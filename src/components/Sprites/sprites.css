@@ -1,0 +1,269 @@
+/* ==========================================================
+   Object sprites (shared by the page, the loupe and the quest list)
+   ========================================================== */
+.object-sprite-container {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 4px rgba(44, 36, 27, 0.28));
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  animation: spriteFadeIn 0.4s ease-out;
+}
+
+.sprite-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.object-sprite-container.sprite-secret {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.55)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.object-sprite-container.sprite-found {
+  opacity: 0.9;
+  animation: foundBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Quest list: unfound targets show only their ink silhouette */
+.object-sprite-container.sprite-silhouette {
+  filter: none;
+}
+.object-sprite-container.sprite-silhouette .sprite-svg {
+  filter: brightness(0);
+  opacity: 0.42;
+}
+
+@keyframes spriteFadeIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes foundBounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.4) rotate(-8deg); }
+  70% { transform: scale(0.9) rotate(4deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ==========================================================
+   Hidden sprites painted into the spread (page + loupe)
+   Blend modes live on the outer element: it is the one composited onto the painting.
+   ========================================================== */
+.scene-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hidden-sprite {
+  position: absolute;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 15;
+  transition: opacity 0.6s ease, filter 0.9s ease;
+}
+
+.hidden-sprite .hs-orient,
+.hidden-sprite .hs-shy {
+  width: 100%;
+  height: 100%;
+}
+
+.hidden-sprite .object-sprite-container {
+  width: 100%;
+  height: 100%;
+}
+
+.hidden-sprite .sprite-svg * {
+  transition: fill 0.9s ease, stroke 0.9s ease;
+}
+
+/* Creatures in water: fade the lower part into the painting. The mask sits on the
+   non-moving wrapper, so shy swimmers dive below a fixed surface line. */
+.hidden-sprite.in-water .hs-orient {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 var(--waterline, 62%), transparent calc(var(--waterline, 62%) + 14%));
+  mask-image: linear-gradient(to bottom, #000 0%, #000 var(--waterline, 62%), transparent calc(var(--waterline, 62%) + 14%));
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* While hidden: no sticker shadow, no pop-in */
+.hidden-sprite:not(.is-found) .object-sprite-container {
+  filter: none;
+  animation: none;
+}
+
+/* --- Ngụy trang nét mực: muted ink & wash, multiplied into the paper --- */
+.hidden-sprite.camo-ink:not(.is-found) {
+  mix-blend-mode: multiply;
+  filter: saturate(0.35) sepia(0.4) contrast(0.92) brightness(1.04);
+  opacity: 0.8;
+}
+
+/* --- Tắc kè hoa: repainted with the colors sampled around it --- */
+.hidden-sprite.camo-chameleon:not(.is-found) {
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+}
+.hidden-sprite.camo-chameleon:not(.is-found) .sprite-svg [fill]:not([fill='none']) {
+  fill: var(--camo-fill, #efe8da);
+}
+.hidden-sprite.camo-chameleon:not(.is-found) .sprite-svg [stroke]:not([stroke='none']) {
+  stroke: var(--camo-ink, #8a7a64);
+}
+.hidden-sprite.camo-chameleon:not(.is-found) .sprite-svg .paint {
+  stroke: var(--camo-fill, #efe8da);
+}
+.hidden-sprite.camo-chameleon:not(.is-found) .sprite-svg .pupil {
+  fill: #3a2f25;
+}
+
+/* --- Mực tàng hình: invisible on the page, glows through the loupe --- */
+.hidden-sprite.camo-invisible:not(.is-found) {
+  opacity: 0;
+}
+.hidden-sprite.camo-invisible.in-loupe:not(.is-found) {
+  opacity: 1;
+  filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 7px rgba(56, 189, 248, 0.55));
+  animation: invisibleInkGlow 2.4s ease-in-out infinite;
+}
+.hidden-sprite.camo-invisible.in-loupe:not(.is-found) .sprite-svg [fill]:not([fill='none']) {
+  fill: rgba(190, 242, 255, 0.28);
+}
+.hidden-sprite.camo-invisible.in-loupe:not(.is-found) .sprite-svg [stroke]:not([stroke='none']) {
+  stroke: #0ea5e9;
+}
+.hidden-sprite.camo-invisible.in-loupe:not(.is-found) .sprite-svg .paint {
+  stroke: rgba(125, 211, 252, 0.55);
+}
+.hidden-sprite.camo-invisible.in-loupe:not(.is-found) .sprite-svg .pupil {
+  fill: #0369a1;
+}
+
+@keyframes invisibleInkGlow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* --- Nhút nhát: hides, peeks out for a moment, hides again ---
+   Keyframe percentages are mirrored in src/game/ShyClock.ts */
+.hidden-sprite.is-shy:not(.is-found) .hs-shy {
+  animation-name: shyPeek;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.hidden-sprite.is-shy.shy-jump:not(.is-found) .hs-shy {
+  animation-name: shyJump;
+  animation-timing-function: linear;
+}
+.hidden-sprite.shy-below { --shy-dx: 0%; --shy-dy: 55%; }
+.hidden-sprite.shy-above { --shy-dx: 0%; --shy-dy: -55%; }
+.hidden-sprite.shy-left { --shy-dx: -55%; --shy-dy: 0%; }
+.hidden-sprite.shy-right { --shy-dx: 55%; --shy-dy: 0%; }
+
+@keyframes shyPeek {
+  0% { opacity: 0; transform: translate(var(--shy-dx), var(--shy-dy)); }
+  8% { opacity: 1; transform: translate(0, 0); }
+  40% { opacity: 1; transform: translate(0, 0); }
+  48% { opacity: 0; transform: translate(var(--shy-dx), var(--shy-dy)); }
+  100% { opacity: 0; transform: translate(var(--shy-dx), var(--shy-dy)); }
+}
+
+@keyframes shyJump {
+  0% { opacity: 0; transform: translate(-45%, 55%) rotate(-55deg); }
+  6% { opacity: 1; }
+  24% { transform: translate(0, -18%) rotate(0deg); }
+  42% { opacity: 1; transform: translate(45%, 55%) rotate(55deg); }
+  48% { opacity: 0; transform: translate(45%, 55%) rotate(55deg); }
+  100% { opacity: 0; transform: translate(45%, 55%) rotate(55deg); }
+}
+
+/* --- Blinking eyes: the tell-tale sign of a hidden creature --- */
+.hidden-sprite .eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spriteBlink 4.6s infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+
+@keyframes spriteBlink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.12); }
+}
+
+/* --- Found: the creature blooms into full color and comes alive --- */
+.hidden-sprite.is-found {
+  mix-blend-mode: normal;
+  opacity: 1;
+  filter: none;
+  z-index: 18;
+}
+
+.hidden-sprite.is-found .object-sprite-container {
+  filter: drop-shadow(0 2px 3px rgba(44, 36, 27, 0.32));
+  animation: foundBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hidden-sprite.is-found::before {
+  content: '';
+  position: absolute;
+  inset: -45%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.5) 0%, rgba(250, 204, 21, 0.18) 38%, rgba(250, 204, 21, 0) 66%);
+  animation: watercolorBloom 1.1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes watercolorBloom {
+  0% { transform: scale(0.3); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+.hidden-sprite.is-found .wing {
+  transform-box: view-box;
+  transform-origin: 24px 24px;
+  animation: wingFlutter 0.9s ease-in-out infinite alternate;
+}
+
+.hidden-sprite.is-found .tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: tailWag 1.6s ease-in-out infinite alternate;
+}
+
+.hidden-sprite.is-found .tail-cat {
+  transform-origin: 10% 90%;
+}
+
+@keyframes wingFlutter {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.72); }
+}
+
+@keyframes tailWag {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(5deg); }
+}
+
+/* Painting drawn back over a tucked-away sprite (pillar, trunk, railing...) */
+.sprite-occluder {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hidden-sprite .eye,
+  .hidden-sprite.is-found .wing,
+  .hidden-sprite.is-found .tail {
+    animation: none;
+  }
+}

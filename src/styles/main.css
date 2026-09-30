@@ -1,0 +1,462 @@
+:root {
+  --paper: #ece7dc;
+  --paper-card: #f5f1e8;
+  --paper-dark: #ded7c8;
+  --ink: #2b2721;
+  --ink-soft: rgba(43, 39, 33, 0.65);
+  --ink-faint: rgba(43, 39, 33, 0.38);
+  --hairline: rgba(43, 39, 33, 0.15);
+  --gold: #b3833b;
+  --gold-light: #d8a85e;
+  --earth: #9a6a3e;
+  --crimson: #a63232;
+  --emerald: #2d7a4f;
+
+  --display: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+  --body: 'Lora', 'Newsreader', Georgia, serif;
+  --serif: 'Playfair Display', 'Lora', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background watercolor wash */
+.app-wash {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url('/assets/ui/bg-wash.jpg') center top / cover no-repeat;
+  opacity: 0.88;
+}
+
+.app-wash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(236,231,220,0.3) 0%, rgba(236,231,220,0.65) 60%, var(--paper) 95%);
+}
+
+/* Foliage decoration */
+.botany-leaf {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.45;
+}
+.botany-leaf.left {
+  left: -20px;
+  bottom: 0;
+  width: clamp(140px, 16vw, 240px);
+}
+.botany-leaf.right {
+  right: -10px;
+  bottom: 0;
+  width: clamp(130px, 15vw, 220px);
+}
+@media (max-width: 800px) {
+  .botany-leaf { display: none; }
+}
+
+/* Main Layout Grid */
+.game-container {
+  position: relative;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Screen shake effect on mistake */
+.screen-shake {
+  animation: shake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+/* Sparkle Pop Animation */
+@keyframes sparklePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Badge pop (secret unlocked, all hidden critters spotted) */
+@keyframes pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Float-up score notification */
+.floating-score {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--display);
+  font-size: 26px;
+  color: var(--gold);
+  font-weight: bold;
+  animation: floatUp 1.2s ease-out forwards;
+  z-index: 100;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  white-space: nowrap;
+}
+
+/* "It just ducked away" notice for shy creatures */
+.floating-score.info {
+  font-family: var(--body);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(255, 252, 245, 0.94);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 4px 12px;
+  text-shadow: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  animation: floatUp 1.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { transform: translate3d(-50%, 0, 0) scale(0.8); opacity: 0; }
+  20% { transform: translate3d(-50%, -15px, 0) scale(1.1); opacity: 1; }
+  100% { transform: translate3d(-50%, -45px, 0) scale(1); opacity: 0; }
+}
+
+/* ==========================================================
+   Plate Selector (Mục Lục 9 Trang Ký Họa)
+   ========================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 24, 20, 0.72);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.plate-selector-modal {
+  width: 100%;
+  max-width: 920px;
+  max-height: 88vh;
+  background: var(--paper-card);
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 32px 80px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.plate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: rgba(240, 236, 226, 0.95);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.plate-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.plate-icon {
+  color: var(--earth);
+}
+
+.plate-modal-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+.plate-modal-desc {
+  margin: 2px 0 0 0;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.plate-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.plate-close-btn:hover {
+  background: #ffffff;
+  transform: rotate(90deg);
+  border-color: var(--earth);
+}
+
+.plate-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.chapter-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--hairline);
+}
+
+.chapter-badge {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  background: var(--earth);
+  color: white;
+  border-radius: 12px;
+}
+
+.chapter-name {
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.chapter-sub {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.plate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.plate-card {
+  border: 1.5px solid var(--hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.plate-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--earth);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+.plate-card.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold), 0 8px 20px rgba(179, 131, 59, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.plate-card-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #e3ded3;
+  overflow: hidden;
+}
+
+.plate-card-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.plate-card:hover .plate-card-thumb {
+  transform: scale(1.04);
+}
+
+.plate-num-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 3px 8px;
+  background: rgba(30, 26, 21, 0.82);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.plate-current-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  background: var(--gold);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.plate-passed-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(45, 122, 79, 0.92);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.plate-card-info {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.plate-card-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.plate-card-subtitle {
+  margin: 3px 0 8px 0;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.plate-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid rgba(43, 39, 33, 0.08);
+}
+
+.plate-card-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.plate-card-score {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--earth);
+  margin-left: 6px;
+}
+
+.plate-card-unplayed {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.plate-card-critters {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-faint);
+}
+
+.plate-card-critters.complete {
+  color: var(--emerald);
+}
+
+@media (max-width: 640px) {
+  .plate-grid {
+    grid-template-columns: 1fr;
+  }
+  .plate-header {
+    padding: 14px 16px;
+  }
+  .plate-scroll-body {
+    padding: 16px;
+  }
+}
+
