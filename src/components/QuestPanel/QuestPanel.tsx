@@ -12,6 +12,7 @@ import {
   Microscope,
   Feather,
   Stamp,
+  Footprints,
   type LucideIcon,
 } from 'lucide-react';
 import { HiddenObject } from '../../types/level';
@@ -35,6 +36,7 @@ interface CamoTrait {
 function camoTrait(obj: HiddenObject): CamoTrait | null {
   if (!obj.spriteType || obj.spriteType === 'seal') return null;
   if (obj.camo === 'invisible') return { key: 'invisible', icon: ScanEye, label: 'Mực tàng hình · chỉ hiện qua kính lúp' };
+  if (obj.roam) return { key: 'roam', icon: Footprints, label: 'Di chuyển liên tục · bắt đúng lúc' };
   if (obj.shy) return { key: 'shy', icon: Timer, label: 'Nhút nhát · thỉnh thoảng mới ló ra' };
   if (obj.camo === 'chameleon') return { key: 'chameleon', icon: Palette, label: 'Đổi màu theo nền' };
   if (obj.occluder) return { key: 'peek', icon: Layers, label: 'Nấp sau vật' };
@@ -61,7 +63,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
       <div className="quest-header">
         <div className="quest-count">
           <Search size={16} className="quest-icon" />
-          <span>MANH MỐI CẦN TÌM</span>
+          <span className="quest-count-label">MANH MỐI CẦN TÌM</span>
           <span className="quest-badge">
             {normalFound} / {normalObjects.length}
           </span>
@@ -98,7 +100,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
           {secretObject && (
             <div className={`secret-badge ${isSecretFound ? 'unlocked' : 'locked'}`}>
               {isSecretFound ? <Sparkles size={14} /> : <Lock size={14} />}
-              <span>{isSecretFound ? 'BÍ MẬT ĐÃ MỞ' : '1 VẬT THỂ ẨN BÍ MẬT'}</span>
+              <span className="secret-badge-text">{isSecretFound ? 'BÍ MẬT ĐÃ MỞ' : '1 VẬT THỂ ẨN BÍ MẬT'}</span>
             </div>
           )}
         </div>
@@ -283,6 +285,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
         .camo-trait.trait-chameleon { color: #4d7c0f; }
         .camo-trait.trait-invisible { color: #0284c7; }
         .camo-trait.trait-shy { color: #b45309; }
+        .camo-trait.trait-roam { color: #0f766e; }
         .camo-trait.trait-peek { color: #7c3aed; }
         .camo-trait.trait-tiny { color: #be185d; }
 
@@ -486,6 +489,37 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
           .quest-card-name { font-size: 14px; }
           .quest-card-clue { font-size: 10.5px; }
           .critter-label { display: none; }
+        }
+
+        /* Phones held sideways: name-only cards so the page keeps its height */
+        @media (max-height: 500px) {
+          .quest-dock { padding: 4px 10px 6px; gap: 4px; }
+          .quest-card { flex: 0 0 150px; padding: 4px 8px; }
+          .quest-card-clue { display: none; }
+          .quest-card-name { font-size: 13px; }
+          .quest-sprite-thumb { width: 24px; height: 24px; }
+          .quest-sprite-thumb .object-sprite-container { width: 22px; height: 22px; }
+        }
+
+        @media (max-width: 640px) {
+          .quest-dock { padding: 5px 8px 8px; gap: 5px; }
+          .quest-header { flex-wrap: nowrap; padding: 0 2px; }
+          .quest-count { gap: 5px; font-size: 10px; letter-spacing: 0.08em; }
+          .quest-count-label { display: none; }
+          .quest-count::after { content: 'MANH MỐI'; order: 1; }
+          .quest-badge { order: 2; font-size: 11px; padding: 1px 7px; }
+          .quest-header-right { gap: 6px; flex-wrap: nowrap; }
+          .critter-tracker { padding: 1px 8px 1px 6px; gap: 4px; }
+          .critter-slot { width: 17px; height: 17px; }
+          .critter-slot .object-sprite-container { width: 16px; height: 16px; }
+          .secret-badge { padding: 3px 7px; }
+          .secret-badge-text { display: none; }
+          .quest-card { flex: 0 0 150px; padding: 5px 8px; gap: 6px; }
+          .quest-sprite-thumb { width: 26px; height: 26px; }
+          .quest-sprite-thumb .object-sprite-container { width: 24px; height: 24px; }
+          .quest-card-name { font-size: 13px; }
+          .quest-card-clue { font-size: 10px; line-height: 1.25; }
+          .camo-trait { font-size: 8px; }
         }
       `}</style>
     </div>

@@ -8,6 +8,17 @@ import lauPaSatData from './chapter-02/lau-pa-sat.json';
 import skylineData from './chapter-03/skyline.json';
 import riverData from './chapter-03/river.json';
 import botanicData from './chapter-03/botanic.json';
+import gardensNightData from './night/gardens-night.json';
+import lauPaSatNightData from './night/lau-pa-sat-night.json';
+import riverNightData from './night/river-night.json';
+
+/** Night variants, keyed by the id of the day page they belong to. */
+export const NIGHT_BY_DAY_ID: Record<string, LevelData> = Object.fromEntries(
+  [gardensNightData, lauPaSatNightData, riverNightData].map((n) => [
+    (n as LevelData).dayId!,
+    n as LevelData,
+  ])
+);
 
 export const CHAPTER_1: ChapterData = {
   id: 'chapter-01',

@@ -150,7 +150,7 @@
 }
 
 /* --- Nhút nhát: hides, peeks out for a moment, hides again ---
-   Keyframe percentages are mirrored in src/game/ShyClock.ts */
+   Keyframe percentages are mirrored in src/game/CreatureMotion.ts */
 .hidden-sprite.is-shy:not(.is-found) .hs-shy {
   animation-name: shyPeek;
   animation-iteration-count: infinite;
@@ -200,7 +200,7 @@
   mix-blend-mode: normal;
   opacity: 1;
   filter: none;
-  z-index: 18;
+  z-index: 19; /* above the night darkness (17) and its lights (18) */
 }
 
 .hidden-sprite.is-found .object-sprite-container {
@@ -250,6 +250,89 @@
   to { transform: rotate(5deg); }
 }
 
+/* Fortune cat beckons with its raised paw */
+.hidden-sprite.is-found .wave {
+  transform-box: fill-box;
+  transform-origin: 70% 95%;
+  animation: pawWave 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes pawWave {
+  from { transform: rotate(-12deg); }
+  to { transform: rotate(10deg); }
+}
+
+/* Firefly lantern keeps glowing once found */
+.hidden-sprite.is-found .glow-spot {
+  animation: fireflyPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes fireflyPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* --- Di chuyển: flying roamers flutter up and down as they travel --- */
+.hidden-sprite.roam-bob:not(.is-found) .hs-shy {
+  animation: roamBob 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes roamBob {
+  from { transform: translateY(-9%); }
+  to { transform: translateY(9%); }
+}
+
+/* ==========================================================
+   Night pages: glowing eyes above the darkness
+   Only `.eye` and `.glow-spot` parts of each sprite stay visible here.
+   ========================================================== */
+.scene-layer.glow-layer {
+  z-index: 20;
+}
+
+/* Selectors are prefixed so they outrank the camouflage rules above */
+.scene-layer.glow-layer .hidden-sprite:not(.is-found) {
+  mix-blend-mode: normal;
+  opacity: 1;
+  filter: none;
+}
+
+.glow-layer .object-sprite-container {
+  filter: drop-shadow(0 0 1.5px rgba(226, 255, 140, 0.95)) drop-shadow(0 0 5px rgba(190, 255, 90, 0.55));
+}
+
+.glow-layer .sprite-svg * {
+  visibility: hidden;
+}
+
+.glow-layer .sprite-svg .eye,
+.glow-layer .sprite-svg .eye *,
+.glow-layer .sprite-svg .glow-spot {
+  visibility: visible;
+}
+
+.scene-layer.glow-layer .hidden-sprite .sprite-svg .eye[fill]:not([fill='none']),
+.scene-layer.glow-layer .hidden-sprite .sprite-svg .eye [fill]:not([fill='none']) {
+  fill: #eaff9e;
+}
+
+.scene-layer.glow-layer .hidden-sprite .sprite-svg .eye[stroke]:not([stroke='none']),
+.scene-layer.glow-layer .hidden-sprite .sprite-svg .eye [stroke]:not([stroke='none']) {
+  stroke: #eaff9e;
+}
+
+.scene-layer.glow-layer .hidden-sprite .sprite-svg .glow-spot {
+  fill: #f6ff8f;
+  stroke: none;
+  animation: fireflyBlink 2.6s ease-in-out infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+
+@keyframes fireflyBlink {
+  0%, 100% { opacity: 0.15; }
+  35%, 60% { opacity: 1; }
+}
+
 /* Painting drawn back over a tucked-away sprite (pillar, trunk, railing...) */
 .sprite-occluder {
   position: absolute;
@@ -263,7 +346,9 @@
 @media (prefers-reduced-motion: reduce) {
   .hidden-sprite .eye,
   .hidden-sprite.is-found .wing,
-  .hidden-sprite.is-found .tail {
+  .hidden-sprite.is-found .tail,
+  .hidden-sprite.is-found .wave,
+  .hidden-sprite.roam-bob .hs-shy {
     animation: none;
   }
 }

@@ -16,7 +16,9 @@ export interface GameState {
   sceneIndex: number;
   score: number;
   foundItems: string[]; // List of object IDs found
+  foundAt: Record<string, { x: number; y: number }>; // Where roaming creatures were caught
   secretFound: boolean;
+  isExploring: boolean; // Case closed, still hunting the remaining critters for the album
   mistakes: number;
   hintsUsed: number;
   remainingTime: number;

@@ -35,31 +35,30 @@
       "foundText": "Chú cún được thực khách chia cho một miếng thịt xiên satay thơm nức!"
     },
     {
-      "id": "white-dove",
-      "name": "Chim Bồ Câu Đậu Mái Vòm",
-      "clue": "Chim bồ câu nhuộm màu sắt đúc, đậu trên dải hoa văn uốn lượn phía dưới mái hiên bên trái.",
+      "id": "iron-durian",
+      "name": "Quả Sầu Riêng Mắc Kẹt",
+      "clue": "Quả sầu riêng xám nâu mắc kẹt giữa hoa văn sắt đúc phía dưới mái hiên bên trái.",
       "x": 0.265,
       "y": 0.51,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "dove",
+      "spriteType": "durian",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Những chú chim thành phố thường tìm bóng mát dưới mái vòm sắt đúc cao ráo."
+      "foundText": "Vua của các loại trái cây — nhưng tuyệt đối đừng mang nó lên tàu điện MRT!"
     },
     {
-      "id": "wax-letter",
-      "name": "Bức Thư Niêm Phong Sáp",
-      "clue": "Bức thư màu khói lẩn trong làn khói nướng satay cuồn cuộn bên phải.",
+      "id": "smoky-satay",
+      "name": "Xiên Satay Trong Làn Khói",
+      "clue": "Những xiên satay nướng lấp ló trong làn khói nướng cuồn cuộn bên phải.",
       "x": 0.83,
       "y": 0.505,
       "radius": 0.034,
       "score": 100,
-      "spriteType": "letter",
+      "spriteType": "satay",
       "scale": 0.55,
-      "rotation": 12,
       "camo": "chameleon",
-      "foundText": "Bức thư chứa công thức gia vị bí truyền và mật mã bước kế tiếp!"
+      "foundText": "Satay chấm sốt đậu phộng — món ăn đêm nổi tiếng nhất Lau Pa Sat!"
     },
     {
       "id": "shy-mouse",
@@ -72,12 +71,28 @@
       "spriteType": "mouse",
       "scale": 0.42,
       "camo": "ink",
-      "shy": { "period": 6, "offset": 2.2, "from": "right" },
+      "shy": {
+        "period": 6,
+        "offset": 2.2,
+        "from": "right"
+      },
       "occluder": [
-        [0.4152, 0.655],
-        [0.4295, 0.655],
-        [0.4295, 0.705],
-        [0.4152, 0.705]
+        [
+          0.4152,
+          0.655
+        ],
+        [
+          0.4295,
+          0.655
+        ],
+        [
+          0.4295,
+          0.705
+        ],
+        [
+          0.4152,
+          0.705
+        ]
       ],
       "foundText": "Bắt quả tang! Chú chuột đang tha một hạt đậu phộng trong bát sốt satay."
     },
@@ -107,18 +122,18 @@
       "foundText": "Chìa khóa cổ nguyên bản dùng để lên dây cót cho tháp chuông đồng hồ Lau Pa Sat!"
     },
     {
-      "id": "bonus-bat",
-      "name": "Dơi Mái Hiên",
-      "clue": "Chú dơi nhỏ treo ngược dưới mép mái hiên bên phải.",
+      "id": "bonus-mantis",
+      "name": "Bọ Ngựa Mái Hiên",
+      "clue": "Chú bọ ngựa bám dưới mép mái hiên bên phải.",
       "x": 0.735,
       "y": 0.548,
       "radius": 0.027,
       "score": 100,
       "isBonus": true,
-      "spriteType": "bat",
-      "scale": 0.45,
+      "spriteType": "mantis",
+      "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Chú dơi đang chờ trời tối để đi ăn trái cây ở quầy hoa quả."
+      "foundText": "Bọ ngựa ghé chợ để săn những con ruồi bị mùi đồ ăn thu hút."
     },
     {
       "id": "bonus-ladybug",
@@ -135,19 +150,18 @@
       "foundText": "Chú bọ rùa cũng muốn nếm thử món satay!"
     },
     {
-      "id": "bonus-dragonfly",
-      "name": "Chuồn Chuồn Trong Khói",
-      "clue": "Chú chuồn chuồn lượn lờ giữa làn khói nướng.",
+      "id": "bonus-moth",
+      "name": "Bướm Đêm Trong Khói",
+      "clue": "Chú bướm đêm chập chờn giữa làn khói nướng.",
       "x": 0.8,
       "y": 0.455,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "dragonfly",
-      "scale": 0.5,
-      "rotation": 25,
+      "spriteType": "moth",
+      "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Chuồn chuồn lạc giữa phố thị — chắc nó bị mùi satay dụ tới!"
+      "foundText": "Bướm đêm lao vào ánh lửa bếp than như thiêu thân."
     }
   ]
 }

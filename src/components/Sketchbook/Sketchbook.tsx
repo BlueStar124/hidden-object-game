@@ -1,37 +1,80 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { ZoomIn, ZoomOut } from 'lucide-react';
 import { Loupe } from '../Loupe/Loupe';
-import { HiddenObject } from '../../types/level';
-import { SceneLayer } from '../Sprites/SceneLayer';
+import { HiddenObject, NightLight } from '../../types/level';
+import { SceneLayer, useRoamingPosition } from '../Sprites/SceneLayer';
+import { NightSky } from './NightSky';
 import { CamoTint, sampleCamoTints } from '../../game/CamoSampler';
+
+type Point = { x: number; y: number };
 
 interface SketchbookProps {
   sceneImage: string;
   nextSceneImage?: string;
   isTurning: boolean;
   foundObjects: HiddenObject[];
+  foundAt?: Record<string, Point>;
   allObjects?: HiddenObject[];
   debugMode?: boolean;
-  radarPoint?: { x: number; y: number } | null;
+  radarTarget?: HiddenObject | null; // Hint tier 3: the object the radar pulses on
   nudgeDirection?: { x: number; y: number } | null;
+  isNight?: boolean;
+  nightLights?: NightLight[];
+  fogged?: boolean;
   onInspect: (nx: number, ny: number, screenPos: { x: number; y: number }) => void;
 }
+
+const ZOOM_STEPS = [1, 1.6, 2.2, 3];
+const NO_LIGHTS: NightLight[] = [];
+
+// Phones see the spread tiny at "fit"; start them zoomed in (upright phones the most,
+// so the page fills the screen height and is swiped sideways)
+function defaultZoom(): number {
+  if (typeof window === 'undefined') return 1;
+  const { innerWidth: w, innerHeight: h } = window;
+  if (w < 700 && h > w) return 2.2;
+  if (h < 500) return 1.6;
+  return 1;
+}
+
+/** Hint radar ring; follows the target if it is a roaming creature. */
+const RadarMarker: React.FC<{ target: HiddenObject }> = ({ target }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useRoamingPosition(ref, target.roam, !!target.roam);
+  return (
+    <div
+      ref={ref}
+      className="radar-ping-marker"
+      style={target.roam ? undefined : { left: `${target.x * 100}%`, top: `${target.y * 100}%` }}
+    >
+      <div className="radar-ripple" />
+      <div className="radar-center-dot" />
+    </div>
+  );
+};
 
 export const Sketchbook: React.FC<SketchbookProps> = ({
   sceneImage,
   isTurning,
   foundObjects,
+  foundAt,
   allObjects = [],
   debugMode = false,
-  radarPoint,
+  radarTarget,
   nudgeDirection,
+  isNight = false,
+  nightLights = NO_LIGHTS,
+  fogged = false,
   onInspect,
 }) => {
   const stageRef = useRef<HTMLDivElement>(null);
   const bookRef = useRef<HTMLDivElement>(null);
+  const beamRef = useRef<SVGCircleElement>(null);
   const [bookRect, setBookRect] = useState<DOMRect | null>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [hoverCoords, setHoverCoords] = useState<{ nx: number; ny: number } | null>(null);
   const [camoTints, setCamoTints] = useState<Record<string, CamoTint>>({});
+  const [zoom, setZoom] = useState(defaultZoom);
 
   const foundIds = useMemo(() => foundObjects.map((f) => f.id), [foundObjects]);
 
@@ -46,7 +89,7 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
     };
   }, [sceneImage, allObjects]);
 
-  // Update book dimensions on resize or image load
+  // Keep the book's size in sync (window resize, image load, zoom)
   const measureBook = useCallback(() => {
     if (bookRef.current) {
       setBookRect(bookRef.current.getBoundingClientRect());
@@ -55,26 +98,64 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
 
   useEffect(() => {
     measureBook();
-    window.addEventListener('resize', measureBook);
-    return () => window.removeEventListener('resize', measureBook);
+    const el = bookRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measureBook);
+      return () => window.removeEventListener('resize', measureBook);
+    }
+    const ro = new ResizeObserver(measureBook);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, [measureBook]);
 
-  // Gentle 3D Tilt on mouse move
+  // A new page on a zoomed-in phone opens on the middle of the spread
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    requestAnimationFrame(() => {
+      stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+      stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
+    });
+  }, [sceneImage]);
+
+  // Zooming keeps the middle of the visible area in view
+  const changeZoom = (dir: 1 | -1) => {
+    const idx = ZOOM_STEPS.indexOf(zoom);
+    const next = ZOOM_STEPS[Math.max(0, Math.min(ZOOM_STEPS.length - 1, idx + dir))];
+    if (next === zoom) return;
+    const stage = stageRef.current;
+    const cx = stage ? (stage.scrollLeft + stage.clientWidth / 2) / Math.max(1, stage.scrollWidth) : 0.5;
+    const cy = stage ? (stage.scrollTop + stage.clientHeight / 2) / Math.max(1, stage.scrollHeight) : 0.5;
+    setZoom(next);
+    requestAnimationFrame(() => {
+      if (!stage) return;
+      stage.scrollLeft = cx * stage.scrollWidth - stage.clientWidth / 2;
+      stage.scrollTop = cy * stage.scrollHeight - stage.clientHeight / 2;
+    });
+  };
+
+  // Night flashlight follows the loupe (straight on the SVG, no re-render)
+  const handleLoupeMove = useCallback((x: number, y: number, r: number) => {
+    const beam = beamRef.current;
+    const book = bookRef.current;
+    if (!beam || !book || !book.offsetWidth) return;
+    const k = 1760 / book.offsetWidth;
+    beam.setAttribute('cx', (x * k).toFixed(1));
+    beam.setAttribute('cy', (y * k).toFixed(1));
+    beam.setAttribute('r', (r * k * 1.35).toFixed(1));
+  }, []);
+
+  // Gentle 3D Tilt on mouse move (not for touch, not while zoomed in)
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!stageRef.current) return;
-    const r = stageRef.current.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
+    if (e.pointerType === 'mouse' && zoom === 1) {
+      const r = stageRef.current.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+      setTilt({ rx: -dy * 3.0, ry: dx * 4.5 });
+    }
 
-    const dx = (e.clientX - cx) / (r.width / 2);
-    const dy = (e.clientY - cy) / (r.height / 2);
-
-    setTilt({
-      rx: -dy * 3.0,
-      ry: dx * 4.5,
-    });
-
-    if (bookRef.current) {
+    if (debugMode && bookRef.current) {
       const bRect = bookRef.current.getBoundingClientRect();
       const nx = (e.clientX - bRect.left) / bRect.width;
       const ny = (e.clientY - bRect.top) / bRect.height;
@@ -89,155 +170,208 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
     setHoverCoords(null);
   };
 
+  useEffect(() => {
+    if (zoom !== 1) setTilt({ rx: 0, ry: 0 });
+  }, [zoom]);
+
   const handleDirectClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!bookRef.current) return;
     const rect = bookRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-
-    const nx = clickX / rect.width;
-    const ny = clickY / rect.height;
-
+    const nx = (e.clientX - rect.left) / rect.width;
+    const ny = (e.clientY - rect.top) / rect.height;
     onInspect(nx, ny, { x: e.clientX, y: e.clientY });
   };
 
+  const zoomIdx = ZOOM_STEPS.indexOf(zoom);
+
   return (
-    <div
-      ref={stageRef}
-      className="sketchbook-stage"
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-    >
-      <div className="sketchbook-3d">
-        <div
-          className="sketchbook-tilt"
-          style={{
-            transform: `rotateX(${tilt.rx.toFixed(2)}deg) rotateY(${tilt.ry.toFixed(2)}deg)`,
-          }}
-        >
-          {/* Surface Cast Shadows */}
-          <div className="sb-cast ambient" />
-          <div className="sb-cast contact" />
-
-          {/* Book Canvas Spread */}
+    <div className="sketchbook-viewport">
+      <div
+        ref={stageRef}
+        className={`sketchbook-stage ${zoom > 1 ? 'zoomed' : ''}`}
+        style={{ '--book-zoom': zoom } as React.CSSProperties}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+      >
+        <div className="sketchbook-3d">
           <div
-            ref={bookRef}
-            className={`sketchbook-book ${isTurning ? 'page-turning' : ''}`}
-            onClick={handleDirectClick}
+            className="sketchbook-tilt"
+            style={{
+              transform: `rotateX(${tilt.rx.toFixed(2)}deg) rotateY(${tilt.ry.toFixed(2)}deg)`,
+            }}
           >
-            {/* The Main Watercolor Spread Artwork */}
-            <img
-              src={sceneImage}
-              alt="Watercolor Scene"
-              className="scene-spread-img"
-              draggable={false}
-              onLoad={measureBook}
-            />
+            {/* Surface Cast Shadows */}
+            <div className="sb-cast ambient" />
+            <div className="sb-cast contact" />
 
-            {/* Debug Mode: Show Exact Target Hitboxes */}
-            {debugMode &&
-              allObjects.map((obj) => (
-                <div
-                  key={`debug-${obj.id}`}
-                  className="debug-hitbox"
-                  style={{
-                    left: `${(obj.x * 100).toFixed(2)}%`,
-                    top: `${(obj.y * 100).toFixed(2)}%`,
-                    width: `${(obj.radius * 2 * 100).toFixed(2)}%`,
-                    aspectRatio: '1',
-                  }}
-                  title={`${obj.name} [x: ${obj.x}, y: ${obj.y}]`}
-                >
-                  <span className="debug-label">{obj.name}</span>
+            {/* Book Canvas Spread */}
+            <div
+              ref={bookRef}
+              className={`sketchbook-book ${isTurning ? 'page-turning' : ''} ${isNight ? 'night' : ''}`}
+              onClick={handleDirectClick}
+            >
+              {/* The Main Watercolor Spread Artwork */}
+              <img
+                src={sceneImage}
+                alt="Watercolor Scene"
+                className="scene-spread-img"
+                draggable={false}
+                onLoad={measureBook}
+              />
+
+              {/* Debug Mode: Show Exact Target Hitboxes */}
+              {debugMode &&
+                allObjects.map((obj) => (
+                  <div
+                    key={`debug-${obj.id}`}
+                    className="debug-hitbox"
+                    style={{
+                      left: `${(obj.x * 100).toFixed(2)}%`,
+                      top: `${(obj.y * 100).toFixed(2)}%`,
+                      width: `${(obj.radius * 2 * 100).toFixed(2)}%`,
+                      aspectRatio: '1',
+                    }}
+                    title={`${obj.name} [x: ${obj.x}, y: ${obj.y}]`}
+                  >
+                    <span className="debug-label">{obj.name}</span>
+                  </div>
+                ))}
+
+              {/* Found Objects Stamped Ink Rings (roamers: where they were caught) */}
+              {foundObjects.map((obj) => {
+                const at = foundAt?.[obj.id] ?? obj;
+                return (
+                  <div
+                    key={obj.id}
+                    className="found-stamp-marker"
+                    style={{
+                      left: `${(at.x * 100).toFixed(2)}%`,
+                      top: `${(at.y * 100).toFixed(2)}%`,
+                    }}
+                  >
+                    <div className="stamp-circle" />
+                    <span className="stamp-label">{obj.name}</span>
+                  </div>
+                );
+              })}
+
+              {/* Camouflaged animals and detective objects painted into the spread */}
+              <SceneLayer
+                sceneImage={sceneImage}
+                objects={allObjects}
+                foundIds={foundIds}
+                foundAt={foundAt}
+                tints={camoTints}
+              />
+
+              {/* Night: darkness with a flashlight hole, lamps, and glowing eyes above it */}
+              {isNight && (
+                <>
+                  <NightSky lights={nightLights} beamRef={beamRef} />
+                  <SceneLayer
+                    sceneImage={sceneImage}
+                    objects={allObjects}
+                    foundIds={foundIds}
+                    tints={camoTints}
+                    glow
+                  />
+                </>
+              )}
+
+              {/* Hint Tier 3: Radar Pulse Indicator */}
+              {radarTarget && <RadarMarker key={radarTarget.id} target={radarTarget} />}
+
+              {/* 3D Page Turn Overlay Effect */}
+              {isTurning && (
+                <div className="turn-leaf-overlay">
+                  <div className="turning-page-curl" />
                 </div>
-              ))}
-
-            {/* Found Objects Stamped Ink Rings */}
-            {foundObjects.map((obj) => (
-              <div
-                key={obj.id}
-                className="found-stamp-marker"
-                style={{
-                  left: `${(obj.x * 100).toFixed(2)}%`,
-                  top: `${(obj.y * 100).toFixed(2)}%`,
-                }}
-              >
-                <div className="stamp-circle" />
-                <span className="stamp-label">{obj.name}</span>
-              </div>
-            ))}
-
-            {/* Camouflaged animals and detective objects painted into the spread */}
-            <SceneLayer
-              sceneImage={sceneImage}
-              objects={allObjects}
-              foundIds={foundIds}
-              tints={camoTints}
-            />
-
-            {/* Hint Tier 3: Radar Pulse Indicator */}
-            {radarPoint && (
-              <div
-                className="radar-ping-marker"
-                style={{
-                  left: `${(radarPoint.x * 100).toFixed(2)}%`,
-                  top: `${(radarPoint.y * 100).toFixed(2)}%`,
-                }}
-              >
-                <div className="radar-ripple" />
-                <div className="radar-center-dot" />
-              </div>
-            )}
-
-            {/* 3D Page Turn Overlay Effect */}
-            {isTurning && (
-              <div className="turn-leaf-overlay">
-                <div className="turning-page-curl" />
-              </div>
-            )}
+              )}
+            </div>
           </div>
+
+          {/* The Interactive Loupe Magnifier (a flashlight on night pages) */}
+          <Loupe
+            bookRect={bookRect}
+            sceneImage={sceneImage}
+            nudgeDirection={nudgeDirection}
+            allObjects={allObjects}
+            foundIds={foundIds}
+            foundAt={foundAt}
+            camoTints={camoTints}
+            night={isNight}
+            fogged={fogged}
+            onMove={isNight ? handleLoupeMove : undefined}
+            onInspect={onInspect}
+          />
+
+          {/* Live Coordinate Badge in Debug Mode */}
+          {debugMode && hoverCoords && (
+            <div className="debug-coord-badge">
+              X: {hoverCoords.nx.toFixed(3)} | Y: {hoverCoords.ny.toFixed(3)}
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* The Interactive Loupe Magnifier */}
-        <Loupe
-          bookRect={bookRect}
-          sceneImage={sceneImage}
-          nudgeDirection={nudgeDirection}
-          allObjects={allObjects}
-          foundIds={foundIds}
-          camoTints={camoTints}
-          onInspect={onInspect}
-        />
-
-        {/* Live Coordinate Badge in Debug Mode */}
-        {debugMode && hoverCoords && (
-          <div className="debug-coord-badge">
-            X: {hoverCoords.nx.toFixed(3)} | Y: {hoverCoords.ny.toFixed(3)}
-          </div>
-        )}
+      {/* Zoom controls — mainly for phones, where the spread is small */}
+      <div className="zoom-controls">
+        <button
+          className="zoom-btn"
+          onClick={() => changeZoom(-1)}
+          disabled={zoomIdx <= 0}
+          aria-label="Thu nhỏ trang sách"
+          title="Thu nhỏ trang sách"
+        >
+          <ZoomOut size={18} />
+        </button>
+        <span className="zoom-level">{zoom}×</span>
+        <button
+          className="zoom-btn"
+          onClick={() => changeZoom(1)}
+          disabled={zoomIdx >= ZOOM_STEPS.length - 1}
+          aria-label="Phóng to trang sách"
+          title="Phóng to trang sách"
+        >
+          <ZoomIn size={18} />
+        </button>
       </div>
 
       <style>{`
-        .sketchbook-stage {
+        .sketchbook-viewport {
           position: relative;
           width: 100%;
           flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 12px 16px;
           min-height: 0;
+        }
+
+        .sketchbook-stage {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          padding: 6px 12px;
           overflow: hidden;
-          touch-action: none;
+          touch-action: manipulation;
+          container-type: size;
+          overscroll-behavior: contain;
+        }
+
+        .sketchbook-stage.zoomed {
+          overflow: auto;
+          touch-action: pan-x pan-y;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: thin;
         }
 
         .sketchbook-3d {
           position: relative;
-          width: min(960px, 94vw, calc((100vh - 210px) * 1.41935));
+          flex: none;
+          margin: auto;
+          /* Fit the stage (container units), then scale by the zoom level */
+          width: calc(min(960px, 100cqw, 100cqh * 1.41935) * var(--book-zoom, 1));
           aspect-ratio: 1760 / 1240;
           perspective: 1800px;
           perspective-origin: 50% 46%;
-          margin: 0 auto;
         }
 
         .sketchbook-tilt {
@@ -247,6 +381,115 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
           transform-style: preserve-3d;
           transition: transform 0.15s ease-out;
           will-change: transform;
+        }
+
+        .zoom-controls {
+          position: absolute;
+          right: 12px;
+          bottom: 10px;
+          z-index: 70;
+          display: none;
+          align-items: center;
+          gap: 2px;
+          padding: 3px;
+          background: rgba(255, 252, 245, 0.92);
+          border: 1px solid var(--hairline);
+          border-radius: 999px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+          backdrop-filter: blur(8px);
+        }
+
+        .zoom-btn {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 50%;
+          background: transparent;
+          color: var(--ink);
+          cursor: pointer;
+        }
+
+        .zoom-btn:disabled {
+          opacity: 0.3;
+          cursor: default;
+        }
+
+        .zoom-level {
+          min-width: 34px;
+          text-align: center;
+          font-family: var(--sans);
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--earth);
+        }
+
+        /* Phones, small tablets and short landscape screens get the zoom controls */
+        @media (max-width: 900px), (max-height: 560px) {
+          .zoom-controls { display: flex; }
+        }
+
+        /* Night pages */
+        .sketchbook-book.night {
+          box-shadow: 0 6px 28px rgba(8, 12, 30, 0.45);
+        }
+
+        .night-overlay {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 17;
+        }
+
+        .night-lights {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 18;
+          overflow: hidden;
+        }
+
+        .night-lamp {
+          position: absolute;
+          aspect-ratio: 1;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          mix-blend-mode: screen;
+          animation: lampFlicker 4s ease-in-out infinite;
+        }
+
+        @keyframes lampFlicker {
+          0%, 100% { opacity: 0.85; }
+          50% { opacity: 1; }
+        }
+
+        .night-star {
+          position: absolute;
+          border-radius: 50%;
+          background: #f8fbff;
+          box-shadow: 0 0 4px rgba(210, 225, 255, 0.9);
+          animation: starTwinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes starTwinkle {
+          0%, 100% { opacity: 0.35; }
+          50% { opacity: 1; }
+        }
+
+        .night-moon {
+          position: absolute;
+          left: 7%;
+          top: 7%;
+          width: 3.2%;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          box-shadow: inset -7px -3px 0 0 #f4ecd0;
+          filter: drop-shadow(0 0 8px rgba(244, 236, 208, 0.6));
+          transform: rotate(-20deg);
         }
 
         /* Surface Shadows */

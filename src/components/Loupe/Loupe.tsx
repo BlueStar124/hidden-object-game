@@ -10,13 +10,21 @@ interface LoupeProps {
   nudgeDirection?: { x: number; y: number } | null;
   allObjects?: HiddenObject[];
   foundIds?: string[];
+  foundAt?: Record<string, { x: number; y: number }>;
   camoTints?: Record<string, CamoTint>;
+  night?: boolean; // Night pages: the loupe doubles as a flashlight
+  fogged?: boolean; // Misted over after a burst of random clicks
+  onMove?: (x: number, y: number, radius: number) => void; // Lens centre in book pixels
   onInspect: (nx: number, ny: number, screenPos: { x: number; y: number }) => void;
 }
 
 const NO_OBJECTS: HiddenObject[] = [];
 const NO_IDS: string[] = [];
 const NO_TINTS: Record<string, CamoTint> = {};
+
+// While dragging near the edge of a zoomed (scrollable) page, scroll it along
+const EDGE_ZONE = 44;
+const EDGE_STEP = 12;
 
 export const Loupe: React.FC<LoupeProps> = ({
   bookRect,
@@ -25,28 +33,43 @@ export const Loupe: React.FC<LoupeProps> = ({
   nudgeDirection,
   allObjects = NO_OBJECTS,
   foundIds = NO_IDS,
+  foundAt,
   camoTints = NO_TINTS,
+  night = false,
+  fogged = false,
+  onMove,
   onInspect,
 }) => {
   const [pos, setPos] = useState({ x: 300, y: 220 });
   const [isDragging, setIsDragging] = useState(false);
   const dragOffset = useRef({ x: 0, y: 0 });
   const loupeRef = useRef<HTMLDivElement>(null);
+  const measuredWidth = useRef(0);
 
   // Responsive Loupe diameter: scales gracefully from mobile to desktop
   const bookWidth = bookRect?.width || 800;
-  const loupeDiameter = Math.round(Math.max(130, Math.min(240, bookWidth * 0.25)));
+  // On a zoomed-in phone the page is wider than the screen — size the lens by the screen too
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280;
+  const loupeDiameter = Math.round(Math.max(110, Math.min(240, bookWidth * 0.25, viewportWidth * 0.36)));
   const radius = loupeDiameter / 2;
 
-  // Initialize position when bookRect is measured
+  // Initialize position when bookRect is measured; keep pointing at the same spot when the
+  // page is zoomed or resized
   useEffect(() => {
-    if (bookRect && pos.x === 300 && pos.y === 220) {
-      setPos({
-        x: bookRect.width * 0.58,
-        y: bookRect.height * 0.62,
-      });
+    if (!bookRect || bookRect.width === 0) return;
+    const prevWidth = measuredWidth.current;
+    measuredWidth.current = bookRect.width;
+    if (!prevWidth) {
+      setPos({ x: bookRect.width * 0.58, y: bookRect.height * 0.62 });
+    } else if (Math.abs(prevWidth - bookRect.width) > 0.5) {
+      const k = bookRect.width / prevWidth;
+      setPos((p) => ({ x: p.x * k, y: p.y * k }));
     }
   }, [bookRect]);
+
+  useEffect(() => {
+    onMove?.(pos.x, pos.y, radius);
+  }, [pos.x, pos.y, radius, onMove]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
@@ -62,6 +85,20 @@ export const Loupe: React.FC<LoupeProps> = ({
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging || !bookRect) return;
 
+    // Zoomed page on a small screen: nudge the scroll so the loupe can travel the whole spread
+    const stage = loupeRef.current?.closest('.sketchbook-stage') as HTMLElement | null;
+    if (stage && (stage.scrollWidth > stage.clientWidth || stage.scrollHeight > stage.clientHeight)) {
+      const r = stage.getBoundingClientRect();
+      const before = { x: stage.scrollLeft, y: stage.scrollTop };
+      if (e.clientX > r.right - EDGE_ZONE) stage.scrollLeft += EDGE_STEP;
+      else if (e.clientX < r.left + EDGE_ZONE) stage.scrollLeft -= EDGE_STEP;
+      if (e.clientY > r.bottom - EDGE_ZONE) stage.scrollTop += EDGE_STEP;
+      else if (e.clientY < r.top + EDGE_ZONE) stage.scrollTop -= EDGE_STEP;
+      // The page moved under the finger: shift the grab offset so the loupe stays with it
+      dragOffset.current.x -= stage.scrollLeft - before.x;
+      dragOffset.current.y -= stage.scrollTop - before.y;
+    }
+
     let newX = e.clientX - dragOffset.current.x;
     let newY = e.clientY - dragOffset.current.y;
 
@@ -72,7 +109,7 @@ export const Loupe: React.FC<LoupeProps> = ({
     setPos({ x: newX, y: newY });
   };
 
-  const handlePointerUp = (e: React.PointerEvent) => {
+  const handlePointerUp = () => {
     if (!isDragging) return;
     setIsDragging(false);
 
@@ -85,10 +122,11 @@ export const Loupe: React.FC<LoupeProps> = ({
       if (!bookRect || bookRect.width === 0 || bookRect.height === 0) return;
       const nx = curX / bookRect.width;
       const ny = curY / bookRect.height;
-      onInspect(nx, ny, {
-        x: bookRect.left + curX,
-        y: bookRect.top + curY,
-      });
+      // The lens centre on screen, measured live (the page may have scrolled since)
+      const lens = loupeRef.current?.getBoundingClientRect();
+      onInspect(nx, ny, lens
+        ? { x: lens.left + lens.width / 2, y: lens.top + lens.height / 2 }
+        : { x: bookRect.left + curX, y: bookRect.top + curY });
     },
     [bookRect, onInspect]
   );
@@ -96,7 +134,9 @@ export const Loupe: React.FC<LoupeProps> = ({
   return (
     <div
       ref={loupeRef}
-      className={`loupe-wrapper ${isDragging ? 'held' : ''} ${nudgeDirection ? 'nudge-anim' : ''}`}
+      className={`loupe-wrapper ${isDragging ? 'held' : ''} ${nudgeDirection ? 'nudge-anim' : ''} ${
+        night ? 'night' : ''
+      } ${fogged ? 'fogged' : ''}`}
       style={{
         transform: `translate3d(${pos.x - radius}px, ${pos.y - radius}px, 0)`,
         width: `${loupeDiameter}px`,
@@ -109,7 +149,7 @@ export const Loupe: React.FC<LoupeProps> = ({
       // pointerup already inspected this tap/drag; inspecting again here would count
       // the just-found object as a wrong click (penalty + combo reset)
       onClick={(e) => e.stopPropagation()}
-      title="Rê kính lúp để điều tra, click để kiểm tra vật thể"
+      title={night ? 'Rê đèn pin để soi trong bóng tối' : 'Rê kính lúp để điều tra, click để kiểm tra vật thể'}
     >
       {/* Wooden Handle */}
       <div className="loupe-grip" />
@@ -148,11 +188,16 @@ export const Loupe: React.FC<LoupeProps> = ({
                 sceneImage={sceneImage}
                 objects={allObjects}
                 foundIds={foundIds}
+                foundAt={foundAt}
                 tints={camoTints}
                 inLoupe
               />
             </div>
           )}
+
+          {/* Flashlight falloff on night pages, mist when fogged */}
+          {night && <div className="lens-night-vignette" />}
+          {fogged && <div className="lens-fog" />}
 
           {/* Optical Highlights */}
           <div className="lens-specular" />
@@ -261,6 +306,48 @@ export const Loupe: React.FC<LoupeProps> = ({
           );
           mix-blend-mode: overlay;
           z-index: 20;
+        }
+
+        /* Night pages: the lens is a warm flashlight beam */
+        .loupe-wrapper.night .loupe-bezel {
+          box-shadow:
+            0 0 28px rgba(255, 214, 140, 0.45),
+            0 12px 32px rgba(0, 0, 0, 0.45),
+            inset 0 1px 2px rgba(255, 255, 255, 0.6),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .lens-night-vignette {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 19;
+          background: radial-gradient(circle, rgba(255, 226, 160, 0.14) 0%, rgba(255, 226, 160, 0.05) 45%, rgba(10, 16, 38, 0.45) 100%);
+        }
+
+        /* Fogged loupe after spamming clicks */
+        .loupe-wrapper.fogged .loupe-zoom-stage {
+          filter: blur(5px) saturate(0.6);
+        }
+
+        .lens-fog {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 19;
+          background:
+            radial-gradient(circle at 35% 40%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 45%),
+            radial-gradient(circle at 70% 65%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 50%),
+            rgba(236, 240, 244, 0.55);
+          animation: fogClear 3s ease-in forwards;
+        }
+
+        @keyframes fogClear {
+          0% { opacity: 1; }
+          70% { opacity: 0.85; }
+          100% { opacity: 0; }
         }
 
         .lens-crosshair {

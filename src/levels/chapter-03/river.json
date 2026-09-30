@@ -9,31 +9,32 @@
   "storyClue": "Nơi những con thuyền bumboat ngày xưa tấp nập bốc dỡ hàng hóa. Dòng sông giờ là nhà của rái cá và chim bói cá — và của chú mèo thủy thủ khoác màu ngói, đang canh chừng từ trên mái nhà.",
   "objects": [
     {
-      "id": "pond-turtle",
-      "name": "Chú Rùa Nhỏ Bơi Sông",
-      "clue": "Chú rùa mai đốm nhuộm màu nước, ngoi đầu bơi sát mạn phải chiếc thuyền bumboat phía đông.",
+      "id": "river-monitor",
+      "name": "Kỳ Đà Bơi Sông",
+      "clue": "Chú kỳ đà nước bơi sát mạn phải chiếc thuyền bumboat phía đông, chỉ để lộ lưng và đầu.",
       "x": 0.832,
       "y": 0.668,
       "radius": 0.034,
       "score": 150,
-      "spriteType": "turtle",
+      "spriteType": "monitor-lizard",
       "scale": 0.55,
+      "rotation": 80,
       "camo": "chameleon",
-      "waterline": 0.55,
-      "foundText": "Chú rùa nước ngọt sống lâu năm dưới chân dòng sông lịch sử."
+      "foundText": "Kỳ đà nước bơi rất giỏi và có thể lặn dưới nước khá lâu."
     },
     {
-      "id": "white-dove",
-      "name": "Chim Bồ Câu Đậu Cầu Sắt",
-      "clue": "Chú chim bồ câu khoác màu thép, đậu trên đỉnh vòm khung sắt của cây cầu cổ.",
+      "id": "bridge-kite",
+      "name": "Diều Wau Mắc Cầu",
+      "clue": "Chiếc diều wau bulan mắc kẹt trên đỉnh vòm khung sắt của cây cầu cổ.",
       "x": 0.69,
       "y": 0.443,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "dove",
+      "spriteType": "kite",
       "scale": 0.5,
+      "rotation": 15,
       "camo": "chameleon",
-      "foundText": "Cây cầu lịch sử là nơi trú ngụ yêu thích của đàn chim bồ câu bến sông."
+      "foundText": "Diều wau bulan — chiếc diều trăng khuyết truyền thống — đã bay lạc tới tận bến sông."
     },
     {
       "id": "coin-pouch",
@@ -49,18 +50,17 @@
       "foundText": "Kho báu tiền xu từ các thương thuyền buôn bán gia vị ngày xưa cập bến."
     },
     {
-      "id": "spyglass",
-      "name": "Ống Nhòm Thuyền Trưởng",
-      "clue": "Ống nhòm viễn vọng bằng đồng nằm lẫn trên mui chiếc thuyền bumboat phía tây.",
+      "id": "boat-deerstalker",
+      "name": "Mũ Thám Tử Bỏ Quên",
+      "clue": "Chiếc mũ hai lưỡi trai của vị kiến trúc sư bị bỏ quên trên mui thuyền bumboat phía tây.",
       "x": 0.33,
       "y": 0.566,
       "radius": 0.032,
       "score": 100,
-      "spriteType": "spyglass",
+      "spriteType": "deerstalker",
       "scale": 0.5,
-      "rotation": 25,
       "camo": "ink",
-      "foundText": "Ống nhòm giúp hoa tiêu quan sát lòng sông mỗi khi thủy triều dâng."
+      "foundText": "Chiếc mũ vẫn còn ấm — vị kiến trúc sư vừa mới rời đi thôi!"
     },
     {
       "id": "bridge-kingfisher",
@@ -101,18 +101,18 @@
       "foundText": "Dấu mộc chứng thực bức tranh bến sông Singapore đã được khám phá."
     },
     {
-      "id": "secret-cat",
-      "name": "Chú Mèo Thủy Thủ",
-      "clue": "[BÍ MẬT] Chú mèo tam thể khoác màu ngói, ngồi oai vệ trên mái dãy nhà phố cổ Boat Quay bên trái.",
+      "id": "secret-civet",
+      "name": "Cầy Vòi Hương Trên Mái",
+      "clue": "[BÍ MẬT] Chú cầy vòi hương khoác màu ngói, nằm dài trên sườn mái dãy nhà phố cổ Boat Quay bên trái.",
       "x": 0.193,
       "y": 0.424,
       "radius": 0.028,
       "score": 300,
       "isSecret": true,
-      "spriteType": "cat",
-      "scale": 0.42,
+      "spriteType": "civet",
+      "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Chú mèo thủy thủ bắt chuột cừ khôi bảo vệ các kho hàng dọc bờ kè Boat Quay!"
+      "foundText": "Cầy vòi hương ngủ ngày trên mái nhà, đêm mới đi kiếm ăn — bắt gặp nó ban ngày quả là hiếm!"
     },
     {
       "id": "bonus-otter",

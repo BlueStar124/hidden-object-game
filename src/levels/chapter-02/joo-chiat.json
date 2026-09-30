@@ -20,10 +20,22 @@
       "scale": 0.5,
       "camo": "ink",
       "occluder": [
-        [0.5572, 0.6622],
-        [0.5726, 0.6632],
-        [0.5709, 0.6775],
-        [0.5605, 0.6772]
+        [
+          0.5572,
+          0.6622
+        ],
+        [
+          0.5726,
+          0.6632
+        ],
+        [
+          0.5709,
+          0.6775
+        ],
+        [
+          0.5605,
+          0.6772
+        ]
       ],
       "foundText": "Chú mèo khẽ ngáp dài và để lộ một đồng xu cổ giấu dưới đáy giỏ xe!"
     },
@@ -41,17 +53,17 @@
       "foundText": "Hương vị trà ô long hoa cúc thơm ngát của văn hóa ẩm thực Nyonya."
     },
     {
-      "id": "coin-pouch",
-      "name": "Túi Tiền Xu Cổ",
-      "clue": "Túi da thắt dây nhuốm màu tường, rơi sát chân cột hoa văn giữa ngôi nhà vàng và ngôi nhà xanh ngọc.",
+      "id": "nyonya-tiffin",
+      "name": "Cà Mèn Tingkat Nyonya",
+      "clue": "Chiếc cà mèn tingkat nhiều tầng nhuốm màu tường, đặt sát chân cột hoa văn giữa ngôi nhà vàng và ngôi nhà xanh ngọc.",
       "x": 0.672,
       "y": 0.686,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "coin-pouch",
+      "spriteType": "tiffin",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Những đồng tiền xu cổ thời kỳ giao thương buôn bán sầm uất tại eo biển Malacca."
+      "foundText": "Tầng trên cùng còn nguyên món bánh kueh lapis nhiều lớp của bà nội Peranakan!"
     },
     {
       "id": "brass-compass",
@@ -103,7 +115,11 @@
       "spriteType": "butterfly",
       "scale": 0.5,
       "camo": "ink",
-      "shy": { "period": 8, "offset": 2.4, "from": "above" },
+      "shy": {
+        "period": 8,
+        "offset": 2.4,
+        "from": "above"
+      },
       "foundText": "Bướm ngọc biểu tượng cho tình yêu và nghệ thuật thêu thùa Peranakan truyền thống!"
     },
     {
@@ -118,22 +134,26 @@
       "spriteType": "frog",
       "scale": 0.42,
       "camo": "ink",
-      "shy": { "period": 7.5, "offset": 4.1, "from": "below" },
+      "shy": {
+        "period": 7.5,
+        "offset": 4.1,
+        "from": "below"
+      },
       "foundText": "Ộp ộp! Sau cơn mưa rào, ống máng xối là nhà của chú ếch này."
     },
     {
-      "id": "bonus-moth",
-      "name": "Bướm Đêm Cửa Lá Sách",
-      "clue": "Chú bướm đêm xếp cánh trên cánh cửa lá sách tầng hai.",
+      "id": "bonus-sunbird",
+      "name": "Chim Hút Mật Ban Công",
+      "clue": "Chú chim hút mật đậu trên thanh cửa lá sách tầng hai.",
       "x": 0.585,
       "y": 0.475,
       "radius": 0.027,
       "score": 100,
       "isBonus": true,
-      "spriteType": "moth",
+      "spriteType": "sunbird",
       "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Họa tiết cánh bướm đêm khớp đến từng thanh lá sách!"
+      "foundText": "Chim hút mật hay làm tổ ngay ban công các dãy nhà phố, nơi có nhiều chậu hoa."
     },
     {
       "id": "bonus-snail",

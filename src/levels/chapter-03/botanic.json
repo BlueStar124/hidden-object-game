@@ -131,33 +131,33 @@
       "foundText": "Dưới cánh hạc giấy có dòng chữ: \"Cảm ơn thám tử đã đọc hết cuốn sổ của tôi.\""
     },
     {
-      "id": "bonus-kingfisher",
-      "name": "Bói Cá Tán Lá",
-      "clue": "Chú bói cá đậu trên cành cao của cây cổ thụ.",
+      "id": "bonus-pangolin",
+      "name": "Tê Tê Leo Cành",
+      "clue": "Chú tê tê leo lên cành cao của cây cổ thụ, cuộn đuôi quanh nhánh.",
       "x": 0.25,
       "y": 0.39,
       "radius": 0.026,
       "score": 100,
       "isBonus": true,
-      "spriteType": "kingfisher",
-      "scale": 0.42,
-      "flip": true,
+      "spriteType": "pangolin",
+      "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Chú bói cá đang ngắm hồ Swan Lake của vườn bách thảo."
+      "foundText": "Tê tê Sunda leo cây rất giỏi nhờ chiếc đuôi dài biết cuộn."
     },
     {
-      "id": "bonus-snail",
-      "name": "Ốc Sên Thảm Cỏ",
-      "clue": "Chú ốc sên chậm rãi bò trên thảm cỏ bên trái gốc cây.",
+      "id": "bonus-turtle",
+      "name": "Rùa Dạo Thảm Cỏ",
+      "clue": "Chú rùa nhỏ chậm rãi dạo bước trên thảm cỏ bên trái gốc cây.",
       "x": 0.115,
       "y": 0.625,
       "radius": 0.024,
       "score": 100,
       "isBonus": true,
-      "spriteType": "snail",
-      "scale": 0.38,
+      "spriteType": "turtle",
+      "scale": 0.4,
+      "rotation": 70,
       "camo": "ink",
-      "foundText": "Đi chậm để ngắm trọn vẻ đẹp khu vườn — chú ốc sên hiểu điều đó hơn ai hết."
+      "foundText": "Các hồ nước trong vườn bách thảo là nhà của nhiều chú rùa."
     }
   ]
 }

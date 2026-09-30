@@ -82,9 +82,64 @@ html, body, #root {
   z-index: 2;
   width: 100vw;
   height: 100vh;
+  /* Mobile browsers: the visible height, without the area behind the address bar */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+/* Night pages: the desk around the sketchbook dims too */
+.game-container.night-mode .app-wash {
+  filter: brightness(0.55) saturate(0.7) hue-rotate(-12deg);
+  transition: filter 0.8s ease;
+}
+
+.game-container.night-mode .botany-leaf {
+  opacity: 0.2;
+}
+
+/* Explore mode (case closed, still hunting critters) */
+.explore-banner {
+  position: absolute;
+  left: 50%;
+  top: 92px;
+  transform: translateX(-50%);
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100vw - 24px);
+  padding: 6px 6px 6px 14px;
+  border-radius: 999px;
+  background: rgba(240, 253, 244, 0.96);
+  border: 1px solid #86efac;
+  color: var(--emerald);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  animation: slideUp 0.3s ease;
+}
+
+.explore-done-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: var(--emerald);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .explore-banner {
+    top: 70px;
+    font-size: 11px;
+    padding: 4px 4px 4px 10px;
+  }
 }
 
 /* Screen shake effect on mistake */
@@ -104,6 +159,57 @@ html, body, #root {
   0% { transform: scale(0.5); opacity: 0; }
   50% { transform: scale(1.3); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Shared modal buttons (victory, time-up, album) */
+.btn-secondary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #fff;
+  border-color: rgba(43, 39, 33, 0.3);
+}
+
+.btn-primary {
+  flex: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  background: linear-gradient(180deg, #b3833b 0%, #9a6a3e 100%);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(154, 106, 62, 0.35);
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #c7954b 0%, #a97747 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(154, 106, 62, 0.45);
 }
 
 /* Badge pop (secret unlocked, all hidden critters spotted) */
@@ -174,6 +280,7 @@ html, body, #root {
   width: 100%;
   max-width: 920px;
   max-height: 88vh;
+  max-height: calc(100dvh - 32px);
   background: var(--paper-card);
   border: 1px solid var(--hairline);
   border-radius: 18px;
@@ -446,6 +553,58 @@ html, body, #root {
 
 .plate-card-critters.complete {
   color: var(--emerald);
+}
+
+/* Night variant of a page */
+.plate-night-btn {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid rgba(27, 36, 64, 0.35);
+  border-radius: 9px;
+  background: linear-gradient(135deg, #1b2440 0%, #28325a 100%);
+  color: #f4ecd0;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.plate-night-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 36, 64, 0.35);
+}
+
+.plate-night-btn.active {
+  box-shadow: 0 0 0 2px var(--gold);
+}
+
+.plate-night-btn.locked {
+  background: rgba(43, 39, 33, 0.06);
+  border-style: dashed;
+  border-color: var(--hairline);
+  color: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+.plate-night-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plate-night-critters {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  opacity: 0.85;
 }
 
 @media (max-width: 640px) {

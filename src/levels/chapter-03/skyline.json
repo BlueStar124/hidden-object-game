@@ -23,45 +23,44 @@
       "foundText": "Tầm nhìn bao quát cảng biển trung tâm của nhà hàng hải kỳ cựu."
     },
     {
-      "id": "emerald-butterfly",
-      "name": "Bướm Ngọc Lượn Sóng",
-      "clue": "Chú bướm ngọc nhuộm màu nước, dập dờn trên những vệt bóng cao ốc phản chiếu dưới vịnh bên trái.",
+      "id": "bay-jellyfish",
+      "name": "Sứa Trong Bóng Nước",
+      "clue": "Chú sứa trong suốt nhuộm màu những vệt bóng cao ốc phản chiếu dưới vịnh bên trái.",
       "x": 0.35,
       "y": 0.655,
       "radius": 0.034,
       "score": 120,
-      "spriteType": "butterfly",
-      "scale": 0.55,
-      "rotation": -10,
+      "spriteType": "jellyfish",
+      "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Cánh bướm phản chiếu ánh hoàng hôn rực rỡ trên mặt nước vịnh Marina."
+      "foundText": "Sứa có mặt trên Trái Đất từ hơn 500 triệu năm trước — lâu đời hơn cả khủng long!"
     },
     {
-      "id": "brass-compass",
-      "name": "La Bàn Quang Học",
-      "clue": "Chiếc la bàn đồng dập dềnh trên mặt nước, sát bên gian hàng thủy tinh pha lê phía phải.",
+      "id": "bay-paper-boat",
+      "name": "Thuyền Giấy Cạnh Gian Pha Lê",
+      "clue": "Chiếc thuyền giấy trôi dập dềnh sát gian hàng thủy tinh pha lê phía phải.",
       "x": 0.775,
       "y": 0.628,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "compass",
+      "spriteType": "paper-boat",
       "scale": 0.5,
       "camo": "chameleon",
-      "waterline": 0.62,
-      "foundText": "Thiết bị định vị quang học trên mặt nước của kiến trúc sư."
+      "waterline": 0.78,
+      "foundText": "Trên cánh buồm có dòng chữ: \"Đi tiếp về phía dòng sông\"."
     },
     {
-      "id": "white-dove",
-      "name": "Chim Bồ Câu Cảng Vịnh",
-      "clue": "Chú chim bồ câu trắng đậu trên cánh hoa sen của bảo tàng ArtScience, trắng như chính cánh hoa.",
+      "id": "lotus-heron",
+      "name": "Diệc Trên Cánh Sen",
+      "clue": "Chú diệc xám đứng trên cánh hoa sen của bảo tàng ArtScience, xám nhạt như chính cánh hoa.",
       "x": 0.463,
       "y": 0.528,
       "radius": 0.032,
       "score": 100,
-      "spriteType": "dove",
-      "scale": 0.5,
+      "spriteType": "heron",
+      "scale": 0.45,
       "camo": "ink",
-      "foundText": "Biểu tượng của tự do và hòa bình trên vịnh cảng hiện đại."
+      "foundText": "Diệc hay đứng một chân để đôi chân đỡ mất nhiệt."
     },
     {
       "id": "tower-monkey",
@@ -89,19 +88,19 @@
       "foundText": "Dấu triện xác nhận bức ký họa toàn cảnh Marina Bay Skyline hoàn thành."
     },
     {
-      "id": "secret-pocket-watch",
-      "name": "Đồng Hồ Thiên Văn Cổ",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ thiên văn chìm lộn ngược giữa bóng phản chiếu của tòa tháp Marina Bay Sands ở giữa.",
+      "id": "secret-hourglass",
+      "name": "Đồng Hồ Cát Lộn Ngược",
+      "clue": "[BÍ MẬT] Chiếc đồng hồ cát chìm lộn ngược giữa bóng phản chiếu của tòa tháp Marina Bay Sands ở giữa.",
       "x": 0.735,
       "y": 0.7,
       "radius": 0.032,
       "score": 300,
       "isSecret": true,
-      "spriteType": "pocket-watch",
-      "scale": 0.55,
+      "spriteType": "hourglass",
+      "scale": 0.5,
       "rotation": 180,
       "camo": "chameleon",
-      "foundText": "Đồng hồ thiên văn cổ dùng để quan trắc các chòm sao trên bầu trời đêm Singapore!"
+      "foundText": "Lộn ngược đồng hồ cát là thời gian bắt đầu lại — kiến trúc sư đang gợi ý điều gì chăng?"
     },
     {
       "id": "bonus-koi",
@@ -115,7 +114,11 @@
       "spriteType": "koi",
       "scale": 0.55,
       "camo": "ink",
-      "shy": { "period": 7, "offset": 5.3, "from": "jump" },
+      "shy": {
+        "period": 7,
+        "offset": 5.3,
+        "from": "jump"
+      },
       "foundText": "Một cú nhảy hoàn hảo — điểm 10 cho chú cá koi!"
     },
     {
@@ -133,19 +136,37 @@
       "foundText": "Bói cá — tay câu cá cừ khôi nhất vịnh Marina."
     },
     {
-      "id": "bonus-gecko",
-      "name": "Thạch Sùng Tháp Kính",
-      "clue": "Chú thạch sùng bám trên mặt kính tòa tháp Marina Bay Sands bên trái.",
-      "x": 0.655,
-      "y": 0.44,
-      "radius": 0.026,
+      "id": "bonus-hornbill",
+      "name": "Chim Mỏ Sừng Bay Ngang",
+      "clue": "Chú chim mỏ sừng bay qua bay lại trên bầu trời phía trên rừng cao ốc.",
+      "x": 0.14,
+      "y": 0.35,
+      "radius": 0.032,
       "score": 100,
       "isBonus": true,
-      "spriteType": "gecko",
-      "scale": 0.45,
-      "rotation": -15,
-      "camo": "chameleon",
-      "foundText": "Chú thạch sùng can đảm nhất Singapore — leo tới tầng 30 rồi!"
+      "spriteType": "hornbill",
+      "scale": 0.55,
+      "camo": "ink",
+      "roam": {
+        "path": [
+          [
+            0.14,
+            0.35
+          ],
+          [
+            0.3,
+            0.325
+          ],
+          [
+            0.46,
+            0.35
+          ]
+        ],
+        "period": 16,
+        "facing": "left",
+        "bob": true
+      },
+      "foundText": "Chim mỏ sừng vỗ cánh phành phạch rất to — nghe thấy trước khi nhìn thấy!"
     }
   ]
 }

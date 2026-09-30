@@ -48,31 +48,31 @@
       "foundText": "Cổ vật gốm sứ tinh xảo lưu giữ tro trầm hương thanh khiết hàng trăm năm."
     },
     {
-      "id": "golden-key",
-      "name": "Chìa Khóa Vàng Cổ",
-      "clue": "Chiếc chìa khóa khoác màu đất nung, nằm dọc theo những hàng ngói trên mái gian tiền điện.",
+      "id": "roof-red-envelope",
+      "name": "Bao Lì Xì Trên Mái Ngói",
+      "clue": "Chiếc bao lì xì đỏ lẫn vào màu ngói đất nung trên mái gian tiền điện.",
       "x": 0.415,
       "y": 0.445,
       "radius": 0.033,
       "score": 120,
-      "spriteType": "key",
-      "scale": 0.55,
-      "rotation": -30,
+      "spriteType": "red-envelope",
+      "scale": 0.5,
+      "rotation": -20,
       "camo": "chameleon",
-      "foundText": "Chìa khóa mở khóa bảo tháp xá lợi vàng rực rỡ."
+      "foundText": "Bên trong bao lì xì là mảnh giấy ghi mật mã \"8 – 8 – 8\"… con số may mắn!"
     },
     {
-      "id": "playful-puppy",
-      "name": "Chú Cún Con Vàng",
-      "clue": "Chú cún nhỏ ngồi ngoan ngoãn giữa những bậc thềm bên trái, cạnh các nhà sư áo cam.",
+      "id": "fortune-cat",
+      "name": "Mèo Thần Tài Bên Thềm",
+      "clue": "Chú mèo thần tài nhỏ ngồi giữa những bậc thềm bên trái, cạnh các nhà sư áo cam.",
       "x": 0.284,
       "y": 0.668,
       "radius": 0.035,
       "score": 100,
-      "spriteType": "dog",
-      "scale": 0.55,
+      "spriteType": "fortune-cat",
+      "scale": 0.5,
       "camo": "ink",
-      "foundText": "Chú cún con vẫy đuôi mừng rỡ, ngậm trong miệng một phong thư nhỏ!"
+      "foundText": "Mèo thần tài vẫy tay chào — Chinatown luôn đón khách bằng may mắn!"
     },
     {
       "id": "artist-seal",
@@ -112,7 +112,11 @@
       "spriteType": "mouse",
       "scale": 0.45,
       "camo": "ink",
-      "shy": { "period": 6.5, "offset": 3.2, "from": "below" },
+      "shy": {
+        "period": 6.5,
+        "offset": 3.2,
+        "from": "below"
+      },
       "foundText": "Chú chuột nhắt nhà chùa ăn chay trường, chỉ thích hạt sen!"
     },
     {
@@ -130,19 +134,19 @@
       "foundText": "Chú nhện chăm chỉ dệt lưới dưới mái chùa suốt trăm năm."
     },
     {
-      "id": "bonus-gecko",
-      "name": "Tắc Kè Cửa Lớn",
-      "clue": "Chú tắc kè bám trên cánh cửa gỗ lớn của bảo tháp.",
+      "id": "bonus-stick-insect",
+      "name": "Bọ Que Khung Cửa",
+      "clue": "Chú bọ que giả làm một thanh gỗ trên khung cánh cửa lớn của bảo tháp.",
       "x": 0.708,
       "y": 0.607,
       "radius": 0.027,
       "score": 100,
       "isBonus": true,
-      "spriteType": "gecko",
-      "scale": 0.45,
-      "rotation": -10,
+      "spriteType": "stick-insect",
+      "scale": 0.5,
+      "rotation": -50,
       "camo": "chameleon",
-      "foundText": "Người xưa tin rằng tắc kè kêu trước cửa là điềm lành."
+      "foundText": "Bọ que nằm im đến mức các nhà sư tưởng đó là một mẩu gỗ vụn!"
     }
   ]
 }

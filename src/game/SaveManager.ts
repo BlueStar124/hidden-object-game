@@ -19,6 +19,7 @@ const DEFAULT_PROGRESS: GameProgress = {
   unlockedLoupes: ['classic-brass'],
   activeLoupeSkin: 'classic-brass',
   settings: DEFAULT_SETTINGS,
+  discovered: {},
 };
 
 export class SaveManager {
@@ -90,5 +91,27 @@ export class SaveManager {
   public static getSceneProgress(sceneId: string): SceneResult | undefined {
     const current = this.load();
     return current.sceneResults[sceneId];
+  }
+
+  /** Remembers a find straight away, even if the page is never finished. */
+  public static recordDiscovery(levelId: string, objectId: string): void {
+    const current = this.load();
+    const seen = current.discovered[levelId] || [];
+    if (seen.includes(objectId)) return;
+    this.save({
+      ...current,
+      discovered: { ...current.discovered, [levelId]: [...seen, objectId] },
+    });
+  }
+
+  /** All object ids ever spotted on a level (older saves only kept the bonus critters). */
+  public static getDiscovered(levelId: string): string[] {
+    const current = this.load();
+    return Array.from(
+      new Set([
+        ...(current.discovered[levelId] || []),
+        ...(current.sceneResults[levelId]?.creaturesFound || []),
+      ])
+    );
   }
 }

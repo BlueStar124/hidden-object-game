@@ -24,4 +24,6 @@ export interface GameProgress {
   unlockedLoupes: string[];
   activeLoupeSkin: string;
   settings: PlayerSettings;
+  // Every object ever spotted, per level id — feeds the "Sổ Tay Sinh Vật" album
+  discovered: Record<string, string[]>;
 }

@@ -9,31 +9,30 @@
   "storyClue": "Con đường trên không OCBC Skyway kết nối những thân cây khổng lồ. Muông thú ở đây là bậc thầy ngụy trang: chúng đổi màu theo lớp dây leo, nấp sau thân cây và lẫn vào giữa các nhánh thép.",
   "objects": [
     {
-      "id": "detective-owl",
-      "name": "Chú Cú Mèo Thám Tử",
-      "clue": "Chú cú mèo khoác màu nhánh thép, nép mình quan sát trong lòng tán siêu cây phía đông.",
+      "id": "canopy-hornbill",
+      "name": "Chim Mỏ Sừng Trên Siêu Cây",
+      "clue": "Chú chim mỏ sừng khoác màu nhánh thép, đậu trong lòng tán siêu cây phía đông — chỉ chiếc mỏ to bè là khó giấu.",
       "x": 0.668,
       "y": 0.415,
       "radius": 0.04,
       "score": 150,
-      "spriteType": "owl",
-      "scale": 0.75,
+      "spriteType": "hornbill",
+      "scale": 0.65,
       "camo": "chameleon",
-      "foundText": "Chú cú mèo tinh tường khẽ chớp mắt, dẫn lối thám tử đến manh mối tiếp theo!"
+      "foundText": "Chim mỏ sừng Phương Đông đã tự quay về Singapore sau hàng chục năm vắng bóng!"
     },
     {
-      "id": "emerald-butterfly",
-      "name": "Bướm Ngọc Nhiệt Đới",
-      "clue": "Cánh bướm ngọc đậu lặng giữa những nhánh thép chằng chịt của tán siêu cây bên trái.",
+      "id": "canopy-sunbird",
+      "name": "Chim Hút Mật Tí Hon",
+      "clue": "Chú chim hút mật với chiếc mỏ cong đậu giữa những nhánh thép chằng chịt của tán siêu cây bên trái.",
       "x": 0.31,
       "y": 0.37,
       "radius": 0.035,
       "score": 120,
-      "spriteType": "butterfly",
+      "spriteType": "sunbird",
       "scale": 0.6,
-      "rotation": 15,
       "camo": "ink",
-      "foundText": "Loài bướm ngọc quý hiếm chỉ xuất hiện tại những khu vườn sinh thái nguyên sơ."
+      "foundText": "Chim hút mật lưng ô liu — một trong những loài chim quen thuộc nhất của các khu vườn Singapore."
     },
     {
       "id": "spyglass",
@@ -101,44 +100,64 @@
       "flip": true,
       "camo": "chameleon",
       "occluder": [
-        [0.25, 0.56],
-        [0.2815, 0.56],
-        [0.2845, 0.6],
-        [0.2885, 0.65],
-        [0.2935, 0.68],
-        [0.2965, 0.695],
-        [0.25, 0.695]
+        [
+          0.25,
+          0.56
+        ],
+        [
+          0.2815,
+          0.56
+        ],
+        [
+          0.2845,
+          0.6
+        ],
+        [
+          0.2885,
+          0.65
+        ],
+        [
+          0.2935,
+          0.68
+        ],
+        [
+          0.2965,
+          0.695
+        ],
+        [
+          0.25,
+          0.695
+        ]
       ],
       "foundText": "Bạn đã tìm ra chú sóc tinh nghịch trao cho chiếc hạt dẻ khắc mật mã cổ!"
     },
     {
-      "id": "bonus-ladybug",
-      "name": "Bọ Rùa Trên Cầu Treo",
-      "clue": "Chú bọ rùa tí hon bò dọc lan can cầu treo.",
+      "id": "bonus-mantis",
+      "name": "Bọ Ngựa Trên Lan Can",
+      "clue": "Chú bọ ngựa xanh rình mồi trên lan can cầu treo.",
       "x": 0.555,
       "y": 0.472,
       "radius": 0.026,
       "score": 100,
       "isBonus": true,
-      "spriteType": "ladybug",
-      "scale": 0.4,
-      "rotation": 80,
+      "spriteType": "mantis",
+      "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Bọ rùa mang lại may mắn cho mọi thám tử!"
+      "foundText": "Bọ ngựa đứng im như đang cầu nguyện — thật ra là đang rình mồi!"
     },
     {
-      "id": "bonus-snail",
-      "name": "Ốc Sên Bệ Đá",
-      "clue": "Chú ốc sên chậm rãi bò trên thành bệ đá của siêu cây bên phải.",
+      "id": "bonus-pangolin",
+      "name": "Tê Tê Bên Bệ Cây",
+      "clue": "Chú tê tê nép sát thành bệ đá của siêu cây bên phải.",
       "x": 0.705,
       "y": 0.713,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "snail",
-      "scale": 0.45,
-      "camo": "ink",
-      "foundText": "Chậm mà chắc — chú ốc sên đã bò suốt đêm để ngắm siêu cây lên đèn."
+      "spriteType": "pangolin",
+      "scale": 0.5,
+      "camo": "chameleon",
+      "foundText": "Tê tê Sunda đang bị đe dọa nghiêm trọng — gặp được một chú là điều rất may mắn!"
     },
     {
       "id": "bonus-dragonfly",

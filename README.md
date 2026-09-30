@@ -69,6 +69,41 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 
 ---
 
+## 🌙 Phiên Bản 0.3 — Trang Đêm, Sổ Tay Sinh Vật & Tối Ưu Mobile
+
+- **22 hình vẽ mới, bớt trùng lặp:** diệc xám, chim mỏ sừng, tê tê, kỳ đà nước, sứa, cá ngựa, bọ ngựa, đom đóm, cầy vòi hương, chim hút mật, culi, chồn bay, bọ que, sầu riêng, mèo thần tài, bao lì xì, cà mèn tingkat, xiên satay, diều wau bulan, máy ảnh cổ, đồng hồ cát, mũ thám tử. Tổng cộng 57 loại, mỗi loại xuất hiện tối đa 3 lần trên 12 trang.
+- **Sinh vật di chuyển (`roam`):** đom đóm, sứa, chim mỏ sừng bay qua lại, bao lì xì trôi sông… Phải bắt đúng chỗ nó đang ở.
+- **3 Trang Đêm** (Vườn Siêu Cây, Lau Pa Sat, Sông Singapore) — mở khóa khi hoàn thành trang ngày tương ứng. Kính lúp thành **đèn pin**, trang tối om, chỉ có đèn trang trí và **mắt thú phát sáng** giúp định hướng.
+- **Tiếng kêu riêng** cho từng con vật/đồ vật khi tìm thấy (meo, ộp ộp, tiếng "chắc chắc" của thạch sùng, tiếng sứ ting…), tổng hợp bằng Web Audio.
+- **Sổ Tay Sinh Vật:** bộ sưu tập mọi loài & cổ vật từng phát hiện, kèm kiến thức thú vị và các trang có loài đó.
+- **Soi Tiếp:** thắng màn rồi vẫn có thể soi tìm nốt sinh vật/bí mật còn sót (không tính giờ, không trừ điểm, vẫn ghi vào Sổ Tay).
+- **Chống click bừa:** click sai 4 lần trong 3 giây thì kính lúp mờ hơi nước 3 giây.
+- **Màn hình Hết Giờ** (trước đây hết giờ game đứng yên, không báo gì).
+- **Mobile:**
+  - Modal mở đầu có nút bắt đầu luôn cố định ở đáy, phần nội dung cuộn được (trước đây bị đẩy khỏi màn hình). Màn chiến thắng cũng vậy.
+  - Điện thoại dọc tự phóng to trang sách 2.2× (vuốt ngang để xem), điện thoại ngang 1.6×; có nút phóng to/thu nhỏ (1×–3×).
+  - Kéo kính lúp sát mép màn hình thì trang tự cuộn theo.
+  - HUD và bảng manh mối gọn lại cho màn nhỏ; dùng `100dvh` để không bị thanh địa chỉ che.
+
+### Trường mới trong file màn chơi
+
+```jsonc
+{
+  "roam": {
+    "path": [[0.46, 0.63], [0.5, 0.6], [0.55, 0.61]], // đường đi (tọa độ chuẩn hóa)
+    "period": 14,        // giây cho một vòng
+    "loop": true,        // true: đi vòng khép kín; false: đi rồi quay lại
+    "facing": "left",    // hướng hình vẽ gốc, sprite tự quay theo hướng đi
+    "bob": true          // nhấp nhô khi bay
+  },
+  "glow": false          // trang đêm: tắt mắt phát sáng cho riêng vật này
+}
+```
+
+Trang đêm là một file riêng trong `src/levels/night/` với `"isNight": true`, `"dayId"` (id trang ngày) và `"nightLights"` (danh sách `{ x, y, r, color }` các đèn trang trí).
+
+---
+
 ## 🛠️ Cài Đặt & Chạy Game
 
 ```bash

@@ -1,3 +1,6 @@
+import { SpriteType } from '../types/level';
+import { playCreatureVoice } from './CreatureVoices';
+
 /**
  * Web Audio API synthesized sound generator.
  * Provides instant, zero-latency tactile audio feedback without needing external MP3s.
@@ -151,6 +154,35 @@ class AudioManager {
 
     noise.start(now);
     noise.stop(now + 0.45);
+  }
+
+  // The found creature / object answers with its own little sound, just after the chime
+  public playVoice(type?: SpriteType) {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.ctx || !this.masterGain) return;
+    playCreatureVoice(this.ctx, this.masterGain, type, this.ctx.currentTime + 0.22);
+  }
+
+  // Loupe fogs up after a burst of random clicks: a soft, sinking breath of air
+  public playFog() {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.ctx || !this.masterGain) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(180, now + 0.6);
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.exponentialRampToValueAtTime(0.14, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(now);
+    osc.stop(now + 0.65);
   }
 
   // Playful double chirp when an optional hidden critter is spotted

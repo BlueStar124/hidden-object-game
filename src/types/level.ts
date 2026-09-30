@@ -35,7 +35,31 @@ export type SpriteType =
   | 'dragonfly'
   | 'spider'
   | 'paper-crane'
-  | 'paper-boat';
+  | 'paper-boat'
+  // Động vật hoang dã Singapore
+  | 'heron'
+  | 'hornbill'
+  | 'pangolin'
+  | 'monitor-lizard'
+  | 'jellyfish'
+  | 'seahorse'
+  | 'mantis'
+  | 'firefly'
+  | 'civet'
+  | 'sunbird'
+  | 'slow-loris'
+  | 'colugo'
+  | 'stick-insect'
+  // Đồ vật văn hóa & thám tử
+  | 'durian'
+  | 'fortune-cat'
+  | 'red-envelope'
+  | 'tiffin'
+  | 'satay'
+  | 'kite'
+  | 'vintage-camera'
+  | 'hourglass'
+  | 'deerstalker';
 
 /**
  * How an unfound object blends into the watercolor painting.
@@ -50,6 +74,16 @@ export interface ShyBehavior {
   period: number; // Seconds for one hide → peek → hide cycle
   offset?: number; // Seconds to shift the cycle so shy creatures don't move in sync
   from?: 'below' | 'left' | 'right' | 'above' | 'jump'; // Where it hides ('jump' = leaps out in an arc)
+}
+
+/** A roaming creature keeps moving along a path; it must be caught where it is right now. */
+export interface RoamBehavior {
+  path: [number, number][]; // Normalized spread coordinates, at least 2 points
+  period: number; // Seconds for one full trip (there and back, or once around a loop)
+  offset?: number; // Seconds to shift the trip so roamers don't move in sync
+  loop?: boolean; // true: closed loop back to the first point; false (default): ping-pong
+  facing?: 'left' | 'right'; // Direction the sprite is drawn facing; it turns to face its travel
+  bob?: boolean; // Gentle up-and-down flutter while moving (flying creatures)
 }
 
 export interface HiddenObject {
@@ -73,9 +107,20 @@ export interface HiddenObject {
   // so the object looks like it is tucked behind a pillar, trunk, railing...
   occluder?: [number, number][];
   shy?: ShyBehavior;
+  roam?: RoamBehavior;
   // For creatures in water: fraction of the sprite height (0-1) where the surface is;
   // everything below fades into the painting.
   waterline?: number;
+  // Night pages: eyes (and firefly lights) glow in the dark unless this is false
+  glow?: boolean;
+}
+
+/** Decorative light painted over a night page (lamps, supertree lights, windows). */
+export interface NightLight {
+  x: number;
+  y: number;
+  r: number; // Radius as a fraction of the spread width
+  color: string;
 }
 
 export interface LevelData {
@@ -88,6 +133,10 @@ export interface LevelData {
   timeLimit: number; // Seconds
   storyClue: string;
   objects: HiddenObject[];
+  // Night variant of a page: dark overlay, the loupe becomes a flashlight
+  isNight?: boolean;
+  dayId?: string; // Night pages: id of the day page they belong to
+  nightLights?: NightLight[];
 }
 
 export interface ChapterData {

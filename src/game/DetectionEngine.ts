@@ -1,10 +1,12 @@
 import { HiddenObject } from '../types/level';
-import { isShyVisible } from './ShyClock';
+import { isShyVisible, objectPosition } from './CreatureMotion';
 
 export interface DetectionResult {
   hit: boolean;
   object?: HiddenObject;
   distance: number;
+  // Where the hit object was caught (roaming creatures move, so this differs from obj.x/y)
+  position?: { x: number; y: number };
   // A shy creature was right here but is currently hiding — not a mistake, just bad timing.
   hidingObject?: HiddenObject;
 }
@@ -26,6 +28,7 @@ export function detectObject(
   let closestObject: HiddenObject | undefined = undefined;
   let minDistance = Infinity;
   let hitObject: HiddenObject | undefined = undefined;
+  let hitPosition: { x: number; y: number } | undefined = undefined;
   let hitDistance = Infinity;
   let hidingObject: HiddenObject | undefined = undefined;
 
@@ -33,8 +36,9 @@ export function detectObject(
     if (foundIds.includes(obj.id)) continue;
 
     // Euclidean distance in aspect-corrected space
-    const dx = (nx - obj.x) * ASPECT_RATIO;
-    const dy = ny - obj.y;
+    const pos = objectPosition(obj, now);
+    const dx = (nx - pos.x) * ASPECT_RATIO;
+    const dy = ny - pos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance < minDistance) {
@@ -52,11 +56,12 @@ export function detectObject(
     if (distance < hitDistance) {
       hitDistance = distance;
       hitObject = obj;
+      hitPosition = pos;
     }
   }
 
   if (hitObject) {
-    return { hit: true, object: hitObject, distance: hitDistance };
+    return { hit: true, object: hitObject, distance: hitDistance, position: hitPosition };
   }
 
   return {

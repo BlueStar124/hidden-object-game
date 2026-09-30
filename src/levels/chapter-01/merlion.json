@@ -108,18 +108,18 @@
       "foundText": "La bàn cổ của thuyền trưởng hải tặc từng khám phá eo biển Malacca!"
     },
     {
-      "id": "bonus-crab",
-      "name": "Cua Cầu Tàu",
-      "clue": "Chú cua nhỏ bò giữa những cột neo trên cầu tàu.",
-      "x": 0.742,
-      "y": 0.742,
-      "radius": 0.027,
+      "id": "bonus-seahorse",
+      "name": "Cá Ngựa Dưới Nước",
+      "clue": "Chú cá ngựa tí hon nép trong làn nước bên trái cầu tàu.",
+      "x": 0.575,
+      "y": 0.73,
+      "radius": 0.026,
       "score": 100,
       "isBonus": true,
-      "spriteType": "crab",
-      "scale": 0.45,
+      "spriteType": "seahorse",
+      "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Chú cua lạc đường đang tìm lối về biển."
+      "foundText": "Cá ngựa bơi thẳng đứng và dùng đuôi bám vào rong rêu để khỏi bị cuốn trôi."
     },
     {
       "id": "bonus-ladybug",
@@ -137,19 +137,18 @@
       "foundText": "Hóa ra \"dấu chấm\" trên trang giấy lại biết bò!"
     },
     {
-      "id": "bonus-gecko",
-      "name": "Thạch Sùng Vảy Cá",
-      "clue": "Chú thạch sùng bám trên lớp vảy cá của tượng Merlion.",
+      "id": "bonus-spider",
+      "name": "Nhện Trên Vảy Merlion",
+      "clue": "Chú nhện tí hon giăng tơ trên lớp vảy cá của tượng Merlion.",
       "x": 0.818,
       "y": 0.528,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "gecko",
-      "scale": 0.45,
-      "rotation": -25,
+      "spriteType": "spider",
+      "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Chú thạch sùng tự hào vì có bộ vảy \"giống\" Merlion nhất đảo quốc."
+      "foundText": "Tượng Merlion cao 8,6 m — với chú nhện này thì đó là cả một ngọn núi!"
     }
   ]
 }

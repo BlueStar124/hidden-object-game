@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { GameState } from '../types/game';
 import { HiddenObject, LevelData } from '../types/level';
-import { ALL_SCENES, ALL_CHAPTERS, getChapterBySceneIndex } from '../levels/chapters';
+import { ALL_SCENES, ALL_CHAPTERS, NIGHT_BY_DAY_ID, getChapterBySceneIndex } from '../levels/chapters';
 import { createInitialGameState, isMainObject } from '../game/GameState';
 import { detectObject } from '../game/DetectionEngine';
 import { ScoreEngine } from '../game/ScoreEngine';
@@ -17,9 +17,20 @@ export interface FloatingNotification {
   variant?: 'score' | 'info';
 }
 
+// Anti-spam: this many wrong clicks within the window fogs up the loupe for a moment
+const FOG_MISSES = 4;
+const FOG_WINDOW_MS = 3000;
+const FOG_DURATION_MS = 3000;
+
+function resolveLevel(index: number, night: boolean): LevelData {
+  const day = ALL_SCENES[index];
+  return (night && NIGHT_BY_DAY_ID[day.id]) || day;
+}
+
 export function useGame() {
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
-  const currentLevel: LevelData = ALL_SCENES[currentSceneIndex];
+  const [isNight, setIsNight] = useState(false);
+  const currentLevel: LevelData = resolveLevel(currentSceneIndex, isNight);
   const chapter = getChapterBySceneIndex(currentSceneIndex);
 
   const [gameState, setGameState] = useState<GameState>(() =>
@@ -31,8 +42,13 @@ export function useGame() {
   const [floatingScores, setFloatingScores] = useState<FloatingNotification[]>([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [showPrologue, setShowPrologue] = useState(true);
+  const [showNightIntro, setShowNightIntro] = useState(false);
+  const [fogUntil, setFogUntil] = useState(0);
+  const [unlockedNight, setUnlockedNight] = useState<string | null>(null);
 
   const lastLoupePos = useRef({ nx: 0.5, ny: 0.5 });
+  const recentMisses = useRef<number[]>([]);
+  const lastFogNotice = useRef(0);
 
   const showFloating = useCallback(
     (text: string, screenPos: { x: number; y: number }, variant: FloatingNotification['variant'] = 'score') => {
@@ -48,19 +64,38 @@ export function useGame() {
     []
   );
 
-  // Reset or switch scene
-  const loadScene = useCallback((index: number) => {
+  // Reset or switch scene (night: the page's night variant, if it has one)
+  const loadScene = useCallback((index: number, night: boolean = false) => {
     const validIndex = Math.max(0, Math.min(index, ALL_SCENES.length - 1));
-    const level = ALL_SCENES[validIndex];
+    const nightOn = night && !!NIGHT_BY_DAY_ID[ALL_SCENES[validIndex].id];
+    const level = resolveLevel(validIndex, nightOn);
     const ch = getChapterBySceneIndex(validIndex);
     setCurrentSceneIndex(validIndex);
+    setIsNight(nightOn);
     setGameState(createInitialGameState(level, ch.id));
     setIsTurning(false);
+    setFogUntil(0);
+    recentMisses.current = [];
+    setShowNightIntro(nightOn);
+    setUnlockedNight(null);
   }, []);
+
+  // Clear the fog once it has lifted, so the loupe re-renders clean
+  useEffect(() => {
+    if (!fogUntil) return;
+    const t = setTimeout(() => setFogUntil(0), Math.max(0, fogUntil - Date.now()));
+    return () => clearTimeout(t);
+  }, [fogUntil]);
 
   // Timer loop
   useEffect(() => {
-    if (gameState.isPaused || gameState.isCompleted || gameState.isGameOver || showPrologue) {
+    if (
+      gameState.isPaused ||
+      gameState.isCompleted ||
+      gameState.isGameOver ||
+      showPrologue ||
+      showNightIntro
+    ) {
       return;
     }
 
@@ -88,14 +123,53 @@ export function useGame() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameState.isPaused, gameState.isCompleted, gameState.isGameOver, showPrologue]);
+  }, [gameState.isPaused, gameState.isCompleted, gameState.isGameOver, showPrologue, showNightIntro]);
+
+  // After the case is closed: hunt the remaining critters & secret for the album (no score)
+  const inspectWhileExploring = useCallback(
+    (nx: number, ny: number, screenPos: { x: number; y: number }) => {
+      const leftovers = currentLevel.objects.filter((o) => o.isBonus || o.isSecret);
+      const result = detectObject(nx, ny, leftovers, gameState.foundItems);
+
+      if (result.hit && result.object) {
+        const foundObj = result.object;
+        audioManager.playFound(1);
+        audioManager.playVoice(foundObj.spriteType);
+        SaveManager.recordDiscovery(currentLevel.id, foundObj.id);
+        showFloating(`${foundObj.name} · đã ghi vào Sổ Tay!`, screenPos, 'info');
+        setGameState((prev) => ({
+          ...prev,
+          foundItems: [...prev.foundItems, foundObj.id],
+          foundAt: result.position ? { ...prev.foundAt, [foundObj.id]: result.position } : prev.foundAt,
+          secretFound: foundObj.isSecret ? true : prev.secretFound,
+        }));
+      } else if (result.hidingObject) {
+        audioManager.playRustle();
+        showFloating('Suỵt… nó vừa trốn mất! Chờ nó ló ra nhé', screenPos, 'info');
+      }
+    },
+    [currentLevel, gameState.foundItems, showFloating]
+  );
 
   // Object Inspection / Click Handler
   const handleInspect = useCallback(
     (nx: number, ny: number, screenPos: { x: number; y: number }) => {
-      if (gameState.isPaused || gameState.isCompleted || isTurning) return;
+      if (gameState.isPaused || gameState.isGameOver || isTurning) return;
+      if (gameState.isCompleted) {
+        if (gameState.isExploring) inspectWhileExploring(nx, ny, screenPos);
+        return;
+      }
 
       lastLoupePos.current = { nx, ny };
+
+      // Fogged loupe: nothing can be inspected until it clears
+      if (Date.now() < fogUntil) {
+        if (Date.now() - lastFogNotice.current > 900) {
+          lastFogNotice.current = Date.now();
+          showFloating('Kính lúp còn mờ hơi nước…', screenPos, 'info');
+        }
+        return;
+      }
 
       const result = detectObject(
         nx,
@@ -106,10 +180,12 @@ export function useGame() {
 
       if (result.hit && result.object) {
         const foundObj = result.object;
+        recentMisses.current = [];
 
         // Sound & Score
         audioManager.playFound(gameState.combo);
-        if (foundObj.isBonus) audioManager.playCreature();
+        audioManager.playVoice(foundObj.spriteType);
+        SaveManager.recordDiscovery(currentLevel.id, foundObj.id);
 
         const { earnedScore, newScore, combo } = ScoreEngine.calculateFoundScore(
           foundObj.score,
@@ -121,62 +197,85 @@ export function useGame() {
         const tag = foundObj.isBonus ? ' · Sinh vật ẩn!' : foundObj.isSecret ? ' · Bí mật!' : '';
         showFloating(`+${earnedScore}${combo > 1 ? ` (×${combo})` : ''}${tag}`, screenPos);
 
-        setGameState((prev) => {
-          const updatedFound = [...prev.foundItems, foundObj.id];
-          const normalObjects = currentLevel.objects.filter(isMainObject);
-          const allNormalFound = normalObjects.every((o) => updatedFound.includes(o.id));
+        // Clicks are discrete events, so this render's state is current; side effects stay out
+        // of the state updater (StrictMode may run updaters twice)
+        const updatedFound = [...gameState.foundItems, foundObj.id];
+        const foundAt = foundObj.roam && result.position
+          ? { ...gameState.foundAt, [foundObj.id]: result.position }
+          : gameState.foundAt;
+        const allNormalFound = currentLevel.objects
+          .filter(isMainObject)
+          .every((o) => updatedFound.includes(o.id));
 
-          if (allNormalFound) {
-            // Victory!
-            audioManager.playVictory();
-            const { timeBonus, stars } = ScoreEngine.calculateCompletionBonus(
-              prev.remainingTime,
-              prev.mistakes,
-              prev.hintsUsed
-            );
+        if (allNormalFound) {
+          // Victory!
+          audioManager.playVictory();
+          const { timeBonus, stars } = ScoreEngine.calculateCompletionBonus(
+            gameState.remainingTime,
+            gameState.mistakes,
+            gameState.hintsUsed
+          );
 
-            const nextScene = ALL_SCENES[currentSceneIndex + 1];
-            const bonusFound = currentLevel.objects
-              .filter((o) => o.isBonus && updatedFound.includes(o.id))
-              .map((o) => o.id);
-            SaveManager.recordSceneVictory(
-              currentLevel.id,
-              nextScene ? nextScene.id : null,
-              newScore + timeBonus,
-              stars,
-              currentLevel.timeLimit - prev.remainingTime,
-              bonusFound
-            );
+          const wasPassed = (SaveManager.getSceneProgress(currentLevel.id)?.stars ?? 0) > 0;
+          const nextScene = ALL_SCENES[currentSceneIndex + 1];
+          const bonusFound = currentLevel.objects
+            .filter((o) => o.isBonus && updatedFound.includes(o.id))
+            .map((o) => o.id);
+          SaveManager.recordSceneVictory(
+            currentLevel.id,
+            nextScene ? nextScene.id : null,
+            newScore + timeBonus,
+            stars,
+            currentLevel.timeLimit - gameState.remainingTime,
+            bonusFound
+          );
 
-            return {
-              ...prev,
-              foundItems: updatedFound,
-              secretFound: foundObj.isSecret ? true : prev.secretFound,
-              score: newScore + timeBonus,
-              combo: combo + 1,
-              comboTimer: 6,
-              isCompleted: true,
-              activeHint: null,
-            };
-          }
+          // First clear of a day page opens its night variant
+          const night = currentLevel.isNight ? undefined : NIGHT_BY_DAY_ID[currentLevel.id];
+          setUnlockedNight(!wasPassed && night ? night.title : null);
 
-          return {
+          setGameState((prev) => ({
             ...prev,
             foundItems: updatedFound,
+            foundAt,
+            secretFound: foundObj.isSecret ? true : prev.secretFound,
+            score: newScore + timeBonus,
+            combo: combo + 1,
+            comboTimer: 6,
+            isCompleted: true,
+            activeHint: null,
+          }));
+        } else {
+          setGameState((prev) => ({
+            ...prev,
+            foundItems: updatedFound,
+            foundAt,
             secretFound: foundObj.isSecret ? true : prev.secretFound,
             score: newScore,
             combo: combo + 1,
             comboTimer: 6,
             activeHint: null,
-          };
-        });
+          }));
+        }
       } else if (result.hidingObject) {
         // Right spot, wrong moment: the shy creature has ducked out of sight
         audioManager.playRustle();
         showFloating('Suỵt… nó vừa trốn mất! Chờ nó ló ra nhé', screenPos, 'info');
       } else {
         // Wrong Click
-        audioManager.playWrong();
+        const now = Date.now();
+        recentMisses.current = [...recentMisses.current.filter((t) => now - t < FOG_WINDOW_MS), now];
+        const fogged = recentMisses.current.length >= FOG_MISSES;
+
+        if (fogged) {
+          recentMisses.current = [];
+          setFogUntil(now + FOG_DURATION_MS);
+          lastFogNotice.current = now;
+          audioManager.playFog();
+          showFloating('Kính lúp mờ hơi nước! Bình tĩnh quan sát nào…', screenPos, 'info');
+        } else {
+          audioManager.playWrong();
+        }
         setScreenShake(true);
         setTimeout(() => setScreenShake(false), 350);
 
@@ -189,12 +288,12 @@ export function useGame() {
         }));
       }
     },
-    [gameState, currentLevel, isTurning, currentSceneIndex, showFloating]
+    [gameState, currentLevel, isTurning, currentSceneIndex, showFloating, fogUntil, inspectWhileExploring]
   );
 
   // Use Hint
   const handleUseHint = useCallback(() => {
-    if (gameState.isCompleted || gameState.isPaused) return;
+    if (gameState.isCompleted || gameState.isPaused || gameState.isGameOver) return;
 
     const currentHintLvl = gameState.activeHint?.level || 0;
     const hint = HintEngine.generateHint(
@@ -221,7 +320,7 @@ export function useGame() {
     }));
   }, [gameState, currentLevel]);
 
-  // Turn page to next level
+  // Turn page to next level (a night page continues with the next day page)
   const handleNextScene = useCallback(() => {
     if (currentSceneIndex >= ALL_SCENES.length - 1) {
       // Reached the end of all 9 scenes
@@ -246,28 +345,28 @@ export function useGame() {
 
   // Turn page to previous level
   const handlePrevScene = useCallback(() => {
-    if (currentSceneIndex <= 0) return;
+    if (currentSceneIndex <= 0 && !isNight) return;
 
-    const prevIndex = currentSceneIndex - 1;
+    const prevIndex = isNight ? currentSceneIndex : currentSceneIndex - 1;
     setIsTurning(true);
     audioManager.playPageTurn();
 
     setTimeout(() => {
       loadScene(prevIndex);
     }, 900);
-  }, [currentSceneIndex, loadScene]);
+  }, [currentSceneIndex, isNight, loadScene]);
 
   // Direct select scene from Plate Selector / Index
   const handleSelectScene = useCallback(
-    (index: number) => {
-      if (index === currentSceneIndex) return;
+    (index: number, night: boolean = false) => {
+      if (index === currentSceneIndex && night === isNight) return;
       setIsTurning(true);
       audioManager.playPageTurn();
       setTimeout(() => {
-        loadScene(index);
+        loadScene(index, night);
       }, 600);
     },
-    [currentSceneIndex, loadScene]
+    [currentSceneIndex, isNight, loadScene]
   );
 
   const handleToggleSound = useCallback(() => {
@@ -280,10 +379,15 @@ export function useGame() {
     setGameState((prev) => ({ ...prev, isPaused: !prev.isPaused }));
   }, []);
 
+  const handleExplore = useCallback((exploring: boolean) => {
+    setGameState((prev) => (prev.isCompleted ? { ...prev, isExploring: exploring } : prev));
+  }, []);
+
   return {
     chapter,
     currentLevel,
     currentSceneIndex,
+    isNight,
     totalScenes: ALL_SCENES.length,
     allScenes: ALL_SCENES,
     allChapters: ALL_CHAPTERS,
@@ -294,6 +398,11 @@ export function useGame() {
     soundEnabled,
     showPrologue,
     setShowPrologue,
+    showNightIntro,
+    setShowNightIntro,
+    isFogged: fogUntil > 0,
+    unlockedNight,
+    nightByDayId: NIGHT_BY_DAY_ID,
     handleInspect,
     handleUseHint,
     handleNextScene,
@@ -301,6 +410,7 @@ export function useGame() {
     handleSelectScene,
     handleToggleSound,
     handleTogglePause,
-    handleReplay: () => loadScene(currentSceneIndex),
+    handleExplore,
+    handleReplay: () => loadScene(currentSceneIndex, isNight),
   };
 }

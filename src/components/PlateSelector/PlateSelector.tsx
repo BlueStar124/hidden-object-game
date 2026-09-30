@@ -1,22 +1,45 @@
 import React from 'react';
-import { X, BookOpen, CheckCircle, Star, PawPrint } from 'lucide-react';
+import { X, BookOpen, CheckCircle, Star, PawPrint, Moon, Lock } from 'lucide-react';
 import { LevelData, ChapterData } from '../../types/level';
 import { SaveManager } from '../../game/SaveManager';
 
 interface PlateSelectorProps {
   isOpen: boolean;
   currentIndex: number;
+  isNight: boolean;
   allScenes: LevelData[];
   allChapters: ChapterData[];
-  onSelectScene: (index: number) => void;
+  nightByDayId: Record<string, LevelData>;
+  onSelectScene: (index: number, night?: boolean) => void;
   onClose: () => void;
+}
+
+const Stars: React.FC<{ count: number }> = ({ count }) => (
+  <>
+    {[...Array(3)].map((_, i) => (
+      <Star
+        key={i}
+        size={12}
+        fill={i < count ? '#f59e0b' : 'transparent'}
+        stroke={i < count ? '#f59e0b' : '#9ca3af'}
+      />
+    ))}
+  </>
+);
+
+function critterProgress(level: LevelData) {
+  const seen = new Set(SaveManager.getDiscovered(level.id));
+  const ids = level.objects.filter((o) => o.isBonus).map((o) => o.id);
+  return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
 }
 
 export const PlateSelector: React.FC<PlateSelectorProps> = ({
   isOpen,
   currentIndex,
+  isNight,
   allScenes,
   allChapters,
+  nightByDayId,
   onSelectScene,
   onClose,
 }) => {
@@ -35,7 +58,7 @@ export const PlateSelector: React.FC<PlateSelectorProps> = ({
             <div>
               <h2 className="plate-modal-title">Mục Lục 9 Trang Ký Họa</h2>
               <p className="plate-modal-desc">
-                Chọn bất kỳ trang nào trong cuốn sổ tay để điều tra và tìm kiếm cổ vật
+                Chọn trang để điều tra · hoàn thành trang ngày để mở khóa 🌙 trang đêm
               </p>
             </div>
           </div>
@@ -60,13 +83,15 @@ export const PlateSelector: React.FC<PlateSelectorProps> = ({
                 <div className="plate-grid">
                   {chapterScenes.map((scene) => {
                     const sceneGlobalIdx = allScenes.findIndex((s) => s.id === scene.id);
-                    const isCurrent = sceneGlobalIdx === currentIndex;
+                    const isCurrent = sceneGlobalIdx === currentIndex && !isNight;
                     const progress = SaveManager.getSceneProgress(scene.id);
                     const isPassed = Boolean(progress && progress.stars > 0);
-                    const critterIds = scene.objects.filter((o) => o.isBonus).map((o) => o.id);
-                    const crittersSpotted = critterIds.filter((id) =>
-                      progress?.creaturesFound?.includes(id)
-                    ).length;
+                    const critters = critterProgress(scene);
+
+                    const night = nightByDayId[scene.id];
+                    const nightProgress = night ? SaveManager.getSceneProgress(night.id) : undefined;
+                    const nightCritters = night ? critterProgress(night) : null;
+                    const isCurrentNight = sceneGlobalIdx === currentIndex && isNight;
 
                     return (
                       <div
@@ -104,14 +129,7 @@ export const PlateSelector: React.FC<PlateSelectorProps> = ({
                           <div className="plate-card-meta">
                             {progress ? (
                               <div className="plate-card-stars">
-                                {[...Array(3)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    size={12}
-                                    fill={i < progress.stars ? '#f59e0b' : 'transparent'}
-                                    stroke={i < progress.stars ? '#f59e0b' : '#9ca3af'}
-                                  />
-                                ))}
+                                <Stars count={progress.stars} />
                                 <span className="plate-card-score">
                                   {progress.highScore.toLocaleString('vi-VN')} đ
                                 </span>
@@ -119,18 +137,50 @@ export const PlateSelector: React.FC<PlateSelectorProps> = ({
                             ) : (
                               <span className="plate-card-unplayed">Chưa giải mã</span>
                             )}
-                            {critterIds.length > 0 && (
+                            {critters.total > 0 && (
                               <span
                                 className={`plate-card-critters ${
-                                  crittersSpotted === critterIds.length ? 'complete' : ''
+                                  critters.spotted === critters.total ? 'complete' : ''
                                 }`}
                                 title="Sinh vật ẩn nấp đã phát hiện trên trang này"
                               >
                                 <PawPrint size={11} />
-                                {crittersSpotted}/{critterIds.length}
+                                {critters.spotted}/{critters.total}
                               </span>
                             )}
                           </div>
+
+                          {night && (
+                            <button
+                              className={`plate-night-btn ${isPassed ? '' : 'locked'} ${
+                                isCurrentNight ? 'active' : ''
+                              }`}
+                              disabled={!isPassed}
+                              title={isPassed ? night.title : 'Hoàn thành trang ngày để mở khóa trang đêm'}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (!isPassed) return;
+                                onSelectScene(sceneGlobalIdx, true);
+                                onClose();
+                              }}
+                            >
+                              {isPassed ? <Moon size={13} /> : <Lock size={12} />}
+                              <span className="plate-night-name">
+                                {isPassed ? night.title : 'Trang Đêm · khóa'}
+                              </span>
+                              {isPassed && nightProgress && (
+                                <span className="plate-card-stars">
+                                  <Stars count={nightProgress.stars} />
+                                </span>
+                              )}
+                              {isPassed && nightCritters && nightCritters.total > 0 && (
+                                <span className="plate-night-critters">
+                                  <PawPrint size={10} />
+                                  {nightCritters.spotted}/{nightCritters.total}
+                                </span>
+                              )}
+                            </button>
+                          )}
                         </div>
                       </div>
                     );

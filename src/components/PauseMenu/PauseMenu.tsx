@@ -74,6 +74,8 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
         .pause-card {
           width: 100%;
           max-width: 400px;
+          max-height: calc(100dvh - 32px);
+          overflow-y: auto;
           background: var(--paper-card);
           border: 1px solid var(--hairline);
           border-radius: 16px;

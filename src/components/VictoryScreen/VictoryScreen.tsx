@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, ArrowRight, RotateCcw, Trophy, Sparkles, PawPrint } from 'lucide-react';
+import { Star, ArrowRight, RotateCcw, Trophy, Sparkles, PawPrint, ScanSearch, Moon } from 'lucide-react';
 import { LevelData } from '../../types/level';
 import { ObjectSprite } from '../Sprites/ObjectSprite';
 
@@ -14,8 +14,10 @@ interface VictoryScreenProps {
   isSecretFound: boolean;
   foundIds: string[];
   hasNextScene: boolean;
+  nightUnlocked?: string; // Title of the night page this victory just unlocked
   onNextScene: () => void;
   onReplay: () => void;
+  onExplore: () => void;
 }
 
 export const VictoryScreen: React.FC<VictoryScreenProps> = ({
@@ -29,11 +31,14 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
   isSecretFound,
   foundIds,
   hasNextScene,
+  nightUnlocked,
   onNextScene,
   onReplay,
+  onExplore,
 }) => {
   const critters = level.objects.filter((o) => o.isBonus);
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
+  const leftovers = level.objects.filter((o) => (o.isBonus || o.isSecret) && !foundIds.includes(o.id)).length;
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -43,7 +48,8 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
 
   return (
     <div className="victory-overlay">
-      <div className="victory-card">
+      <div className="victory-card" role="dialog" aria-modal="true">
+        <div className="victory-scroll">
         {/* Header Icon */}
         <div className="victory-trophy">
           <Trophy size={42} />
@@ -100,9 +106,17 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
             </div>
             {crittersFound < critters.length && (
               <div className="critter-summary-note">
-                Vẫn còn sinh vật nấp trong tranh — chơi lại để soi kỹ hơn!
+                Vẫn còn sinh vật nấp trong tranh — bấm “Soi Tiếp” để tìm nốt cho Sổ Tay!
               </div>
             )}
+          </div>
+        )}
+
+        {/* A night page just opened up */}
+        {nightUnlocked && (
+          <div className="night-unlocked-banner">
+            <Moon size={15} />
+            <span>Đã mở khóa trang đêm: <b>{nightUnlocked}</b></span>
           </div>
         )}
 
@@ -130,6 +144,17 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
             <b className="total-score">{score.toLocaleString('vi-VN')}</b>
           </div>
         </div>
+        </div>
+
+        {/* Actions stay pinned under the scrollable summary, always reachable on small phones */}
+        <div className="victory-footer">
+        {/* Keep hunting the leftovers (album only, no score) */}
+        {leftovers > 0 && (
+          <button className="explore-btn" onClick={onExplore}>
+            <ScanSearch size={17} />
+            <span>Soi Tiếp Tìm Nốt {leftovers} Vật Ẩn</span>
+          </button>
+        )}
 
         {/* Buttons */}
         <div className="victory-actions">
@@ -149,6 +174,7 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
               <Trophy size={18} />
             </button>
           )}
+        </div>
         </div>
       </div>
 
@@ -175,19 +201,34 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
           width: 100%;
           max-width: 440px;
           max-height: calc(100vh - 32px);
-          overflow-y: auto;
+          max-height: calc(100dvh - 32px);
+          overflow: hidden;
           background: var(--paper-card);
           border: 1px solid var(--hairline);
           border-radius: 16px;
-          padding: 28px 24px 24px;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          text-align: center;
           box-shadow:
             0 10px 30px rgba(0,0,0,0.25),
             0 30px 60px rgba(0,0,0,0.35);
           animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .victory-scroll {
+          flex: 1;
+          min-height: 0;
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          padding: 28px 24px 4px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .victory-footer {
+          flex-shrink: 0;
+          padding: 10px 24px 20px;
         }
 
         @keyframes slideUp {
@@ -383,52 +424,51 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
           width: 100%;
         }
 
-        .btn-secondary {
-          flex: 1;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          height: 44px;
-          background: var(--paper);
-          border: 1px solid var(--hairline);
-          border-radius: 10px;
-          color: var(--ink);
-          font-family: var(--sans);
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-          background: #fff;
-          border-color: rgba(43,39,33,0.3);
-        }
-
-        .btn-primary {
-          flex: 2;
+        .explore-btn {
+          width: 100%;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          height: 44px;
-          background: linear-gradient(180deg, #b3833b 0%, #9a6a3e 100%);
-          border: none;
+          min-height: 42px;
+          margin-bottom: 10px;
+          border: 1.5px dashed rgba(45, 122, 79, 0.55);
           border-radius: 10px;
-          color: #fff;
+          background: rgba(45, 122, 79, 0.08);
+          color: var(--emerald);
           font-family: var(--sans);
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 700;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(154, 106, 62, 0.35);
-          transition: all 0.2s;
+          transition: background 0.2s ease;
         }
 
-        .btn-primary:hover {
-          background: linear-gradient(180deg, #c7954b 0%, #a97747 100%);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(154, 106, 62, 0.45);
+        .explore-btn:hover {
+          background: rgba(45, 122, 79, 0.15);
+        }
+
+        .night-unlocked-banner {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 7px 12px;
+          margin-bottom: 14px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #1b2440, #28325a);
+          color: #f4ecd0;
+          font-size: 12.5px;
+        }
+
+        @media (max-width: 480px), (max-height: 700px) {
+          .victory-scroll { padding: 18px 16px 4px; }
+          .victory-footer { padding: 8px 16px 14px; }
+          .victory-trophy svg { width: 32px; height: 32px; }
+          .victory-title { font-size: 25px; }
+          .stars-row { margin-bottom: 10px; }
+          .stats-grid { padding: 10px 12px; margin-bottom: 12px; gap: 6px; font-size: 12.5px; }
+          .critter-summary { margin-bottom: 10px; }
         }
       `}</style>
     </div>

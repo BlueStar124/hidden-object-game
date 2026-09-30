@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pause, HelpCircle, Flame, Volume2, VolumeX, Eye, EyeOff, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Pause, HelpCircle, Flame, Volume2, VolumeX, Eye, EyeOff, BookOpen, ChevronLeft, ChevronRight, BookHeart, Moon } from 'lucide-react';
 import { LevelData } from '../../types/level';
 
 interface HUDProps {
@@ -13,7 +13,9 @@ interface HUDProps {
   hintsUsed: number;
   soundEnabled: boolean;
   debugMode: boolean;
+  isNight?: boolean;
   onOpenPlateSelector: () => void;
+  onOpenAlbum: () => void;
   onPrevScene: () => void;
   onNextScene: () => void;
   onToggleSound: () => void;
@@ -32,7 +34,9 @@ export const HUD: React.FC<HUDProps> = ({
   comboTimer,
   soundEnabled,
   debugMode,
+  isNight = false,
   onOpenPlateSelector,
+  onOpenAlbum,
   onPrevScene,
   onNextScene,
   onToggleSound,
@@ -49,7 +53,7 @@ export const HUD: React.FC<HUDProps> = ({
   const isLowTime = remainingTime <= 30;
 
   return (
-    <header className="hud-container">
+    <header className={`hud-container ${isNight ? 'night' : ''}`}>
       {/* Left: Case Info & Page Switcher */}
       <div className="hud-left">
         <div className="hud-top-meta">
@@ -83,6 +87,11 @@ export const HUD: React.FC<HUDProps> = ({
               <ChevronRight size={16} />
             </button>
           </div>
+          {isNight && (
+            <span className="hud-night-badge">
+              <Moon size={11} /> ĐÊM
+            </span>
+          )}
         </div>
 
         <h1 className="hud-title">{level.title}</h1>
@@ -125,13 +134,23 @@ export const HUD: React.FC<HUDProps> = ({
         <div className="hud-actions">
           {/* Debug Inspector Toggle */}
           <button
-            className={`hud-btn ${debugMode ? 'debug-active' : ''}`}
+            className={`hud-btn debug-btn ${debugMode ? 'debug-active' : ''}`}
             onClick={onToggleDebug}
             title={debugMode ? 'Tắt chế độ xem tọa độ & hitbox' : 'Bật chế độ xem tọa độ & hitbox'}
             aria-label="Toggle Debug Inspector"
           >
             {debugMode ? <EyeOff size={18} /> : <Eye size={18} />}
             <span className="btn-text">Soát Tọa Độ</span>
+          </button>
+
+          <button
+            className="hud-btn album-btn"
+            onClick={onOpenAlbum}
+            title="Sổ Tay Sinh Vật — bộ sưu tập các loài đã phát hiện"
+            aria-label="Sổ Tay Sinh Vật"
+          >
+            <BookHeart size={18} />
+            <span className="btn-text">Sổ Tay</span>
           </button>
 
           <button
@@ -443,6 +462,26 @@ export const HUD: React.FC<HUDProps> = ({
           background: linear-gradient(135deg, rgba(160, 107, 71, 0.2), rgba(160, 107, 71, 0.35));
         }
 
+        .hud-btn.album-btn {
+          color: var(--emerald);
+          border-color: rgba(45, 122, 79, 0.35);
+          background: rgba(45, 122, 79, 0.08);
+        }
+
+        .hud-night-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 2px 8px;
+          border-radius: 999px;
+          background: #1b2440;
+          color: #f4d58d;
+          font-family: var(--sans);
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+        }
+
         @media (max-width: 768px) {
           .hud-container {
             padding: 8px 12px;
@@ -514,6 +553,91 @@ export const HUD: React.FC<HUDProps> = ({
           }
           .btn-text {
             display: none;
+          }
+        }
+
+        /* Short screens (phones held sideways): one slim row */
+        @media (max-height: 500px) and (min-width: 641px) {
+          .hud-container { padding: 4px 12px; }
+          .hud-case-tag,
+          .hud-subtitle,
+          .timer-label,
+          .score-label,
+          .btn-text,
+          .debug-btn {
+            display: none;
+          }
+          .hud-top-meta { margin-bottom: 0; }
+          .hud-left { flex-direction: row; align-items: center; gap: 10px; }
+          .hud-title { font-size: 15px; }
+          .timer-display { font-size: 18px; }
+          .timer-bar-track { margin-top: 3px; }
+          .score-value { font-size: 18px; }
+          .hud-btn { padding: 6px 8px; }
+        }
+
+        /* Phones: two tight rows — [pages + title] / [timer · score · buttons] */
+        @media (max-width: 640px) {
+          .hud-container {
+            padding: 6px 10px 4px;
+            gap: 4px 8px;
+          }
+          .hud-case-tag,
+          .debug-btn {
+            display: none;
+          }
+          .hud-left {
+            flex: 1 1 100%;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+          }
+          .hud-top-meta {
+            margin: 0;
+            flex-shrink: 0;
+            flex-wrap: nowrap;
+          }
+          .hud-title {
+            min-width: 0;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .hud-timer {
+            order: 2;
+            flex: 0 0 auto;
+            gap: 6px;
+            padding: 2px 8px;
+          }
+          .timer-label {
+            display: none;
+          }
+          .timer-bar-track {
+            width: 40px;
+          }
+          .hud-right {
+            order: 3;
+            flex: 1 1 auto;
+            justify-content: flex-end;
+            gap: 6px;
+          }
+          .combo-badge {
+            padding: 3px 8px;
+            font-size: 10px;
+            gap: 3px;
+          }
+          .combo-badge svg {
+            width: 13px;
+            height: 13px;
+          }
+          .hud-btn {
+            padding: 6px;
+          }
+          .hud-btn svg {
+            width: 17px;
+            height: 17px;
           }
         }
       `}</style>
