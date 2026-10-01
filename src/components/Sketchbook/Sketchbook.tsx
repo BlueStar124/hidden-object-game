@@ -24,7 +24,11 @@ interface SketchbookProps {
   onInspect: (nx: number, ny: number, screenPos: { x: number; y: number }) => void;
 }
 
-const ZOOM_STEPS = [1, 1.6, 2.2, 3];
+// Mobile zoom controls move in gentle 10% increments instead of making the
+// page jump abruptly from 1x to 1.6x.
+const ZOOM_STEPS = Array.from({ length: 21 }, (_, index) =>
+  Number((1 + index * 0.1).toFixed(1))
+);
 const NO_LIGHTS: NightLight[] = [];
 
 // Phones see the spread tiny at "fit"; start them zoomed in (upright phones the most,

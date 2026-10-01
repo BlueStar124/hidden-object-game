@@ -232,14 +232,15 @@ export const Loupe: React.FC<LoupeProps> = ({
 
         .loupe-grip {
           position: absolute;
-          width: 24px;
-          height: 140px;
-          left: 80%;
-          top: 80%;
-          transform-origin: top left;
-          transform: rotate(45deg);
+          z-index: 0;
+          width: 10%;
+          height: 58%;
+          left: 82%;
+          top: 82%;
+          transform-origin: 50% 0;
+          transform: translateX(-50%) rotate(-45deg);
           background: linear-gradient(90deg, #3d2716 0%, #6d4a2d 40%, #8c603a 65%, #3d2716 100%);
-          border-radius: 12px;
+          border-radius: 999px;
           box-shadow:
             5px 12px 24px rgba(0, 0, 0, 0.4),
             inset 1px 0 2px rgba(255, 255, 255, 0.15);
@@ -250,20 +251,21 @@ export const Loupe: React.FC<LoupeProps> = ({
           content: "";
           position: absolute;
           top: 0;
-          left: 0;
-          right: 0;
-          height: 18px;
+          left: -14%;
+          width: 128%;
+          height: 14%;
           background: linear-gradient(90deg, #b3833b 0%, #e5c378 50%, #8c6226 100%);
-          border-radius: 6px 6px 0 0;
+          border-radius: 999px 999px 35% 35%;
           box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .loupe-bezel {
           position: relative;
+          z-index: 1;
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          padding: 8px;
+          padding: 3.75%;
           background: conic-gradient(
             from 180deg at 50% 50%,
             #8c6226 0deg,
