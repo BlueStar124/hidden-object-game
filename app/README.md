@@ -45,7 +45,9 @@ npx eas-cli@latest build --platform ios       # cần tài khoản Apple Develop
 npm run build:web                             # bản web tĩnh → app/dist (deploy Vercel/Netlify)
 ```
 
-`app.json` đang đặt mã định danh `com.bluestar124.lostsketchbook` (Android `package` / iOS `bundleIdentifier`) — đổi trước lần phát hành đầu tiên nếu bạn muốn tên khác. Khi deploy bản web, phục vụ `canvaskit.wasm` với `Content-Type: application/wasm` và bật nén gzip/brotli (Vercel tự làm).
+`app.json` đang đặt mã định danh `com.bluestar124.lostsketchbook` (Android `package` / iOS `bundleIdentifier`) — đổi trước lần phát hành đầu tiên nếu bạn muốn tên khác.
+
+**Vercel** đã được cấu hình sẵn bằng [`vercel.json`](../vercel.json) ở thư mục gốc (xem [README gốc](../README.md#-hướng-dẫn-deploy-lên-vercel-miễn-phí)): push là Vercel tự build bản web này. File JS trong `_expo/static/` và ảnh, font trong `assets/` có mã hash trong tên, nên được cache 1 năm (`immutable`). Host khác thì cần phục vụ `canvaskit.wasm` với `Content-Type: application/wasm` và bật nén gzip/brotli (Vercel tự làm cả hai).
 
 ---
 

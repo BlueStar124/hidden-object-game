@@ -140,14 +140,11 @@ Sau khi chạy `npm run dev`, mở trình duyệt tại: `http://localhost:3000`
 
 ## 🚀 Hướng Dẫn Deploy Lên Vercel (Miễn Phí)
 
-1. Khởi tạo Git và đẩy mã nguồn lên GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: initial detective sketchbook v0.1"
-   git remote add origin https://github.com/<your-username>/hidden-object-game.git
-   git push -u origin main
-   ```
-2. Đăng nhập vào [Vercel](https://vercel.com/), chọn **Add New Project** $\rightarrow$ **Import Git Repository**.
-3. Chọn project `hidden-object-game`, nhấn **Deploy**.
-4. Game của bạn sẽ trực tuyến tại: `https://hidden-object-game.vercel.app`!
+File [`vercel.json`](vercel.json) ở thư mục gốc cho Vercel deploy **bản app (Expo web)** trong `app/` thay cho bản Vite: cài `app/` bằng `npm ci`, chạy `expo export --platform web`, phục vụ thư mục `app/dist`. Cấu hình trong file ghi đè Project Settings, nên không phải chỉnh gì trên dashboard.
+
+1. Đẩy mã nguồn lên GitHub, rồi trên [Vercel](https://vercel.com/) chọn **Add New Project** $\rightarrow$ **Import Git Repository** (giữ *Root Directory* là thư mục gốc của repo).
+2. Mỗi nhánh được push lên có một bản **Preview** riêng để thử; push/merge vào `main` thì thay bản chính thức trên tên miền của project (xem ở mục *Domains* trên dashboard).
+3. Cùng tên miền nên người chơi **giữ nguyên tiến độ** (app đọc đúng khóa lưu của bản Vite).
+4. Muốn quay về bản Vite: xóa `vercel.json` — Vercel tự nhận Vite (`npm run build` → `dist`). Cần gấp thì dùng **Instant Rollback** trên dashboard.
+
+`package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 57 cần Node ≥ 22.13 (hoặc 24.3).
