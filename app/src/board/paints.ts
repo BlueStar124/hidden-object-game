@@ -177,17 +177,14 @@ export function createBoardPaints() {
     radarGlow: blurred('rgba(179, 131, 59, 0.9)', 4),
 
     // Found stamps (screen px)
-    stampGlow: blurred('rgba(45, 122, 79, 0.45)', 6),
-    stampFill: paint((p) => p.setShader(radial(['rgba(45, 122, 79, 0.2)', 'rgba(45, 122, 79, 0)'], [0, 0.7]))),
+    stampGlow: blurred('rgba(45, 122, 79, 0.08)', 4),
+    stampFill: paint((p) => p.setShader(radial(['rgba(45, 122, 79, 0.04)', 'rgba(45, 122, 79, 0)'], [0, 0.7]))),
     stampRing: paint((p) => {
       p.setStyle(PaintStyle.Stroke);
       p.setStrokeWidth(2);
-      p.setColor(color('rgba(45, 122, 79, 0.85)'));
+      p.setColor(color('rgba(45, 122, 79, 0.55)'));
       p.setPathEffect(Skia.PathEffect.MakeDash([6, 4], 0));
     }),
-    labelShadow: blurred('rgba(0, 0, 0, 0.1)', 2),
-    labelBg: paint((p) => p.setColor(color('rgba(255, 255, 255, 0.92)'))),
-    labelText: paint((p) => p.setColor(color('#2d7a4f'))),
 
     // Page turn sweep (unit-wide gradient, scaled to the page)
     turn: paint((p) =>

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   Search,
   Sparkles,
   Lock,
@@ -50,6 +52,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
   activeHintId,
   onSelectClue,
 }) => {
+  const [collapsed, setCollapsed] = useState(false);
   const normalObjects = objects.filter(isMainObject);
   const secretObject = objects.find(o => o.isSecret);
   const bonusObjects = objects.filter(o => o.isBonus);
@@ -58,7 +61,18 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
   const isSecretFound = secretObject ? foundIds.includes(secretObject.id) : false;
 
   return (
-    <div className="quest-dock">
+    <div className={`quest-dock ${collapsed ? 'collapsed' : ''}`}>
+      <button
+        className="quest-toggle"
+        type="button"
+        aria-label={collapsed ? 'Hiện thanh manh mối' : 'Ẩn thanh manh mối'}
+        aria-expanded={!collapsed}
+        title={collapsed ? 'Hiện thanh manh mối' : 'Ẩn thanh manh mối'}
+        onClick={() => setCollapsed(value => !value)}
+      >
+        {collapsed ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
+      {!collapsed && <>
       {/* Header bar */}
       <div className="quest-header">
         <div className="quest-count">
@@ -193,7 +207,34 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
         )}
       </div>
 
+      </>}
       <style>{`
+        .quest-dock.collapsed {
+          padding: 0;
+          height: 6px;
+          min-height: 6px;
+        }
+
+        .quest-toggle {
+          position: absolute;
+          left: 16px;
+          top: -32px;
+          width: 48px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid var(--hairline);
+          border-bottom: 0;
+          border-radius: 12px 12px 0 0;
+          background: rgba(246, 242, 233, 0.97);
+          color: var(--ink);
+          cursor: pointer;
+        }
+
+        .quest-toggle:hover { background: #fffaf0; }
+        .quest-toggle:focus-visible { outline: 2px solid var(--earth); outline-offset: 2px; }
+
         .quest-dock {
           position: relative;
           z-index: 90;

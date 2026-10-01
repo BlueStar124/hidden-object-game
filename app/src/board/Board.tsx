@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
-import { Canvas, Picture, Skia, useFont, useImage, type SkImage, type SkPicture } from '@shopify/react-native-skia';
+import { Canvas, Picture, Skia, useImage, type SkImage, type SkPicture } from '@shopify/react-native-skia';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   cancelAnimation,
@@ -22,8 +22,6 @@ import { MAX_ZOOM, MIN_ZOOM, PAGE_H, PAGE_W } from './constants';
 import { createLoupePaints } from './paints';
 import { renderFrame, type FoundInfo, type SceneData } from './renderer';
 import { buildScene } from './scene';
-
-const FONT = require('@expo-google-fonts/playfair-display/600SemiBold/PlayfairDisplay_600SemiBold.ttf');
 
 // Room around the spread when it is fitted, and how far a zoomed page may be dragged past its edge
 const FIT_PAD = 8;
@@ -62,16 +60,6 @@ function loupeDiameter(w: number, h: number) {
   return Math.round(Math.max(110, Math.min(220, Math.min(w, h) * 0.42)));
 }
 
-/** Phones see the book tiny when it is fitted: open zoomed in so the paper fills the board. */
-function defaultZoom(w: number, h: number, bookW: number, bookH: number, fit: number) {
-  if (Math.min(w, h) >= 600) return 1;
-  const cover = Math.max(w / bookW, h / bookH) / fit;
-  // Upright phones: the wide book cannot fill the height without endless panning — take ~¾ of it
-  const zoom = h > w ? Math.min(3, Math.max(1, cover * 0.72)) : Math.min(1.6, Math.max(1, cover));
-  // On a tenth, like the steps of the zoom buttons
-  return Math.round(zoom * 10) / 10;
-}
-
 const emptyPicture = (() => {
   const rec = Skia.PictureRecorder();
   rec.beginRecording(Skia.XYWHRect(0, 0, 1, 1));
@@ -108,7 +96,6 @@ export const Board: React.FC<BoardProps> = ({
 }) => {
   const win = useWindowDimensions();
   const compact = win.width < 640;
-  const font = useFont(FONT, compact ? 11 : 13);
 
   const viewRef = useRef<View>(null);
   const windowOffset = useRef({ x: 0, y: 0 });
@@ -140,9 +127,9 @@ export const Board: React.FC<BoardProps> = ({
   const scene = useMemo<SceneData | null>(
     () =>
       ready && analysis
-        ? buildScene({ level, image: ready.image, tints: analysis.tints, book: analysis.book, loupe: loupePaints, font, compact })
+        ? buildScene({ level, image: ready.image, tints: analysis.tints, book: analysis.book, loupe: loupePaints, compact })
         : null,
-    [ready, analysis, level, loupePaints, font, compact]
+    [ready, analysis, level, loupePaints, compact]
   );
   // Keep showing the previous page while the next one decodes
   const lastScene = useRef<SceneData | null>(null);
@@ -269,10 +256,10 @@ export const Board: React.FC<BoardProps> = ({
     dims.value = { w: size.w, h: size.h, fit, r: d / 2, d, bx, by, bw, bh };
     const prev = placed.current;
     placed.current = size;
-    // First layout, or the phone turned: open at the default zoom for this shape
+    // First layout, or the phone turned: start fitted at 1.0×.
     const turned = !prev || prev.w > prev.h !== size.w > size.h;
     if (turned) userZoomed.current = false;
-    const zoom = userZoomed.current ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom)) : defaultZoom(size.w, size.h, bw, bh, fit);
+    const zoom = userZoomed.current ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom)) : 1;
     const scale = fit * zoom;
     s.value = scale;
     const b = bounds(scale);

@@ -3,6 +3,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import {
   CircleCheck,
+  ChevronDown,
+  ChevronUp,
   Feather,
   Footprints,
   Layers,
@@ -134,6 +136,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
   insetLeft,
   insetRight,
 }) => {
+  const [collapsed, setCollapsed] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
   const compact = layout === 'phoneLandscape';
   const wide = layout === 'wide';
@@ -248,12 +251,27 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
     styles.dock,
     { paddingBottom: bottomInset + (compact ? 5 : 10), paddingLeft: insetLeft + 10, paddingRight: insetRight + 10 },
     compact && styles.dockCompact,
+    collapsed && { paddingTop: 0, paddingBottom: bottomInset + 6, gap: 0 },
   ];
 
-  if (compact) {
-    const found = expandedObj ? foundIds.includes(expandedObj.id) : false;
-    return (
+  const found = expandedObj ? foundIds.includes(expandedObj.id) : false;
+  return (
+    <View style={styles.shell} pointerEvents="box-none">
+      <Pressable
+        onPress={() => {
+          setCollapsed(value => !value);
+          setExpanded(null);
+        }}
+        accessibilityRole="button"
+        accessibilityLabel={collapsed ? 'Hiện thanh manh mối' : 'Ẩn thanh manh mối'}
+        accessibilityState={{ expanded: !collapsed }}
+        hitSlop={6}
+        style={({ pressed }) => [styles.toggle, { left: insetLeft + 16 }, pressed && { opacity: 0.7 }]}
+      >
+        {collapsed ? <ChevronUp size={20} color={colors.ink} /> : <ChevronDown size={20} color={colors.ink} />}
+      </Pressable>
       <View style={dockStyle}>
+      {!collapsed && (compact ? <>
         {expandedObj && (
           // Read-only and touch-through: it floats over the sketchbook, whose taps must still land
           <View pointerEvents="none" style={[styles.bubble, { left: insetLeft + 10, right: insetRight + 10 }]}>
@@ -266,17 +284,14 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
         {counter}
         {cards}
         {badges}
-      </View>
-    );
-  }
-
-  return (
-    <View style={dockStyle}>
+      </> : <>
       <View style={styles.header}>
         {counter}
         {badges}
       </View>
       {cards}
+      </>)}
+      </View>
     </View>
   );
 };
@@ -284,6 +299,25 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
 const SECRET_CLUE = 'Vật được giấu kỹ nhất trang — hãy rê kính lúp thật chậm.';
 
 const styles = StyleSheet.create({
+  shell: {
+    zIndex: 90,
+    paddingTop: 32,
+    marginTop: -32,
+  },
+  toggle: {
+    position: 'absolute',
+    top: 0,
+    width: 48,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.hairline,
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    backgroundColor: 'rgba(246, 242, 233, 0.97)',
+  },
   dock: {
     zIndex: 90,
     backgroundColor: 'rgba(246, 242, 233, 0.95)',

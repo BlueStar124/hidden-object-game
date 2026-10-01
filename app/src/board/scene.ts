@@ -1,4 +1,4 @@
-import { BlendMode, Skia, TileMode, type SkFont, type SkImage } from '@shopify/react-native-skia';
+import { BlendMode, Skia, TileMode, type SkImage } from '@shopify/react-native-skia';
 import type { HiddenObject, LevelData } from '@core/types/level';
 import { isCreature } from '@core/data/bestiary';
 import type { BookRect, CamoTint } from '../game/sceneAnalysis';
@@ -131,22 +131,18 @@ export interface SceneOptions {
   tints: Record<string, CamoTint>;
   book: BookRect;
   loupe: LoupePaints;
-  font: SkFont | null;
   compact: boolean;
 }
 
-export function buildScene({ level, image, tints, book, loupe, font, compact }: SceneOptions): SceneData {
+export function buildScene({ level, image, tints, book, loupe, compact }: SceneOptions): SceneData {
   const night = !!level.isNight;
   const pageRect = Skia.XYWHRect(0, 0, PAGE_W, PAGE_H);
   const marks: SceneMark[] = level.objects.map((o) => {
-    const label = o.name.normalize('NFC');
     return {
       id: o.id,
       x: o.x * PAGE_W,
       y: o.y * PAGE_H,
       roam: o.roam && o.roam.path.length >= 2 ? o.roam : null,
-      label,
-      labelWidth: font ? font.getTextWidth(label) : 0,
     };
   });
   const lensR = loupe.lensR;
@@ -162,9 +158,6 @@ export function buildScene({ level, image, tints, book, loupe, font, compact }: 
     paints: boardPaints,
     loupe,
     lensRRect: Skia.RRectXY(Skia.XYWHRect(-lensR, -lensR, 2 * lensR, 2 * lensR), lensR, lensR),
-    font,
-    fontSize: compact ? 11 : 13,
-    fontAscent: font ? -font.getMetrics().ascent : 0,
     stampSize: compact ? 32 : 44,
   };
 }

@@ -4,7 +4,6 @@ import {
   MipmapMode,
   Skia,
   type SkCanvas,
-  type SkFont,
   type SkImage,
   type SkPaint,
   type SkPath,
@@ -78,8 +77,6 @@ export interface SceneMark {
   x: number; // page units
   y: number;
   roam: RoamBehavior | null;
-  label: string;
-  labelWidth: number;
 }
 
 export interface NightScene {
@@ -107,9 +104,6 @@ export interface SceneData {
   paints: BoardPaints;
   loupe: LoupePaints;
   lensRRect: SkRRect;
-  font: SkFont | null;
-  fontSize: number;
-  fontAscent: number;
   stampSize: number;
 }
 
@@ -488,8 +482,6 @@ function drawStamps(c: SkCanvas, S: SceneData, F: FrameState) {
   'worklet';
   const P = S.paints;
   const D = S.stampSize;
-  const labelH = Math.round(S.fontSize * 1.3) + 2;
-  const total = D + 4 + labelH;
   for (let i = 0; i < S.marks.length; i++) {
     const m = S.marks[i];
     const f = F.found[m.id];
@@ -500,32 +492,15 @@ function drawStamps(c: SkCanvas, S: SceneData, F: FrameState) {
     c.save();
     c.translate(f.x * F.s + F.tx, f.y * F.s + F.ty);
     c.scale(k, k);
-    const cy = -total / 2 + D / 2;
-    P.stampGlow.setAlphaf(0.45 * a);
-    c.drawCircle(0, cy, D / 2, P.stampGlow);
+    P.stampGlow.setAlphaf(0.08 * a);
+    c.drawCircle(0, 0, D / 2, P.stampGlow);
     P.stampFill.setAlphaf(a);
     c.save();
-    c.translate(0, cy);
     c.scale(D * Math.SQRT1_2, D * Math.SQRT1_2);
     c.drawCircle(0, 0, Math.SQRT1_2, P.stampFill);
     c.restore();
-    P.stampRing.setAlphaf(0.85 * a);
-    c.drawCircle(0, cy, D / 2 - 1, P.stampRing);
-
-    if (S.font) {
-      const lw = m.labelWidth + 12;
-      const top = -total / 2 + D + 4;
-      const rect = Skia.RRectXY(Skia.XYWHRect(-lw / 2, top, lw, labelH), 4, 4);
-      P.labelShadow.setAlphaf(0.1 * a);
-      c.save();
-      c.translate(0, 1);
-      c.drawRRect(rect, P.labelShadow);
-      c.restore();
-      P.labelBg.setAlphaf(0.92 * a);
-      c.drawRRect(rect, P.labelBg);
-      P.labelText.setAlphaf(a);
-      c.drawText(m.label, -m.labelWidth / 2, top + 1 + S.fontAscent, P.labelText, S.font);
-    }
+    P.stampRing.setAlphaf(0.55 * a);
+    c.drawCircle(0, 0, D / 2 - 1, P.stampRing);
     c.restore();
   }
 }

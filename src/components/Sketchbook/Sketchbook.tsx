@@ -31,16 +31,6 @@ const ZOOM_STEPS = Array.from({ length: 21 }, (_, index) =>
 );
 const NO_LIGHTS: NightLight[] = [];
 
-// Phones see the spread tiny at "fit"; start them zoomed in (upright phones the most,
-// so the page fills the screen height and is swiped sideways)
-function defaultZoom(): number {
-  if (typeof window === 'undefined') return 1;
-  const { innerWidth: w, innerHeight: h } = window;
-  if (w < 700 && h > w) return 2.2;
-  if (h < 500) return 1.6;
-  return 1;
-}
-
 /** Hint radar ring; follows the target if it is a roaming creature. */
 const RadarMarker: React.FC<{ target: HiddenObject }> = ({ target }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -78,7 +68,7 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [hoverCoords, setHoverCoords] = useState<{ nx: number; ny: number } | null>(null);
   const [camoTints, setCamoTints] = useState<Record<string, CamoTint>>({});
-  const [zoom, setZoom] = useState(defaultZoom);
+  const [zoom, setZoom] = useState(1);
 
   const foundIds = useMemo(() => foundObjects.map((f) => f.id), [foundObjects]);
 
@@ -254,7 +244,6 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
                     }}
                   >
                     <div className="stamp-circle" />
-                    <span className="stamp-label">{obj.name}</span>
                   </div>
                 );
               })}
@@ -329,7 +318,7 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
         >
           <ZoomOut size={18} />
         </button>
-        <span className="zoom-level">{zoom}×</span>
+        <span className="zoom-level">{zoom.toFixed(1)}×</span>
         <button
           className="zoom-btn"
           onClick={() => changeZoom(1)}
@@ -608,23 +597,10 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
         .stamp-circle {
           width: 44px;
           height: 44px;
-          border: 2px dashed rgba(45, 122, 79, 0.85);
+          border: 2px dashed rgba(45, 122, 79, 0.55);
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(45, 122, 79, 0.2) 0%, transparent 70%);
-          box-shadow: 0 0 12px rgba(45, 122, 79, 0.45);
-        }
-
-        .stamp-label {
-          margin-top: 4px;
-          font-family: var(--display);
-          font-size: 13px;
-          color: var(--emerald);
-          font-weight: 600;
-          background: rgba(255, 255, 255, 0.92);
-          padding: 1px 6px;
-          border-radius: 4px;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-          white-space: nowrap;
+          background: radial-gradient(circle, rgba(45, 122, 79, 0.04) 0%, transparent 70%);
+          box-shadow: 0 0 8px rgba(45, 122, 79, 0.08);
         }
 
         /* Hint Tier 3 Radar Pulse */
@@ -678,7 +654,6 @@ export const Sketchbook: React.FC<SketchbookProps> = ({
         @media (max-width: 640px) {
           .sketchbook-stage { padding: 4px; }
           .stamp-circle { width: 32px; height: 32px; }
-          .stamp-label { font-size: 11px; }
           .debug-label { font-size: 9px; }
         }
       `}</style>
