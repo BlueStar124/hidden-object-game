@@ -109,8 +109,8 @@ Trang đêm là một file riêng trong `src/levels/night/` với `"isNight": tr
 Thư mục [`app/`](app/README.md) là bản **Expo (React Native)** của game: một mã nguồn chạy thành app iOS, app Android và bản web, dùng chung luật chơi (`src/hooks/useGame.ts`, `src/game/`), màn chơi và tranh với bản web này.
 
 - Cuốn sổ vẽ bằng **Skia** trên UI thread (web: CanvasKit) — kéo kính lúp, zoom, sinh vật di chuyển đều mượt 60 khung hình/giây.
-- **Chụm hai ngón** để zoom, kéo để lật xem trang; cầm **cán kính lúp** để rê mà không che tròng kính; **chạm** để soi (kéo thả không còn bị tính click sai).
-- Kính lúp cất ra ngoài bức tranh không bị tính lần chạm; chạm ra mặt bàn không bị trừ điểm.
+- **Chụm hai ngón** để zoom (nút +/− đi từng 0.1×), kéo để di chuyển quanh trang; cầm **cán kính lúp** để rê mà không che tròng kính.
+- **Thả kính lúp ở đâu thì soi ngay tâm kính ở đó**, hoặc **chạm** thẳng vào chỗ muốn soi. Thả kính ra ngoài bức tranh (mặt bàn) thì không tính lần soi, không bị trừ điểm.
 - Khóa **màn hình ngang**; rung khi tìm thấy/soi sai; tự tạm dừng khi rời app; cài được như app trên web (PWA).
 
 ```bash

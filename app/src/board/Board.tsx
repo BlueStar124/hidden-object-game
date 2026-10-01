@@ -67,7 +67,9 @@ function defaultZoom(w: number, h: number, bookW: number, bookH: number, fit: nu
   if (Math.min(w, h) >= 600) return 1;
   const cover = Math.max(w / bookW, h / bookH) / fit;
   // Upright phones: the wide book cannot fill the height without endless panning — take ~¾ of it
-  return h > w ? Math.min(3, Math.max(1, cover * 0.72)) : Math.min(1.6, Math.max(1, cover));
+  const zoom = h > w ? Math.min(3, Math.max(1, cover * 0.72)) : Math.min(1.6, Math.max(1, cover));
+  // On a tenth, like the steps of the zoom buttons
+  return Math.round(zoom * 10) / 10;
 }
 
 const emptyPicture = (() => {
@@ -429,6 +431,22 @@ export const Board: React.FC<BoardProps> = ({
     [deliverTap]
   );
 
+  // Inspects the spot under a point of the board. Off the painting — a tap on the desk, or the
+  // loupe put down beside the book — is not a guess: no penalty, no miss counted towards the
+  // misted loupe
+  const inspectAt = useCallback(
+    (x: number, y: number) => {
+      'worklet';
+      if (!enabled.value) return;
+      const px = (x - tx.value) / s.value;
+      const py = (y - ty.value) / s.value;
+      const { bx: left, by: top, bw: width, bh: height } = dims.value;
+      if (px < left || px > left + width || py < top || py > top + height) return;
+      scheduleOnRN(inspect, px / PAGE_W, py / PAGE_H, x, y);
+    },
+    [dims, enabled, inspect, s, tx, ty]
+  );
+
   const syncZoom = useCallback((zoom: number) => {
     userZoomed.current = true;
     setZoomLabel(zoom);
@@ -437,7 +455,7 @@ export const Board: React.FC<BoardProps> = ({
   const gesture = useMemo(() => {
     const pan = Gesture.Pan()
       .maxPointers(1)
-      // Below this much movement a touch is a tap (inspect), above it a drag
+      // Below this much movement a touch is a tap, above it a drag
       .minDistance(TAP_SLOP)
       .onBegin((e) => {
         if (onControls(e.x, e.y)) {
@@ -465,7 +483,12 @@ export const Board: React.FC<BoardProps> = ({
           ty.value = Math.min(b.maxY, Math.max(b.minY, panStart.value.ty + e.translationY));
         }
       })
-      .onEnd((e) => {
+      .onEnd((e, success) => {
+        if (mode.value === LOUPE) {
+          // Wherever the loupe is put down, its crosshair inspects that spot
+          if (success) inspectAt(lx.value, ly.value);
+          return;
+        }
         if (mode.value !== PAGE) return;
         const b = bounds(s.value);
         tx.value = withDecay({ velocity: e.velocityX, clamp: [b.minX, b.maxX] });
@@ -502,16 +525,8 @@ export const Board: React.FC<BoardProps> = ({
       .maxDistance(TAP_SLOP)
       .onEnd((e, success) => {
         if (!success || onControls(e.x, e.y)) return;
-        const onLoupe = hitLoupe(e.x, e.y);
-        const x = onLoupe ? lx.value : e.x;
-        const y = onLoupe ? ly.value : e.y;
-        const px = (x - tx.value) / s.value;
-        const py = (y - ty.value) / s.value;
-        // Off the painting — a tap on the desk, or the loupe parked beside the book — is not a
-        // guess: no penalty, no miss counted towards the misted loupe
-        const { bx: left, by: top, bw: width, bh: height } = dims.value;
-        if (px < left || px > left + width || py < top || py > top + height) return;
-        scheduleOnRN(inspect, px / PAGE_W, py / PAGE_H, x, y);
+        if (hitLoupe(e.x, e.y)) inspectAt(lx.value, ly.value);
+        else inspectAt(e.x, e.y);
       });
 
     return Gesture.Simultaneous(pinch, Gesture.Race(pan, tap));
@@ -524,7 +539,7 @@ export const Board: React.FC<BoardProps> = ({
     finger,
     grab,
     hitLoupe,
-    inspect,
+    inspectAt,
     lx,
     ly,
     mode,
@@ -564,7 +579,8 @@ export const Board: React.FC<BoardProps> = ({
   );
 
   const zoom = zoomLabel;
-  const stepZoom = (dir: 1 | -1) => zoomTo(dir > 0 ? zoom * 1.25 : zoom / 1.25);
+  // The buttons move in tenths of what the label shows (1.0×, 1.1×, 1.2×…), also after a pinch
+  const stepZoom = (dir: 1 | -1) => zoomTo((Math.round(zoom * 10) + dir) / 10);
 
   // Browsers: mouse wheel / trackpad pinch zooms around the pointer
   useEffect(() => {
@@ -574,8 +590,11 @@ export const Board: React.FC<BoardProps> = ({
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       const rect = node.getBoundingClientRect();
-      const factor = Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015));
-      zoomTo((s.value / dims.value.fit) * factor, { x: e.clientX - rect.left, y: e.clientY - rect.top });
+      // Linear like the buttons: one wheel notch (100 px) = 0.1×. A trackpad pinch arrives as
+      // ctrl + wheel with small deltas, hence its larger factor
+      const delta = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY; // Firefox counts lines
+      const target = s.value / dims.value.fit - delta * (e.ctrlKey ? 0.01 : 0.001);
+      zoomTo(target, { x: e.clientX - rect.left, y: e.clientY - rect.top });
     };
     node.addEventListener('wheel', onWheel, { passive: false });
     return () => node.removeEventListener('wheel', onWheel);

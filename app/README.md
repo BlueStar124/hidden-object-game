@@ -9,9 +9,9 @@ Bản React Native của game, viết **một lần cho cả ba nền tảng**: 
 | | Bản web (Vite) | App (thư mục `app/`) |
 |---|---|---|
 | Vẽ cuốn sổ | DOM + CSS (blend, filter, mask) | **Skia** — vẽ trên UI thread mỗi khung hình (web: CanvasKit/WebAssembly) |
-| Zoom | Nút 1×–3×, trang cuộn trong khung | **Chụm 2 ngón** (pinch) + nút + lăn chuột (web), zoom quanh điểm chạm |
-| Kính lúp | Kéo ở bất cứ đâu, **thả tay là soi** | Kéo bằng tròng **hoặc cán gỗ** (ngón tay không che kính); **chạm** để soi — kéo, thả không bị tính |
-| Kính lúp ngoài tranh | Thả ra lề vẫn tính click sai | Cất kính ra mặt bàn thoải mái; chạm ngoài tranh **không bị trừ điểm** |
+| Zoom | Nút 1×–3×, trang cuộn trong khung | **Chụm 2 ngón** (pinch), nút +/− **từng 0.1×**, lăn chuột (web) — zoom quanh điểm chạm |
+| Kính lúp | Kéo ở bất cứ đâu, **thả tay là soi** | Kéo bằng tròng **hoặc cán gỗ** (ngón tay không che kính), **thả là soi** tại tâm kính; hoặc **chạm** thẳng vào chỗ muốn soi |
+| Kính lúp ngoài tranh | Thả ra lề vẫn tính click sai | Thả kính ra mặt bàn **không tính lần soi**, không bị trừ điểm; chạm ra mặt bàn cũng vậy |
 | Khung nhìn | Cả khung ảnh 1760×1240 (có lề trong suốt) | Camera ôm sát **phần giấy** của cuốn sổ → tranh to hơn hẳn trên điện thoại |
 | Hướng màn hình | Dọc/ngang | **Khóa ngang** (app); web hỏi xoay ngang khi cầm dọc |
 | Gợi ý cấp 2 | (chưa nối dây) | Kính lúp **nhích về phía** vật cần tìm, như mô tả trong README |
