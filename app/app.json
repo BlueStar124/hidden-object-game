@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "The Lost Sketchbook",
+    "slug": "lost-sketchbook",
+    "version": "0.3.0",
+    "orientation": "landscape",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#ece7dc",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bluestar124.lostsketchbook",
+      "requireFullScreen": true
+    },
+    "android": {
+      "package": "com.bluestar124.lostsketchbook",
+      "adaptiveIcon": {
+        "backgroundColor": "#ece7dc",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "The Lost Sketchbook",
+      "shortName": "Sketchbook",
+      "backgroundColor": "#ece7dc",
+      "themeColor": "#ece7dc",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-audio",
+      "expo-sqlite",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#ece7dc"
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": false
+    }
+  }
+}

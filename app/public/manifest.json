@@ -1,0 +1,40 @@
+{
+  "name": "The Lost Sketchbook — Thám Tử Tìm Đồ",
+  "short_name": "Sketchbook",
+  "description": "Soi kính lúp tìm những sinh vật và manh mối ngụy trang trong cuốn sổ ký họa màu nước Singapore.",
+  "lang": "vi",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "landscape",
+  "background_color": "#ece7dc",
+  "theme_color": "#ece7dc",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

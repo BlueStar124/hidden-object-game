@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <!-- The game handles pinch-zoom itself: the browser must not zoom the page -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#ece7dc" />
+    <meta name="description" content="The Lost Sketchbook — soi kính lúp tìm những sinh vật và manh mối ngụy trang trong cuốn sổ ký họa màu nước Singapore." />
+    <!-- Installable: "Add to Home Screen" opens it full screen like an app -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sketchbook" />
+    <title>The Lost Sketchbook — Detective Hidden Object Adventure</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #ece7dc;
+      }
+      body {
+        overflow: hidden;
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        height: 100dvh;
+        flex: 1;
+      }
+      /* Shown until CanvasKit and the app are ready (replaced when React mounts) */
+      .boot {
+        margin: auto;
+        text-align: center;
+        /* System UI fonts carry Vietnamese diacritics everywhere (Georgia lacks some) */
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        color: rgba(43, 39, 33, 0.65);
+      }
+      .boot-ring {
+        width: 54px;
+        height: 54px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        border: 4px solid #e5c378;
+        border-top-color: #8c6226;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>Bạn cần bật JavaScript để mở cuốn sổ.</noscript>
+    <div id="root">
+      <div class="boot">
+        <div class="boot-ring"></div>
+        Đang mở cuốn sổ ký họa…
+      </div>
+    </div>
+  </body>
+</html>
