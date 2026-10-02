@@ -1,13 +1,12 @@
-import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas } from '@shopify/react-native-skia';
+import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas, type SkPicture } from '@shopify/react-native-skia';
 import { alternate, EASE_IN, EASE_IN_OUT, track } from '../anim';
 import { LOUPE_ZOOM } from '../constants';
 import { drawLoupeBody } from '../scene/loupeBody';
 import { drawBook } from './book';
-import { drawFlip } from './pageTurn';
 import type { FrameState, Pose, SceneData } from './types';
 
 /** The brass loupe (a flashlight on night pages), magnifying whatever is under it. */
-export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], flip: number) {
+export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], leaf: SkPicture | null) {
   'worklet';
   const L = S.loupe;
   const { r, lensR } = L;
@@ -60,7 +59,7 @@ export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[
   c.translate(-px, -py);
   c.clipRect(S.pageRect, ClipOp.Intersect, true);
   const seen = lensR / z; // page units
-  if (F.flip) drawFlip(c, F.flip, flip);
+  if (leaf) c.drawPicture(leaf);
   else drawBook(c, S, F, poses, true, { x0: px - seen, y0: py - seen, x1: px + seen, y1: py + seen });
   c.restore();
   if (fogged) c.restore();

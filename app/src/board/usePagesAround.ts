@@ -1,25 +1,19 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { SkImage } from '@shopify/react-native-skia';
 import type { Page } from '../core/model';
 import { useKeepArt, type SceneLibrary } from './useSceneLibrary';
 
-// The pages around this one are prepared once it has settled
-const SETTLE_MS = 500;
-const NO_PAGES: Page[] = [];
+// Decode immediately; give input/landing a short head start before synchronous scene layout.
+const PREPARE_MS = 120;
 
 /**
- * Keeps turning cheap. Once the page on screen has settled — never during a turn — the pages
- * likely to come next (`preload`: the neighbours) are decoded and laid out one at a time, and
+ * Decode upcoming artwork immediately, including the neighbour beyond a pending turn.
+ * Once the page on screen has settled — never during a turn — scenes are laid out one at a time, and
  * their artwork and sprite sheets stay on the GPU. Returns those images, for the renderer to keep warm.
  */
 export function usePagesAround(library: SceneLibrary, page: Page, preload: Page[], turningTo: Page | null): SkImage[] {
   const busy = turningTo !== null;
-  const [around, setAround] = useState<Page[]>(NO_PAGES);
-  useEffect(() => {
-    if (busy) return;
-    const t = setTimeout(() => setAround(preload), SETTLE_MS);
-    return () => clearTimeout(t);
-  }, [preload, busy]);
+  const around = preload;
 
   const { hasArt, isPrepared, preparedScene, prepare, bump, version, imageOf } = library;
   useEffect(() => {
@@ -29,7 +23,7 @@ export function usePagesAround(library: SceneLibrary, page: Page, preload: Page[
     const t = setTimeout(() => {
       prepare(next);
       bump(); // on to the next one
-    }, 120);
+    }, PREPARE_MS);
     return () => clearTimeout(t);
   }, [around, version, busy, prepare, bump, hasArt, isPrepared]);
 

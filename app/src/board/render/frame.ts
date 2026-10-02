@@ -15,10 +15,28 @@ import type { FrameState, Pose, SceneData } from './types';
 
 function drawFrame(c: SkCanvas, live: SceneData, F: FrameState) {
   'worklet';
+  const camera = F.flip?.camera;
+  if (camera) {
+    const p = flipProgress(F);
+    const t = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    F = {
+      ...F,
+      tx: camera.fromX + (camera.toX - camera.fromX) * t,
+      ty: camera.fromY + (camera.toY - camera.fromY) * t,
+    };
+  }
   // While a page turns, both pages come from the turn and the frame is the page being opened
   const S = F.flip ? F.flip.S : live;
   const P = S.paints;
   const flip = flipProgress(F);
+  // Calculate the bent leaf once. The board and the loupe replay the same geometry.
+  let leaf: SkPicture | null = null;
+  if (F.flip) {
+    const recorder = Skia.PictureRecorder();
+    drawFlip(recorder.beginRecording(S.pageRect), F.flip, flip);
+    leaf = recorder.finishRecordingAsPicture();
+    recorder.dispose();
+  }
   const poses: Pose[] = F.flip ? [] : posesAt(S, F);
 
   // Artwork of the pages likely to come next, one invisible pixel each: it stays decoded on the
@@ -53,7 +71,7 @@ function drawFrame(c: SkCanvas, live: SceneData, F: FrameState) {
   c.drawRRect(S.bookRRect, S.night ? P.bookShadowNight : P.bookShadow);
   c.restore();
   c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
-  if (F.flip) drawFlip(c, F.flip, flip);
+  if (leaf) c.drawPicture(leaf);
   else drawBook(c, S, F, poses, false, { x0: -F.tx / F.s, y0: -F.ty / F.s, x1: (F.width - F.tx) / F.s, y1: (F.height - F.ty) / F.s });
   c.restore();
 
@@ -66,7 +84,8 @@ function drawFrame(c: SkCanvas, live: SceneData, F: FrameState) {
     c.restore();
   }
 
-  drawLoupe(c, S, F, poses, flip);
+  drawLoupe(c, S, F, poses, leaf);
+  leaf?.dispose();
 }
 
 /** The frame as a picture. */
@@ -88,5 +107,7 @@ export function renderFrame(live: SceneData, F: FrameState): SkPicture {
     c.restore();
   }
   drawFrame(c, live, F);
-  return recorder.finishRecordingAsPicture();
+  const picture = recorder.finishRecordingAsPicture();
+  recorder.dispose();
+  return picture;
 }

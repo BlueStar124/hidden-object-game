@@ -54,7 +54,12 @@ export const GameScreen: React.FC = () => {
   // (back from a night page is its own day page)
   const nextDay = pages[ref.index + 1]?.day;
   const backDay = isNight ? ref.day : pages[ref.index - 1]?.day;
-  const preload = useMemo(() => [nextDay, backDay].filter((p): p is Page => !!p), [nextDay, backDay]);
+  const preload = useMemo(() => {
+    // Decode the neighbour beyond the destination during this turn, ready for a rapid next tap.
+    const target = turn ? pages.findIndex((p) => p.day.id === turn.to.id || p.night?.id === turn.to.id) : -1;
+    const ahead = turn && target >= 0 ? pages[target + turn.direction]?.day : undefined;
+    return [nextDay, backDay, ahead].filter((p, i, all): p is Page => !!p && all.indexOf(p) === i);
+  }, [nextDay, backDay, pages, turn]);
 
   const albumPages = useMemo(() => allPages(), []);
   const hint = c.activeHint;

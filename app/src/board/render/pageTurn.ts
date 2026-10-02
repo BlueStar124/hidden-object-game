@@ -171,5 +171,7 @@ export function recordPage(S: SceneData, F: FrameState): SkPicture {
   drawBook(c, S, F, posesAt(S, F), false, null);
   c.restore();
   drawStamps(c, S, F, true);
-  return recorder.finishRecordingAsPicture();
+  const picture = recorder.finishRecordingAsPicture();
+  recorder.dispose();
+  return picture;
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
-import { Easing, useSharedValue, withSequence, withTiming, type SharedValue } from 'react-native-reanimated';
+import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { PAGE_TURN_MS, type Page, type PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { recordPage, type FoundInfo, type FrameState, type PageFlip, type SceneData } from './render';
@@ -12,14 +12,12 @@ import type { SceneLibrary } from './useSceneLibrary';
  * 1. the page on screen is recorded flat (stamps and all): it becomes the leaf;
  * 2. as soon as the page it turns to is prepared — usually at once, the neighbours being prepared
  *    ahead — that one is recorded too, the leaf starts to turn and the camera glides to the middle
- *    of the spread, drawing back a little so the raised leaf stays in view;
+ *    of the spread while keeping the player's zoom;
  * 3. the last frame holds until the game has opened the new page; then the board draws it live.
  */
 
 // The leaf comes down a moment before the game opens the new page, so the swap never shows
 const FLIP_MS = PAGE_TURN_MS - 80;
-// How far the camera draws back at the height of a page turn
-const FLIP_DRAW_BACK = 0.91;
 
 /** A turn, with the page it turns to. */
 type Flip = PageFlip & { page: Page };
@@ -75,13 +73,13 @@ export function usePageTurn(
   const openTo = useCallback(
     (pending: Flip, next: SceneData): Flip => {
       const scale = s.value;
-      const back = centre(scale * FLIP_DRAW_BACK);
       const settled = centre(scale);
-      const leg = { duration: pending.duration / 2, easing: Easing.inOut(Easing.quad) };
-      s.value = withSequence(withTiming(scale * FLIP_DRAW_BACK, leg), withTiming(scale, leg));
-      tx.value = withSequence(withTiming(back.tx, leg), withTiming(settled.tx, leg));
-      ty.value = withSequence(withTiming(back.ty, leg), withTiming(settled.ty, leg));
-      return { ...pending, to: recordPage(next, frameFor({}, settled)), S: next };
+      return {
+        ...pending,
+        to: recordPage(next, frameFor({}, settled)),
+        S: next,
+        camera: { fromX: tx.value, fromY: ty.value, toX: settled.tx, toY: settled.ty },
+      };
     },
     [centre, frameFor, s, tx, ty]
   );
@@ -127,11 +125,15 @@ export function usePageTurn(
   useEffect(() => {
     if (!flip || !landed || !scene) return;
     if (page.id !== flip.page.id && turn) return;
+    if (flip.camera) {
+      tx.value = flip.camera.toX;
+      ty.value = flip.camera.toY;
+    }
     setFlip(null);
-  }, [flip, landed, scene, page.id, turn]);
+  }, [flip, landed, scene, page.id, turn, tx, ty]);
 
   const flipFrame = useMemo<PageFlip | null>(
-    () => (flip ? { from: flip.from, to: flip.to, dir: flip.dir, S: flip.S, duration: flip.duration } : null),
+    () => (flip ? { from: flip.from, to: flip.to, dir: flip.dir, S: flip.S, duration: flip.duration, camera: flip.camera } : null),
     [flip]
   );
 

@@ -119,6 +119,8 @@ export interface PageFlip {
   dir: number; // 1: the right-hand page turns over to the left (forwards), -1: back
   S: SceneData; // frame & paints: the page being opened (the old page until it is ready)
   duration: number; // ms
+  // Pan as part of the turn frame, with no separate camera animation state.
+  camera?: { fromX: number; fromY: number; toX: number; toY: number };
 }
 
 export interface Pose {
