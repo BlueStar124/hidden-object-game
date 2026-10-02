@@ -1,4 +1,4 @@
-import { ClipOp, FilterMode, MipmapMode, Skia, type SkPicture } from '@shopify/react-native-skia';
+import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas, type SkPicture } from '@shopify/react-native-skia';
 import { PAGE_H, PAGE_W } from '../constants';
 import { drawBook } from './book';
 import { drawLoupe } from './loupe';
@@ -13,10 +13,8 @@ import type { FrameState, Pose, SceneData } from './types';
  * (noted in comments).
  */
 
-export function renderFrame(live: SceneData, F: FrameState): SkPicture {
+function drawFrame(c: SkCanvas, live: SceneData, F: FrameState) {
   'worklet';
-  const recorder = Skia.PictureRecorder();
-  const c = recorder.beginRecording(Skia.XYWHRect(0, 0, F.width, F.height));
   // While a page turns, both pages come from the turn and the frame is the page being opened
   const S = F.flip ? F.flip.S : live;
   const P = S.paints;
@@ -56,7 +54,7 @@ export function renderFrame(live: SceneData, F: FrameState): SkPicture {
   c.restore();
   c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
   if (F.flip) drawFlip(c, F.flip, flip);
-  else drawBook(c, S, F, poses, false);
+  else drawBook(c, S, F, poses, false, { x0: -F.tx / F.s, y0: -F.ty / F.s, x1: (F.width - F.tx) / F.s, y1: (F.height - F.ty) / F.s });
   c.restore();
 
   // Screen-space marks, clipped to the book (a turning page carries its own stamps)
@@ -69,6 +67,26 @@ export function renderFrame(live: SceneData, F: FrameState): SkPicture {
   }
 
   drawLoupe(c, S, F, poses, flip);
+}
 
+/** The frame as a picture. */
+export function renderFrame(live: SceneData, F: FrameState): SkPicture {
+  'worklet';
+  const recorder = Skia.PictureRecorder();
+  const c = recorder.beginRecording(Skia.XYWHRect(0, 0, F.width, F.height));
+  // Frames still to come (a page turn, a find, the radar…), so what they need of the GPU is set up
+  // now, while a dialog covers the board, rather than in the middle of play. They are drawn straight
+  // onto the screen, as they will be (in a layer, or clipped to a small area, the GPU would take
+  // other shortcuts), then wiped before this frame. The wipe leaves one row out: wiping the whole
+  // screen would let the GPU drop the warm-up unseen
+  if (F.warmUp) {
+    const most = Skia.XYWHRect(0, 0, F.width, Math.max(0, F.height - 1));
+    c.save();
+    c.clipRect(most, ClipOp.Intersect, false);
+    for (let i = 0; i < F.warmUp.length; i++) drawFrame(c, live, F.warmUp[i]);
+    c.clear(Skia.Color('transparent'));
+    c.restore();
+  }
+  drawFrame(c, live, F);
   return recorder.finishRecordingAsPicture();
 }

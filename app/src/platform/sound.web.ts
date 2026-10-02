@@ -3,6 +3,12 @@ import { haptics } from './haptics';
 import type { GameSound } from './sound';
 import { synth } from './synth/synth';
 
+// Opening the audio context stalls the page for a moment: on the player's first touch (the prologue,
+// most likely) rather than with the first sound, in the middle of play
+if (typeof window !== 'undefined') {
+  window.addEventListener('pointerdown', () => synth.prepare(), { once: true, capture: true });
+}
+
 /** Web: the Web Audio synth plays live (instant, nothing to download), with haptics where supported. */
 export const sound: GameSound = {
   setSoundEnabled: (enabled: boolean) => synth.setSoundEnabled(enabled),

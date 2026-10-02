@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { PixelRatio } from 'react-native';
 import type { SkImage } from '@shopify/react-native-skia';
 import type { Page } from '../core/model';
 import { artIdOf, artOf } from '../content';
@@ -38,6 +39,8 @@ export interface SceneLibrary {
   /** Lays a page out if its artwork is there (cached) */
   prepare: (page: Page) => SceneData | null;
   isPrepared: (page: Page) => boolean;
+  /** The page laid out, if it already is */
+  preparedScene: (page: Page) => SceneData | undefined;
   hasArt: (page: Page) => boolean;
   /** Changes whenever artwork arrives or a page is prepared in the background */
   version: number;
@@ -47,12 +50,15 @@ export interface SceneLibrary {
   imageOf: (page: Page) => SkImage | undefined;
 }
 
-export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean): SceneLibrary {
+/**
+ * `density`: device pixels per page unit to draw sprite sheets at (scene/spriteAtlas.atlasDensity).
+ */
+export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean, density: number): SceneLibrary {
   const [version, setVersion] = useState(0);
   const bump = useCallback(() => setVersion((n) => n + 1), []);
 
-  // Pages laid out for this loupe size and layout
-  const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact]);
+  // Pages laid out for this loupe size, layout and sprite sharpness
+  const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact, density]);
   const prepare = useCallback(
     (p: Page): SceneData | null => {
       const cached = scenes.get(p.id);
@@ -60,11 +66,11 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
       const art = images.get(artIdOf(p));
       if (!art) return null;
       const { tints, book } = analysisOf(p, art);
-      const prepared = buildScene({ page: p, image: art.image, tints, book, loupe, compact });
+      const prepared = buildScene({ page: p, image: art.image, tints, book, loupe, compact, density, pixelRatio: PixelRatio.get() });
       scenes.set(p.id, prepared);
       return prepared;
     },
-    [scenes, loupe, compact]
+    [scenes, loupe, compact, density]
   );
 
   // (`version`: try again once the artwork has arrived)
@@ -103,6 +109,7 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
     shown,
     prepare,
     isPrepared: useCallback((p: Page) => scenes.has(p.id), [scenes]),
+    preparedScene: useCallback((p: Page) => scenes.get(p.id), [scenes]),
     hasArt: useCallback((p: Page) => images.has(artIdOf(p)), []),
     version,
     bump,

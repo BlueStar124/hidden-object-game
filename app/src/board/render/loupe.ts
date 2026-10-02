@@ -1,6 +1,7 @@
-import { ClipOp, Skia, type SkCanvas } from '@shopify/react-native-skia';
+import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas } from '@shopify/react-native-skia';
 import { alternate, EASE_IN, EASE_IN_OUT, track } from '../anim';
 import { LOUPE_ZOOM } from '../constants';
+import { drawLoupeBody } from '../scene/loupeBody';
 import { drawBook } from './book';
 import { drawFlip } from './pageTurn';
 import type { FrameState, Pose, SceneData } from './types';
@@ -9,7 +10,7 @@ import type { FrameState, Pose, SceneData } from './types';
 export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], flip: number) {
   'worklet';
   const L = S.loupe;
-  const { r, d, lensR } = L;
+  const { r, lensR } = L;
   const now = F.now;
   const px = (F.lx - F.tx) / F.s; // page point under the crosshair
   const py = (F.ly - F.ty) / F.s;
@@ -18,7 +19,9 @@ export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[
   c.translate(F.lx, F.ly);
 
   // Hint tier 2: the loupe tugs gently towards the target
+  let still = true;
   if (F.nudge) {
+    still = false;
     const t = alternate(now - F.nudge.t, 800, EASE_IN_OUT);
     const vx = F.nudge.x - px;
     const vy = F.nudge.y - py;
@@ -31,29 +34,18 @@ export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[
   }
   if (S.night) c.drawCircle(0, 0, r, L.nightGlow);
 
-  // Wooden grip with its brass ferrule, tucked under the bezel
-  c.save();
-  c.translate(-r + 0.82 * d, -r + 0.82 * d);
-  c.rotate(-45, 0, 0);
-  const grip = Skia.RRectXY(Skia.XYWHRect(-L.gripW / 2, 0, L.gripW, L.gripH), L.gripW / 2, L.gripW / 2);
-  c.save();
-  c.translate(5, 12);
-  c.drawRRect(grip, L.gripShadow);
-  c.restore();
-  c.drawRRect(grip, L.grip);
-  const ferrule = Skia.RRectXY(Skia.XYWHRect(-L.ferruleW / 2, 0, L.ferruleW, L.ferruleH), L.ferruleH * 0.45, L.ferruleH * 0.45);
-  c.save();
-  c.translate(0, 2);
-  c.drawRRect(ferrule, L.ferruleShadow);
-  c.restore();
-  c.drawRRect(ferrule, L.ferrule);
-  c.restore();
-
-  // Brass bezel
-  c.drawCircle(0, 12, r, L.bezelShadowNear);
-  c.drawCircle(0, 24, r, L.bezelShadowFar);
-  c.drawCircle(0, 0, r, L.bezel);
-  c.drawCircle(0, 0, r - 0.75, L.bezelHighlight);
+  if (L.body) {
+    // Grip, bezel and shadows drawn once; laid on whole device pixels unless it is being tugged
+    const body = L.body;
+    const pr = S.pixelRatio;
+    const ox = still ? Math.round(F.lx * pr) / pr - F.lx : 0;
+    const oy = still ? Math.round(F.ly * pr) / pr - F.ly : 0;
+    const src = Skia.XYWHRect(0, 0, body.image.width(), body.image.height());
+    const dst = Skia.XYWHRect(body.rect.x + ox, body.rect.y + oy, body.rect.width, body.rect.height);
+    c.drawImageRectOptions(body.image, src, dst, FilterMode.Linear, MipmapMode.None, L.bodyPaint);
+  } else {
+    drawLoupeBody(c, L);
+  }
 
   // Glass lens with the magnified page
   c.save();
@@ -67,8 +59,9 @@ export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[
   c.scale(z, z);
   c.translate(-px, -py);
   c.clipRect(S.pageRect, ClipOp.Intersect, true);
+  const seen = lensR / z; // page units
   if (F.flip) drawFlip(c, F.flip, flip);
-  else drawBook(c, S, F, poses, true);
+  else drawBook(c, S, F, poses, true, { x0: px - seen, y0: py - seen, x1: px + seen, y1: py + seen });
   c.restore();
   if (fogged) c.restore();
 

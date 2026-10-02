@@ -168,7 +168,7 @@ export function recordPage(S: SceneData, F: FrameState): SkPicture {
   const c = recorder.beginRecording(S.pageRect);
   c.save();
   c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
-  drawBook(c, S, F, posesAt(S, F), false);
+  drawBook(c, S, F, posesAt(S, F), false, null);
   c.restore();
   drawStamps(c, S, F, true);
   return recorder.finishRecordingAsPicture();

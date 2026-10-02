@@ -1,9 +1,34 @@
 import { ClipOp, FilterMode, MipmapMode, type SkCanvas } from '@shopify/react-native-skia';
 import { bloom, clamp01, EASE_IN_OUT, loop, track } from '../anim';
-import { drawSprite } from './sprites';
-import { CAMO_CHAMELEON, CAMO_INVISIBLE, FOUND_FADE_MS, type FrameState, type Pose, type SceneData } from './types';
+import { drawSprite, type SpriteCell } from './sprites';
+import {
+  CAMO_CHAMELEON,
+  CAMO_INVISIBLE,
+  FOUND_FADE_MS,
+  type FrameState,
+  type Pose,
+  type SceneData,
+  type SceneSprite,
+} from './types';
+import type { AtlasCell } from '../scene/spriteAtlas';
 
 /** The painted spread: artwork, camouflaged sprites, the scraps of painting over them, night. */
+
+/** What part of the spread is seen (page units); sprites wholly outside it are skipped. */
+export interface View {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+function inView(view: View | null, x: number, y: number, reach: number): boolean {
+  'worklet';
+  return !view || (x + reach > view.x0 && x - reach < view.x1 && y + reach > view.y0 && y - reach < view.y1);
+}
+
+// Sheet cells are drawn up to this much larger than they were drawn at before shapes take over
+const SHEET_STRETCH = 1.15;
 
 function drawImage(c: SkCanvas, S: SceneData, magnified: boolean) {
   'worklet';
@@ -61,12 +86,29 @@ function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
   }
 }
 
-/** The spread itself: artwork, camouflaged sprites, occluders, night, found sprites, glowing eyes. */
-export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], inLoupe: boolean) {
+/**
+ * The spread itself: artwork, camouflaged sprites, occluders, night, found sprites, glowing eyes.
+ * `view`: the part of the spread that is seen (null: all of it).
+ */
+export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], inLoupe: boolean, view: View | null) {
   'worklet';
   const P = S.paints;
   const now = F.now;
   drawImage(c, S, inLoupe);
+
+  // Sprites at rest come from the sheet while it is sharp enough at this zoom (never in the loupe)
+  const atlas = S.atlas;
+  const fromSheet = (sp: SceneSprite, cell: AtlasCell | null, pose: Pose, hidden: boolean): SpriteCell | null => {
+    const sheet = atlas;
+    if (!sheet || inLoupe || F.s * S.pixelRatio > sheet.density * SHEET_STRETCH || !cell || (sp.blinks && pose.blink !== 1)) return null;
+    return {
+      sheet: sheet.image, cell, plain: P.sheet,
+      ...(hidden ? {
+        modulate: sp.camo === CAMO_CHAMELEON ? P.chameleonModulate : P.inkModulate,
+        baseOpacity: sp.camo === CAMO_CHAMELEON ? 0.95 : 0.8,
+      } : {}),
+    };
+  };
 
   // Still hidden (z 15) — fading out for a moment once found
   for (let i = 0; i < S.sprites.length; i++) {
@@ -75,21 +117,23 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     const fade = pose.found ? 1 - clamp01(pose.age / FOUND_FADE_MS) : 1;
     if (fade <= 0) continue;
     const parts = inLoupe ? sp.loupe : sp.page;
-    if (!parts) continue;
+    if (!parts || !inView(view, pose.x, pose.y, 2.2 * sp.w)) continue;
+    const cell = fromSheet(sp, sp.pageCell, pose, true);
     if (sp.camo === CAMO_CHAMELEON) {
-      drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot);
+      drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, cell);
     } else if (sp.camo === CAMO_INVISIBLE) {
       const glow = track([0, 0.5, 1], [0.7, 1, 0.7], EASE_IN_OUT, loop(now, 2400));
-      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot);
+      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, cell);
     } else {
-      drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot);
+      drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, cell);
     }
   }
 
   // Scraps of painting over tucked-away sprites (z 16)
   for (let i = 0; i < S.sprites.length; i++) {
     const occ = S.sprites[i].occluder;
-    if (!occ) continue;
+    const ob = S.sprites[i].occluderBounds;
+    if (!occ || (ob && !inView(view, ob.x + ob.width / 2, ob.y + ob.height / 2, Math.max(ob.width, ob.height) / 2))) continue;
     c.save();
     c.clipPath(occ, ClipOp.Intersect, true);
     drawImage(c, S, inLoupe);
@@ -103,6 +147,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     const pose = poses[i];
     if (!pose.found) continue;
     const sp = S.sprites[i];
+    if (!inView(view, pose.x, pose.y, 2.2 * sp.w * Math.max(1, pose.bs))) continue;
     if (pose.age < 1100) {
       const b = bloom(pose.age / 1100);
       const reach = 1.9 * sp.w * Math.SQRT1_2 * b.scale;
@@ -121,7 +166,8 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       inLoupe ? P.foundLoupe : P.foundPage,
       0.9 * clamp01(pose.age / FOUND_FADE_MS + 0.15),
       false,
-      P.glowSpot
+      P.glowSpot,
+      fromSheet(sp, sp.foundCell, pose, false)
     );
   }
 
@@ -129,7 +175,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
   if (!inLoupe && S.night) {
     for (let i = 0; i < S.sprites.length; i++) {
       const sp = S.sprites[i];
-      if (!sp.glow || poses[i].found) continue;
+      if (!sp.glow || poses[i].found || !inView(view, poses[i].x, poses[i].y, 2.2 * sp.w)) continue;
       drawSprite(c, sp, poses[i], sp.glow, P.plain, 1, true, P.glowSpot);
     }
   }

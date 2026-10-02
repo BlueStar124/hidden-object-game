@@ -205,6 +205,74 @@ export function spriteParts(type: SpriteType, variant: PaintVariant, tint?: Camo
   return parts;
 }
 
+/** Draws parts as they look at rest: eyes open, nothing waving, glow spots unlit. */
+export function drawPartsAtRest(canvas: SkCanvas, parts: Part[]) {
+  for (const p of parts) {
+    if (p.k === 0) {
+      canvas.drawPicture(p.pic as SkPicture);
+    } else if (p.k === 1) {
+      canvas.save();
+      canvas.concat(p.m as number[]);
+      drawPartsAtRest(canvas, p.parts as Part[]);
+      canvas.restore();
+    } else {
+      drawPartsAtRest(canvas, p.parts as Part[]);
+    }
+  }
+}
+
+/** Whether any of these animations (ANIM_*) moves something in the parts. */
+export function partsAnimate(parts: Part[], anims: number[]): boolean {
+  return parts.some((p) => (p.k === 2 && anims.includes(p.anim as number)) || (!!p.parts && partsAnimate(p.parts, anims)));
+}
+
+const restBounds = new Map<SpriteType, SkRect>();
+
+/** What a sprite's drawing covers at rest, in its view box (strokes included). */
+export function spriteBounds(type: SpriteType): SkRect {
+  let rect = restBounds.get(type);
+  if (rect) return rect;
+  let l = Infinity;
+  let t = Infinity;
+  let r = -Infinity;
+  let b = -Infinity;
+  // m: the affine transform down to this node (SVG a b c d e f)
+  const visit = (n: SpriteArtNode, m: number[]) => {
+    const k = n.m;
+    const own = k
+      ? [
+          m[0] * k[0] + m[2] * k[1],
+          m[1] * k[0] + m[3] * k[1],
+          m[0] * k[2] + m[2] * k[3],
+          m[1] * k[2] + m[3] * k[3],
+          m[0] * k[4] + m[2] * k[5] + m[4],
+          m[1] * k[4] + m[3] * k[5] + m[5],
+        ]
+      : m;
+    if (n.children) return n.children.forEach((c) => visit(c, own));
+    if (!n.d) return;
+    const box = pathOf(n.d).computeTightBounds();
+    const pad = (n.paint?.width ?? 0) / 2 + 1;
+    for (const [x, y] of [
+      [box.x - pad, box.y - pad],
+      [box.x + box.width + pad, box.y - pad],
+      [box.x - pad, box.y + box.height + pad],
+      [box.x + box.width + pad, box.y + box.height + pad],
+    ]) {
+      const sx = own[0] * x + own[2] * y + own[4];
+      const sy = own[1] * x + own[3] * y + own[5];
+      l = Math.min(l, sx);
+      t = Math.min(t, sy);
+      r = Math.max(r, sx);
+      b = Math.max(b, sy);
+    }
+  };
+  SPRITE_ART[type]?.forEach((n) => visit(n, [1, 0, 0, 1, 0, 0]));
+  rect = Number.isFinite(l) ? Skia.XYWHRect(l, t, r - l, b - t) : Skia.XYWHRect(0, 0, 48, 48);
+  restBounds.set(type, rect);
+  return rect;
+}
+
 /** Sprite animation kinds present in a drawing (so the renderer can skip unused curves). */
 export function animKinds(type: SpriteType): Set<ArtAnimKind> {
   const kinds = new Set<ArtAnimKind>();

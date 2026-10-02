@@ -1,5 +1,5 @@
 import { BlendMode, Skia, TileMode, type SkImage } from '@shopify/react-native-skia';
-import type { HiddenObject, Page } from '../../core/model';
+import type { HiddenObject, Page, SpriteType } from '../../core/model';
 import { isCreature } from '../../content/bestiary';
 import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
 import {
@@ -13,11 +13,23 @@ import {
 } from '../render/types';
 import type { BookRect, CamoTint } from './analyze';
 import { createBoardPaints, lampShader, moonPath, type LoupePaints } from './paints';
-import { spriteParts } from './spriteParts';
+import { buildSheet, type AtlasEntry, type SpriteAtlas } from './spriteAtlas';
+import {
+  ANIM_BLINK,
+  ANIM_GLOW_SPOT,
+  ANIM_TAIL,
+  ANIM_WAVE,
+  ANIM_WING,
+  partsAnimate,
+  spriteBounds,
+  spriteParts,
+  type Part,
+} from './spriteParts';
 
 /**
  * Lays a page out for the renderer, once, on the JS thread: every sprite with its drawing in each
- * camouflage variant, occluders, waterlines, the night (lamps, stars, moon) and the paper frame.
+ * camouflage variant, occluders, waterlines, the night (lamps, stars, moon) and the paper frame,
+ * and the sheet of its sprites drawn at rest (scene/spriteAtlas).
  */
 
 const boardPaints = createBoardPaints();
@@ -91,6 +103,8 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     occluder = shape.close().build();
   }
 
+  const page = camo === CAMO_INVISIBLE ? null : spriteParts(type, hiddenVariant, tint);
+  const found = spriteParts(type, 'base');
   return {
     id: obj.id,
     x: obj.x * PAGE_W,
@@ -106,15 +120,70 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     roam,
     bob: !!roam?.bob,
     blinkDelay: blinkDelay(obj.id),
-    page: camo === CAMO_INVISIBLE ? null : spriteParts(type, hiddenVariant, tint),
+    page,
     loupe: spriteParts(type, camo === CAMO_INVISIBLE ? 'invisible' : hiddenVariant, tint),
-    found: spriteParts(type, 'base'),
+    found,
     glow: glows ? spriteParts(type, camo === CAMO_CHAMELEON ? 'glowChameleon' : 'glow', tint) : null,
     bounds: Skia.XYWHRect(-1.4 * w, -1.4 * w, 2.8 * w, 2.8 * w),
     box: Skia.XYWHRect(-w / 2, -w / 2, w, w),
     water: obj.waterline !== undefined ? waterPaint(w, obj.waterline) : null,
     occluder,
+    occluderBounds: occluder ? occluder.computeTightBounds() : null,
+    pageCell: null,
+    foundCell: null,
+    blinks: partsAnimate(found, [ANIM_BLINK]),
   };
+}
+
+// What keeps moving in a found sprite
+const FOUND_MOTION = [ANIM_WING, ANIM_TAIL, ANIM_WAVE, ANIM_GLOW_SPOT];
+
+/**
+ * Draws the page's sprites at rest into one sheet and hands each sprite its cells: hidden on the
+ * page, and found if nothing in it moves once found (wings, tails, paws, glow spots do).
+ */
+function layOutAtlas(sprites: SceneSprite[], objects: HiddenObject[], density: number): SpriteAtlas | null {
+  const entries: AtlasEntry[] = [];
+  const index = new Map<Part[], Map<number, number>>(); // same drawing at the same size: one cell
+  const entryOf = (parts: Part[], type: SpriteType, w: number) => {
+    let bySize = index.get(parts);
+    if (!bySize) index.set(parts, (bySize = new Map()));
+    let i = bySize.get(w);
+    if (i === undefined) {
+      i = entries.push({ parts, bounds: spriteBounds(type), w }) - 1;
+      bySize.set(w, i);
+    }
+    return i;
+  };
+  const types = new Map(objects.map((o) => [o.id, o.spriteType!]));
+  const wanted = sprites.map((sp) => {
+    const type = types.get(sp.id)!;
+    return {
+      page: sp.page && sp.page.length ? entryOf(sp.page, type, sp.w) : -1,
+      found: partsAnimate(sp.found, FOUND_MOTION) ? -1 : entryOf(sp.found, type, sp.w),
+    };
+  });
+  // Both kinds share one texture, but only hidden cells are backed with white.
+  // Bake the ink filter before drawing over white, never over the backing itself.
+  const hiddenEntries: AtlasEntry[] = [];
+  const hiddenWanted = sprites.map((sp, i) => {
+    if (wanted[i].page < 0 || sp.water) return -1;
+    return hiddenEntries.push({
+      ...entries[wanted[i].page],
+      filter: sp.camo === CAMO_INK ? boardPaints.inkFilter : null,
+      background: 'white',
+    }) - 1;
+  });
+  const foundEntries: AtlasEntry[] = [];
+  const foundWanted = sprites.map((sp, i) => wanted[i].found < 0
+    ? -1 : foundEntries.push(entries[wanted[i].found]) - 1);
+  const { sheet, cells } = buildSheet([...hiddenEntries, ...foundEntries], density, 'transparent');
+  if (!sheet) return null;
+  sprites.forEach((sp, i) => {
+    sp.pageCell = hiddenWanted[i] >= 0 ? cells[hiddenWanted[i]] : null;
+    sp.foundCell = foundWanted[i] >= 0 ? cells[hiddenEntries.length + foundWanted[i]] : null;
+  });
+  return sheet;
 }
 
 function buildNight(page: Page): NightScene {
@@ -140,9 +209,12 @@ export interface SceneOptions {
   book: BookRect;
   loupe: LoupePaints;
   compact: boolean;
+  /** Device pixels per page unit to draw the sprite sheet at (scene/spriteAtlas) */
+  density: number;
+  pixelRatio: number;
 }
 
-export function buildScene({ page, image, tints, book, loupe, compact }: SceneOptions): SceneData {
+export function buildScene({ page, image, tints, book, loupe, compact, density, pixelRatio }: SceneOptions): SceneData {
   const night = !!page.isNight;
   const pageRect = Skia.XYWHRect(0, 0, PAGE_W, PAGE_H);
   const marks: SceneMark[] = page.objects.map((o) => {
@@ -155,6 +227,8 @@ export function buildScene({ page, image, tints, book, loupe, compact }: SceneOp
   });
   const lensR = loupe.lensR;
   const bookRect = Skia.XYWHRect(book.x * PAGE_W, book.y * PAGE_H, book.w * PAGE_W, book.h * PAGE_H);
+  const painted = page.objects.filter(isPainted);
+  const sprites = painted.map((o) => buildSprite(o, tints[o.id], night));
   return {
     image,
     imageRect: Skia.XYWHRect(0, 0, image.width(), image.height()),
@@ -162,12 +236,14 @@ export function buildScene({ page, image, tints, book, loupe, compact }: SceneOp
     pageRRect: Skia.RRectXY(pageRect, 4 * PX, 4 * PX),
     bookRRect: Skia.RRectXY(bookRect, 4 * PX, 4 * PX),
     paperRRect: Skia.RRectXY(bookRect, PAPER_CORNER, PAPER_CORNER),
-    sprites: page.objects.filter(isPainted).map((o) => buildSprite(o, tints[o.id], night)),
+    sprites,
     marks,
     night: night ? buildNight(page) : null,
     paints: boardPaints,
     loupe,
     lensRRect: Skia.RRectXY(Skia.XYWHRect(-lensR, -lensR, 2 * lensR, 2 * lensR), lensR, lensR),
     stampSize: compact ? 32 : 44,
+    atlas: layOutAtlas(sprites, painted, density),
+    pixelRatio,
   };
 }

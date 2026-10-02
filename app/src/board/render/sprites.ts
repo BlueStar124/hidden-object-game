@@ -1,7 +1,8 @@
-import { ClipOp, type SkCanvas, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
+import { ClipOp, FilterMode, MipmapMode, type SkCanvas, type SkImage, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
 import { roamState, shyPhase } from '../../core/motion';
 import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, track } from '../anim';
 import { PAGE_H, PAGE_W } from '../constants';
+import type { AtlasCell } from '../scene/spriteAtlas';
 import { ANIM_BLINK, ANIM_GLOW_SPOT, ANIM_TAIL, ANIM_WAVE, ANIM_WING, type Part } from '../scene/spriteParts';
 import type { FoundInfo, FrameState, Pose, SceneData, SceneSprite } from './types';
 
@@ -143,6 +144,20 @@ function drawParts(c: SkCanvas, parts: Part[], pose: Pose, glowMode: boolean, sp
   }
 }
 
+/** A sprite drawn whole from the page's sprite sheet instead of its shapes. */
+export interface SpriteCell {
+  sheet: SkImage;
+  cell: AtlasCell;
+  plain: SkPaint; // draws the cell inside a layer
+  modulate?: SkPaint[]; // opacity steps of an opaque, white-backed cell
+  baseOpacity?: number;
+}
+
+/**
+ * One sprite, as a group: `layer` (camouflage blend, colour filter, shadow…) applies to the whole
+ * drawing at `alpha`. From the sheet (`fromSheet`) a single image takes that paint itself; shapes
+ * need a layer.
+ */
 export function drawSprite(
   c: SkCanvas,
   sp: SceneSprite,
@@ -151,7 +166,8 @@ export function drawSprite(
   layer: SkPaint,
   alpha: number,
   glowMode: boolean,
-  spotPaint: SkPaint
+  spotPaint: SkPaint,
+  fromSheet: SpriteCell | null = null
 ) {
   'worklet';
   const a = alpha * pose.op;
@@ -163,7 +179,12 @@ export function drawSprite(
   if (pose.flip < 0) c.scale(-1, 1);
   if (sp.water) c.clipRect(sp.box, ClipOp.Intersect, true);
   layer.setAlphaf(a);
-  c.saveLayer(layer, sp.bounds);
+  const cellPaint = fromSheet?.modulate
+    ? fromSheet.modulate[Math.max(0, Math.min(128, Math.round(a / fromSheet.baseOpacity! * 128)))]
+    : layer;
+  // The waterline fades the group: that still takes a layer
+  const direct = fromSheet !== null && !sp.water;
+  if (!direct) c.saveLayer(layer, sp.bounds);
   c.save();
   if (pose.dx !== 0 || pose.dy !== 0) c.translate(pose.dx * w, pose.dy * w);
   if (pose.rot !== 0) c.rotate(pose.rot, 0, 0);
@@ -172,9 +193,14 @@ export function drawSprite(
   const k = w / 48;
   c.scale(k, k);
   c.translate(-24, -24);
-  drawParts(c, parts, pose, glowMode, spotPaint);
+  if (fromSheet) {
+    const { sheet, cell } = fromSheet;
+    c.drawImageRectOptions(sheet, cell.src, cell.dst, FilterMode.Linear, MipmapMode.None, direct ? cellPaint : fromSheet.plain);
+  } else {
+    drawParts(c, parts, pose, glowMode, spotPaint);
+  }
   c.restore();
   if (sp.water) c.drawRect(sp.box, sp.water);
-  c.restore();
+  if (!direct) c.restore();
   c.restore();
 }

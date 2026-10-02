@@ -26,6 +26,11 @@ class WebAudioSynth {
     }
   }
 
+  /** Opens the audio context ahead of the first sound (it takes a moment); call from a user gesture. */
+  public prepare() {
+    this.initContext();
+  }
+
   public setSoundEnabled(enabled: boolean) {
     this.soundEnabled = enabled;
   }

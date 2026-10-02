@@ -80,9 +80,13 @@ const IconButton: React.FC<{
   </Pressable>
 );
 
-const PageSwitcher: React.FC<
-  Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>
-> = ({ pageIndex, pageCount, onPrevPage, onNextPage, onOpenIndex }) => (
+const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
+  pageIndex,
+  pageCount,
+  onPrevPage,
+  onNextPage,
+  onOpenIndex,
+}) => (
   <View style={styles.switcher}>
     <Pressable
       onPress={onPrevPage}
@@ -110,7 +114,7 @@ const PageSwitcher: React.FC<
       <ChevronRight size={16} color={colors.inkSoft} />
     </Pressable>
   </View>
-);
+));
 
 const NightBadge = () => (
   <View style={styles.nightBadge}>
@@ -188,28 +192,54 @@ const ComboBadge: React.FC<{ combo: number; comboTimer: number; compact: boolean
   );
 };
 
+/** Album, sound, hint, pause. */
+const Actions = React.memo<
+  Pick<HUDProps, 'soundEnabled' | 'onOpenAlbum' | 'onToggleSound' | 'onUseHint' | 'onPause'> & { wide: boolean }
+>(({ wide, soundEnabled, onOpenAlbum, onToggleSound, onUseHint, onPause }) => {
+  const iconSize = wide ? 18 : 17;
+  const SoundIcon = soundEnabled ? Volume2 : VolumeX;
+  return (
+    <View style={styles.actions}>
+      <IconButton onPress={onOpenAlbum} label="Sổ Tay" showLabel={wide} tone="album">
+        <BookHeart size={iconSize} color={colors.emerald} />
+      </IconButton>
+      <IconButton onPress={onToggleSound} label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}>
+        <SoundIcon size={iconSize} color={colors.ink} />
+      </IconButton>
+      <IconButton onPress={onUseHint} label="Gợi Ý" showLabel={wide} tone="hint">
+        <CircleQuestionMark size={iconSize} color={colors.earth} />
+      </IconButton>
+      <IconButton onPress={onPause} label="Tạm dừng">
+        <Pause size={iconSize} color={colors.ink} />
+      </IconButton>
+    </View>
+  );
+});
+
+/** The bar over the sketchbook. From second to second only the clock (score, combo) changes. */
 export const HUD: React.FC<HUDProps> = (props) => {
   const { layout, page, chapterNumber, score, remainingTime, combo, comboTimer, soundEnabled, isNight, topInset, insetLeft, insetRight } =
     props;
   const wide = layout === 'wide';
-  const iconSize = wide ? 18 : 17;
-  const SoundIcon = soundEnabled ? Volume2 : VolumeX;
 
   const actions = (
-    <View style={styles.actions}>
-      <IconButton onPress={props.onOpenAlbum} label="Sổ Tay" showLabel={wide} tone="album">
-        <BookHeart size={iconSize} color={colors.emerald} />
-      </IconButton>
-      <IconButton onPress={props.onToggleSound} label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}>
-        <SoundIcon size={iconSize} color={colors.ink} />
-      </IconButton>
-      <IconButton onPress={props.onUseHint} label="Gợi Ý" showLabel={wide} tone="hint">
-        <CircleQuestionMark size={iconSize} color={colors.earth} />
-      </IconButton>
-      <IconButton onPress={props.onPause} label="Tạm dừng">
-        <Pause size={iconSize} color={colors.ink} />
-      </IconButton>
-    </View>
+    <Actions
+      wide={wide}
+      soundEnabled={soundEnabled}
+      onOpenAlbum={props.onOpenAlbum}
+      onToggleSound={props.onToggleSound}
+      onUseHint={props.onUseHint}
+      onPause={props.onPause}
+    />
+  );
+  const switcher = (
+    <PageSwitcher
+      pageIndex={props.pageIndex}
+      pageCount={props.pageCount}
+      onPrevPage={props.onPrevPage}
+      onNextPage={props.onNextPage}
+      onOpenIndex={props.onOpenIndex}
+    />
   );
 
   const scoreBox = (
@@ -236,7 +266,7 @@ export const HUD: React.FC<HUDProps> = (props) => {
     return (
       <View style={[container, styles.row, { paddingBottom: 5 }]}>
         {background}
-        <PageSwitcher {...props} />
+        {switcher}
         {isNight && <NightBadge />}
         <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
           {page.title}
@@ -254,7 +284,7 @@ export const HUD: React.FC<HUDProps> = (props) => {
       <View style={[container, { paddingBottom: 6, gap: 6 }]}>
         {background}
         <View style={styles.row}>
-          <PageSwitcher {...props} />
+          {switcher}
           <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
             {page.title}
           </Text>
@@ -277,7 +307,7 @@ export const HUD: React.FC<HUDProps> = (props) => {
       <View style={{ flexShrink: 1 }}>
         <View style={[styles.row, { marginBottom: 4 }]}>
           <Text style={styles.caseTag}>HỒ SƠ ĐIỀU TRA #CHƯƠNG {chapterNumber}</Text>
-          <PageSwitcher {...props} />
+          {switcher}
           {isNight && <NightBadge />}
         </View>
         <Text style={[styles.title, isNight && styles.titleNight]} numberOfLines={1}>

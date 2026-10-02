@@ -11,6 +11,7 @@ import { allPages } from '../content';
 import { useGame } from '../game/useGame';
 import { sound } from '../platform/sound';
 import { ScanSearch } from '../ui/icons';
+import { useStableCallback } from '../ui/useStableCallback';
 import { colors, fonts } from '../ui/theme';
 import { Desk } from './Desk';
 import { CreatureAlbum } from './dialogs/CreatureAlbum';
@@ -111,6 +112,12 @@ export const GameScreen: React.FC = () => {
   }, [kase.screenShake, shake]);
   const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.value }] }));
 
+  // Stable handlers: the HUD and the board skip the re-render of every clock tick
+  const openIndex = useCallback(() => setShowIndex(true), []);
+  const openAlbum = useCallback(() => setShowAlbum(true), []);
+  const requestHint = useStableCallback(kase.requestHint);
+  const inspect = useStableCallback(kase.inspect);
+
   const measureRoot = useCallback(() => {
     rootRef.current?.measureInWindow((x, y) => setRootOffset({ x, y }));
   }, []);
@@ -137,12 +144,12 @@ export const GameScreen: React.FC = () => {
         topInset={insets.top}
         insetLeft={insets.left}
         insetRight={insets.right}
-        onOpenIndex={() => setShowIndex(true)}
-        onOpenAlbum={() => setShowAlbum(true)}
+        onOpenIndex={openIndex}
+        onOpenAlbum={openAlbum}
         onPrevPage={nav.prev}
         onNextPage={nav.next}
         onToggleSound={toggleSound}
-        onUseHint={kase.requestHint}
+        onUseHint={requestHint}
         onPause={togglePause}
       />
 
@@ -156,7 +163,7 @@ export const GameScreen: React.FC = () => {
           nudgeTarget={nudgeTarget}
           turn={turn}
           fogged={kase.isFogged}
-          onInspect={kase.inspect}
+          onInspect={inspect}
           preload={preload}
           active={boardActive}
         >
@@ -229,7 +236,7 @@ export const GameScreen: React.FC = () => {
 
       {/* Both close as soon as a page starts turning, so the turn shows */}
       {c.isGameOver && !c.isCompleted && !isTurning && (
-        <TimeUpScreen page={page} foundIds={c.foundItems} onReplay={nav.replay} onOpenIndex={() => setShowIndex(true)} />
+        <TimeUpScreen page={page} foundIds={c.foundItems} onReplay={nav.replay} onOpenIndex={openIndex} />
       )}
 
       {askToRotate && <RotatePrompt onKeepPortrait={() => setKeepPortrait(true)} />}

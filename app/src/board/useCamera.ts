@@ -14,6 +14,14 @@ import type { SceneData } from './render';
 const FIT_PAD = 8;
 const OVERSCROLL = 8;
 
+// The paper of the sketchbook template every painting follows (page units)
+const TEMPLATE_PAPER = { w: 1584, h: 700 };
+
+/** Page → screen scale at 1×: the paper (bw × bh page units) fitted to the board. */
+export function fittedScale(w: number, h: number, bw: number = TEMPLATE_PAPER.w, bh: number = TEMPLATE_PAPER.h) {
+  return Math.min((w - 2 * FIT_PAD) / bw, (h - 2 * FIT_PAD) / bh);
+}
+
 /** Diameter of the loupe: big enough to search with, never more than ~40% of the shorter side. */
 export function loupeDiameter(w: number, h: number) {
   return Math.round(Math.max(110, Math.min(220, Math.min(w, h) * 0.42)));
@@ -133,7 +141,7 @@ export function useCamera(
   const bh = book?.height ?? PAGE_H;
   useEffect(() => {
     if (!size || size.w === 0 || size.h === 0) return;
-    const fit = Math.min((size.w - 2 * FIT_PAD) / bw, (size.h - 2 * FIT_PAD) / bh);
+    const fit = fittedScale(size.w, size.h, bw, bh);
     const d = loupeDiameter(size.w, size.h);
     const prevZoom = s.value / dims.value.fit;
     dims.value = { w: size.w, h: size.h, fit, r: d / 2, d, bx, by, bw, bh };

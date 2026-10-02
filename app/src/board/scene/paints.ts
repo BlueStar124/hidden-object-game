@@ -1,5 +1,6 @@
 import { BlendMode, BlurStyle, PaintStyle, PathOp, Skia, TileMode, type SkPaint } from '@shopify/react-native-skia';
 import { LOUPE_ZOOM, PX } from '../constants';
+import { makeLoupeBody, type LoupeBody } from './loupeBody';
 
 /**
  * Paints & shaders for the sketchbook, transcribed from the original web CSS. Created once on the JS
@@ -103,16 +104,34 @@ const INK_FILTER = [sepia(0.4), contrast(0.92), brightness(1.04)].reduce((acc, m
 /* ------------------------------------ Board ------------------------------------ */
 
 export function createBoardPaints() {
+  const inkFilter = Skia.ColorFilter.MakeMatrix(INK_FILTER);
+  // Opaque, white-backed cells multiply all RGBA components. Fade RGB towards white,
+  // leaving alpha at one, rather than making the painting itself transparent.
+  const modulatePaints = (opacity: number) => Array.from({ length: 129 }, (_, i) => {
+    const a = opacity * i / 128;
+    return paint((p) => {
+      p.setBlendMode(BlendMode.Modulate);
+      p.setColorFilter(Skia.ColorFilter.MakeMatrix([
+        a, 0, 0, 0, 1 - a,
+        0, a, 0, 0, 1 - a,
+        0, 0, a, 0, 1 - a,
+        0, 0, 0, 0, 1,
+      ]));
+    });
+  });
   const dropShadow = (dy: number, blur: number, c: string, input: ReturnType<typeof Skia.ImageFilter.MakeBlur> | null = null) =>
     Skia.ImageFilter.MakeDropShadow(0, dy, blur / 2, blur / 2, color(c), input);
 
   return {
     image: paint(),
+    inkFilter,
+    inkModulate: modulatePaints(0.8),
+    chameleonModulate: modulatePaints(0.95),
 
     // Unfound sprite layers (alpha set per draw)
     ink: paint((p) => {
       p.setBlendMode(BlendMode.Multiply);
-      p.setColorFilter(Skia.ColorFilter.MakeMatrix(INK_FILTER));
+      p.setColorFilter(inkFilter);
     }),
     chameleon: paint((p) => p.setBlendMode(BlendMode.Multiply)),
     // Invisible ink only ever shows through the loupe: CSS px there are not magnified
@@ -127,6 +146,7 @@ export function createBoardPaints() {
       )
     ),
     plain: paint(),
+    sheet: paint(), // a sprite's cell of the sprite sheet, inside its layer
     // Found sprites: `drop-shadow(0 2px 3px rgba(44, 36, 27, 0.32))`
     foundPage: paint((p) => p.setImageFilter(dropShadow(2 * PX, 3 * PX, 'rgba(44, 36, 27, 0.32)'))),
     foundLoupe: paint((p) =>
@@ -241,8 +261,11 @@ export function moonPath(cx: number, cy: number, r: number) {
 
 /* ------------------------------------ Loupe ------------------------------------ */
 
-/** Paints of the brass loupe for a lens of diameter `d` (screen px), centred on (0, 0). */
-export function createLoupePaints(d: number) {
+/**
+ * Paints of the brass loupe for a lens of diameter `d` (screen px), centred on (0, 0), and its body
+ * drawn once at `pixelRatio` (scene/loupeBody).
+ */
+export function createLoupePaints(d: number, pixelRatio: number) {
   const r = d / 2;
   const lensR = r - 0.0375 * d;
   const grad = (from: [number, number], to: [number, number], colors: string[], stops: number[]) =>
@@ -264,7 +287,7 @@ export function createLoupePaints(d: number) {
   const ferruleW = 1.28 * gripW;
   const ferruleH = 0.14 * gripH;
 
-  return {
+  const paints = {
     d,
     r,
     lensR,
@@ -360,7 +383,12 @@ export function createLoupePaints(d: number) {
       );
     }),
     fogAlpha: paint(),
+    // Grip, bezel and their shadows as one image (null: drawn from these paints)
+    body: null as LoupeBody | null,
+    bodyPaint: paint(),
   };
+  paints.body = makeLoupeBody(paints, pixelRatio);
+  return paints;
 }
 
 export type LoupePaints = ReturnType<typeof createLoupePaints>;

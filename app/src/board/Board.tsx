@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
+import { PixelRatio, Pressable, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 import { Canvas, Picture, Skia, type SkPicture } from '@shopify/react-native-skia';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
@@ -10,12 +10,14 @@ import { colors } from '../ui/theme';
 import { MAX_ZOOM, MIN_ZOOM } from './constants';
 import { renderFrame } from './render';
 import { createLoupePaints } from './scene/paints';
+import { atlasDensity } from './scene/spriteAtlas';
 import { useBoardGestures } from './useBoardGestures';
-import { loupeDiameter, useCamera } from './useCamera';
+import { fittedScale, loupeDiameter, useCamera } from './useCamera';
 import { useCaseMarks } from './useCaseMarks';
 import { usePageTurn } from './usePageTurn';
 import { usePagesAround } from './usePagesAround';
 import { useSceneLibrary } from './useSceneLibrary';
+import { useWarmUp } from './useWarmUp';
 
 /**
  * The sketchbook: the painted page with its hidden objects, the loupe, the zoom buttons. Drawn
@@ -27,6 +29,7 @@ import { useSceneLibrary } from './useSceneLibrary';
  *   useCaseMarks     the case's state for the renderer (found, radar, mist, nudge)
  *   usePageTurn      a page turning over to the next one
  *   usePagesAround   the neighbouring pages, prepared ahead
+ *   useWarmUp        the GPU set up for what is still to come, while a dialog covers the board
  *   useBoardGestures touch, pinch, wheel → camera, loupe and inspections
  */
 
@@ -54,7 +57,7 @@ const emptyPicture = (() => {
   return rec.finishRecordingAsPicture();
 })();
 
-export const Board: React.FC<BoardProps> = ({
+export const Board = React.memo<BoardProps>(function Board({
   page,
   foundIds,
   foundAt,
@@ -66,7 +69,7 @@ export const Board: React.FC<BoardProps> = ({
   preload,
   active = true,
   children,
-}) => {
+}) {
   const win = useWindowDimensions();
   const compact = win.width < 640;
 
@@ -82,16 +85,18 @@ export const Board: React.FC<BoardProps> = ({
   }, []);
 
   const diameter = size ? loupeDiameter(size.w, size.h) : 140;
-  const loupePaints = useMemo(() => createLoupePaints(diameter), [diameter]);
+  const loupePaints = useMemo(() => createLoupePaints(diameter, PixelRatio.get()), [diameter]);
   // While a page turns, the turn moves the camera (the hooks below read it during their effects)
   const turning = useRef(false);
 
   // The order of these hooks is the order their effects run in: keep it
-  const library = useSceneLibrary(page, loupePaints, compact);
+  const density = size ? atlasDensity(fittedScale(size.w, size.h), PixelRatio.get()) : 1;
+  const library = useSceneLibrary(page, loupePaints, compact, density);
   const camera = useCamera(size, library.shown, page.id, diameter, turning);
   const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera);
   const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);
+  const warmUp = useWarmUp(library.scene, !active, camera);
 
   /* --------------------------------- Frame --------------------------------- */
 
@@ -123,8 +128,9 @@ export const Board: React.FC<BoardProps> = ({
       flip,
       flipStart: flipStart.value,
       warm,
+      warmUp,
     });
-  }, [shown, flip, warm]);
+  }, [shown, flip, warm, warmUp]);
 
   const { gesture, zoomRect, bannerRect } = useBoardGestures(camera, active && !flip, onInspect, windowOffset, viewRef, turning);
 
@@ -188,7 +194,7 @@ export const Board: React.FC<BoardProps> = ({
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   root: {

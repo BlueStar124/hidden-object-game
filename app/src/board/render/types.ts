@@ -1,6 +1,7 @@
 import type { Skia, SkImage, SkPaint, SkPath, SkPicture, SkRect, SkRRect } from '@shopify/react-native-skia';
 import type { RoamBehavior, ShyBehavior } from '../../core/model';
 import type { BoardPaints, LoupePaints } from '../scene/paints';
+import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import type { Part } from '../scene/spriteParts';
 
 /**
@@ -40,6 +41,11 @@ export interface SceneSprite {
   box: SkRect; // the sprite box in its frame
   water: SkPaint | null; // waterline fade (dst-in)
   occluder: SkPath | null; // painting laid back over the sprite
+  occluderBounds: SkRect | null;
+  // Drawn at rest in the page's sprite sheet (null: always drawn from its shapes)
+  pageCell: AtlasCell | null; // hidden, on the page
+  foundCell: AtlasCell | null; // found (only sprites that stay still once found)
+  blinks: boolean; // its eyes close now and then (drawn from its shapes meanwhile)
 }
 
 export interface SceneMark {
@@ -76,6 +82,8 @@ export interface SceneData {
   loupe: LoupePaints;
   lensRRect: SkRRect;
   stampSize: number;
+  atlas: SpriteAtlas | null;
+  pixelRatio: number; // device pixels per screen unit
 }
 
 export interface FoundInfo {
@@ -101,6 +109,7 @@ export interface FrameState {
   flip: PageFlip | null;
   flipStart: number; // when the leaf started to turn (0: not yet)
   warm: SkImage[]; // artwork of the pages likely to come next, kept on the GPU
+  warmUp?: FrameState[] | null; // frames drawn all but invisibly, to set the GPU up for them
 }
 
 /** A page turning over. Both pages are recorded flat, in page units, when the turn begins. */
