@@ -18,7 +18,7 @@ import type { Chapter, Page } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { ModalShell } from '../../ui/ModalShell';
 import { PrimaryButton } from '../../ui/Buttons';
-import { useShortLandscape } from '../../ui/layout';
+import { useCompact, useShortLandscape } from '../../ui/layout';
 
 interface BriefingItem {
   icon: LucideIcon;
@@ -56,8 +56,18 @@ export const StoryPrologue: React.FC<StoryPrologueProps> = ({ chapter, chapterNu
   const briefing = night ? NIGHT_BRIEFING : DAY_BRIEFING;
   const paragraphs = night ? [nightPage!.storyClue] : chapter.prologue;
   const ink = night ? colors.moonlight : colors.ink;
-  // Phone held sideways: story on the left, how-to-play on the right
+  // Phone held sideways: story on the left, how-to-play and the button on the right
   const columns = useShortLandscape();
+  const compact = useCompact();
+
+  const start = (
+    <PrimaryButton
+      tall={!compact}
+      label={night ? 'Bật Đèn Pin & Bắt Đầu' : 'Mở Cuốn Sổ & Bắt Đầu Điều Tra'}
+      icon={night ? <Flashlight size={19} color="#fff" /> : <BookOpen size={19} color="#fff" />}
+      onPress={onStartGame}
+    />
+  );
 
   return (
     <ModalShell
@@ -65,34 +75,32 @@ export const StoryPrologue: React.FC<StoryPrologueProps> = ({ chapter, chapterNu
       zIndex={300}
       backdrop={night ? 'rgba(6, 10, 26, 0.82)' : 'rgba(30, 26, 20, 0.74)'}
       cardStyle={night && styles.nightCard}
-      footer={
-        <PrimaryButton
-          tall
-          label={night ? 'Bật Đèn Pin & Bắt Đầu' : 'Mở Cuốn Sổ & Bắt Đầu Điều Tra'}
-          icon={night ? <Flashlight size={19} color="#fff" /> : <BookOpen size={19} color="#fff" />}
-          onPress={onStartGame}
-        />
-      }
+      contentStyle={compact && styles.contentCompact}
+      // Sideways the button goes under the briefing: a full-width row would cost the height
+      footer={columns ? undefined : start}
     >
       <View style={columns ? styles.columns : styles.stack}>
         <View style={columns ? styles.column : styles.stack}>
-          <View style={[styles.stamp, night && { borderColor: colors.moonGold }]}>
+          <View style={[styles.stamp, compact && styles.stampCompact, night && { borderColor: colors.moonGold }]}>
             {night ? <Moon size={20} color={colors.moonGold} /> : <Compass size={22} color={colors.earth} />}
             <Text style={[styles.stampText, night && { color: colors.moonGold }]}>
               {night ? 'ĐÊM XUỐNG' : `CASE FILE #${chapterNumber}`}
             </Text>
           </View>
 
-          <Text style={[styles.title, { color: ink }]}>{night ? nightPage!.title : chapter.title}</Text>
+          <Text style={[styles.title, compact && styles.titleCompact, { color: ink }]}>{night ? nightPage!.title : chapter.title}</Text>
           <Text style={[styles.subtitle, night && { color: 'rgba(244, 236, 208, 0.7)' }]}>
             {night ? nightPage!.subtitle : chapter.subtitle}
           </Text>
 
-          <View style={[styles.divider, night && { backgroundColor: 'rgba(244, 236, 208, 0.2)' }]} />
+          <View style={[styles.divider, compact && styles.dividerCompact, night && { backgroundColor: 'rgba(244, 236, 208, 0.2)' }]} />
 
-          <View style={styles.narrative}>
+          <View style={[styles.narrative, compact && styles.narrativeCompact]}>
             {paragraphs.map((p, i) => (
-              <Text key={i} style={[styles.paragraph, { color: night ? 'rgba(244, 236, 208, 0.92)' : colors.ink }]}>
+              <Text
+                key={i}
+                style={[styles.paragraph, compact && styles.paragraphCompact, { color: night ? 'rgba(244, 236, 208, 0.92)' : colors.ink }]}
+              >
                 {' '}
                 {p}
               </Text>
@@ -100,13 +108,18 @@ export const StoryPrologue: React.FC<StoryPrologueProps> = ({ chapter, chapterNu
           </View>
         </View>
 
-        <View style={[styles.briefing, night && styles.briefingNight, columns && styles.briefingSide]}>
-          {briefing.map(({ icon: Icon, text }) => (
-            <View key={text} style={styles.briefingItem}>
-              <Icon size={17} color={night ? colors.moonGold : colors.gold} />
-              <Text style={[styles.briefingText, night && { color: 'rgba(244, 236, 208, 0.85)' }]}>{text}</Text>
-            </View>
-          ))}
+        <View style={columns ? styles.side : styles.stack}>
+          <View style={[styles.briefing, compact && styles.briefingCompact, night && styles.briefingNight]}>
+            {briefing.map(({ icon: Icon, text }) => (
+              <View key={text} style={styles.briefingItem}>
+                <Icon size={17} color={night ? colors.moonGold : colors.gold} />
+                <Text style={[styles.briefingText, compact && styles.briefingTextCompact, night && { color: 'rgba(244, 236, 208, 0.85)' }]}>
+                  {text}
+                </Text>
+              </View>
+            ))}
+          </View>
+          {columns && <View style={styles.sideStart}>{start}</View>}
         </View>
       </View>
     </ModalShell>
@@ -124,14 +137,18 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 22,
   },
+  // The story is read once; the briefing, with the button under it, is the taller column
   column: {
-    flex: 1.15,
+    flex: 1,
     alignItems: 'center',
   },
-  briefingSide: {
-    flex: 1,
+  side: {
+    flex: 1.1,
     alignSelf: 'flex-start',
-    marginTop: 6,
+    marginTop: 2,
+  },
+  sideStart: {
+    marginTop: 8,
   },
   nightCard: {
     backgroundColor: '#171e36',
@@ -210,5 +227,37 @@ const styles = StyleSheet.create({
     fontSize: 12.5,
     lineHeight: 17,
     color: colors.inkSoft,
+  },
+  // Little height (useCompact): tighter spacing, smaller title and text
+  contentCompact: {
+    paddingTop: 14,
+    paddingBottom: 10,
+  },
+  stampCompact: {
+    paddingVertical: 2,
+    marginBottom: 6,
+  },
+  titleCompact: {
+    fontSize: 24,
+    lineHeight: 28,
+  },
+  dividerCompact: {
+    marginVertical: 8,
+  },
+  narrativeCompact: {
+    gap: 5,
+    marginBottom: 6,
+  },
+  paragraphCompact: {
+    fontSize: 13.5,
+    lineHeight: 19,
+  },
+  briefingCompact: {
+    gap: 6,
+    padding: 10,
+  },
+  briefingTextCompact: {
+    fontSize: 12,
+    lineHeight: 16,
   },
 });

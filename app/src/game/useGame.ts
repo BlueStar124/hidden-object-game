@@ -7,15 +7,16 @@ import { useNotices } from './useNotices';
 /**
  * A play session: where the player is in the books (useNavigation), the case of the page being
  * played (useCase), and the notices floating up from the page (useNotices).
+ * `browsing`: the page index or the album covers the sketchbook — the clock waits meanwhile.
  */
-export function useGame() {
+export function useGame({ browsing }: { browsing: boolean }) {
   const nav = useNavigation();
   const { notices, notify } = useNotices();
   const kase = useCase(
     nav.page,
     nav.visit,
     {
-      clockRuns: !nav.showPrologue && !nav.showNightIntro,
+      clockRuns: !nav.showPrologue && !nav.showNightIntro && !browsing,
       isTurning: nav.turn !== null,
       nextPage: nav.nextPage,
       night: nav.isNight ? undefined : nav.ref.night,

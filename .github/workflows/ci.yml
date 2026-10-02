@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: |
+            app/package-lock.json
+            package-lock.json
 
       - name: Install
         run: npm ci
@@ -42,3 +44,23 @@ jobs:
 
       - name: Build web
         run: npm run build:web
+
+      # Playwright comes from the repo root (the tools' package). Roboto: the system font of
+      # Android phones, which the web app's labels then use, as they would on one
+      - name: Install Playwright and fonts
+        working-directory: .
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          sudo apt-get install -y fonts-roboto
+
+      - name: Screen sizes (every dialog and the game, on phones either way up, tablets, computers)
+        run: npm run test:screens
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screens
+          path: scratch/screens
+          if-no-files-found: ignore

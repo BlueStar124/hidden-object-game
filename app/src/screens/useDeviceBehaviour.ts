@@ -21,7 +21,8 @@ export function useDeviceBehaviour({
   /** Closes the sheet on top (album, index…); false when none is open */
   closeTopSheet: () => boolean;
 }) {
-  useKeepAwake();
+  // (A browser may refuse the wake lock: then there is nothing to release, and no error to report)
+  useKeepAwake(undefined, { suppressDeactivateWarnings: true });
 
   // Full screen on Android (swipe from the edge to bring the system bars back)
   useEffect(() => {
