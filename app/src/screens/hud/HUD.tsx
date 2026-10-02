@@ -25,6 +25,7 @@ import {
 import type { Page } from '../../core/model';
 import { formatClock, formatNumber } from '../../ui/format';
 import { colors, fonts, gradients } from '../../ui/theme';
+import { ExploreStatus } from './ExploreStatus';
 
 export type HudLayout = 'phone' | 'phoneLandscape' | 'wide';
 
@@ -43,6 +44,8 @@ interface HUDProps {
   topInset: number;
   insetLeft: number;
   insetRight: number;
+  exploreRemaining: number | null;
+  onFinishExplore: () => void;
   onOpenIndex: () => void;
   onOpenAlbum: () => void;
   onPrevPage: () => void;
@@ -221,6 +224,9 @@ export const HUD: React.FC<HUDProps> = (props) => {
   const { layout, page, chapterNumber, score, remainingTime, combo, comboTimer, soundEnabled, isNight, topInset, insetLeft, insetRight } =
     props;
   const wide = layout === 'wide';
+  const exploring = props.exploreRemaining !== null;
+  const exploration = props.exploreRemaining !== null
+    ? <ExploreStatus remaining={props.exploreRemaining} onFinish={props.onFinishExplore} /> : null;
 
   const actions = (
     <Actions
@@ -268,12 +274,14 @@ export const HUD: React.FC<HUDProps> = (props) => {
         {background}
         {switcher}
         {isNight && <NightBadge />}
-        <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
-          {page.title}
-        </Text>
-        <Timer remaining={remainingTime} limit={page.timeLimit} compact />
-        {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
-        {scoreBox}
+        {exploring ? exploration : <>
+          <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
+            {page.title}
+          </Text>
+          <Timer remaining={remainingTime} limit={page.timeLimit} compact />
+          {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
+          {scoreBox}
+        </>}
         {actions}
       </View>
     );
@@ -291,10 +299,12 @@ export const HUD: React.FC<HUDProps> = (props) => {
           {isNight && <NightBadge />}
         </View>
         <View style={styles.row}>
-          <Timer remaining={remainingTime} limit={page.timeLimit} compact />
-          <View style={{ flex: 1 }} />
-          {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
-          {scoreBox}
+          {exploring ? exploration : <>
+            <Timer remaining={remainingTime} limit={page.timeLimit} compact />
+            <View style={{ flex: 1 }} />
+            {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
+            {scoreBox}
+          </>}
           {actions}
         </View>
       </View>
@@ -317,10 +327,10 @@ export const HUD: React.FC<HUDProps> = (props) => {
           {page.subtitle}
         </Text>
       </View>
-      <Timer remaining={remainingTime} limit={page.timeLimit} compact={false} />
+      {exploring ? exploration : <Timer remaining={remainingTime} limit={page.timeLimit} compact={false} />}
       <View style={[styles.row, { gap: 14 }]}>
-        {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact={false} />}
-        {scoreBox}
+        {!exploring && combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact={false} />}
+        {!exploring && scoreBox}
         {actions}
       </View>
     </View>

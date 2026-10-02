@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Board } from '../board/Board';
@@ -10,9 +10,8 @@ import { completionBonus } from '../core/scoring';
 import { allPages } from '../content';
 import { useGame } from '../game/useGame';
 import { sound } from '../platform/sound';
-import { ScanSearch } from '../ui/icons';
 import { useStableCallback } from '../ui/useStableCallback';
-import { colors, fonts } from '../ui/theme';
+import { colors } from '../ui/theme';
 import { Desk } from './Desk';
 import { CreatureAlbum } from './dialogs/CreatureAlbum';
 import { PageIndex } from './dialogs/PageIndex';
@@ -73,6 +72,7 @@ export const GameScreen: React.FC = () => {
   // Explore mode: critters & secret still hiding after the case was closed
   const left = leftovers(c, page).length;
   const { explore, togglePause } = kase;
+  const finishExplore = useCallback(() => explore(false), [explore]);
   useEffect(() => {
     if (c.isExploring && left === 0) explore(false);
   }, [c.isExploring, left, explore]);
@@ -149,6 +149,8 @@ export const GameScreen: React.FC = () => {
         topInset={insets.top}
         insetLeft={insets.left}
         insetRight={insets.right}
+        exploreRemaining={c.isCompleted && c.isExploring ? left : null}
+        onFinishExplore={finishExplore}
         onOpenIndex={openIndex}
         onOpenAlbum={openAlbum}
         onPrevPage={nav.prev}
@@ -171,20 +173,7 @@ export const GameScreen: React.FC = () => {
           onInspect={inspect}
           preload={preload}
           active={boardActive}
-        >
-          {c.isCompleted && c.isExploring && (
-            <Animated.View entering={FadeInDown} style={styles.explore} pointerEvents="box-none">
-              <ScanSearch size={16} color={colors.emerald} />
-              <Text style={styles.exploreText} numberOfLines={2}>
-                Khám phá tự do · còn <Text style={{ fontWeight: '800' }}>{left}</Text> vật ẩn — không tính giờ, không trừ
-                điểm
-              </Text>
-              <Pressable onPress={() => explore(false)} style={styles.exploreDone} hitSlop={6}>
-                <Text style={styles.exploreDoneText}>Xong</Text>
-              </Pressable>
-            </Animated.View>
-          )}
-        </Board>
+        />
       </View>
 
       <QuestPanel
@@ -275,39 +264,5 @@ const styles = StyleSheet.create({
   },
   boardArea: {
     flex: 1,
-  },
-  explore: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingLeft: 12,
-    paddingRight: 5,
-    paddingVertical: 5,
-    borderRadius: 999,
-    backgroundColor: 'rgba(240, 253, 244, 0.97)',
-    borderWidth: 1,
-    borderColor: '#86efac',
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 9,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 5,
-  },
-  exploreText: {
-    flexShrink: 1,
-    fontSize: 12,
-    color: colors.emerald,
-    fontFamily: fonts.body,
-  },
-  exploreDone: {
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    backgroundColor: colors.emerald,
-  },
-  exploreDoneText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '700',
   },
 });
