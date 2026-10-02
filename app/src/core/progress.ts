@@ -9,19 +9,64 @@ import type { GameProgress, PageResult } from './model';
 
 const STORAGE_KEY = 'detective_sketchbook_progress_v1';
 
-const EMPTY: GameProgress = {
-  unlockedScenes: [],
-  sceneResults: {},
-  totalScore: 0,
-  discovered: {},
-};
+/**
+ * Version of what is saved under that key. 2: `totalScore` is the sum of each page's best score
+ * (version 1, unversioned, added every win to it — replays included).
+ */
+export const SCHEMA_VERSION = 2;
+
+type Fields = Record<string, unknown>;
+
+const isRecord = (v: unknown): v is Fields => typeof v === 'object' && v !== null && !Array.isArray(v);
+const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : []);
+const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, v) : 0);
+
+/**
+ * A save of any version, read back safely: missing or damaged fields become empty ones, fields
+ * this version does not know are kept, and older saves are brought up to date.
+ */
+export function readProgress(raw: unknown): GameProgress {
+  const data = isRecord(raw) ? raw : {};
+
+  const sceneResults: Record<string, PageResult> = {};
+  if (isRecord(data.sceneResults)) {
+    for (const [pageId, r] of Object.entries(data.sceneResults)) {
+      if (!isRecord(r)) continue;
+      sceneResults[pageId] = {
+        ...r,
+        sceneId: pageId,
+        stars: Math.min(3, count(r.stars)),
+        highScore: count(r.highScore),
+        bestTime: count(r.bestTime),
+        completedAt: typeof r.completedAt === 'string' ? r.completedAt : '',
+        creaturesFound: strings(r.creaturesFound),
+      };
+    }
+  }
+
+  const discovered: Record<string, string[]> = {};
+  if (isRecord(data.discovered)) {
+    for (const [pageId, seen] of Object.entries(data.discovered)) discovered[pageId] = strings(seen);
+  }
+
+  const upToDate = typeof data.schemaVersion === 'number' && data.schemaVersion >= SCHEMA_VERSION;
+  const bestScores = Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0);
+  return {
+    ...data,
+    schemaVersion: SCHEMA_VERSION,
+    unlockedScenes: strings(data.unlockedScenes),
+    sceneResults,
+    totalScore: upToDate ? count(data.totalScore) : bestScores,
+    discovered,
+  };
+}
 
 function load(): GameProgress {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? { ...EMPTY, ...JSON.parse(data) } : EMPTY;
+    return readProgress(data ? JSON.parse(data) : null);
   } catch {
-    return EMPTY;
+    return readProgress(null);
   }
 }
 
@@ -59,7 +104,8 @@ export const progress = {
       ...current,
       unlockedScenes,
       sceneResults: { ...current.sceneResults, [pageId]: result },
-      totalScore: current.totalScore + score,
+      // A replay only adds what it beats the page's best score by
+      totalScore: current.totalScore + result.highScore - (existing?.highScore || 0),
     });
   },
 

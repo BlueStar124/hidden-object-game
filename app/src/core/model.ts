@@ -263,9 +263,10 @@ export interface PageResult {
  * those of the first web version, so old saves keep working: `sceneResults` is keyed by page id.
  */
 export interface GameProgress {
+  schemaVersion: number; // See core/progress: older saves are brought up to date when read
   unlockedScenes: string[]; // Pages unlocked by clearing the previous one (kept for old saves)
   sceneResults: Record<string, PageResult>;
-  totalScore: number;
+  totalScore: number; // Sum of every page's best score
   // Every object ever spotted, per page id — feeds the "Sổ Tay Sinh Vật" album
   discovered: Record<string, string[]>;
 }
