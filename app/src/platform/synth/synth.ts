@@ -162,7 +162,7 @@ class WebAudioSynth {
     noise.stop(now + 0.45);
   }
 
-  // The found creature / object answers with its own little sound, just after the chime
+  // The found creature / object answers with its own little sound.
   public playVoice(type?: SpriteType) {
     if (!this.soundEnabled) return;
     this.initContext();

@@ -11,7 +11,7 @@ import type { GameSound } from './sound';
 
 type Source = number;
 
-// A couple of players per sound so quick repeats (combo chimes, rapid misses) overlap cleanly
+// A couple of players per sound so quick repeats (voices, rapid misses) overlap cleanly
 const VOICES_PER_SOUND = 2;
 
 class SoundBank {
@@ -61,7 +61,7 @@ class NativeSound implements GameSound {
     if (this.ready) return;
     this.ready = true;
     setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(() => {});
-    this.bank.prepare([...SFX.found, SFX.wrong, SFX.hint, SFX.pageTurn, SFX.fog, SFX.rustle, SFX.victory]);
+    this.bank.prepare([SFX.wrong, SFX.hint, SFX.pageTurn, SFX.fog, SFX.rustle, SFX.victory]);
   }
 
   private play(source: Source | undefined) {
@@ -86,7 +86,6 @@ class NativeSound implements GameSound {
 
   public playFound(combo: number = 1) {
     haptics.found(combo);
-    this.play(SFX.found[Math.max(0, Math.min(combo - 1, SFX.found.length - 1))]);
   }
 
   public playWrong() {
@@ -104,7 +103,7 @@ class NativeSound implements GameSound {
     this.play(SFX.pageTurn);
   }
 
-  // The found creature / object answers with its own little sound, just after the chime
+  // The found creature / object answers with its own little sound.
   public playVoice(type?: SpriteType) {
     this.play(type ? VOICES[type] : undefined);
   }

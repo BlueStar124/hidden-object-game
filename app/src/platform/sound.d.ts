@@ -8,12 +8,12 @@ import type { SpriteType } from '../core/model';
 export interface GameSound {
   setSoundEnabled(enabled: boolean): void;
   isEnabled(): boolean;
-  /** A find; the chime climbs with the combo */
+  /** Touch feedback for a find; leaves audio to the object's own voice. */
   playFound(combo?: number): void;
   playWrong(): void;
   playHint(): void;
   playPageTurn(): void;
-  /** The found creature / object answers with its own little sound, just after the chime */
+  /** The found creature / object answers with its own little sound. */
   playVoice(type?: SpriteType): void;
   /** The loupe mists over after a burst of random taps */
   playFog(): void;

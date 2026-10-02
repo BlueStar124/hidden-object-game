@@ -15,7 +15,6 @@ export const sound: GameSound = {
   isEnabled: () => synth.isEnabled(),
   playFound: (combo: number = 1) => {
     haptics.found(combo);
-    synth.playFound(combo);
   },
   playWrong: () => {
     haptics.wrong();
