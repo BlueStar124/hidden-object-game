@@ -123,4 +123,7 @@ npm run typecheck       # tsc trên toàn bộ app
 npm test                # Jest (jest-expo): luật chơi, lưu tiến độ, dữ liệu từng trang trong test/
 npm run check:architecture  # các tầng trong src/ chỉ phụ thuộc một chiều
 npm run build:web       # đảm bảo bản web build được
+npm run test:screens    # màn chơi + mọi hộp thoại trên 13 cỡ màn hình (điện thoại ngang/dọc, tablet, máy tính)
 ```
+
+`test:screens` (Playwright, cần `npm install` ở thư mục gốc và một lần `npx playwright install chromium`) build bản web kèm **phòng trưng bày hộp thoại** (`test/screens/Gallery.tsx`, nội dung dài nhất của từng hộp thoại) rồi báo lỗi nếu có gì bị cắt, phải cuộn, hoặc bị thu nhỏ quá mức đọc được; ảnh chụp từng trường hợp ở `../scratch/screens/`. Hộp thoại tự **thu nhỏ cho vừa màn hình** (`ui/ModalShell.tsx`, tối thiểu 0,75×); trên màn thấp chúng gọn lại (`useCompact` trong `ui/layout.ts`). Mục Lục và Sổ Tay là danh sách dài nên vẫn cuộn.

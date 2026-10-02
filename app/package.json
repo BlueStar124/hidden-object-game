@@ -50,6 +50,7 @@
     "lint": "expo lint --max-warnings 0",
     "test": "jest",
     "check:architecture": "node ../tools/check-architecture.mjs",
+    "test:screens": "node ../tools/test-screens.mjs",
     "check": "npm run lint && npm run typecheck && npm test && npm run check:architecture",
     "postinstall": "setup-skia-web public"
   },

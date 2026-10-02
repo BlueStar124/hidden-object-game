@@ -69,14 +69,14 @@ export const singapore: Country = {
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)
   art: {
-    'marina-bay-sands': require('../../../../assets/art/singapore/marina-bay-sands.png'),
-    'gardens-by-the-bay': require('../../../../assets/art/singapore/gardens-by-the-bay.png'),
-    merlion: require('../../../../assets/art/singapore/merlion.png'),
-    'buddha-tooth': require('../../../../assets/art/singapore/buddha-tooth.png'),
-    'joo-chiat': require('../../../../assets/art/singapore/joo-chiat.png'),
-    'lau-pa-sat': require('../../../../assets/art/singapore/lau-pa-sat.png'),
-    'marina-bay-skyline': require('../../../../assets/art/singapore/marina-bay-skyline.png'),
-    'singapore-river': require('../../../../assets/art/singapore/singapore-river.png'),
-    'botanic-gardens': require('../../../../assets/art/singapore/botanic-gardens.png'),
+    'marina-bay-sands': require('../../../../assets/art/singapore/marina-bay-sands.webp'),
+    'gardens-by-the-bay': require('../../../../assets/art/singapore/gardens-by-the-bay.webp'),
+    merlion: require('../../../../assets/art/singapore/merlion.webp'),
+    'buddha-tooth': require('../../../../assets/art/singapore/buddha-tooth.webp'),
+    'joo-chiat': require('../../../../assets/art/singapore/joo-chiat.webp'),
+    'lau-pa-sat': require('../../../../assets/art/singapore/lau-pa-sat.webp'),
+    'marina-bay-skyline': require('../../../../assets/art/singapore/marina-bay-skyline.webp'),
+    'singapore-river': require('../../../../assets/art/singapore/singapore-river.webp'),
+    'botanic-gardens': require('../../../../assets/art/singapore/botanic-gardens.webp'),
   },
 };

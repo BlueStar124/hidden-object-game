@@ -8,7 +8,7 @@ import { formatDuration, formatNumber } from '../../ui/format';
 import { ModalShell } from '../../ui/ModalShell';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { SpriteIcon } from '../../ui/SpriteIcon';
-import { useShortLandscape } from '../../ui/layout';
+import { useCompact, useShortLandscape } from '../../ui/layout';
 
 interface VictoryScreenProps {
   page: Page;
@@ -27,7 +27,7 @@ interface VictoryScreenProps {
   onExplore: () => void;
 }
 
-const PopStar: React.FC<{ index: number; active: boolean }> = ({ index, active }) => {
+const PopStar: React.FC<{ index: number; active: boolean; size: number }> = ({ index, active, size }) => {
   const scale = useSharedValue(0);
   useEffect(() => {
     scale.value = withDelay(index * 250, withTiming(1, { duration: 500, easing: Easing.bezier(0.175, 0.885, 0.32, 1.275) }));
@@ -35,7 +35,7 @@ const PopStar: React.FC<{ index: number; active: boolean }> = ({ index, active }
   const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   return (
     <Animated.View style={[style, active && styles.starGlow]}>
-      <Star size={36} color={active ? '#eab308' : 'rgba(43, 39, 33, 0.2)'} fill={active ? '#eab308' : 'none'} />
+      <Star size={size} color={active ? '#eab308' : 'rgba(43, 39, 33, 0.2)'} fill={active ? '#eab308' : 'none'} />
     </Animated.View>
   );
 };
@@ -75,66 +75,83 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
   const leftovers = page.objects.filter((o) => (o.isBonus || o.isSecret) && !foundIds.includes(o.id)).length;
 
-  // Phone held sideways: the verdict on the left, the score sheet on the right
+  // Phone held sideways: the verdict on the left, the score sheet and the buttons on the right
   const columns = useShortLandscape();
+  const compact = useCompact();
   const float = useSharedValue(0);
   useEffect(() => {
     float.value = withRepeat(withTiming(-6, { duration: 1250, easing: Easing.inOut(Easing.ease) }), -1, true);
   }, [float]);
   const trophy = useAnimatedStyle(() => ({ transform: [{ translateY: float.value }] }));
 
+  const actions = (
+    <View style={{ gap: compact ? 8 : 10 }}>
+      {/* Keep hunting the leftovers (album only, no score) */}
+      {leftovers > 0 && (
+        <Pressable
+          onPress={onExplore}
+          style={({ pressed }) => [
+            styles.explore,
+            compact && styles.exploreCompact,
+            pressed && { backgroundColor: 'rgba(45, 122, 79, 0.15)' },
+          ]}
+        >
+          <ScanSearch size={17} color={colors.emerald} />
+          <Text style={styles.exploreText}>Soi Tiếp Tìm Nốt {leftovers} Vật Ẩn</Text>
+        </Pressable>
+      )}
+      <View style={styles.actions}>
+        <SecondaryButton label="Chơi Lại" icon={<RotateCcw size={16} color={colors.ink} />} onPress={onReplay} />
+        <PrimaryButton
+          label={hasNextPage ? 'Lật Trang Mới' : 'Hoàn Thành Vụ Án'}
+          iconAfter={hasNextPage ? <ArrowRight size={18} color="#fff" /> : <Trophy size={18} color="#fff" />}
+          onPress={onNextPage}
+        />
+      </View>
+    </View>
+  );
+
   return (
     <ModalShell
       maxWidth={columns ? 860 : 440}
       backdrop="rgba(35, 30, 24, 0.66)"
-      footer={
-        <View style={{ gap: 10 }}>
-          {/* Keep hunting the leftovers (album only, no score) */}
-          {leftovers > 0 && (
-            <Pressable
-              onPress={onExplore}
-              style={({ pressed }) => [styles.explore, pressed && { backgroundColor: 'rgba(45, 122, 79, 0.15)' }]}
-            >
-              <ScanSearch size={17} color={colors.emerald} />
-              <Text style={styles.exploreText}>Soi Tiếp Tìm Nốt {leftovers} Vật Ẩn</Text>
-            </Pressable>
-          )}
-          <View style={styles.actions}>
-            <SecondaryButton label="Chơi Lại" icon={<RotateCcw size={16} color={colors.ink} />} onPress={onReplay} />
-            <PrimaryButton
-              label={hasNextPage ? 'Lật Trang Mới' : 'Hoàn Thành Vụ Án'}
-              iconAfter={hasNextPage ? <ArrowRight size={18} color="#fff" /> : <Trophy size={18} color="#fff" />}
-              onPress={onNextPage}
-            />
-          </View>
-        </View>
-      }
+      contentStyle={compact && styles.contentCompact}
+      // Sideways the buttons go under the score sheet: a full-width row would cost the height
+      footer={columns ? undefined : actions}
     >
       <View style={columns ? styles.columns : styles.stack}>
         <View style={columns ? styles.column : styles.stack}>
-          <Animated.View style={[styles.trophy, trophy]}>
-            <Trophy size={40} color={colors.gold} />
-          </Animated.View>
+          {!compact && (
+            <Animated.View style={[styles.trophy, trophy]}>
+              <Trophy size={40} color={colors.gold} />
+            </Animated.View>
+          )}
           <Text style={styles.tag}>HỒ SƠ KHÉP LẠI</Text>
-          <Text style={styles.title}>ĐÃ PHÁ GIẢI MANH MỐI!</Text>
-          <Text style={styles.pageName}>{page.title}</Text>
+          <Text style={[styles.title, compact && styles.titleCompact]}>ĐÃ PHÁ GIẢI MANH MỐI!</Text>
+          <Text style={[styles.pageName, compact && styles.gapCompact]}>{page.title}</Text>
 
-          <View style={styles.stars}>
+          <View style={[styles.stars, compact && styles.gapCompact]}>
             {[1, 2, 3].map((i) => (
-              <PopStar key={i} index={i} active={i <= stars} />
+              <PopStar key={i} index={i} active={i <= stars} size={compact ? 30 : 36} />
             ))}
           </View>
 
           {isSecretFound && (
-            <View style={styles.secret}>
+            <View style={[styles.secret, compact && styles.gapCompact]}>
               <Sparkles size={15} color="#854d0e" />
               <Text style={styles.secretText}>PHÁT HIỆN CỔ VẬT BÍ MẬT! (+300 ĐIỂM)</Text>
             </View>
           )}
 
           {critters.length > 0 && (
-            <View style={[styles.critters, crittersFound === critters.length && styles.crittersDone]}>
-              <View style={styles.crittersHead}>
+            <View
+              style={[
+                styles.critters,
+                compact && styles.crittersCompact,
+                crittersFound === critters.length && styles.crittersDone,
+              ]}
+            >
+              <View style={[styles.crittersHead, compact && { marginBottom: 4 }]}>
                 <PawPrint size={14} color={colors.emerald} />
                 <Text style={styles.crittersLabel}>
                   SINH VẬT ẨN NẤP: {crittersFound}/{critters.length}
@@ -145,7 +162,7 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
                   const found = foundIds.includes(o.id);
                   return (
                     <View key={o.id} style={styles.critter}>
-                      <SpriteIcon type={o.spriteType} size={34} revealed={found} />
+                      <SpriteIcon type={o.spriteType} size={compact ? 28 : 34} revealed={found} />
                       <Text style={styles.critterName} numberOfLines={2}>
                         {found ? o.name : '???'}
                       </Text>
@@ -154,7 +171,9 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
                 })}
               </View>
               {crittersFound < critters.length && (
-                <Text style={styles.crittersNote}>Vẫn còn sinh vật nấp trong tranh — bấm “Soi Tiếp” để tìm nốt cho Sổ Tay!</Text>
+                <Text style={[styles.crittersNote, compact && { marginTop: 4 }]}>
+                  Vẫn còn sinh vật nấp trong tranh — bấm “Soi Tiếp” để tìm nốt cho Sổ Tay!
+                </Text>
               )}
             </View>
           )}
@@ -162,7 +181,7 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
 
         <View style={columns ? styles.column : styles.stack}>
           {nightUnlocked && (
-            <View style={styles.night}>
+            <View style={[styles.night, compact && styles.nightCompact]}>
               <Moon size={15} color={colors.moonlight} />
               <Text style={styles.nightText}>
                 Đã mở khóa trang đêm: <Text style={{ fontFamily: fonts.bodyBold }}>{nightUnlocked}</Text>
@@ -170,7 +189,7 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
             </View>
           )}
 
-          <View style={styles.stats}>
+          <View style={[styles.stats, compact && styles.statsCompact]}>
             <Stat label="Thời gian hoàn thành:" value={formatDuration(timeTaken)} />
             <Stat label="Thưởng thời gian:" value={`+${timeBonus}`} tone="positive" />
             <Stat label="Số lần đoán nhầm:" value={String(mistakes)} tone={mistakes > 0 ? 'negative' : undefined} />
@@ -181,6 +200,8 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
               <Text style={styles.total}>{formatNumber(score)}</Text>
             </View>
           </View>
+
+          {columns && <View style={styles.sideActions}>{actions}</View>}
         </View>
       </View>
     </ModalShell>
@@ -386,5 +407,36 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     gap: 10,
+  },
+  sideActions: {
+    alignSelf: 'stretch',
+    marginTop: 4,
+  },
+  // Little height (useCompact): tighter spacing, smaller title and stars
+  contentCompact: {
+    paddingTop: 14,
+    paddingBottom: 10,
+  },
+  titleCompact: {
+    fontSize: 22,
+    lineHeight: 26,
+  },
+  gapCompact: {
+    marginBottom: 8,
+  },
+  crittersCompact: {
+    padding: 8,
+    marginBottom: 8,
+  },
+  nightCompact: {
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  statsCompact: {
+    paddingVertical: 8,
+    gap: 4,
+  },
+  exploreCompact: {
+    minHeight: 40,
   },
 });

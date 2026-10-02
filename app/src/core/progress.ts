@@ -61,16 +61,32 @@ export function readProgress(raw: unknown): GameProgress {
   };
 }
 
+/**
+ * The save, kept in memory once read: this module is its only writer, so the page index and the
+ * album can ask for every page without reading storage (SQLite on iOS/Android) each time.
+ */
+let copy: GameProgress | null = null;
+
+// Web: another tab of the game saved — read the save again
+if (typeof addEventListener === 'function') {
+  addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY || e.key === null) copy = null;
+  });
+}
+
 function load(): GameProgress {
+  if (copy) return copy;
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return readProgress(data ? JSON.parse(data) : null);
+    copy = readProgress(data ? JSON.parse(data) : null);
   } catch {
-    return readProgress(null);
+    copy = readProgress(null);
   }
+  return copy;
 }
 
 function save(progress: GameProgress): void {
+  copy = progress;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   } catch (e) {

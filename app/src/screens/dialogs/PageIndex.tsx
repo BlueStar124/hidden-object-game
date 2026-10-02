@@ -71,6 +71,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
 
   return (
     <ModalShell
+      scroll
       maxWidth={920}
       zIndex={350}
       backdrop="rgba(28, 24, 20, 0.74)"

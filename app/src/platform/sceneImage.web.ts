@@ -2,7 +2,7 @@ import { Skia } from '@shopify/react-native-skia';
 import type { LoadedScene, ScenePixels } from './sceneImage';
 
 /**
- * Web. CanvasKit would decode the PNG in WebAssembly on the main thread (some 40 ms a page, a
+ * Web. CanvasKit would decode the painting in WebAssembly on the main thread (some 40 ms a page, a
  * visible hitch). The browser decodes it off the main thread instead; Skia then draws it as a
  * texture, and the analysis reads its pixels through a 2D canvas.
  */
@@ -18,7 +18,7 @@ export async function loadSceneImage(source: number): Promise<LoadedScene> {
 
 /**
  * Where a bundled image is served, as Skia's useImage finds it on the web: Expo's web bundler
- * turns `require('….png')` into `{ uri, width, height }`; plain React Native registers a number.
+ * turns `require('….webp')` into `{ uri, width, height }`; plain React Native registers a number.
  */
 function assetUri(source: unknown): string {
   if (typeof source === 'object' && source !== null && 'uri' in source) return String(source.uri);

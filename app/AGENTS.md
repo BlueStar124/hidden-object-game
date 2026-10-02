@@ -18,6 +18,7 @@ npm run lint                # ESLint (eslint-config-expo)
 npm run typecheck           # tsc over the whole app
 npm test                    # Jest (jest-expo): rules, saved progress, every page's content — in test/
 npm run check:architecture  # the layers of src/ depend one way (../tools/check-architecture.mjs)
+npm run test:screens        # the game and every dialog on 13 screen sizes, phones either way up (Playwright, ../tools/test-screens.mjs)
 npm run build:web           # web export to dist/
 npm run generate            # regenerate sprite art + sounds with ../tools (needs `npm install` at the repo root)
 npx expo-doctor             # diagnose dependency and config issues
@@ -36,6 +37,7 @@ Layers depend one way: `core` ← `content` ← `game` ← `screens`; `board` dr
 - `src/platform/` — per-platform files picked by Metro: `sound.native.ts` / `sound.web.ts` (contract in `sound.d.ts`), `sceneImage.ts` / `sceneImage.web.ts`. `platform/synth/` is the Web Audio synth: the source of every sound.
 - `src/generated/` is written by `../tools/generate-assets.mjs` — never edit it by hand. The sprite drawings' source is `../tools/sprites/ObjectSprite.tsx`.
 - Single screen, no navigation library: dialogs are overlays (`src/ui/ModalShell.tsx`). The app is locked to landscape.
+- Dialogs shrink to fit the screen instead of scrolling (ModalShell, down to 0.75×); only long lists (page index, album) pass `scroll`. On little height they tighten up with `useCompact()` (`src/ui/layout.ts`). After changing a dialog or the HUD, run `npm run test:screens`; a new dialog also gets an entry in `test/screens/Gallery.tsx` (and in `DIALOGS` of the test).
 
 ## Rules
 

@@ -31,8 +31,6 @@ export const fonts = {
   displayBold: 'PlayfairDisplay_700Bold',
   body: 'Lora_400Regular',
   bodyItalic: 'Lora_400Regular_Italic',
-  bodyMedium: 'Lora_500Medium',
-  bodySemiBold: 'Lora_600SemiBold',
   bodySemiBoldItalic: 'Lora_600SemiBold_Italic',
   bodyBold: 'Lora_700Bold',
 };

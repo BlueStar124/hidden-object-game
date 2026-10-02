@@ -30,7 +30,9 @@ import { useDeviceBehaviour } from './useDeviceBehaviour';
  * cards below, and the dialogs (story, pause, victory, index, album) over everything.
  */
 export const GameScreen: React.FC = () => {
-  const { nav, case: kase, notices, soundEnabled, toggleSound } = useGame();
+  const [showIndex, setShowIndex] = useState(false);
+  const [showAlbum, setShowAlbum] = useState(false);
+  const { nav, case: kase, notices, soundEnabled, toggleSound } = useGame({ browsing: showIndex || showAlbum });
   const { country, pages, ref, page, isNight, turn, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
   const isTurning = turn !== null;
@@ -39,8 +41,6 @@ export const GameScreen: React.FC = () => {
   const { width, height } = useWindowDimensions();
   const layout: HudLayout = height < 500 ? 'phoneLandscape' : width < 700 ? 'phone' : 'wide';
 
-  const [showIndex, setShowIndex] = useState(false);
-  const [showAlbum, setShowAlbum] = useState(false);
   // The apps are locked to landscape; an upright phone browser is asked to turn sideways
   const [keepPortrait, setKeepPortrait] = useState(false);
   const askToRotate = Platform.OS === 'web' && height > width && width < 700 && !keepPortrait;

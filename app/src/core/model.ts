@@ -183,7 +183,7 @@ export interface Country {
   id: string;
   name: string; // "Singapore"
   chapters: Chapter[];
-  /** Painting of each `Page.art` key: a bundled image (`require('…png')`) */
+  /** Painting of each `Page.art` key: a bundled image (`require('….webp')`) */
   art: Record<string, number>;
 }
 

@@ -1,11 +1,13 @@
-import { beforeEach, describe, expect, test } from '@jest/globals';
-import { progress, readProgress, SCHEMA_VERSION } from '../src/core/progress';
+import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { readProgress, SCHEMA_VERSION } from '../src/core/progress';
 
 const KEY = 'detective_sketchbook_progress_v1';
 
 /** The device's localStorage, in memory. */
 class MemoryStorage implements Storage {
   private items = new Map<string, string>();
+  reads = 0;
+  failWrites = false;
   get length() {
     return this.items.size;
   }
@@ -16,22 +18,41 @@ class MemoryStorage implements Storage {
     return [...this.items.keys()][index] ?? null;
   }
   getItem(key: string) {
+    this.reads++;
     return this.items.get(key) ?? null;
   }
   setItem(key: string, value: string) {
+    if (this.failWrites) throw new Error('QuotaExceededError');
     this.items.set(key, value);
   }
   removeItem(key: string) {
     this.items.delete(key);
   }
+  /** What is stored, without counting as a read */
+  peek(key: string) {
+    return this.items.get(key) ?? null;
+  }
 }
 
 let storage: MemoryStorage;
-const saved = () => JSON.parse(storage.getItem(KEY) ?? 'null');
+const saved = () => JSON.parse(storage.peek(KEY) ?? 'null');
+// The `storage` listeners the module registers (a browser tab is told when another one saves)
+let storageListeners: ((e: { key: string | null }) => void)[];
+// The module keeps the save in memory: every test gets a fresh one, as the app does when it starts
+let progress: typeof import('../src/core/progress').progress;
 
 beforeEach(() => {
   storage = new MemoryStorage();
   Object.defineProperty(globalThis, 'localStorage', { value: storage, configurable: true });
+  storageListeners = [];
+  Object.defineProperty(globalThis, 'addEventListener', {
+    value: (type: string, listener: (e: { key: string | null }) => void) => {
+      if (type === 'storage') storageListeners.push(listener);
+    },
+    configurable: true,
+  });
+  jest.resetModules();
+  ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
 });
 
 /** A save of the first web version: no schemaVersion, a total inflated by replays. */
@@ -131,5 +152,35 @@ describe('the album', () => {
     progress.recordDiscovery('merlion-park', 'secret-amulet');
     expect(progress.discovered('merlion-park').sort()).toEqual(['gecko', 'secret-amulet']);
     expect(saved().settings).toEqual({ soundEnabled: false });
+  });
+});
+
+describe('the copy kept in memory', () => {
+  test('storage is read once, however often the page index and the album ask', () => {
+    storage.setItem(KEY, JSON.stringify(firstVersionSave));
+    for (let i = 0; i < 10; i++) {
+      progress.pageResult('marina-bay-sands');
+      progress.discovered('merlion-park');
+    }
+    progress.recordDiscovery('merlion-park', 'gecko');
+    expect(progress.discovered('merlion-park')).toEqual(['gecko']);
+    expect(storage.reads).toBe(1);
+  });
+
+  test('another browser tab saving is picked up', () => {
+    expect(progress.pageResult('merlion-park')).toBeUndefined();
+    storage.setItem(KEY, JSON.stringify(firstVersionSave));
+    expect(progress.pageResult('merlion-park')).toBeUndefined(); // not told yet
+    for (const listener of storageListeners) listener({ key: KEY });
+    expect(progress.pageResult('merlion-park')?.highScore).toBe(800);
+  });
+
+  test('a win still counts for the session when storage cannot be written', () => {
+    storage.failWrites = true;
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    progress.recordVictory('marina-bay-sands', 'gardens-by-the-bay', 500, 2, 60);
+    expect(progress.pageResult('marina-bay-sands')?.stars).toBe(2);
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
   });
 });
