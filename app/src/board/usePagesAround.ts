@@ -41,5 +41,6 @@ export function usePagesAround(library: SceneLibrary, page: Page, preload: Page[
     if (images.length === prev.length && images.every((img, i) => img === prev[i])) return prev;
     warmRef.current = images;
     return images;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [around, version, imageOf, preparedScene]); // (`version`: images arrive asynchronously)
 }

@@ -22,6 +22,7 @@ export async function loadSceneImage(source: number): Promise<LoadedScene> {
  */
 function assetUri(source: unknown): string {
   if (typeof source === 'object' && source !== null && 'uri' in source) return String(source.uri);
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- only needed off Expo's bundler
   const { getAssetByID } = require('react-native/Libraries/Image/AssetRegistry') as {
     getAssetByID: (id: number) => { httpServerLocation: string; name: string; type: string };
   };

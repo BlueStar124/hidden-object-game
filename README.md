@@ -156,7 +156,8 @@ hidden-object-game/
 │       ├── platform/           theo thiết bị: âm thanh (native/web), rung, tải tranh
 │       ├── ui/                 giao diện dùng chung: màu, chữ, nút, hộp thoại, icon
 │       └── generated/          hình vẽ & âm thanh sinh tự động (không sửa tay)
-├── tools/                      công cụ: sprites/ (bản vẽ gốc của 57 hình), generate-assets, generate-icons
+├── tools/                      công cụ: sprites/ (bản vẽ gốc của 57 hình), generate-assets, generate-icons,
+│                               check-architecture (kiểm tra các tầng của app/src)
 ├── archive/web-vite.zip        bản web Vite cũ (không dùng)
 └── vercel.json                 deploy bản web
 ```
@@ -174,7 +175,7 @@ Mỗi nước là một cuốn sổ riêng trong `app/src/content/countries/<nư
 3. **Định nghĩa nước** — `app/src/content/countries/<nước>/index.ts`: tên nước, các chương (tiêu đề, phụ đề, các đoạn mở đầu), trang của mỗi chương (`{ day }` hoặc `{ day, night }`) và bảng `art` (tên tranh → `require('…png')`). Lấy `countries/singapore/index.ts` làm mẫu.
 4. **Đăng ký** — thêm nước vào `COUNTRIES` trong `app/src/content/index.ts`. Mục Lục tự hiện tab chọn nước, số trang tính riêng từng nước ("Trang 3 / 9"), Sổ Tay ghi tên nước cạnh số trang.
 5. **Đồ vật / sinh vật mới** (nón lá, đèn lồng, xích lô…) — vẽ thêm trong `tools/sprites/ObjectSprite.tsx`, thêm tên vào `SpriteType` (`app/src/core/model.ts`) và một mục Sổ Tay (`app/src/content/bestiary.ts`), rồi chạy `npm run generate` ở thư mục gốc.
-6. **Kiểm tra** — `cd app && npm run typecheck && npm run web`. Khi khởi động, danh mục tự báo lỗi nếu id trang bị trùng hoặc trang dùng tên tranh không có trong bảng `art`.
+6. **Kiểm tra** — `cd app && npm run check && npm run web`. `npm test` soát từng trang của mọi nước (tọa độ trong khung 0–1, id không trùng, hình vẽ và mục Sổ Tay có đủ, trang đêm dùng chung tranh với trang ngày); khi khởi động, danh mục cũng tự báo lỗi nếu id trang bị trùng hoặc trang dùng tên tranh không có trong bảng `art`.
 
 ---
 

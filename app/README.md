@@ -53,6 +53,7 @@ app/
 ├── App.tsx                  font, gesture root, safe area → screens/GameScreen
 ├── assets/art/              tranh: <nước>/ (trang sổ 1760 × 1240), desk/ (mặt bàn)
 ├── assets/sounds/           âm thanh .wav (sinh từ bộ tổng hợp, cho iOS/Android)
+├── test/                    kiểm tra tự động: luật chơi, lưu tiến độ, dữ liệu từng trang (npm test)
 └── src/
     ├── core/                luật chơi — TypeScript thuần, không React Native / Skia
     │   ├── model.ts             từ vựng: Country → Chapter → Page → HiddenObject, CaseState…
@@ -87,7 +88,7 @@ app/
     └── generated/           spriteArt.ts, sounds.ts — sinh bởi ../tools, không sửa tay
 ```
 
-**Phụ thuộc một chiều**: `core` ← `content` ← `game` ← `screens`; `board` vẽ những gì `game` cho biết. `platform` là tầng thấp nhất cùng `core`. Không có alias đường dẫn hay cấu hình Metro đặc biệt.
+**Phụ thuộc một chiều**: `core` ← `content` ← `game` ← `screens`; `board` vẽ những gì `game` cho biết. `platform` là tầng thấp nhất cùng `core` (`npm run check:architecture` kiểm tra điều này). Không có alias đường dẫn hay cấu hình Metro đặc biệt.
 
 **File theo nền tảng**: Metro chọn `sound.native.ts` hoặc `sound.web.ts` (giao diện chung khai báo trong `sound.d.ts`), tương tự `sceneImage.ts` / `sceneImage.web.ts`.
 
@@ -116,6 +117,10 @@ npm run generate:icons  # icon app, splash, favicon, icon PWA
 ## ✅ Kiểm tra
 
 ```bash
+npm run check           # tất cả các bước dưới đây trừ build — CI (.github/workflows/ci.yml) chạy mỗi lần push
+npm run lint            # ESLint (eslint-config-expo)
 npm run typecheck       # tsc trên toàn bộ app
+npm test                # Jest (jest-expo): luật chơi, lưu tiến độ, dữ liệu từng trang trong test/
+npm run check:architecture  # các tầng trong src/ chỉ phụ thuộc một chiều
 npm run build:web       # đảm bảo bản web build được
 ```

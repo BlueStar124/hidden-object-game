@@ -58,6 +58,7 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   const bump = useCallback(() => setVersion((n) => n + 1), []);
 
   // Pages laid out for this loupe size, layout and sprite sharpness
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact, density]);
   const prepare = useCallback(
     (p: Page): SceneData | null => {
@@ -74,6 +75,7 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   );
 
   // (`version`: try again once the artwork has arrived)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const scene = useMemo(() => prepare(page), [prepare, page, version]);
   const lastScene = useRef<SceneData | null>(null);
   if (scene) lastScene.current = scene;

@@ -13,13 +13,17 @@ Expo ships breaking changes every SDK release. APIs you remember are likely rena
 ```bash
 npx expo install <package>  # ALWAYS use instead of npm add — resolves SDK-compatible versions
 npx expo start              # dev server (Expo Go)
+npm run check               # lint + typecheck + test + check:architecture (what CI runs, plus expo-doctor and the web export)
+npm run lint                # ESLint (eslint-config-expo)
 npm run typecheck           # tsc over the whole app
+npm test                    # Jest (jest-expo): rules, saved progress, every page's content — in test/
+npm run check:architecture  # the layers of src/ depend one way (../tools/check-architecture.mjs)
 npm run build:web           # web export to dist/
 npm run generate            # regenerate sprite art + sounds with ../tools (needs `npm install` at the repo root)
 npx expo-doctor             # diagnose dependency and config issues
 ```
 
-Run the typecheck (and the web export when touching web-specific code) before declaring a task done.
+Run `npm run check` (and the web export when touching web-specific code) before declaring a task done. A rule change in `src/core/` gets a test in `test/`.
 
 ## Project layout
 

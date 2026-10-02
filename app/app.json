@@ -42,7 +42,8 @@
           "imageWidth": 200,
           "backgroundColor": "#ece7dc"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "tsconfigPaths": false
