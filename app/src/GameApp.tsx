@@ -8,6 +8,7 @@ import { useKeepAwake } from 'expo-keep-awake';
 import * as NavigationBar from 'expo-navigation-bar';
 import { ScanSearch } from './ui/icons';
 import { useGame } from '@core/hooks/useGame';
+import type { LevelData } from '@core/types/level';
 import { ScoreEngine } from '@core/game/ScoreEngine';
 import { Board } from './board/Board';
 import { HUD, type HudLayout } from './components/HUD';
@@ -25,7 +26,7 @@ import { UI_ART } from './platform/assets';
 import { colors, fonts } from './theme';
 
 /** Painted desk behind the sketchbook: paper wash and foliage (dimmed on night pages). */
-const Desk: React.FC<{ night: boolean; foliage: boolean }> = ({ night, foliage }) => (
+const Desk = React.memo<{ night: boolean; foliage: boolean }>(({ night, foliage }) => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Image source={UI_ART.wash} style={[StyleSheet.absoluteFill, { opacity: 0.88 }]} resizeMode="cover" />
     <LinearGradient
@@ -49,7 +50,7 @@ const Desk: React.FC<{ night: boolean; foliage: boolean }> = ({ night, foliage }
     )}
     {night && <View style={[StyleSheet.absoluteFill, styles.nightDesk]} />}
   </View>
-);
+));
 
 export const GameApp: React.FC = () => {
   useKeepAwake();
@@ -64,6 +65,7 @@ export const GameApp: React.FC = () => {
     allChapters,
     gameState,
     isTurning,
+    turn,
     screenShake,
     floatingScores,
     soundEnabled,
@@ -99,9 +101,11 @@ export const GameApp: React.FC = () => {
 
   /* ------------------------------- Derived state ------------------------------- */
 
-  // Decode the next page while this one is played
+  // The pages either side are prepared while this one is played, so turning to them is instant
+  // (back from a night page is its own day page)
   const nextScene = allScenes[currentSceneIndex + 1];
-  const preload = useMemo(() => (nextScene ? [nextScene.sceneImage] : []), [nextScene]);
+  const backScene = isNight ? allScenes[currentSceneIndex] : allScenes[currentSceneIndex - 1];
+  const preload = useMemo(() => [nextScene, backScene].filter((s): s is LevelData => !!s), [nextScene, backScene]);
 
   const albumLevels = useMemo(() => [...allScenes, ...Object.values(nightByDayId)], [allScenes, nightByDayId]);
   const hint = gameState.activeHint;
@@ -223,7 +227,7 @@ export const GameApp: React.FC = () => {
           foundAt={gameState.foundAt}
           radarTargetId={radarTargetId}
           nudgeTarget={nudgeTarget}
-          isTurning={isTurning}
+          turn={turn}
           fogged={isFogged}
           onInspect={handleInspect}
           preload={preload}
@@ -291,7 +295,8 @@ export const GameApp: React.FC = () => {
         />
       )}
 
-      {gameState.isGameOver && !gameState.isCompleted && (
+      {/* Both close as soon as a page starts turning, so the turn shows */}
+      {gameState.isGameOver && !gameState.isCompleted && !isTurning && (
         <TimeUpScreen
           level={currentLevel}
           foundIds={gameState.foundItems}
@@ -302,7 +307,7 @@ export const GameApp: React.FC = () => {
 
       {askToRotate && <RotatePrompt onKeepPortrait={() => setKeepPortrait(true)} />}
 
-      {gameState.isCompleted && !gameState.isExploring && (
+      {gameState.isCompleted && !gameState.isExploring && !isTurning && (
         <VictoryScreen
           level={currentLevel}
           score={gameState.score}

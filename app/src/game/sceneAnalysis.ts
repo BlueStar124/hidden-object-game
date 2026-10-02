@@ -1,9 +1,8 @@
-import { AlphaType, ColorType, Skia, type SkImage } from '@shopify/react-native-skia';
 import type { HiddenObject } from '@core/types/level';
 import { SPRITE_BASE_WIDTH } from '@core/game/CamoSampler';
 
 /**
- * Reads a scene's pixels once (through Skia, so it works on iOS, Android and web) to find:
+ * Reads a scene's pixels once (see platform/sceneImage) to find:
  * - the chameleon tints: the paint colours around each chameleon object, sampled exactly like
  *   the web's CamoSampler;
  * - the book: the artwork is a photo of the open sketchbook on a transparent margin, and the
@@ -27,32 +26,15 @@ export interface SceneAnalysis {
   book: BookRect;
 }
 
-const SAMPLE_WIDTH = 880; // Half of the 1760px artwork is plenty for averaging colours
+export const SAMPLE_WIDTH = 880; // Half of the 1760px artwork is plenty for averaging colours
 
 type RGB = [number, number, number];
 
-interface Pixels {
+/** A scene's pixels at SAMPLE_WIDTH: unpremultiplied RGBA. */
+export interface ScenePixels {
   width: number;
   height: number;
-  data: Uint8Array;
-}
-
-function readPixels(image: SkImage): Pixels | null {
-  const width = SAMPLE_WIDTH;
-  const height = Math.round((image.height() * width) / image.width());
-  const surface = Skia.Surface.Make(width, height);
-  if (!surface) return null;
-  surface
-    .getCanvas()
-    .drawImageRect(image, Skia.XYWHRect(0, 0, image.width(), image.height()), Skia.XYWHRect(0, 0, width, height), Skia.Paint());
-  surface.flush();
-  const data = surface.makeImageSnapshot().readPixels(0, 0, {
-    width,
-    height,
-    colorType: ColorType.RGBA_8888,
-    alphaType: AlphaType.Unpremul,
-  });
-  return data instanceof Uint8Array ? { width, height, data } : null;
+  data: Uint8Array | Uint8ClampedArray;
 }
 
 const mix = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -60,7 +42,7 @@ const mix = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] 
 const css = (c: RGB) => `rgb(${c.map((v) => Math.round(Math.max(0, Math.min(255, v)))).join(', ')})`;
 
 // Mirrors sampleAround() in src/game/CamoSampler.ts
-function sampleAround({ width: w, height: h, data: px }: Pixels, obj: HiddenObject): CamoTint | null {
+function sampleAround({ width: w, height: h, data: px }: ScenePixels, obj: HiddenObject): CamoTint | null {
   const cx = obj.x * w;
   const cy = obj.y * h;
   const r = Math.max(3, (SPRITE_BASE_WIDTH * (obj.scale ?? 1) * w) / 2);
@@ -101,7 +83,7 @@ function sampleAround({ width: w, height: h, data: px }: Pixels, obj: HiddenObje
 }
 
 /** Bounding box of the opaque pixels — the paper of the sketchbook. */
-function bookBounds({ width: w, height: h, data: px }: Pixels): BookRect {
+function bookBounds({ width: w, height: h, data: px }: ScenePixels): BookRect {
   let x0 = w;
   let y0 = h;
   let x1 = -1;
@@ -121,8 +103,7 @@ function bookBounds({ width: w, height: h, data: px }: Pixels): BookRect {
 
 export const FULL_SPREAD: BookRect = { x: 0, y: 0, w: 1, h: 1 };
 
-export function analyzeScene(image: SkImage, objects: HiddenObject[]): SceneAnalysis {
-  const pixels = readPixels(image);
+export function analyzeScene(pixels: ScenePixels | null, objects: HiddenObject[]): SceneAnalysis {
   if (!pixels) return { tints: {}, book: FULL_SPREAD };
   const tints: Record<string, CamoTint> = {};
   for (const obj of objects) {

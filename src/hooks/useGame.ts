@@ -17,6 +17,16 @@ export interface FloatingNotification {
   variant?: 'score' | 'info';
 }
 
+/** How long a page takes to turn: the new page is loaded once the leaf has come down. */
+export const PAGE_TURN_MS = 900;
+
+/** A page turn in progress: where it goes, and which way the leaf turns. */
+export interface PageTurn {
+  level: LevelData;
+  /** 1: forwards (the right-hand page turns over to the left), -1: backwards */
+  direction: 1 | -1;
+}
+
 // Anti-spam: this many wrong clicks within the window fogs up the loupe for a moment
 const FOG_MISSES = 4;
 const FOG_WINDOW_MS = 3000;
@@ -37,7 +47,8 @@ export function useGame() {
     createInitialGameState(currentLevel, chapter.id)
   );
 
-  const [isTurning, setIsTurning] = useState(false);
+  const [turn, setTurn] = useState<PageTurn | null>(null);
+  const isTurning = turn !== null;
   const [screenShake, setScreenShake] = useState(false);
   const [floatingScores, setFloatingScores] = useState<FloatingNotification[]>([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -73,7 +84,7 @@ export function useGame() {
     setCurrentSceneIndex(validIndex);
     setIsNight(nightOn);
     setGameState(createInitialGameState(level, ch.id));
-    setIsTurning(false);
+    setTurn(null);
     setFogUntil(0);
     recentMisses.current = [];
     setShowNightIntro(nightOn);
@@ -320,8 +331,22 @@ export function useGame() {
     }));
   }, [gameState, currentLevel]);
 
+  // Starts turning the page; the target is loaded once the leaf has come down
+  const turnPage = useCallback(
+    (index: number, night: boolean, direction: 1 | -1, then?: () => void) => {
+      setTurn({ level: resolveLevel(index, night), direction });
+      audioManager.playPageTurn();
+      setTimeout(() => {
+        loadScene(index, night);
+        then?.();
+      }, PAGE_TURN_MS);
+    },
+    [loadScene]
+  );
+
   // Turn page to next level (a night page continues with the next day page)
   const handleNextScene = useCallback(() => {
+    if (isTurning) return;
     if (currentSceneIndex >= ALL_SCENES.length - 1) {
       // Reached the end of all 9 scenes
       loadScene(0);
@@ -332,41 +357,31 @@ export function useGame() {
     const currentCh = getChapterBySceneIndex(currentSceneIndex);
     const nextCh = getChapterBySceneIndex(nextIndex);
 
-    setIsTurning(true);
-    audioManager.playPageTurn();
-
-    setTimeout(() => {
-      loadScene(nextIndex);
+    turnPage(nextIndex, false, 1, () => {
       if (nextCh.id !== currentCh.id) {
         setShowPrologue(true);
       }
-    }, 900);
-  }, [currentSceneIndex, loadScene]);
+    });
+  }, [currentSceneIndex, isTurning, loadScene, turnPage]);
 
   // Turn page to previous level
   const handlePrevScene = useCallback(() => {
+    if (isTurning) return;
     if (currentSceneIndex <= 0 && !isNight) return;
 
     const prevIndex = isNight ? currentSceneIndex : currentSceneIndex - 1;
-    setIsTurning(true);
-    audioManager.playPageTurn();
+    turnPage(prevIndex, false, -1);
+  }, [currentSceneIndex, isNight, isTurning, turnPage]);
 
-    setTimeout(() => {
-      loadScene(prevIndex);
-    }, 900);
-  }, [currentSceneIndex, isNight, loadScene]);
-
-  // Direct select scene from Plate Selector / Index
+  // Direct select scene from Plate Selector / Index (a page's night comes after its day)
   const handleSelectScene = useCallback(
     (index: number, night: boolean = false) => {
+      if (isTurning) return;
       if (index === currentSceneIndex && night === isNight) return;
-      setIsTurning(true);
-      audioManager.playPageTurn();
-      setTimeout(() => {
-        loadScene(index, night);
-      }, 600);
+      const forwards = index > currentSceneIndex || (index === currentSceneIndex && night);
+      turnPage(index, night, forwards ? 1 : -1);
     },
-    [currentSceneIndex, isNight, loadScene]
+    [currentSceneIndex, isNight, isTurning, turnPage]
   );
 
   const handleToggleSound = useCallback(() => {
@@ -393,6 +408,7 @@ export function useGame() {
     allChapters: ALL_CHAPTERS,
     gameState,
     isTurning,
+    turn,
     screenShake,
     floatingScores,
     soundEnabled,

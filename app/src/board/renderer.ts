@@ -18,6 +18,7 @@ import {
   BACK_OUT,
   bloom,
   blinkScale,
+  cubicBezier,
   ease,
   EASE,
   EASE_IN,
@@ -28,7 +29,6 @@ import {
   loop,
   shyJump,
   shyPeek,
-  STANDARD,
   track,
 } from './anim';
 import { LOUPE_ZOOM, PAGE_H, PAGE_W } from './constants';
@@ -98,6 +98,7 @@ export interface SceneData {
   pageRect: SkRect;
   pageRRect: SkRRect;
   bookRRect: SkRRect; // the paper inside the artwork's transparent margin
+  paperRRect: SkRRect; // the same with the paper's rounded corners (shadows stay on the paper)
   sprites: SceneSprite[];
   marks: SceneMark[];
   night: NightScene | null;
@@ -126,8 +127,19 @@ export interface FrameState {
   found: Record<string, FoundInfo>;
   radar: string | null;
   fogStart: number;
-  turnStart: number;
   nudge: { x: number; y: number; t: number } | null;
+  flip: PageFlip | null;
+  flipStart: number; // when the leaf started to turn (0: not yet)
+  warm: SkImage[]; // artwork of the pages likely to come next, kept on the GPU
+}
+
+/** A page turning over. Both pages are recorded flat, in page units, when the turn begins. */
+export interface PageFlip {
+  from: SkPicture; // the page being left
+  to: SkPicture | null; // the page being opened (null while it is still being prepared)
+  dir: number; // 1: the right-hand page turns over to the left (forwards), -1: back
+  S: SceneData; // frame & paints: the page being opened (the old page until it is ready)
+  duration: number; // ms
 }
 
 interface Pose {
@@ -232,6 +244,15 @@ function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined): Pos
     found: !!f,
     age,
   };
+}
+
+function posesAt(S: SceneData, F: FrameState): Pose[] {
+  'worklet';
+  const poses: Pose[] = [];
+  for (let i = 0; i < S.sprites.length; i++) {
+    poses.push(spritePose(S.sprites[i], F.now, F.found[S.sprites[i].id]));
+  }
+  return poses;
 }
 
 function drawParts(c: SkCanvas, parts: Part[], pose: Pose, glowMode: boolean, spotPaint: SkPaint) {
@@ -477,8 +498,8 @@ function drawRadar(c: SkCanvas, S: SceneData, F: FrameState) {
   c.drawCircle(x, y, 4, P.radarDot);
 }
 
-/** Ink stamps on everything found (screen px, z 25). */
-function drawStamps(c: SkCanvas, S: SceneData, F: FrameState) {
+/** Ink stamps on everything found (z 25): screen px, or inked on the page for a recorded page. */
+function drawStamps(c: SkCanvas, S: SceneData, F: FrameState, onPage: boolean) {
   'worklet';
   const P = S.paints;
   const D = S.stampSize;
@@ -490,8 +511,14 @@ function drawStamps(c: SkCanvas, S: SceneData, F: FrameState) {
     const a = clamp01(e);
     const k = lerp(2.2, 1, e);
     c.save();
-    c.translate(f.x * F.s + F.tx, f.y * F.s + F.ty);
-    c.scale(k, k);
+    if (onPage) {
+      // Same size on screen as the live stamps at the current zoom
+      c.translate(f.x, f.y);
+      c.scale(k / F.s, k / F.s);
+    } else {
+      c.translate(f.x * F.s + F.tx, f.y * F.s + F.ty);
+      c.scale(k, k);
+    }
     P.stampGlow.setAlphaf(0.08 * a);
     c.drawCircle(0, 0, D / 2, P.stampGlow);
     P.stampFill.setAlphaf(a);
@@ -505,28 +532,176 @@ function drawStamps(c: SkCanvas, S: SceneData, F: FrameState) {
   }
 }
 
-/** Page-turn sweep across the spread (z 50). */
-function drawTurn(c: SkCanvas, S: SceneData, F: FrameState) {
+/* ---------------------------------- Page turn ---------------------------------- */
+
+// The leaf is drawn as flat strips, so the paper can bend as it turns
+const FLIP_STRIPS = 7;
+// How far (radians) the free edge leads the spine side while it lifts, and trails as it lands
+const FLIP_BEND = 0.55;
+// Distance of the eye from the spine, in leaf widths: the lifted edge swells towards the viewer
+const FLIP_DEPTH = 6.5;
+// Neighbouring strips overlap by this much (page units) so no hairline shows between them
+const FLIP_SEAM = 1.2;
+
+/** Shade on a strip of the leaf at angle phi: the more it stands up, the darker; its back is in its own shade. */
+function leafShade(phi: number, front: boolean): number {
   'worklet';
-  if (!F.turnStart) return;
-  const p = (F.now - F.turnStart) / 1200;
-  if (p < 0 || p >= 1) return;
-  const e = ease(STANDARD, p);
+  const tilt = 1 - Math.abs(Math.cos(phi));
+  return front ? 0.34 * Math.pow(tilt, 1.4) : 0.42 * Math.pow(tilt, 1.2) + 0.06 * Math.sin(phi);
+}
+
+function flipProgress(F: FrameState): number {
+  'worklet';
+  const T = F.flip;
+  if (!T || !T.to || !F.flipStart) return 0;
+  return clamp01((F.now - F.flipStart) / T.duration);
+}
+
+/**
+ * The spread while a leaf turns about the spine (page units). Underneath, the half the leaf
+ * lifts off already shows the new page and the other half still the old one; the leaf carries
+ * the old page on its front and the facing half of the new page on its back.
+ */
+function drawFlip(c: SkCanvas, T: PageFlip, p: number) {
+  'worklet';
+  const to = T.to;
+  if (!to || p <= 0) {
+    c.drawPicture(T.from);
+    return;
+  }
+  if (p >= 1) {
+    c.drawPicture(to);
+    return;
+  }
+  const S = T.S;
   const P = S.paints;
+  const d = T.dir < 0 ? -1 : 1;
+  const book = S.bookRRect.rect;
+  const x0 = book.x + book.width / 2; // the spine
+  const yc = book.y + book.height / 2;
+  const half = book.width / 2;
+  const depth = FLIP_DEPTH * half;
+
+  // Lifts, swings over, settles softly. The paper flexes: its free edge leads while the leaf
+  // rises (the corner comes up at once) and trails behind as it comes down
+  const theta = Math.PI * cubicBezier(0.55, 0, 0.35, 1, p);
+  const flex = Math.sin(2 * theta);
+  const bend = FLIP_BEND * (flex < 0 ? -Math.sqrt(-flex) : Math.sqrt(flex));
+  const lift = Math.sin(theta);
+
+  // The leaf strip by strip from the spine: the angle of each, and where it starts (x along the
+  // desk away from the spine, z up towards the viewer)
+  const n = FLIP_STRIPS;
+  const len = half / n;
+  const phis: number[] = [];
+  const xs: number[] = [];
+  const zs: number[] = [];
+  let x = 0;
+  let z = 0;
+  const angleAt = (j: number) => Math.min(Math.PI, Math.max(0, theta + (bend * j) / n));
+  for (let i = 0; i < n; i++) {
+    const phi = angleAt(i + 0.5);
+    phis.push(phi);
+    xs.push(x);
+    zs.push(z);
+    x += len * Math.cos(phi);
+    z += len * Math.sin(phi);
+  }
+  // Free edge on screen, measured from the spine (positive: still over the half it lifted off)
+  const tip = (depth * x) / (depth - z);
+
+  // Underneath
   c.save();
-  c.translate(F.tx, F.ty);
-  c.scale(F.s, F.s);
-  c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
-  c.translate(PAGE_W / 2 + lerp(1, -1, e) * PAGE_W, PAGE_H / 2);
-  c.skew(Math.tan((lerp(-15, -5, e) * Math.PI) / 180), 0);
-  c.translate(-PAGE_W / 2, -PAGE_H / 2);
-  P.turn.setAlphaf(lerp(0.8, 0, e));
-  c.drawRect(S.pageRect, P.turn);
+  c.clipRect(Skia.XYWHRect(0, 0, x0, PAGE_H), ClipOp.Intersect, false);
+  c.drawPicture(d > 0 ? T.from : to);
   c.restore();
+  c.save();
+  c.clipRect(Skia.XYWHRect(x0, 0, PAGE_W - x0, PAGE_H), ClipOp.Intersect, false);
+  c.drawPicture(d > 0 ? to : T.from);
+  c.restore();
+
+  // Shadows of the raised leaf: beyond its free edge, and in the gutter on the other side
+  const out = tip >= 0 ? d : -d; // away from the spine, on the side the free edge is over
+  const band = Skia.XYWHRect(0, book.y, 1, book.height);
+  c.save();
+  c.clipRRect(S.paperRRect, ClipOp.Intersect, true);
+  P.flipCast.setAlphaf(0.42 * lift);
+  c.save();
+  c.translate(x0 + d * tip, 0);
+  c.scale(out * half * (0.06 + 0.34 * lift), 1);
+  c.drawRect(band, P.flipCast);
+  c.restore();
+  P.flipCast.setAlphaf(0.26 * lift);
+  c.save();
+  c.translate(x0, 0);
+  c.scale(-out * half * 0.2, 1);
+  c.drawRect(band, P.flipCast);
+  c.restore();
+  c.restore();
+
+  // The leaf, farthest strips first
+  const order: number[] = [];
+  for (let i = 0; i < n; i++) order.push(i);
+  order.sort((a, b) => zs[a] + 0.5 * len * Math.sin(phis[a]) - (zs[b] + 0.5 * len * Math.sin(phis[b])));
+  for (let k = 0; k < n; k++) {
+    const i = order[k];
+    const phi = phis[i];
+    const cs = Math.cos(phi);
+    const sn = Math.sin(phi);
+    const u0 = i * len;
+    const xa = xs[i];
+    const za = zs[i];
+    const xb = xa + len * cs;
+    const zb = za + len * sn;
+    // Its front faces the viewer while, on screen, it still runs away from the spine
+    const front = (depth * xb) / (depth - zb) >= (depth * xa) / (depth - za);
+    // u (distance from the spine along the leaf) → screen: the strip turned by phi about the
+    // edge it shares with the previous one, seen in perspective (a 3×3 homography)
+    const m = [cs, 0, xa - u0 * cs, 0, 1, 0, -sn / depth, 0, 1 - (za - u0 * sn) / depth];
+    // Half of the spread printed on this face: the leaf's own on its front, the other on its back
+    const side = front ? d : -d;
+    const strip = Skia.XYWHRect(side > 0 ? x0 + u0 - FLIP_SEAM : x0 - u0 - len - FLIP_SEAM, 0, len + 2 * FLIP_SEAM, PAGE_H);
+    c.save();
+    c.translate(x0, yc);
+    c.scale(d, 1);
+    c.concat(m);
+    c.scale(side, 1);
+    c.translate(-x0, -yc);
+    c.clipRect(strip, ClipOp.Intersect, true);
+    c.drawPicture(front ? T.from : to);
+    // Lit from above, the shade running smoothly across the strip from one joint to the next
+    const inner = leafShade(angleAt(i), front);
+    const outer = leafShade(angleAt(i + 1), front);
+    if (Math.max(inner, outer) > 0.004) {
+      c.clipRRect(S.paperRRect, ClipOp.Intersect, true);
+      P.flipShade.setAlphaf(Math.min(inner, outer));
+      c.drawRect(strip, P.flipShade);
+      // …plus a ramp from the darker joint to the lighter one
+      const darkInner = inner > outer;
+      c.translate(x0 + side * (darkInner ? u0 : u0 + len), 0);
+      c.scale((darkInner ? side : -side) * len, 1);
+      P.flipRamp.setAlphaf(Math.abs(inner - outer));
+      c.drawRect(Skia.XYWHRect(0, 0, 1, PAGE_H), P.flipRamp);
+    }
+    c.restore();
+  }
+}
+
+/** Records a page as it looks now, flat and in page units, for a page turn. */
+export function recordPage(S: SceneData, F: FrameState): SkPicture {
+  'worklet';
+  const recorder = Skia.PictureRecorder();
+  const c = recorder.beginRecording(S.pageRect);
+  c.save();
+  c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
+  drawBook(c, S, F, posesAt(S, F), false);
+  c.restore();
+  drawStamps(c, S, F, true);
+  return recorder.finishRecordingAsPicture();
 }
 
 /** The brass loupe (a flashlight on night pages), magnifying whatever is under it. */
-function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]) {
+function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], flip: number) {
   'worklet';
   const L = S.loupe;
   const { r, d, lensR } = L;
@@ -587,7 +762,8 @@ function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]) {
   c.scale(z, z);
   c.translate(-px, -py);
   c.clipRect(S.pageRect, ClipOp.Intersect, true);
-  drawBook(c, S, F, poses, true);
+  if (F.flip) drawFlip(c, F.flip, flip);
+  else drawBook(c, S, F, poses, true);
   c.restore();
   if (fogged) c.restore();
 
@@ -609,15 +785,28 @@ function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]) {
   c.restore();
 }
 
-export function renderFrame(S: SceneData, F: FrameState): SkPicture {
+export function renderFrame(live: SceneData, F: FrameState): SkPicture {
   'worklet';
   const recorder = Skia.PictureRecorder();
   const c = recorder.beginRecording(Skia.XYWHRect(0, 0, F.width, F.height));
+  // While a page turns, both pages come from the turn and the frame is the page being opened
+  const S = F.flip ? F.flip.S : live;
   const P = S.paints;
+  const flip = flipProgress(F);
+  const poses: Pose[] = F.flip ? [] : posesAt(S, F);
 
-  const poses: Pose[] = [];
-  for (let i = 0; i < S.sprites.length; i++) {
-    poses.push(spritePose(S.sprites[i], F.now, F.found[S.sprites[i].id]));
+  // Artwork of the pages likely to come next, one invisible pixel each: it stays decoded on the
+  // GPU, so turning to it never stalls a frame on the upload
+  for (let i = 0; i < F.warm.length; i++) {
+    const img = F.warm[i];
+    c.drawImageRectOptions(
+      img,
+      Skia.XYWHRect(0, 0, img.width(), img.height()),
+      Skia.XYWHRect(0, 0, 1, 1),
+      FilterMode.Linear,
+      MipmapMode.Linear,
+      P.warm
+    );
   }
 
   // The book on the desk: soft shadows under the paper
@@ -638,18 +827,20 @@ export function renderFrame(S: SceneData, F: FrameState): SkPicture {
   c.drawRRect(S.bookRRect, S.night ? P.bookShadowNight : P.bookShadow);
   c.restore();
   c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
-  drawBook(c, S, F, poses, false);
+  if (F.flip) drawFlip(c, F.flip, flip);
+  else drawBook(c, S, F, poses, false);
   c.restore();
 
-  // Screen-space marks, clipped to the book
-  c.save();
-  c.clipRect(Skia.XYWHRect(F.tx, F.ty, PAGE_W * F.s, PAGE_H * F.s), ClipOp.Intersect, true);
-  drawRadar(c, S, F);
-  drawStamps(c, S, F);
-  c.restore();
+  // Screen-space marks, clipped to the book (a turning page carries its own stamps)
+  if (!F.flip) {
+    c.save();
+    c.clipRect(Skia.XYWHRect(F.tx, F.ty, PAGE_W * F.s, PAGE_H * F.s), ClipOp.Intersect, true);
+    drawRadar(c, S, F);
+    drawStamps(c, S, F, false);
+    c.restore();
+  }
 
-  drawTurn(c, S, F);
-  drawLoupe(c, S, F, poses);
+  drawLoupe(c, S, F, poses, flip);
 
   return recorder.finishRecordingAsPicture();
 }

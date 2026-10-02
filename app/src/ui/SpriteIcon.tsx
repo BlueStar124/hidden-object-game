@@ -27,7 +27,7 @@ interface SpriteIconProps {
 }
 
 /** Static drawing of a sprite for cards, album and summaries (the board draws them with Skia). */
-export const SpriteIcon: React.FC<SpriteIconProps> = ({ type, size, revealed = true, glow = false }) => {
+export const SpriteIcon = React.memo<SpriteIconProps>(({ type, size, revealed = true, glow = false }) => {
   const ast = type ? astOf(type, revealed) : null;
   const scale = useSharedValue(1);
   const rotate = useSharedValue(0);
@@ -51,7 +51,7 @@ export const SpriteIcon: React.FC<SpriteIconProps> = ({ type, size, revealed = t
       <SvgAst ast={ast} override={{ width: size, height: size, opacity: revealed ? 1 : 0.42 }} />
     </Animated.View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   glow: {

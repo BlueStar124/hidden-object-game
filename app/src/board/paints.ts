@@ -1,5 +1,5 @@
 import { BlendMode, BlurStyle, PaintStyle, PathOp, Skia, TileMode, type SkPaint } from '@shopify/react-native-skia';
-import { LOUPE_ZOOM, PAGE_W, PX } from './constants';
+import { LOUPE_ZOOM, PX } from './constants';
 
 /**
  * Paints & shaders for the sketchbook, transcribed from the web CSS. Created once on the JS
@@ -186,18 +186,34 @@ export function createBoardPaints() {
       p.setPathEffect(Skia.PathEffect.MakeDash([6, 4], 0));
     }),
 
-    // Page turn sweep (unit-wide gradient, scaled to the page)
-    turn: paint((p) =>
+    // Page turn: shade on the turning leaf, and the shadow it casts (unit-wide, fading out
+    // along x — scaled and mirrored to the shadow's width)
+    flipShade: paint((p) => p.setColor(color('rgb(38, 30, 18)'))),
+    flipRamp: paint((p) =>
       p.setShader(
         Skia.Shader.MakeLinearGradient(
           { x: 0, y: 0 },
-          { x: PAGE_W, y: 0 },
-          ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.2)', 'rgba(255, 255, 255, 0.4)', 'rgba(0, 0, 0, 0)'].map(color),
-          [0, 0.48, 0.5, 1],
+          { x: 1, y: 0 },
+          ['rgba(38, 30, 18, 1)', 'rgba(38, 30, 18, 0)'].map(color),
+          [0, 1],
           TileMode.Clamp
         )
       )
     ),
+    flipCast: paint((p) =>
+      p.setShader(
+        Skia.Shader.MakeLinearGradient(
+          { x: 0, y: 0 },
+          { x: 1, y: 0 },
+          ['rgba(38, 30, 18, 1)', 'rgba(38, 30, 18, 0.45)', 'rgba(38, 30, 18, 0)'].map(color),
+          [0, 0.3, 1],
+          TileMode.Clamp
+        )
+      )
+    ),
+
+    // Keeps the next pages' artwork on the GPU (one pixel, all but transparent)
+    warm: paint((p) => p.setAlphaf(1 / 255)),
   };
 }
 

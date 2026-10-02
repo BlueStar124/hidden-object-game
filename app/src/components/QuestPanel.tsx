@@ -127,7 +127,8 @@ const QuestCard: React.FC<{
   );
 };
 
-export const QuestPanel: React.FC<QuestPanelProps> = ({
+// Memoised: the game re-renders every second for its clock, the clue cards need not follow
+export const QuestPanel = React.memo<QuestPanelProps>(({
   layout,
   objects,
   foundIds,
@@ -294,7 +295,7 @@ export const QuestPanel: React.FC<QuestPanelProps> = ({
       </View>
     </View>
   );
-};
+});
 
 const SECRET_CLUE = 'Vật được giấu kỹ nhất trang — hãy rê kính lúp thật chậm.';
 

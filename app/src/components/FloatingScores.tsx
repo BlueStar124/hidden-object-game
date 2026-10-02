@@ -35,7 +35,7 @@ const Floating: React.FC<{ item: FloatingNotification; origin: { x: number; y: n
   );
 };
 
-export const FloatingScores: React.FC<{ items: FloatingNotification[]; origin: { x: number; y: number } }> = ({
+export const FloatingScores = React.memo<{ items: FloatingNotification[]; origin: { x: number; y: number } }>(({
   items,
   origin,
 }) => (
@@ -44,7 +44,7 @@ export const FloatingScores: React.FC<{ items: FloatingNotification[]; origin: {
       <Floating key={f.id} item={f} origin={origin} />
     ))}
   </View>
-);
+));
 
 const styles = StyleSheet.create({
   item: {

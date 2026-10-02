@@ -17,6 +17,9 @@ import { spriteParts } from './spriteParts';
 
 const boardPaints = createBoardPaints();
 
+// Radius of the sketchbook's rounded corners in the artwork (page units)
+const PAPER_CORNER = 48;
+
 // Fixed star field in the upper part of the spread (normalized x, y, size) — as in NightSky.tsx
 const STARS: [number, number, number][] = [
   [0.06, 0.08, 1.2],
@@ -146,12 +149,14 @@ export function buildScene({ level, image, tints, book, loupe, compact }: SceneO
     };
   });
   const lensR = loupe.lensR;
+  const bookRect = Skia.XYWHRect(book.x * PAGE_W, book.y * PAGE_H, book.w * PAGE_W, book.h * PAGE_H);
   return {
     image,
     imageRect: Skia.XYWHRect(0, 0, image.width(), image.height()),
     pageRect,
     pageRRect: Skia.RRectXY(pageRect, 4 * PX, 4 * PX),
-    bookRRect: Skia.RRectXY(Skia.XYWHRect(book.x * PAGE_W, book.y * PAGE_H, book.w * PAGE_W, book.h * PAGE_H), 4 * PX, 4 * PX),
+    bookRRect: Skia.RRectXY(bookRect, 4 * PX, 4 * PX),
+    paperRRect: Skia.RRectXY(bookRect, PAPER_CORNER, PAPER_CORNER),
     sprites: level.objects.filter(isPainted).map((o) => buildSprite(o, tints[o.id], night)),
     marks,
     night: night ? buildNight(level) : null,
