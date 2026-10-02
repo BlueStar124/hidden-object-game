@@ -112,6 +112,7 @@ Thư mục [`app/`](app/README.md) là bản **Expo (React Native)** của game:
 - **Chụm hai ngón** để zoom (nút +/− đi từng 0.1×), kéo để di chuyển quanh trang; cầm **cán kính lúp** để rê mà không che tròng kính.
 - **Thả kính lúp ở đâu thì soi ngay tâm kính ở đó**, hoặc **chạm** thẳng vào chỗ muốn soi. Thả kính ra ngoài bức tranh (mặt bàn) thì không tính lần soi, không bị trừ điểm.
 - Khóa **màn hình ngang**; rung khi tìm thấy/soi sai; tự tạm dừng khi rời app; cài được như app trên web (PWA).
+- **Lật trang như sổ thật**: trang sau thì tờ bên phải lật qua trái, trang trước thì tờ bên trái lật qua phải. Tờ giấy cong theo phối cảnh, mặt sau in nửa trang mới, có bóng đổ lên trang bên dưới; camera lùi nhẹ cho tờ giấy không bị khung cắt. Trang kế bên được giải mã và dựng sẵn khi đang chơi, nên lúc lật không bị khựng.
 
 ```bash
 cd app && npm install && npm start   # quét QR bằng Expo Go
@@ -123,18 +124,18 @@ Chi tiết cách chạy, kiến trúc và phát hành: [app/README.md](app/READM
 
 ## 🛠️ Cài Đặt & Chạy Game
 
+Game chạy bằng bản app trong [`app/`](app/README.md) (iOS · Android · web):
+
 ```bash
-# 1. Cài đặt thư viện (nếu chưa cài)
+cd app
 npm install
-
-# 2. Khởi chạy máy chủ phát triển (Local Dev Server)
-npm run dev
-
-# 3. Biên dịch bản đóng gói triển khai (Build for Production)
-npm run build
+npm run web          # bản web tại http://localhost:8081
+npm start            # app trên điện thoại (Expo Go)
 ```
 
-Sau khi chạy `npm run dev`, mở trình duyệt tại: `http://localhost:3000`
+Thư mục gốc chỉ còn **lõi game dùng chung** (`src/`: luật chơi, màn chơi, sinh vật, hình vẽ gốc) và tranh (`public/assets/`). `npm install` ở thư mục gốc chỉ cần khi chạy `npm run generate` trong `app/` (sinh lại hình vẽ & âm thanh).
+
+Giao diện web cũ dựng bằng Vite không còn dùng: đã nén vào [`archive/web-vite.zip`](archive/web-vite.zip), kèm hướng dẫn khôi phục trong file `README-web-vite.md` bên trong.
 
 ---
 
@@ -145,6 +146,6 @@ File [`vercel.json`](vercel.json) ở thư mục gốc cho Vercel deploy **bản
 1. Đẩy mã nguồn lên GitHub, rồi trên [Vercel](https://vercel.com/) chọn **Add New Project** $\rightarrow$ **Import Git Repository** (giữ *Root Directory* là thư mục gốc của repo).
 2. Mỗi nhánh được push lên có một bản **Preview** riêng để thử; push/merge vào `main` thì thay bản chính thức trên tên miền của project (xem ở mục *Domains* trên dashboard).
 3. Cùng tên miền nên người chơi **giữ nguyên tiến độ** (app đọc đúng khóa lưu của bản Vite).
-4. Muốn quay về bản Vite: xóa `vercel.json` — Vercel tự nhận Vite (`npm run build` → `dist`). Cần gấp thì dùng **Instant Rollback** trên dashboard.
+4. Cần quay về bản trước thì dùng **Instant Rollback** trên dashboard. (Bản Vite cũ nằm trong `archive/web-vite.zip`; muốn deploy lại nó phải giải nén và khôi phục `package.json` như hướng dẫn trong zip.)
 
 `package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 57 cần Node ≥ 22.13 (hoặc 24.3).

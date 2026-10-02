@@ -23,7 +23,7 @@ Run the typecheck (and the web export when touching web-specific code) before de
 
 ## Project layout
 
-- The game core is **shared with the Vite web app** in `../src` (`@core/*`): `hooks/useGame.ts`, `game/*`, `levels/*`, `data/*`, `types/*`. Do not fork game rules into the app.
+- The game core lives in `../src` (`@core/*`): `hooks/useGame.ts`, `game/*`, `levels/*`, `data/*`, `types/*`. Do not fork game rules into the app. (The old Vite web UI that also used it is archived in `../archive/web-vite.zip`.)
 - `metro.config.js` redirects two shared modules to app twins: `src/game/AudioManager` → `src/platform/AudioManager.(native|web).ts` and `src/game/CreatureMotion` → `src/game/CreatureMotion.ts` (worklet version — keep its maths in sync with the web file).
 - The sketchbook is drawn imperatively by `src/board/renderer.ts` (one SkPicture per frame on the UI thread). Gestures live in `src/board/Board.tsx`; they are native, so the board must stay inactive under dialogs (`active` prop).
 - `src/sprites/art.generated.ts` and `src/audio/sounds.generated.ts` are generated — never edit them by hand.

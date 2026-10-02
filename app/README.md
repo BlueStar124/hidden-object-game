@@ -1,6 +1,6 @@
 # 📱 The Lost Sketchbook — App iOS · Android · Web (Expo)
 
-Bản React Native của game, viết **một lần cho cả ba nền tảng**: app iOS, app Android và bản web (react-native-web). Toàn bộ luật chơi, màn chơi và hình vẽ **dùng chung** với bản web Vite ở thư mục gốc — sửa một chỗ, cả hai bản cùng đổi.
+Bản React Native của game, viết **một lần cho cả ba nền tảng**: app iOS, app Android và bản web (react-native-web). Luật chơi, màn chơi và hình vẽ nằm trong **lõi dùng chung** ở `../src` (trước đây dùng chung với bản web Vite, nay đã nén vào `archive/web-vite.zip`).
 
 ---
 
@@ -55,7 +55,7 @@ npm run build:web                             # bản web tĩnh → app/dist (de
 
 ```
 hidden-object-game/
-├── src/                     ← bản web Vite + LÕI GAME DÙNG CHUNG
+├── src/                     ← LÕI GAME DÙNG CHUNG (giao diện Vite cũ: archive/web-vite.zip)
 │   ├── hooks/useGame.ts         luật chơi, điểm, combo, gợi ý, giờ, sương mờ… (dùng nguyên văn)
 │   ├── game/                    DetectionEngine, ScoreEngine, HintEngine, SaveManager…
 │   ├── levels/  data/  types/   12 trang (JSON), sổ tay sinh vật, kiểu dữ liệu
@@ -79,11 +79,13 @@ hidden-object-game/
 
 **Renderer** (`src/board/renderer.ts`): mỗi khung hình vẽ lại toàn bộ cảnh thành một `SkPicture` trên UI thread — tranh, sprite ngụy trang (multiply + ma trận màu của CSS `filter`), mảnh tranh che (occluder), mặt nước, bóng đêm + đèn, dấu mộc, radar, lật trang, kính lúp. Thứ tự lớp bám theo `z-index` của bản web.
 
+**Lật trang**: `useGame` báo trang đích và chiều lật (`turn`) ngay lúc bấm, rồi mở trang mới sau `PAGE_TURN_MS`. `Board` chụp trang cũ và trang mới thành hai `SkPicture` phẳng. Renderer vẽ tờ giấy quay quanh gáy sổ thành 7 dải, mỗi dải một ma trận phối cảnh 3×3, nên tờ giấy cong được. Mặt trước là trang cũ, mặt sau là nửa đối diện của trang mới, kèm bóng đổ lên trang bên dưới. Hai trang kế bên được giải mã (native: trên JS thread, không đợi lần vẽ đầu trên UI thread), phân tích và dựng sẵn sau khi trang hiện tại ổn định, và giữ trên GPU, nên lúc lật không phải chờ. Chỉ ảnh của vài trang quanh trang hiện tại được giữ trong bộ nhớ.
+
 ---
 
 ## 🛠️ Sinh dữ liệu từ bản web
 
-Cần cài `npm install` ở **thư mục gốc** trước (dùng esbuild, react-dom và Playwright của bản web).
+Cần cài `npm install` ở **thư mục gốc** trước (dùng esbuild, react-dom và Playwright ở đó).
 
 ```bash
 cd app
