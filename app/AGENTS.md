@@ -1,4 +1,4 @@
-This is the Expo (React Native) version of The Lost Sketchbook — one codebase for iOS, Android and web. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+This is The Lost Sketchbook — the whole game, one Expo (React Native) codebase for iOS, Android and web. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
 ## Expo has changed — do not trust your training data
 
@@ -13,9 +13,9 @@ Expo ships breaking changes every SDK release. APIs you remember are likely rena
 ```bash
 npx expo install <package>  # ALWAYS use instead of npm add — resolves SDK-compatible versions
 npx expo start              # dev server (Expo Go)
-npm run typecheck           # tsc: the app and the shared game core in ../src
+npm run typecheck           # tsc over the whole app
 npm run build:web           # web export to dist/
-npm run generate            # regenerate sprite art + sounds from the web sources (needs root npm install)
+npm run generate            # regenerate sprite art + sounds with ../tools (needs `npm install` at the repo root)
 npx expo-doctor             # diagnose dependency and config issues
 ```
 
@@ -23,10 +23,14 @@ Run the typecheck (and the web export when touching web-specific code) before de
 
 ## Project layout
 
-- The game core lives in `../src` (`@core/*`): `hooks/useGame.ts`, `game/*`, `levels/*`, `data/*`, `types/*`. Do not fork game rules into the app. (The old Vite web UI that also used it is archived in `../archive/web-vite.zip`.)
-- `metro.config.js` redirects two shared modules to app twins: `src/game/AudioManager` → `src/platform/AudioManager.(native|web).ts` and `src/game/CreatureMotion` → `src/game/CreatureMotion.ts` (worklet version — keep its maths in sync with the web file).
-- The sketchbook is drawn imperatively by `src/board/renderer.ts` (one SkPicture per frame on the UI thread). Gestures live in `src/board/Board.tsx`; they are native, so the board must stay inactive under dialogs (`active` prop).
-- `src/sprites/art.generated.ts` and `src/audio/sounds.generated.ts` are generated — never edit them by hand.
+Layers depend one way: `core` ← `content` ← `game` ← `screens`; `board` draws what `game` tells it; `platform` and `ui` are leaves. See README.md (Kiến trúc) for the full map.
+
+- `src/core/` — game rules in plain TypeScript (no React Native, no Skia): the model (`model.ts`: Country → Chapter → Page → HiddenObject, CaseState), case transitions (`caseFile.ts`), detection, scoring, hints, creature motion (worklets: they run on the JS and UI threads), saved progress. Keep rules here, pure.
+- `src/content/` — data only: `countries/<country>/` (chapters, page JSON, art table) registered in `content/index.ts`, and the bestiary. Page ids are unique across countries (progress is keyed by them). Adding a country: README.md, "Thêm Một Quốc Gia".
+- `src/game/` — session state as hooks: `useNavigation` (country, page, turns), `useCase` (the page's case), composed by `useGame`.
+- `src/board/` — the sketchbook, drawn imperatively with Skia: one SkPicture per frame on the UI thread (`render/`, worklets), pages laid out on the JS thread (`scene/`). Gestures are native, so the board must stay inactive under dialogs (`active` prop). The order of the hooks in `Board.tsx` is the order their effects run in — keep it (see `usePageTurn`).
+- `src/platform/` — per-platform files picked by Metro: `sound.native.ts` / `sound.web.ts` (contract in `sound.d.ts`), `sceneImage.ts` / `sceneImage.web.ts`. `platform/synth/` is the Web Audio synth: the source of every sound.
+- `src/generated/` is written by `../tools/generate-assets.mjs` — never edit it by hand. The sprite drawings' source is `../tools/sprites/ObjectSprite.tsx`.
 - Single screen, no navigation library: dialogs are overlays (`src/ui/ModalShell.tsx`). The app is locked to landscape.
 
 ## Rules

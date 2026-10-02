@@ -18,13 +18,13 @@ import {
   Lora_600SemiBold_Italic,
   Lora_700Bold,
 } from '@expo-google-fonts/lora';
-import { GameApp } from './src/GameApp';
-import { colors } from './src/theme';
+import { GameScreen } from './src/screens/GameScreen';
+import { colors } from './src/ui/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
-  // Same typefaces as the web version: Playfair Display (display) and Lora (body)
+  // Playfair Display (titles) and Lora (body text)
   const [fontsLoaded, fontError] = useFonts({
     PlayfairDisplay_400Regular,
     PlayfairDisplay_500Medium,
@@ -47,7 +47,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
-        <GameApp />
+        <GameScreen />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

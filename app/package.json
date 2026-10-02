@@ -38,8 +38,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:web": "expo export --platform web",
-    "generate": "node scripts/generate-assets.mjs",
-    "generate:icons": "node scripts/generate-icons.mjs",
+    "generate": "npm --prefix .. run generate",
+    "generate:icons": "npm --prefix .. run generate:icons",
     "typecheck": "tsc --noEmit",
     "postinstall": "setup-skia-web public"
   },

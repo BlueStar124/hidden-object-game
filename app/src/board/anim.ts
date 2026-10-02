@@ -1,6 +1,7 @@
 /**
- * Worklet versions of the CSS animations used by the web sketchbook (sprites.css, Sketchbook,
- * Loupe): timing functions, keyframe tracks and the named curves, evaluated from a clock.
+ * The sketchbook's animations as worklets — the CSS animations of the original web version
+ * (tools/sprites/sprites.css): timing functions, keyframe tracks and the named curves, evaluated
+ * from a clock.
  */
 
 /** CSS cubic-bezier(x1, y1, x2, y2) evaluated at progress x ∈ [0, 1]. */
@@ -104,12 +105,17 @@ export function once(nowMs: number, startMs: number, durationMs: number): number
   return p < 0 ? 0 : p > 1 ? 1 : p;
 }
 
+export const clamp01 = (v: number) => {
+  'worklet';
+  return v < 0 ? 0 : v > 1 ? 1 : v;
+};
+
 export const lerp = (a: number, b: number, t: number) => {
   'worklet';
   return a + (b - a) * t;
 };
 
-/* ------------------------ Named curves from the web CSS ------------------------ */
+/* ------------------------ Named curves (from sprites.css) ------------------------ */
 
 /** spriteBlink 4.6s: eyes close briefly at ~94% of every cycle. */
 export function blinkScale(nowMs: number, delayMs: number): number {

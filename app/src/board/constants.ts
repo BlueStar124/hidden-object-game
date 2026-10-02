@@ -1,10 +1,10 @@
-import { SPRITE_BASE_WIDTH } from '@core/game/CamoSampler';
+import { SPRITE_BASE_WIDTH } from '../core/model';
 
 /** The watercolour spread is drawn in its own pixel space: 1760 × 1240 "page units". */
 export const PAGE_W = 1760;
 export const PAGE_H = 1240;
 
-/** Page units per CSS pixel of the web sketchbook at its full 960px width (for shadow & glow sizes). */
+/** Page units per CSS pixel of the original 960px-wide web sketchbook (shadow & glow sizes are in those). */
 export const PX = PAGE_W / 960;
 
 /** Magnification of the loupe over the page as it is shown. */

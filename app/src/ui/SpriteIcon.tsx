@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { parse, SvgAst, type JsxAST } from 'react-native-svg';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
-import type { SpriteType } from '@core/types/level';
-import { SPRITE_SVG } from '../sprites/art.generated';
+import type { SpriteType } from '../core/model';
+import { SPRITE_SVG } from '../generated/spriteArt';
 
 // Parsed once per drawing and shared by every icon (the album shows dozens at a time)
 const asts = new Map<string, JsxAST | null>();

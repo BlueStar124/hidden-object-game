@@ -1,9 +1,14 @@
 import { Image } from 'react-native';
 import { AlphaType, ColorType, Skia, type SkImage } from '@shopify/react-native-skia';
-import type { ScenePixels } from '../game/sceneAnalysis';
-import { sceneSource } from './assets';
 
-/** A scene's artwork, decoded and ready to draw, with a way to read its pixels for the analysis. */
+/** Pixels of a painting, scaled down: unpremultiplied RGBA, row by row. */
+export interface ScenePixels {
+  width: number;
+  height: number;
+  data: Uint8Array | Uint8ClampedArray;
+}
+
+/** A painting, decoded and ready to draw, with a way to read its pixels for the analysis. */
 export interface LoadedScene {
   image: SkImage;
   /** The pixels scaled down to `width` (unpremultiplied RGBA) */
@@ -14,10 +19,10 @@ export interface LoadedScene {
  * iOS & Android. Skia decodes images lazily, on their first draw — that would be on the UI thread,
  * in the middle of a page turn. They are decoded here, on the JS thread, as soon as they arrive.
  */
-export async function loadSceneImage(src: string): Promise<LoadedScene> {
-  const data = await Skia.Data.fromURI(Image.resolveAssetSource(sceneSource(src)).uri);
-  const lazy = Skia.Image.MakeImageFromEncoded(data);
-  if (!lazy) throw new Error(`Could not decode ${src}`);
+export async function loadSceneImage(source: number): Promise<LoadedScene> {
+  const uri = Image.resolveAssetSource(source).uri;
+  const lazy = Skia.Image.MakeImageFromEncoded(await Skia.Data.fromURI(uri));
+  if (!lazy) throw new Error(`Could not decode ${uri}`);
   let image = lazy;
   try {
     image = lazy.makeNonTextureImage() ?? lazy;

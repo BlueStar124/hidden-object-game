@@ -43,7 +43,7 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 - **17 hình vẽ mới:** thạch sùng, tắc kè hoa, ếch, ốc sên, bọ rùa, chuột, cá koi, cua, rái cá, bói cá, dơi, khỉ, bướm đêm, chuồn chuồn, nhện, hạc giấy, thuyền giấy.
 - Bảng manh mối chỉ hiện **hình bóng** của vật cần tìm và nhãn kiểu ngụy trang của nó.
 
-### Khai báo một vật ẩn trong file màn chơi (`src/levels/**.json`)
+### Khai báo một vật ẩn trong file màn chơi (`app/src/content/countries/<nước>/chapter-N/<id-trang>.json`)
 
 ```jsonc
 {
@@ -65,7 +65,7 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 }
 ```
 
-> Mẹo: bật nút **Soát Tọa Độ** trong game để xem tọa độ con trỏ và vùng click của từng vật.
+> Mẹo: tọa độ là tỉ lệ trên **cả khung ảnh 1760 × 1240** (kể cả lề trong suốt quanh cuốn sổ): mở tranh bằng trình xem ảnh có hiện tọa độ pixel, rồi lấy `x = px / 1760`, `y = py / 1240`.
 
 ---
 
@@ -100,13 +100,13 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 }
 ```
 
-Trang đêm là một file riêng trong `src/levels/night/` với `"isNight": true`, `"dayId"` (id trang ngày) và `"nightLights"` (danh sách `{ x, y, r, color }` các đèn trang trí).
+Trang đêm là một file JSON riêng với `"isNight": true` và `"nightLights"` (danh sách `{ x, y, r, color }` các đèn trang trí). Nó dùng chung bức tranh (`"art"`) với trang ngày, và được ghép cặp với trang ngày trong file `index.ts` của nước đó: `{ day: …, night: … }`.
 
 ---
 
 ## 📱 Phiên Bản 0.4 — App iOS · Android · Web (React Native / Expo)
 
-Thư mục [`app/`](app/README.md) là bản **Expo (React Native)** của game: một mã nguồn chạy thành app iOS, app Android và bản web, dùng chung luật chơi (`src/hooks/useGame.ts`, `src/game/`), màn chơi và tranh với bản web này.
+Thư mục [`app/`](app/README.md) là bản **Expo (React Native)** của game: một mã nguồn chạy thành app iOS, app Android và bản web. Từ bản 0.5 đây là bản duy nhất (bản web Vite đầu tiên đã nén vào `archive/`).
 
 - Cuốn sổ vẽ bằng **Skia** trên UI thread (web: CanvasKit) — kéo kính lúp, zoom, sinh vật di chuyển đều mượt 60 khung hình/giây.
 - **Chụm hai ngón** để zoom (nút +/− đi từng 0.1×), kéo để di chuyển quanh trang; cầm **cán kính lúp** để rê mà không che tròng kính.
@@ -133,9 +133,48 @@ npm run web          # bản web tại http://localhost:8081
 npm start            # app trên điện thoại (Expo Go)
 ```
 
-Thư mục gốc chỉ còn **lõi game dùng chung** (`src/`: luật chơi, màn chơi, sinh vật, hình vẽ gốc) và tranh (`public/assets/`). `npm install` ở thư mục gốc chỉ cần khi chạy `npm run generate` trong `app/` (sinh lại hình vẽ & âm thanh).
+`npm install` ở thư mục gốc chỉ cần cho **công cụ** trong `tools/` (sinh lại hình vẽ, âm thanh, icon: `npm run generate`, `npm run generate:icons`).
 
 Giao diện web cũ dựng bằng Vite không còn dùng: đã nén vào [`archive/web-vite.zip`](archive/web-vite.zip), kèm hướng dẫn khôi phục trong file `README-web-vite.md` bên trong.
+
+---
+
+## 🧱 Cấu Trúc Mã Nguồn (từ bản 0.5)
+
+```
+hidden-object-game/
+├── app/                        ← game (Expo: iOS · Android · web) — mọi thứ được phát hành
+│   ├── assets/art/             ← tranh: <nước>/ (các trang sổ), desk/ (mặt bàn)
+│   └── src/
+│       ├── core/               luật chơi, thuần TypeScript: mô hình dữ liệu, phát hiện, điểm,
+│       │                       gợi ý, hồ sơ vụ án, chuyển động sinh vật, lưu tiến độ
+│       ├── content/            nội dung: countries/<nước>/ (chương, trang JSON, tranh), Sổ Tay
+│       ├── game/               một lượt chơi (React hooks): điều hướng trang, vụ án, thông báo
+│       ├── board/              cuốn sổ vẽ bằng Skia: camera, lật trang, cử chỉ;
+│       │                       scene/ dựng trang (JS thread), render/ vẽ từng khung (UI thread)
+│       ├── screens/            màn hình chơi, HUD, bảng manh mối, các hộp thoại
+│       ├── platform/           theo thiết bị: âm thanh (native/web), rung, tải tranh
+│       ├── ui/                 giao diện dùng chung: màu, chữ, nút, hộp thoại, icon
+│       └── generated/          hình vẽ & âm thanh sinh tự động (không sửa tay)
+├── tools/                      công cụ: sprites/ (bản vẽ gốc của 57 hình), generate-assets, generate-icons
+├── archive/web-vite.zip        bản web Vite cũ (không dùng)
+└── vercel.json                 deploy bản web
+```
+
+Phụ thuộc đi một chiều: `core` không biết gì về giao diện; `content` chỉ là dữ liệu; `game` dùng `core` + `content`; `board` và `screens` hiển thị. Chi tiết từng phần: [app/README.md](app/README.md#-kiến-trúc).
+
+---
+
+## 🌏 Thêm Một Quốc Gia (ví dụ Việt Nam)
+
+Mỗi nước là một cuốn sổ riêng trong `app/src/content/countries/<nước>/`. Thêm nước **không cần sửa** luật chơi, cuốn sổ hay giao diện:
+
+1. **Tranh** — mỗi trang một ảnh PNG **1760 × 1240**: cuốn sổ mở hai trang trên nền trong suốt, giữ đúng khung sổ của bộ Singapore (phần giấy ở khoảng x 88–1672, y 270–969, gáy ở giữa x ≈ 880, góc bo ~50 px) để camera, bóng đổ và hiệu ứng lật trang khớp. Đặt vào `app/assets/art/<nước>/`.
+2. **Màn chơi** — mỗi trang một file JSON `app/src/content/countries/<nước>/chapter-N/<id-trang>.json` (định dạng ở mục 0.2 và 0.3 phía trên; `"art"` là tên bức tranh, không kèm `.png`). Id trang **không được trùng** với nước khác: tiến độ lưu theo id.
+3. **Định nghĩa nước** — `app/src/content/countries/<nước>/index.ts`: tên nước, các chương (tiêu đề, phụ đề, các đoạn mở đầu), trang của mỗi chương (`{ day }` hoặc `{ day, night }`) và bảng `art` (tên tranh → `require('…png')`). Lấy `countries/singapore/index.ts` làm mẫu.
+4. **Đăng ký** — thêm nước vào `COUNTRIES` trong `app/src/content/index.ts`. Mục Lục tự hiện tab chọn nước, số trang tính riêng từng nước ("Trang 3 / 9"), Sổ Tay ghi tên nước cạnh số trang.
+5. **Đồ vật / sinh vật mới** (nón lá, đèn lồng, xích lô…) — vẽ thêm trong `tools/sprites/ObjectSprite.tsx`, thêm tên vào `SpriteType` (`app/src/core/model.ts`) và một mục Sổ Tay (`app/src/content/bestiary.ts`), rồi chạy `npm run generate` ở thư mục gốc.
+6. **Kiểm tra** — `cd app && npm run typecheck && npm run web`. Khi khởi động, danh mục tự báo lỗi nếu id trang bị trùng hoặc trang dùng tên tranh không có trong bảng `art`.
 
 ---
 

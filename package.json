@@ -2,9 +2,14 @@
   "name": "detective-sketchbook",
   "private": true,
   "version": "0.1.0",
+  "description": "Tools of The Lost Sketchbook: regenerate sprite art, sounds and icons for the app (the game itself is in app/).",
   "type": "module",
   "engines": {
     "node": "24.x"
+  },
+  "scripts": {
+    "generate": "node tools/generate-assets.mjs",
+    "generate:icons": "node tools/generate-icons.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

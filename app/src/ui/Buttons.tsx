@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { colors, gradients } from '../theme';
+import { colors, gradients } from './theme';
 
 interface ButtonProps {
   label: string;
@@ -13,7 +13,7 @@ interface ButtonProps {
   accessibilityLabel?: string;
 }
 
-/** Gold gradient call to action (`.btn-primary` on the web). */
+/** Gold gradient call to action. */
 export const PrimaryButton: React.FC<ButtonProps & { tall?: boolean }> = ({
   label,
   icon,
@@ -47,7 +47,7 @@ export const PrimaryButton: React.FC<ButtonProps & { tall?: boolean }> = ({
   </Pressable>
 );
 
-/** Paper button (`.btn-secondary` on the web). */
+/** Paper button. */
 export const SecondaryButton: React.FC<ButtonProps & { tone?: 'default' | 'danger' }> = ({
   label,
   icon,

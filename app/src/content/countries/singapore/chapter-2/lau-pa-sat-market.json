@@ -1,0 +1,165 @@
+{
+  "id": "lau-pa-sat-market",
+  "title": "Chợ Ẩm Thực Lúc Lên Đèn",
+  "subtitle": "Trang 6 — Nhà Lồng Chợ Cổ Lau Pa Sat",
+  "art": "lau-pa-sat",
+  "timeLimit": 240,
+  "storyClue": "Kiến trúc khung sắt đúc thời Victoria hình bát giác giữa trung tâm tài chính hiện đại. Giữa hoa văn gang uốn lượn và làn khói nướng satay, mọi thứ đều khoác một màu xám nâu — kể cả những vị khách không mời.",
+  "objects": [
+    {
+      "id": "pocket-watch",
+      "name": "Đồng Hồ Quả Quýt Cổ",
+      "clue": "Chiếc đồng hồ quả quýt nằm lẫn giữa những nan quạt trang trí trên đầu hồi, ngay dưới chân tháp đồng hồ.",
+      "x": 0.4715,
+      "y": 0.448,
+      "radius": 0.03,
+      "score": 150,
+      "spriteType": "pocket-watch",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Đồng hồ điểm chuông lịch sử kết nối nhịp sống của người dân Singapore."
+    },
+    {
+      "id": "playful-puppy",
+      "name": "Chú Cún Con Đói Bụng",
+      "clue": "Chú cún nhỏ ngồi vẫy đuôi giữa hai cây cột gang ngoài cùng bên trái, chờ thực khách cho ăn.",
+      "x": 0.228,
+      "y": 0.688,
+      "radius": 0.033,
+      "score": 120,
+      "spriteType": "dog",
+      "scale": 0.5,
+      "camo": "ink",
+      "foundText": "Chú cún được thực khách chia cho một miếng thịt xiên satay thơm nức!"
+    },
+    {
+      "id": "iron-durian",
+      "name": "Quả Sầu Riêng Mắc Kẹt",
+      "clue": "Quả sầu riêng xám nâu mắc kẹt giữa hoa văn sắt đúc phía dưới mái hiên bên trái.",
+      "x": 0.265,
+      "y": 0.51,
+      "radius": 0.032,
+      "score": 120,
+      "spriteType": "durian",
+      "scale": 0.5,
+      "camo": "chameleon",
+      "foundText": "Vua của các loại trái cây — nhưng tuyệt đối đừng mang nó lên tàu điện MRT!"
+    },
+    {
+      "id": "smoky-satay",
+      "name": "Xiên Satay Trong Làn Khói",
+      "clue": "Những xiên satay nướng lấp ló trong làn khói nướng cuồn cuộn bên phải.",
+      "x": 0.83,
+      "y": 0.505,
+      "radius": 0.034,
+      "score": 100,
+      "spriteType": "satay",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "foundText": "Satay chấm sốt đậu phộng — món ăn đêm nổi tiếng nhất Lau Pa Sat!"
+    },
+    {
+      "id": "shy-mouse",
+      "name": "Chuột Nhắt Ăn Vụng",
+      "clue": "Chú chuột nhắt thỉnh thoảng lại lén thò đầu ra từ sau chân cây cột gang giữa chợ, gần quầy hàng.",
+      "x": 0.411,
+      "y": 0.693,
+      "radius": 0.03,
+      "score": 150,
+      "spriteType": "mouse",
+      "scale": 0.42,
+      "camo": "ink",
+      "shy": {
+        "period": 6,
+        "offset": 2.2,
+        "from": "right"
+      },
+      "occluder": [
+        [
+          0.4152,
+          0.655
+        ],
+        [
+          0.4295,
+          0.655
+        ],
+        [
+          0.4295,
+          0.705
+        ],
+        [
+          0.4152,
+          0.705
+        ]
+      ],
+      "foundText": "Bắt quả tang! Chú chuột đang tha một hạt đậu phộng trong bát sốt satay."
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện son đỏ cùng dòng ghi chú 'MAY 15 2024' ở góc phải bên dưới trang sách.",
+      "x": 0.905,
+      "y": 0.71,
+      "radius": 0.04,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu triện hoàn tất chặng điều tra ẩm thực và di sản Chương 2!"
+    },
+    {
+      "id": "secret-golden-key",
+      "name": "Chìa Khóa Tháp Chuông",
+      "clue": "[BÍ MẬT] Chiếc chìa khóa vẽ bằng mực tàng hình dưới gầm bàn tiệc bên phải — chỉ kính lúp mới soi thấy.",
+      "x": 0.593,
+      "y": 0.695,
+      "radius": 0.032,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "key",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "Chìa khóa cổ nguyên bản dùng để lên dây cót cho tháp chuông đồng hồ Lau Pa Sat!"
+    },
+    {
+      "id": "bonus-mantis",
+      "name": "Bọ Ngựa Mái Hiên",
+      "clue": "Chú bọ ngựa bám dưới mép mái hiên bên phải.",
+      "x": 0.735,
+      "y": 0.548,
+      "radius": 0.027,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "mantis",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Bọ ngựa ghé chợ để săn những con ruồi bị mùi đồ ăn thu hút."
+    },
+    {
+      "id": "bonus-ladybug",
+      "name": "Bọ Rùa Bàn Tiệc",
+      "clue": "Chú bọ rùa tí hon bò trên mặt bàn tiệc bên trái.",
+      "x": 0.378,
+      "y": 0.676,
+      "radius": 0.022,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "ladybug",
+      "scale": 0.33,
+      "camo": "ink",
+      "foundText": "Chú bọ rùa cũng muốn nếm thử món satay!"
+    },
+    {
+      "id": "bonus-moth",
+      "name": "Bướm Đêm Trong Khói",
+      "clue": "Chú bướm đêm chập chờn giữa làn khói nướng.",
+      "x": 0.8,
+      "y": 0.455,
+      "radius": 0.028,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "moth",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Bướm đêm lao vào ánh lửa bếp than như thiêu thân."
+    }
+  ]
+}

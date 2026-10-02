@@ -1,5 +1,5 @@
 import { registerRootComponent } from 'expo';
-// Synchronous localStorage on iOS/Android (SQLite-backed), used by the shared SaveManager.
+// Synchronous localStorage on iOS/Android (SQLite-backed), where progress is saved (core/progress).
 // A no-op on web, where the browser's localStorage is used.
 import 'expo-sqlite/localStorage/install';
 

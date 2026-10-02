@@ -1,16 +1,15 @@
 import { Skia } from '@shopify/react-native-skia';
-import type { ScenePixels } from '../game/sceneAnalysis';
-import { sceneSource } from './assets';
-import type { LoadedScene } from './sceneImage';
+import type { LoadedScene, ScenePixels } from './sceneImage';
 
 /**
  * Web. CanvasKit would decode the PNG in WebAssembly on the main thread (some 40 ms a page, a
  * visible hitch). The browser decodes it off the main thread instead; Skia then draws it as a
  * texture, and the analysis reads its pixels through a 2D canvas.
  */
-export async function loadSceneImage(src: string): Promise<LoadedScene> {
-  const response = await fetch(assetUri(sceneSource(src)));
-  if (!response.ok) throw new Error(`Could not load ${src} (${response.status})`);
+export async function loadSceneImage(source: number): Promise<LoadedScene> {
+  const uri = assetUri(source);
+  const response = await fetch(uri);
+  if (!response.ok) throw new Error(`Could not load ${uri} (${response.status})`);
   // Straight alpha, as CanvasKit expects from a texture source
   const bitmap = await createImageBitmap(await response.blob(), { premultiplyAlpha: 'none' });
   const image = Skia.Image.MakeImageFromNativeBuffer(bitmap);
