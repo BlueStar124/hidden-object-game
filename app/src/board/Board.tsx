@@ -422,7 +422,6 @@ export const Board: React.FC<BoardProps> = ({
   useEffect(() => {
     if (!turn || turnSeen.current === turn || !shown) return;
     turnSeen.current = turn;
-    flipStart.value = 0;
     setLanded(false);
     const pending: Flip = {
       from: recordPage(shown, frameFor(foundRef.current.map)),
@@ -434,7 +433,7 @@ export const Board: React.FC<BoardProps> = ({
     };
     const next = prepare(turn.level);
     setFlip(next ? openTo(pending, next) : pending);
-  }, [turn, shown, frameFor, flipStart, prepare, openTo]);
+  }, [turn, shown, frameFor, prepare, openTo]);
 
   // …or once its artwork has decoded
   useEffect(() => {
@@ -443,6 +442,9 @@ export const Board: React.FC<BoardProps> = ({
     if (next) setFlip(openTo(flip, next));
   }, [flip, prepare, decoded, openTo]);
 
+  // The clock of a turn starts when the page it opens is there. (Never reset it to 0 while a turn
+  // is on screen: until React has dropped that turn, the frame would show its first page again —
+  // the old page flashing back.) This effect runs before the frame worklet picks up the new turn
   const flipTo = flip?.to ?? null;
   const flipDuration = flip?.duration ?? 0;
   useEffect(() => {
@@ -456,9 +458,8 @@ export const Board: React.FC<BoardProps> = ({
   useEffect(() => {
     if (!flip || !landed || !scene) return;
     if (level.id !== flip.page.id && turn) return;
-    flipStart.value = 0;
     setFlip(null);
-  }, [flip, landed, scene, level.id, turn, flipStart]);
+  }, [flip, landed, scene, level.id, turn]);
 
   // What the frame worklet needs of the turn
   const flipFrame = useMemo<PageFlip | null>(
