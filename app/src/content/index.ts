@@ -1,12 +1,13 @@
 import type { Country, Page, PageRef } from '../core/model';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
+import { vietnam } from './countries/vietnam';
 
 /**
  * The catalogue of sketchbooks. Adding a country = adding its folder under countries/ and
  * listing it here (see "Thêm một quốc gia" in the README); everything else is derived.
  */
-export const COUNTRIES: Country[] = [singapore, thailand];
+export const COUNTRIES: Country[] = [singapore, thailand, vietnam];
 
 /** The sketchbook a new player opens first. */
 export const FIRST_COUNTRY = COUNTRIES[0];

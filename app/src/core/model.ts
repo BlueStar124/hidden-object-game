@@ -65,6 +65,8 @@ export type SpriteType =
   | 'slow-loris'
   | 'colugo'
   | 'stick-insect'
+  | 'saola'
+  | 'water-buffalo'
   // Đồ vật văn hóa & thám tử
   | 'durian'
   | 'fortune-cat'
@@ -74,7 +76,10 @@ export type SpriteType =
   | 'kite'
   | 'vintage-camera'
   | 'hourglass'
-  | 'deerstalker';
+  | 'deerstalker'
+  | 'conical-hat'
+  | 'lantern'
+  | 'cyclo';
 
 /**
  * How an unfound object blends into the watercolour painting.

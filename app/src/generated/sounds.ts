@@ -72,4 +72,9 @@ export const VOICES: Partial<Record<SpriteType, number>> = {
   'vintage-camera': require('../../assets/sounds/voice-shutter.wav'),
   'hourglass': require('../../assets/sounds/voice-sand.wav'),
   'deerstalker': require('../../assets/sounds/voice-whoosh.wav'),
+  'saola': require('../../assets/sounds/voice-sniff.wav'),
+  'water-buffalo': require('../../assets/sounds/voice-thud.wav'),
+  'conical-hat': require('../../assets/sounds/voice-paper.wav'),
+  'lantern': require('../../assets/sounds/voice-twinkle.wav'),
+  'cyclo': require('../../assets/sounds/voice-tick.wav'),
 };
