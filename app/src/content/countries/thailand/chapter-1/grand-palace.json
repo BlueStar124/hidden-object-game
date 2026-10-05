@@ -1,0 +1,168 @@
+{
+  "id": "grand-palace",
+  "title": "Bảo Ngọc Hoàng Cung",
+  "subtitle": "Trang 3 — Wat Phra Kaew & Grand Palace",
+  "art": "grand-palace",
+  "timeLimit": 240,
+  "storyClue": "Kiến trúc sư đã ghé thăm Hoàng Cung Grand Palace và Chùa Phật Ngọc Wat Phra Kaew lộng lẫy. Ngọn tháp Chedi dát vàng rực rỡ dưới nắng và những mái ngói nhiều tầng cong vút đang che giấu những bí mật hoàng gia.",
+  "objects": [
+    {
+      "id": "lotus-vase",
+      "name": "Bình Gốm Hoa Sen",
+      "clue": "Chiếc bình gốm cắm hoa sen bằng đá đặt cạnh hàng hiên cung điện bên trái sân gạch.",
+      "x": 0.255,
+      "y": 0.785,
+      "radius": 0.035,
+      "score": 120,
+      "spriteType": "vase",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "foundText": "Bình gốm tráng men xanh ngọc chứa đầy những đóa sen trắng thanh tịnh dâng lên điện Phật."
+    },
+    {
+      "id": "palace-sunbird",
+      "name": "Chim Hút Mật Hoa Sứ",
+      "clue": "Chú chim hút mật nhỏ rực rỡ chuyền cành quanh chậu hoa sứ trắng bên trái sân.",
+      "x": 0.28,
+      "y": 0.62,
+      "radius": 0.032,
+      "score": 150,
+      "spriteType": "sunbird",
+      "scale": 0.48,
+      "camo": "chameleon",
+      "roam": {
+        "path": [
+          [
+            0.28,
+            0.62
+          ],
+          [
+            0.31,
+            0.58
+          ],
+          [
+            0.26,
+            0.59
+          ]
+        ],
+        "period": 14,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Loài chim hút mật đuôi nhọn bay ríu rít hút mật hoa sứ trong khuôn viên cung điện."
+    },
+    {
+      "id": "palace-key",
+      "name": "Chìa Khóa Cổng Hoàng Cung",
+      "clue": "Chiếc chìa khóa đồng cổ rơi trên bậc thềm đá cẩm thạch của ngôi điện thờ bên phải.",
+      "x": 0.71,
+      "y": 0.71,
+      "radius": 0.032,
+      "score": 120,
+      "spriteType": "key",
+      "scale": 0.5,
+      "rotation": 15,
+      "camo": "ink",
+      "foundText": "Chiếc chìa khóa chạm trổ hoa văn hoàng gia mở lối vào thư viện kinh Phật cổ kính!"
+    },
+    {
+      "id": "palace-hornbill",
+      "name": "Chim Hồng Hoàng Xiêm La",
+      "clue": "Chú chim hồng hoàng mỏ lớn đậu trên bờ mái ngói cong phía sau bảo tháp.",
+      "x": 0.52,
+      "y": 0.42,
+      "radius": 0.034,
+      "score": 120,
+      "spriteType": "hornbill",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "foundText": "Hồng hoàng là biểu tượng của lòng trung thành và sự trường thọ trong văn hóa Á Đông."
+    },
+    {
+      "id": "shy-loris",
+      "name": "Cu Li Nấp Hiên Chùa",
+      "clue": "Chú cu li mắt tròn xoe thỉnh thoảng mới ló đầu ra từ khe cột đình nhỏ ở giữa sân.",
+      "x": 0.38,
+      "y": 0.64,
+      "radius": 0.036,
+      "score": 150,
+      "spriteType": "slow-loris",
+      "scale": 0.6,
+      "camo": "chameleon",
+      "shy": {
+        "period": 7,
+        "offset": 2.1,
+        "from": "below"
+      },
+      "foundText": "Chú cu li chậm chạp tròn mắt nhìn đoàn du khách qua lại giữa sân điện uy nghiêm."
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 18 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.905,
+      "y": 0.725,
+      "radius": 0.04,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu ấn của kiến trúc sư hoàn thành chương 1 tại thủ đô Bangkok!"
+    },
+    {
+      "id": "secret-pocket-watch",
+      "name": "Đồng Hồ Quả Quýt Hoàng Gia",
+      "clue": "[BÍ MẬT] Chiếc đồng hồ quả quýt vẽ bằng mực tàng hình ẩn dưới tấm vé vào cổng bên trang trái.",
+      "x": 0.25,
+      "y": 0.42,
+      "radius": 0.038,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "pocket-watch",
+      "scale": 0.65,
+      "rotation": -12,
+      "camo": "invisible",
+      "foundText": "Bí mật hé lộ: Chiếc đồng hồ cổ đúc bằng vàng ròng của một nhà ngoại giao phương Tây tại Xiêm La!"
+    },
+    {
+      "id": "bonus-snail",
+      "name": "Ốc Sên Thềm Đá",
+      "clue": "Chú ốc sên bò chậm rãi trên bậc thềm đá hoa cương giữa sân.",
+      "x": 0.36,
+      "y": 0.75,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "snail",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Chú ốc sên kiên trì bò qua từng viên đá lát sân đã có hơn hai trăm năm tuổi."
+    },
+    {
+      "id": "bonus-gecko",
+      "name": "Tắc Kè Tháp Vàng",
+      "clue": "Chú tắc kè nhỏ bám trên bệ đá dưới chân bảo tháp Chedi dát vàng.",
+      "x": 0.62,
+      "y": 0.52,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "gecko",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Lớp da óng vàng của chú tắc kè hòa vào lớp dát vàng lấp lánh của bảo tháp."
+    },
+    {
+      "id": "bonus-butterfly",
+      "name": "Bướm Ngọc Cung Đình",
+      "clue": "Cánh bướm xanh ngọc bay lượn trên mái ngói điện thờ bên phải.",
+      "x": 0.78,
+      "y": 0.48,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "butterfly",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Màu cánh bướm trùng khít với sắc xanh của ngói tráng men cung điện."
+    }
+  ]
+}

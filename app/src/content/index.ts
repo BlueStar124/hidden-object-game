@@ -1,11 +1,12 @@
 import type { Country, Page, PageRef } from '../core/model';
 import { singapore } from './countries/singapore';
+import { thailand } from './countries/thailand';
 
 /**
  * The catalogue of sketchbooks. Adding a country = adding its folder under countries/ and
  * listing it here (see "Thêm một quốc gia" in the README); everything else is derived.
  */
-export const COUNTRIES: Country[] = [singapore];
+export const COUNTRIES: Country[] = [singapore, thailand];
 
 /** The sketchbook a new player opens first. */
 export const FIRST_COUNTRY = COUNTRIES[0];
@@ -52,6 +53,12 @@ export function pagesOf(country: Country): PageRef[] {
 /** The book position of a page (day or night). */
 export function pageRefOf(page: Page): PageRef | undefined {
   return refByPageId.get(page.id);
+}
+
+/** Where a page id sits in the books, and whether it is a night variant (null: no such page). */
+export function placeOf(pageId: string): { ref: PageRef; night: boolean } | null {
+  const ref = refByPageId.get(pageId);
+  return ref ? { ref, night: ref.night?.id === pageId } : null;
 }
 
 function refOf(page: Page): PageRef {

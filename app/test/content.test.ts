@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { allPages, artOf, COUNTRIES, pagesOf } from '../src/content';
+import { allPages, artOf, COUNTRIES, pagesOf, placeOf } from '../src/content';
 import { BESTIARY } from '../src/content/bestiary';
 import { isMainObject, type Page } from '../src/core/model';
 import { SPRITE_ART } from '../src/generated/spriteArt';
@@ -14,6 +14,16 @@ const inSpread = ([x, y]: [number, number]) => x >= 0 && x <= 1 && y >= 0 && y <
 test('there is a sketchbook to open', () => {
   expect(COUNTRIES.length).toBeGreaterThan(0);
   for (const country of COUNTRIES) expect(pagesOf(country).length).toBeGreaterThan(0);
+});
+
+test('every page can be found again by its id ("Chơi tiếp" on the home screen)', () => {
+  for (const country of COUNTRIES) {
+    for (const ref of pagesOf(country)) {
+      expect(placeOf(ref.day.id)).toEqual({ ref, night: false });
+      if (ref.night) expect(placeOf(ref.night.id)).toEqual({ ref, night: true });
+    }
+  }
+  expect(placeOf('no-such-page')).toBeNull();
 });
 
 test('page ids are unique across countries', () => {

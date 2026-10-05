@@ -269,4 +269,6 @@ export interface GameProgress {
   totalScore: number; // Sum of every page's best score
   // Every object ever spotted, per page id — feeds the "Sổ Tay Sinh Vật" album
   discovered: Record<string, string[]>;
+  // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
+  lastPageId?: string;
 }

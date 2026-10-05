@@ -1,0 +1,213 @@
+{
+  "id": "doi-suthep-night",
+  "isNight": true,
+  "title": "Doi Suthep Biển Mây Đêm",
+  "subtitle": "Trang 8 · Đêm — Ánh sáng ngàn sao & Bảo tháp lung linh",
+  "art": "doi-suthep",
+  "timeLimit": 240,
+  "storyClue": "Khi màn đêm buông xuống trên đỉnh núi thiêng Doi Suthep, sương mây bao phủ quanh các đỉnh tháp. Bảo tháp Chedi rực sáng ánh vàng kim giữa biển sao lấp lánh và tiếng chuông đồng ngân vang trong gió núi. Hãy bật đèn soi tìm những sinh vật đêm!",
+  "nightLights": [
+    {
+      "x": 0.52,
+      "y": 0.35,
+      "r": 0.08,
+      "color": "rgba(255, 215, 70, 0.7)"
+    },
+    {
+      "x": 0.52,
+      "y": 0.5,
+      "r": 0.065,
+      "color": "rgba(255, 195, 60, 0.6)"
+    },
+    {
+      "x": 0.42,
+      "y": 0.52,
+      "r": 0.05,
+      "color": "rgba(255, 200, 80, 0.55)"
+    },
+    {
+      "x": 0.62,
+      "y": 0.52,
+      "r": 0.05,
+      "color": "rgba(255, 200, 80, 0.55)"
+    },
+    {
+      "x": 0.3,
+      "y": 0.65,
+      "r": 0.05,
+      "color": "rgba(255, 180, 70, 0.6)"
+    },
+    {
+      "x": 0.72,
+      "y": 0.65,
+      "r": 0.05,
+      "color": "rgba(255, 180, 70, 0.6)"
+    },
+    {
+      "x": 0.22,
+      "y": 0.72,
+      "r": 0.04,
+      "color": "rgba(255, 220, 110, 0.65)"
+    },
+    {
+      "x": 0.52,
+      "y": 0.72,
+      "r": 0.05,
+      "color": "rgba(255, 230, 130, 0.7)"
+    },
+    {
+      "x": 0.78,
+      "y": 0.72,
+      "r": 0.04,
+      "color": "rgba(255, 220, 110, 0.65)"
+    },
+    {
+      "x": 0.15,
+      "y": 0.55,
+      "r": 0.045,
+      "color": "rgba(255, 170, 70, 0.5)"
+    },
+    {
+      "x": 0.85,
+      "y": 0.55,
+      "r": 0.045,
+      "color": "rgba(255, 170, 70, 0.5)"
+    }
+  ],
+  "objects": [
+    {
+      "id": "night-owl-suthep",
+      "name": "Cú Mèo Rừng Sương",
+      "clue": "Chú cú mèo núi đậu tĩnh lặng trên chóp mái cong điện thờ bên phải ngắm nhìn biển mây.",
+      "x": 0.64,
+      "y": 0.46,
+      "radius": 0.034,
+      "score": 150,
+      "spriteType": "owl",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "foundText": "Đôi mắt tròn xoe của cú mèo phản chiếu ánh sáng dát vàng lung linh của ngôi bảo tháp thiêng."
+    },
+    {
+      "id": "night-colugo",
+      "name": "Chồn Bay Lemur Rừng Núi",
+      "clue": "Chú chồn bay thỉnh thoảng mới nhô đầu ra từ vòm lá cây thông cổ thụ bên trái tháp.",
+      "x": 0.32,
+      "y": 0.48,
+      "radius": 0.035,
+      "score": 150,
+      "spriteType": "colugo",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "shy": {
+        "period": 7,
+        "offset": 1.5,
+        "from": "above"
+      },
+      "foundText": "Chồn bay Lanna lượn êm như cánh diều giữa các vòm cây sương mù đỉnh Doi Suthep."
+    },
+    {
+      "id": "night-firefly-swarm",
+      "name": "Đom Đóm Núi Cao",
+      "clue": "Đốm sáng đom đóm bay lượn vòng quanh lan can đá gần bậc thang bên trái.",
+      "x": 0.26,
+      "y": 0.65,
+      "radius": 0.03,
+      "score": 150,
+      "spriteType": "firefly",
+      "scale": 0.45,
+      "camo": "ink",
+      "roam": {
+        "path": [
+          [
+            0.26,
+            0.65
+          ],
+          [
+            0.31,
+            0.61
+          ],
+          [
+            0.35,
+            0.66
+          ],
+          [
+            0.29,
+            0.69
+          ]
+        ],
+        "period": 14,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Những chấm sáng đom đóm lấp lánh như những hạt bụi vàng rơi ra từ bảo tháp linh thiêng."
+    },
+    {
+      "id": "night-moth",
+      "name": "Bướm Đêm Chuông Đồng",
+      "clue": "Chú bướm đêm cánh gấm khổng lồ đậu gần quả chuông đồng bên phải sân chùa.",
+      "x": 0.72,
+      "y": 0.68,
+      "radius": 0.032,
+      "score": 120,
+      "spriteType": "moth",
+      "scale": 0.5,
+      "camo": "chameleon",
+      "foundText": "Bướm đêm núi rừng nghỉ ngơi bên tiếng chuông đồng ngân vang trầm mặc."
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 30 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.895,
+      "y": 0.728,
+      "radius": 0.04,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu ấn của kiến trúc sư ghi lại sự kỳ vĩ của đêm trên đỉnh Doi Suthep!"
+    },
+    {
+      "id": "secret-magnifying-glass",
+      "name": "Kính Lúp Phát Quang",
+      "clue": "[BÍ MẬT] Chiếc kính lúp vẽ bằng mực tàng hình ẩn hiện trên phần trang giấy bên trái.",
+      "x": 0.16,
+      "y": 0.38,
+      "radius": 0.038,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "magnifying-glass",
+      "scale": 0.65,
+      "rotation": -15,
+      "camo": "invisible",
+      "foundText": "Bí mật hé mở: Manh mối cuối cùng dẫn thẳng đến dòng sông Ping trong đêm hội hoa đăng!"
+    },
+    {
+      "id": "bonus-bat",
+      "name": "Dơi Núi Chao Liệng",
+      "clue": "Chú dơi nhỏ chao liệng săn mồi trên bầu trời đêm giữa ngọn tháp và vòm cây.",
+      "x": 0.44,
+      "y": 0.32,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "bat",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Cánh dơi lướt êm ru trong gió núi se lạnh của miền sơn cước phía Bắc."
+    },
+    {
+      "id": "bonus-spider",
+      "name": "Nhện Tơ Sương Mù",
+      "clue": "Chú nhện giăng tơ phủ đầy giọt sương đọng dưới mái hiên chùa bên trái.",
+      "x": 0.36,
+      "y": 0.58,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "spider",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Từng giọt sương sớm đọng trên mạng nhện lấp lánh như chuỗi hạt ngọc bích."
+    }
+  ]
+}

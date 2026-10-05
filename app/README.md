@@ -12,6 +12,7 @@ Toàn bộ game, viết **một lần cho cả ba nền tảng**: app iOS, app A
 - Gợi ý 3 cấp: nhắc lại manh mối → kính lúp **nhích về phía** vật cần tìm → radar, và camera **tự lướt tới** nếu vật đang khuất màn hình.
 - **Lật trang như sổ thật**, theo chiều trước/sau; trang kế bên được dựng sẵn nên lật không khựng.
 - **Rung (haptics)** khi tìm thấy / soi sai / mờ kính / thắng; tự **tạm dừng** khi thoát app; nút Back Android mở Tạm dừng; giữ màn hình sáng.
+- **Trang chủ** khi mở game: **Chơi tiếp** đúng trang đang dở (người mới: Bắt đầu điều tra), chọn **cuốn sổ của từng nước** kèm tiến độ, Mục Lục, Sổ Tay, âm thanh, tổng điểm. Menu Tạm dừng có nút về trang chủ.
 - **Khóa ngang** (app); bản web hỏi xoay ngang khi cầm dọc và cài được như app (**PWA**).
 
 Tiến độ (sao, điểm, Sổ Tay Sinh Vật) lưu dưới khóa `detective_sketchbook_progress_v1` (app: SQLite qua `expo-sqlite/localStorage`; web: localStorage), cùng định dạng với bản web đầu tiên — người chơi cũ giữ nguyên tiến độ.
@@ -81,7 +82,7 @@ app/
     │   ├── useBoardGestures.ts  chạm, kéo, chụm, lăn chuột
     │   ├── scene/               dựng một trang, trên JS thread (phân tích tranh, sprite, paint)
     │   └── render/              vẽ từng khung, trên UI thread (frame, book, sprites, marks, pageTurn, loupe)
-    ├── screens/             GameScreen, Desk, hud/ (HUD, bảng manh mối, điểm bay), dialogs/
+    ├── screens/             GameScreen, Desk, home/ (trang chủ), hud/ (HUD, bảng manh mối, điểm bay), dialogs/
     ├── platform/            theo thiết bị: sound.native/.web (+ synth/ bộ tổng hợp Web Audio),
     │                        haptics, sceneImage(.web) (giải mã tranh ngoài luồng vẽ)
     ├── ui/                  dùng chung: theme, format, nút, ModalShell, SpriteIcon, icons

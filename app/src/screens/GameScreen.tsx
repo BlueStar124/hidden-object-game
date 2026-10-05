@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Board } from '../board/Board';
 import { leftovers } from '../core/caseFile';
 import type { Page } from '../core/model';
+import { progress } from '../core/progress';
 import { completionBonus } from '../core/scoring';
 import { allPages } from '../content';
 import { useGame } from '../game/useGame';
@@ -20,6 +21,7 @@ import { RotatePrompt } from './dialogs/RotatePrompt';
 import { StoryPrologue } from './dialogs/StoryPrologue';
 import { TimeUpScreen } from './dialogs/TimeUpScreen';
 import { VictoryScreen } from './dialogs/VictoryScreen';
+import { HomeScreen } from './home/HomeScreen';
 import { FloatingScores } from './hud/FloatingScores';
 import { HUD, type HudLayout } from './hud/HUD';
 import { QuestPanel } from './hud/QuestPanel';
@@ -27,12 +29,13 @@ import { useDeviceBehaviour } from './useDeviceBehaviour';
 
 /**
  * The one screen of the game: the desk with the sketchbook (Board), the HUD above it, the clue
- * cards below, and the dialogs (story, pause, victory, index, album) over everything.
+ * cards below, the home screen over them when the game opens, and the dialogs (story, pause,
+ * victory, index, album) over everything.
  */
 export const GameScreen: React.FC = () => {
   const [showIndex, setShowIndex] = useState(false);
   const [showAlbum, setShowAlbum] = useState(false);
-  const { nav, case: kase, notices, soundEnabled, toggleSound } = useGame({ browsing: showIndex || showAlbum });
+  const { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome } = useGame({ browsing: showIndex || showAlbum });
   const { country, pages, ref, page, isNight, turn, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
   const isTurning = turn !== null;
@@ -82,6 +85,7 @@ export const GameScreen: React.FC = () => {
 
   // Nothing covers the sketchbook (its gestures would otherwise fire under the dialogs)
   const boardActive =
+    !home &&
     !showIndex &&
     !showAlbum &&
     !showPrologue &&
@@ -91,7 +95,7 @@ export const GameScreen: React.FC = () => {
     !(c.isCompleted && !c.isExploring) &&
     !askToRotate;
 
-  const playing = !c.isPaused && !c.isCompleted && !c.isGameOver && !showPrologue && !nightIntroOpen;
+  const playing = !home && !c.isPaused && !c.isCompleted && !c.isGameOver && !showPrologue && !nightIntroOpen;
 
   /* ------------------------------ Device & feedback ------------------------------ */
 
@@ -122,6 +126,18 @@ export const GameScreen: React.FC = () => {
   const openAlbum = useCallback(() => setShowAlbum(true), []);
   const requestHint = useStableCallback(kase.requestHint);
   const inspect = useStableCallback(kase.inspect);
+
+  // Home screen: carry on with the page the book is open at, or turn to another page (a country's
+  // book from its card, any page from the index) — which also leaves the home screen
+  const { goTo } = nav;
+  const play = useCallback(() => setHome(false), [setHome]);
+  const selectPage = useCallback(
+    (index: number, night: boolean, countryId: string) => {
+      goTo(index, night, countryId);
+      setHome(false);
+    },
+    [goTo, setHome]
+  );
 
   const measureRoot = useCallback(() => {
     rootRef.current?.measureInWindow((x, y) => setRootOffset({ x, y }));
@@ -188,23 +204,32 @@ export const GameScreen: React.FC = () => {
 
       <FloatingScores items={notices} origin={rootOffset} />
 
-      {showIndex && (
-        <PageIndex
-          country={country}
+      {home && (
+        <HomeScreen
           current={ref}
           isNight={isNight}
-          onSelect={(index, night, countryId) => nav.goTo(index, night, countryId)}
-          onClose={() => setShowIndex(false)}
+          returning={progress.lastPage() !== undefined}
+          soundEnabled={soundEnabled}
+          onPlay={play}
+          onSelect={selectPage}
+          onOpenIndex={openIndex}
+          onOpenAlbum={openAlbum}
+          onToggleSound={toggleSound}
         />
+      )}
+
+      {showIndex && (
+        <PageIndex country={country} current={ref} isNight={isNight} onSelect={selectPage} onClose={() => setShowIndex(false)} />
       )}
 
       {showAlbum && <CreatureAlbum pages={albumPages} onClose={() => setShowAlbum(false)} />}
 
-      {showPrologue && (
+      {/* The case file and the night intro wait for the player to leave the home screen */}
+      {!home && showPrologue && (
         <StoryPrologue chapter={ref.chapter} chapterNumber={ref.chapterNumber} onStartGame={() => setShowPrologue(false)} />
       )}
 
-      {!showPrologue && nightIntroOpen && (
+      {!home && !showPrologue && nightIntroOpen && (
         <StoryPrologue
           chapter={ref.chapter}
           chapterNumber={ref.chapterNumber}
@@ -213,7 +238,7 @@ export const GameScreen: React.FC = () => {
         />
       )}
 
-      {c.isPaused && !showPrologue && (
+      {!home && c.isPaused && !showPrologue && (
         <PauseMenu
           page={page}
           soundEnabled={soundEnabled}
@@ -221,21 +246,22 @@ export const GameScreen: React.FC = () => {
           onRestart={nav.replay}
           onToggleSound={toggleSound}
           onExit={() => {
-            // Back to the case file; the clock stays stopped while it is open
+            // Back to the home screen; the clock stays stopped while it is open, and "Chơi tiếp"
+            // carries on with this case where it was
             togglePause();
-            setShowPrologue(true);
+            setHome(true);
           }}
         />
       )}
 
       {/* Both close as soon as a page starts turning, so the turn shows */}
-      {c.isGameOver && !c.isCompleted && !isTurning && (
+      {!home && c.isGameOver && !c.isCompleted && !isTurning && (
         <TimeUpScreen page={page} foundIds={c.foundItems} onReplay={nav.replay} onOpenIndex={openIndex} />
       )}
 
       {askToRotate && <RotatePrompt onKeepPortrait={() => setKeepPortrait(true)} />}
 
-      {c.isCompleted && !c.isExploring && !isTurning && (
+      {!home && c.isCompleted && !c.isExploring && !isTurning && (
         <VictoryScreen
           page={page}
           score={c.score}
