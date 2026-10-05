@@ -78,14 +78,14 @@
     {
       "id": "night-civet",
       "name": "Cầy Hương Mái Nhà",
-      "clue": "Chú cầy hương mắt sáng quắc thỉnh thoảng mới nhô đầu ra từ khe mái tôn hiên nhà bên trái.",
-      "x": 0.32,
-      "y": 0.48,
-      "radius": 0.035,
+      "clue": "Chú cầy hương mắt sáng quắc thỉnh thoảng mới nhô đầu ra từ lan can ban công tầng 2 bên phải.",
+      "x": 0.62,
+      "y": 0.38,
+      "radius": 0.046,
       "score": 150,
       "spriteType": "civet",
-      "scale": 0.55,
-      "camo": "chameleon",
+      "scale": 0.82,
+      "camo": "ink",
       "shy": {
         "period": 7,
         "offset": 1.2,
@@ -96,31 +96,31 @@
     {
       "id": "night-moth",
       "name": "Bướm Đêm Đèn Neon",
-      "clue": "Chú bướm đêm chao liệng quanh biển hiệu neon sáng rực giữa ngã tư.",
-      "x": 0.58,
-      "y": 0.38,
-      "radius": 0.032,
+      "clue": "Chú bướm đêm chao liệng quanh các bảng hiệu neon sáng rực bên trái phố.",
+      "x": 0.35,
+      "y": 0.4,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "moth",
-      "scale": 0.48,
+      "scale": 0.75,
       "camo": "chameleon",
       "roam": {
         "path": [
           [
-            0.58,
-            0.38
+            0.35,
+            0.4
           ],
           [
-            0.63,
-            0.35
+            0.4,
+            0.36
           ],
           [
-            0.66,
+            0.44,
             0.42
           ],
           [
-            0.6,
-            0.44
+            0.38,
+            0.45
           ]
         ],
         "period": 14,
@@ -133,35 +133,35 @@
       "id": "night-bat",
       "name": "Dơi Bay Phố Hoa",
       "clue": "Chú dơi đêm săn mồi lượn vòng trên bầu trời đêm tối giữa hai dãy phố.",
-      "x": 0.46,
+      "x": 0.48,
       "y": 0.32,
-      "radius": 0.034,
+      "radius": 0.045,
       "score": 150,
       "spriteType": "bat",
-      "scale": 0.52,
+      "scale": 0.78,
       "camo": "ink",
       "foundText": "Những cánh dơi chớp nhoáng lướt qua ranh giới giữa bóng tối và ánh đèn đường rực rỡ."
     },
     {
       "id": "night-street-cat",
       "name": "Mèo Đêm Đi Dạo",
-      "clue": "Chú mèo tam thể bước đi thong thả trên gờ tường cạnh quầy hải sản bên phải.",
-      "x": 0.76,
-      "y": 0.72,
-      "radius": 0.032,
+      "clue": "Chú mèo tam thể bước đi thong thả trên nóc chiếc xe tuk tuk ở giữa phố.",
+      "x": 0.58,
+      "y": 0.54,
+      "radius": 0.046,
       "score": 120,
       "spriteType": "cat",
-      "scale": 0.52,
-      "camo": "chameleon",
+      "scale": 0.82,
+      "camo": "ink",
       "foundText": "Mèo phố Chinatown luôn được các chủ quán ưu ái dành cho những phần cá nướng ngon lành."
     },
     {
       "id": "artist-seal",
       "name": "Dấu Triện Ký Họa",
-      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 22 2023' ở góc dưới cùng bên phải trang sách.",
-      "x": 0.902,
-      "y": 0.728,
-      "radius": 0.04,
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 20 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.895,
+      "y": 0.725,
+      "radius": 0.045,
       "score": 150,
       "spriteType": "seal",
       "foundText": "Dấu ấn của kiến trúc sư ghi lại đêm không ngủ tại phố cổ Yaowarat!"
@@ -169,14 +169,14 @@
     {
       "id": "secret-pocket-watch",
       "name": "Đồng Hồ Quả Quýt Bí Mật",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ cổ vẽ bằng mực tàng hình ẩn hiện trên phần giấy ghi chép bên trang trái.",
+      "clue": "[BÍ MẬT] Chiếc đồng hồ cổ vẽ bằng mực tàng hình ẩn hiện trên phần giấy trống phía trên bên trang trái.",
       "x": 0.16,
       "y": 0.35,
-      "radius": 0.038,
+      "radius": 0.048,
       "score": 300,
       "isSecret": true,
       "spriteType": "pocket-watch",
-      "scale": 0.65,
+      "scale": 0.85,
       "rotation": -15,
       "camo": "invisible",
       "foundText": "Bí mật sáng tỏ: Chiếc đồng hồ chỉ đúng nửa đêm — thời điểm các xe bán súp tổ yến bắt đầu mở cửa!"
@@ -184,28 +184,28 @@
     {
       "id": "bonus-firefly",
       "name": "Đom Đóm Góc Hẻm",
-      "clue": "Đốm sáng đom đóm lập lòe gần chậu cây nhỏ dưới chân bảng hiệu bên trái.",
-      "x": 0.22,
-      "y": 0.6,
-      "radius": 0.026,
+      "clue": "Đốm sáng đom đóm lập lòe gần hàng lồng đèn đỏ bên phải.",
+      "x": 0.75,
+      "y": 0.52,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
       "spriteType": "firefly",
-      "scale": 0.42,
+      "scale": 0.65,
       "camo": "ink",
       "foundText": "Đốm sáng lập lòe nhỏ bé đung đưa như một ngọn đèn lồng tí hon trong hẻm sâu."
     },
     {
       "id": "bonus-spider",
       "name": "Nhện Giăng Tơ Đêm",
-      "clue": "Chú nhện giăng tơ mảnh dưới góc mái che quán ăn bên phải.",
-      "x": 0.66,
-      "y": 0.62,
-      "radius": 0.026,
+      "clue": "Chú nhện giăng tơ mảnh dưới góc mái che tòa nhà shophouse bên phải.",
+      "x": 0.82,
+      "y": 0.45,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
       "spriteType": "spider",
-      "scale": 0.42,
+      "scale": 0.65,
       "camo": "chameleon",
       "foundText": "Mạng nhện lấp lánh phản chiếu ánh đèn đỏ từ lồng đèn tiệm vàng gần đó."
     }
