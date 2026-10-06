@@ -363,7 +363,8 @@ async function main() {
   const markups = renderMarkups();
   console.log(`  ${Object.keys(markups).length} sprite types`);
 
-  const browser = await chromium.launch();
+  const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+  const browser = await chromium.launch(fs.existsSync(chromePath) ? { executablePath: chromePath } : { channel: 'chrome' });
   try {
     const page = await browser.newPage();
     const spriteCss = fs.readFileSync(SPRITE_CSS, 'utf8');

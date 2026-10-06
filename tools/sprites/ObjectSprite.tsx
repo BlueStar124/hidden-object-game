@@ -1513,6 +1513,110 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
           </svg>
         );
 
+      case 'saola':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Saola — Asian Unicorn of the Annamite Range */}
+            <path d="M 21 16 L 15 4 M 26 16 L 20 4" stroke="#1c1917" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 21 16 L 15 4 M 26 16 L 20 4" stroke="#d97706" strokeWidth="1" strokeLinecap="round" />
+            <path d="M 12 30 C 12 24 18 20 28 22 C 36 24 40 28 38 36 C 36 40 28 42 18 40 C 14 38 12 34 12 30 Z" fill="#6c3f20" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 16 34 C 18 36 24 37 28 36 C 24 38 18 38 16 34 Z" fill="#ffffff" />
+            <path className="tail" d="M 38 34 C 42 35 44 38 42 41" stroke="#3e2311" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 16 28 C 12 26 14 18 20 16 C 26 14 30 18 28 25 C 26 30 20 30 16 28 Z" fill="#7a4623" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 16 22 L 20 25 M 18 18 L 22 19" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M 26 17 C 30 16 33 18 31 21 Z" fill="#5a3114" stroke={INK} strokeWidth="1.2" />
+            <g className="eye">
+              <circle cx="21" cy="20" r="2.2" fill="#1c1917" />
+              <circle className="pupil" cx="21" cy="20" r="1.4" fill="#1c1917" />
+              <circle cx="20.6" cy="19.4" r="0.6" fill="#ffffff" />
+            </g>
+            <Limb d="M 17 38 L 16 45" color="#5a3114" w={3.2} />
+            <Limb d="M 23 39 L 24 45" color="#5a3114" w={3.2} />
+            <Limb d="M 31 38 L 30 45" color="#5a3114" w={3.2} />
+            <Limb d="M 36 36 L 37 44" color="#5a3114" w={3.2} />
+          </svg>
+        );
+
+      case 'water-buffalo':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Vietnamese Water Buffalo */}
+            <path d="M 11 18 C 7 10 16 7 21 13" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 37 18 C 41 10 32 7 27 13" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 11 18 C 8 11 16 8 20 13" stroke="#64748b" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 37 18 C 40 11 32 8 28 13" stroke="#64748b" strokeWidth="1.2" strokeLinecap="round" />
+            <ellipse cx="24" cy="31" rx="14" ry="10" fill="#475569" stroke={INK} strokeWidth="1.8" />
+            <path className="tail" d="M 37 29 C 42 32 44 38 41 41" stroke="#334155" strokeWidth="2.2" strokeLinecap="round" />
+            <ellipse cx="24" cy="20" rx="7.5" ry="8" fill="#334155" stroke={INK} strokeWidth="1.6" />
+            <ellipse cx="14" cy="22" rx="3.5" ry="2" transform="rotate(-15 14 22)" fill="#475569" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="34" cy="22" rx="3.5" ry="2" transform="rotate(15 34 22)" fill="#475569" stroke={INK} strokeWidth="1.2" />
+            <g className="eye">
+              <circle cx="20" cy="18" r="1.8" fill="#0f172a" />
+              <circle className="pupil" cx="20" cy="18" r="1.2" fill="#0f172a" />
+              <circle cx="19.5" cy="17.5" r="0.5" fill="#ffffff" />
+            </g>
+            <g className="eye">
+              <circle cx="28" cy="18" r="1.8" fill="#0f172a" />
+              <circle className="pupil" cx="28" cy="18" r="1.2" fill="#0f172a" />
+              <circle cx="27.5" cy="17.5" r="0.5" fill="#ffffff" />
+            </g>
+            <ellipse cx="24" cy="24" rx="4.5" ry="3" fill="#64748b" stroke={INK} strokeWidth="1.2" />
+            <circle cx="22" cy="24" r="0.8" fill="#1e293b" />
+            <circle cx="26" cy="24" r="0.8" fill="#1e293b" />
+            <Limb d="M 16 38 L 16 45" color="#334155" w={3.4} />
+            <Limb d="M 21 39 L 21 45" color="#334155" w={3.4} />
+            <Limb d="M 27 39 L 27 45" color="#334155" w={3.4} />
+            <Limb d="M 32 38 L 32 45" color="#334155" w={3.4} />
+          </svg>
+        );
+
+      case 'conical-hat':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Vietnamese Nón Lá */}
+            <path d="M 16 31 C 15 37 18 43 24 44 C 30 43 33 37 32 31" stroke="#f43f5e" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+            <path d="M 24 8 L 5 33 C 12 36 36 36 43 33 Z" fill="#fef3c7" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path className="paint" d="M 19 15 C 22 16 26 16 29 15" stroke="#d97706" strokeWidth="0.8" strokeLinecap="round" />
+            <path className="paint" d="M 14 22 C 20 24 28 24 34 22" stroke="#d97706" strokeWidth="0.8" strokeLinecap="round" />
+            <path className="paint" d="M 9 29 C 18 31 30 31 39 29" stroke="#d97706" strokeWidth="0.8" strokeLinecap="round" />
+            <path d="M 5 33 C 12 37 36 37 43 33 C 36 34 12 34 5 33 Z" fill="#d97706" opacity="0.6" />
+          </svg>
+        );
+
+      case 'lantern':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Hội An Silk Lantern */}
+            <path d="M 24 5 L 24 9" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
+            <rect x="20" y="9" width="8" height="2.5" rx="1" fill="#78350f" stroke={INK} strokeWidth="1.2" />
+            <path d="M 20 11.5 C 13 14 11 20 11 25 C 11 30 14 35 20 37.5 L 28 37.5 C 34 35 37 30 37 25 C 37 20 35 14 28 11.5 Z" fill="#ef4444" stroke={INK} strokeWidth="1.8" strokeLinejoin="round" />
+            <circle className="glow-spot" cx="24" cy="24.5" r="4.5" fill="#fef08a" opacity="0.85" />
+            <path className="paint" d="M 24 11.5 L 24 37.5" stroke="#b91c1c" strokeWidth="1" />
+            <path className="paint" d="M 18 12.5 C 16 17 16 32 18 36.5" stroke="#b91c1c" strokeWidth="0.9" />
+            <path className="paint" d="M 30 12.5 C 32 17 32 32 30 36.5" stroke="#b91c1c" strokeWidth="0.9" />
+            <rect x="20" y="37.5" width="8" height="2.5" rx="1" fill="#78350f" stroke={INK} strokeWidth="1.2" />
+            <path className="tail" d="M 24 40 L 24 46 M 22.5 40 L 22 45 M 25.5 40 L 26 45" stroke="#eab308" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'cyclo':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Vietnamese Cyclo (Xích Lô) */}
+            <circle cx="39" cy="33" r="8" fill="none" stroke={INK} strokeWidth="1.8" />
+            <circle cx="39" cy="33" r="2" fill="#475569" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="14" cy="34" rx="7.5" ry="7.5" fill="none" stroke={INK} strokeWidth="1.8" />
+            <circle cx="14" cy="34" r="1.8" fill="#475569" stroke={INK} strokeWidth="1.2" />
+            <path d="M 14 34 L 28 34 L 39 33 L 34 23 L 26 23 L 28 34" stroke={INK} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <path d="M 34 23 L 34 19 L 36 19" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+            <rect x="31" y="18" width="6" height="2.5" rx="1" fill="#1c1917" />
+            <path d="M 8 28 L 22 28 L 24 20 L 10 20 Z" fill="#0284c7" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 8 16 C 14 13 22 13 25 17" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M 8 16 L 9 20 M 24 17 L 24 20" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M 8 28 L 6 33 L 11 33" stroke={INK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+        );
+
       default:
         return null;
     }
