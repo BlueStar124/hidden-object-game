@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { PAGE_TURN_MS, type Country, type Page, type PageRef, type PageTurn } from '../core/model';
-import { countryById, FIRST_COUNTRY, pagesOf } from '../content';
+import { progress } from '../core/progress';
+import { countryById, FIRST_COUNTRY, pagesOf, placeOf } from '../content';
 import { sound } from '../platform/sound';
 
 /**
@@ -46,10 +47,20 @@ function pageAt(country: Country, index: number, night: boolean): Page {
   return (night && ref.night) || ref.day;
 }
 
+/** The page the player was last in, if it is still in the books. */
+function savedPlace(): Place | null {
+  const id = progress.lastPage();
+  const saved = id ? placeOf(id) : null;
+  return saved ? { countryId: saved.ref.country.id, index: saved.ref.index, night: saved.night, visit: 0 } : null;
+}
+
 export function useNavigation(): Navigation {
-  const [place, setPlace] = useState<Place>({ countryId: FIRST_COUNTRY.id, index: 0, night: false, visit: 0 });
+  // The book opens where the player left off; a new player starts on the first page
+  const [saved] = useState(savedPlace);
+  const [place, setPlace] = useState<Place>(() => saved ?? { countryId: FIRST_COUNTRY.id, index: 0, night: false, visit: 0 });
   const [turn, setTurn] = useState<PageTurn | null>(null);
-  const [showPrologue, setShowPrologue] = useState(true);
+  // A new player gets the case file of the first chapter (how to play); one coming back goes straight on
+  const [showPrologue, setShowPrologue] = useState(!saved);
   const [showNightIntro, setShowNightIntro] = useState(false);
 
   const country = countryById(place.countryId);

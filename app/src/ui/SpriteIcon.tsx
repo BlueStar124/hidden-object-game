@@ -10,7 +10,9 @@ const asts = new Map<string, JsxAST | null>();
 function astOf(type: SpriteType, revealed: boolean): JsxAST | null {
   const key = `${type}|${revealed ? 1 : 0}`;
   if (!asts.has(key)) {
-    const xml = SPRITE_SVG[type];
+    // The class names only serve the sprite generator's CSS; on the web react-native-svg would pass
+    // them to the DOM as `class`, which React rejects (it wants `className`)
+    const xml = SPRITE_SVG[type]?.replace(/\sclass="[^"]*"/g, '');
     // `filter: brightness(0); opacity: 0.42` — the ink silhouette of a target that is still unfound
     const source = xml && (revealed ? xml : xml.replace(/(fill|stroke)="(?!none)[^"]*"/g, '$1="#000"'));
     asts.set(key, source ? parse(source) : null);

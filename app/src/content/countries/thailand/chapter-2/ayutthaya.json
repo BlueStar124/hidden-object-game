@@ -1,0 +1,173 @@
+{
+  "id": "ayutthaya",
+  "title": "Phế Tích Cố Đô Ayutthaya",
+  "subtitle": "Trang 6 — Wat Mahathat & Vương triều nghìn năm",
+  "art": "ayutthaya",
+  "timeLimit": 240,
+  "storyClue": "Rời Bangkok xuôi về phương Bắc, thám tử đã đặt chân tới Công viên Lịch sử Ayutthaya — cố đô huyền thoại của Xiêm La. Giữa những tháp gạch nung rêu phong và rễ cây bồ đề ôm trọn đầu tượng Phật là những báu vật thời gian đang chờ được khai quật.",
+  "objects": [
+    {
+      "id": "ruin-monkey",
+      "name": "Chú Khỉ Cố Đô",
+      "clue": "Chú khỉ tinh nghịch thỉnh thoảng mới nhô đầu lên từ bờ tường gạch phế tích giữa hai trang.",
+      "x": 0.45,
+      "y": 0.52,
+      "radius": 0.046,
+      "score": 150,
+      "spriteType": "monkey",
+      "scale": 0.85,
+      "camo": "ink",
+      "shy": {
+        "period": 7.2,
+        "offset": 1.8,
+        "from": "below"
+      },
+      "foundText": "Những đàn khỉ tinh nghịch tự do dạo chơi giữa các công trình cổ kính của cố đô Ayutthaya."
+    },
+    {
+      "id": "ancient-kingfisher",
+      "name": "Bói Cá Hồ Nước",
+      "clue": "Chú chim bói cá có bộ lông xanh biếc bay lượn sát lối đi lát gạch giữa các tháp phế tích bên trái.",
+      "x": 0.32,
+      "y": 0.5,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "kingfisher",
+      "scale": 0.75,
+      "camo": "chameleon",
+      "roam": {
+        "path": [
+          [
+            0.32,
+            0.5
+          ],
+          [
+            0.37,
+            0.46
+          ],
+          [
+            0.42,
+            0.52
+          ],
+          [
+            0.35,
+            0.54
+          ]
+        ],
+        "period": 16,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Chim bói cá rình mồi bên những hào nước cổ bao quanh quần thể đền tháp linh thiêng."
+    },
+    {
+      "id": "archaeologist-compass",
+      "name": "La Bàn Khảo Cổ",
+      "clue": "Chiếc la bàn đồng của nhà khảo cổ nằm trên bậc thềm gạch đỏ ở tiền cảnh bên phải.",
+      "x": 0.72,
+      "y": 0.68,
+      "radius": 0.042,
+      "score": 120,
+      "spriteType": "compass",
+      "scale": 0.75,
+      "rotation": 18,
+      "camo": "ink",
+      "foundText": "Chiếc kim la bàn chỉ về hướng Bắc — lộ trình đưa bước thám tử đến vùng đất Chiang Mai xa xôi."
+    },
+    {
+      "id": "terracotta-vase",
+      "name": "Bình Gốm Đất Nung Cổ",
+      "clue": "Chiếc bình gốm nung hoa văn cổ chạm khắc tinh xảo đặt cạnh thềm gạch phế tích bên trái.",
+      "x": 0.28,
+      "y": 0.68,
+      "radius": 0.042,
+      "score": 120,
+      "spriteType": "vase",
+      "scale": 0.75,
+      "camo": "ink",
+      "foundText": "Gốm nung thời vương triều Ayutthaya từng là mặt hàng giao thương nức tiếng khắp Đông Nam Á."
+    },
+    {
+      "id": "hourglass-relic",
+      "name": "Đồng Hồ Cát Cổ Xưa",
+      "clue": "Chiếc đồng hồ cát bọc đồng đặt trên bậc thềm gạch đỏ tiền cảnh giữa bức tranh.",
+      "x": 0.55,
+      "y": 0.68,
+      "radius": 0.042,
+      "score": 120,
+      "spriteType": "hourglass",
+      "scale": 0.72,
+      "camo": "ink",
+      "foundText": "Dòng cát thời gian như ngừng trôi trước vẻ đẹp trầm mặc của thành phố di sản ngàn năm."
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 24 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.898,
+      "y": 0.725,
+      "radius": 0.045,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu ấn của kiến trúc sư khép lại chương khảo cứu cố đô Ayutthaya."
+    },
+    {
+      "id": "secret-scroll",
+      "name": "Cuộn Da Mật Thư Bí Mật",
+      "clue": "[BÍ MẬT] Cuộn giấy da cổ vẽ bằng mực tàng hình ẩn hiện trên phần lề giấy trống phía trên bên trái.",
+      "x": 0.18,
+      "y": 0.32,
+      "radius": 0.048,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "scroll",
+      "scale": 0.85,
+      "rotation": -10,
+      "camo": "invisible",
+      "foundText": "Bí mật được giải mã: Bản đồ cổ hé lộ con đường hành hương tiến về miền sơn cước phía Bắc!"
+    },
+    {
+      "id": "bonus-mantis",
+      "name": "Bọ Ngựa Nhánh Cây",
+      "clue": "Chú bọ ngựa ngụy trang xanh ngát bám trên cành rễ bồ đề cổ thụ bên phải đầu tượng Phật.",
+      "x": 0.68,
+      "y": 0.48,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "mantis",
+      "scale": 0.65,
+      "camo": "chameleon",
+      "foundText": "Bọ ngựa đứng bất động như một mầm cây non đâm chồi từ kẽ gạch cổ xưa."
+    },
+    {
+      "id": "bonus-turtle",
+      "name": "Rùa Đầm Phế Tích",
+      "clue": "Chú rùa nước nhỏ bò chậm chạp trên bờ cỏ xanh ven lối đi lát gạch bên trái.",
+      "x": 0.36,
+      "y": 0.72,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "turtle",
+      "scale": 0.65,
+      "camo": "chameleon",
+      "foundText": "Rùa nước Ayutthaya tượng trưng cho sự trường tồn và bình yên của đất cố đô."
+    },
+    {
+      "id": "bonus-key",
+      "name": "Chìa Khóa Cổng Thành",
+      "clue": "Chiếc chìa khóa cổ in mờ ngay trên tấm vé tàu Ayutthaya góc dưới bên trái.",
+      "x": 0.16,
+      "y": 0.68,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "key",
+      "scale": 0.65,
+      "rotation": 30,
+      "camo": "ink",
+      "foundText": "Chìa khóa cổ từng mở chiếc cổng thành kiên cố của kinh đô Xiêm La thế kỷ 16."
+    }
+  ]
+}

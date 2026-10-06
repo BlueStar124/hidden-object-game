@@ -155,6 +155,28 @@ describe('the album', () => {
   });
 });
 
+describe('where the player left off', () => {
+  test('a new player has no page to go back to', () => {
+    expect(progress.lastPage()).toBeUndefined();
+    expect(progress.totalScore()).toBe(0);
+  });
+
+  test('the page the player is in is remembered, written only when it changes', () => {
+    progress.recordVisit('merlion-park');
+    progress.recordVisit('gardens-by-the-bay-night');
+    expect(progress.lastPage()).toBe('gardens-by-the-bay-night');
+    expect(saved().lastPageId).toBe('gardens-by-the-bay-night');
+
+    storage.failWrites = true; // the same page again: nothing to write
+    progress.recordVisit('gardens-by-the-bay-night');
+  });
+
+  test('a damaged last page is dropped, and the rest of the save kept', () => {
+    expect(readProgress({ ...firstVersionSave, lastPageId: 42 }).lastPageId).toBeUndefined();
+    expect(readProgress({ ...firstVersionSave, lastPageId: 'merlion-park' })).toMatchObject({ lastPageId: 'merlion-park', currentChapter: 2 });
+  });
+});
+
 describe('the copy kept in memory', () => {
   test('storage is read once, however often the page index and the album ask', () => {
     storage.setItem(KEY, JSON.stringify(firstVersionSave));

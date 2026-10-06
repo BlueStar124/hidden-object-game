@@ -265,6 +265,11 @@ const VOICE_OF: Partial<Record<SpriteType, keyof typeof VOICES>> = {
   'vintage-camera': 'shutter',
   hourglass: 'sand',
   deerstalker: 'whoosh',
+  saola: 'sniff',
+  'water-buffalo': 'thud',
+  'conical-hat': 'paper',
+  lantern: 'twinkle',
+  cyclo: 'tick',
 };
 
 export function playCreatureVoice(ctx: AudioContext, out: AudioNode, type: SpriteType | undefined, when: number) {

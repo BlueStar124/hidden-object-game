@@ -65,6 +65,8 @@ export type SpriteType =
   | 'slow-loris'
   | 'colugo'
   | 'stick-insect'
+  | 'saola'
+  | 'water-buffalo'
   // Đồ vật văn hóa & thám tử
   | 'durian'
   | 'fortune-cat'
@@ -74,7 +76,10 @@ export type SpriteType =
   | 'kite'
   | 'vintage-camera'
   | 'hourglass'
-  | 'deerstalker';
+  | 'deerstalker'
+  | 'conical-hat'
+  | 'lantern'
+  | 'cyclo';
 
 /**
  * How an unfound object blends into the watercolour painting.
@@ -269,4 +274,6 @@ export interface GameProgress {
   totalScore: number; // Sum of every page's best score
   // Every object ever spotted, per page id — feeds the "Sổ Tay Sinh Vật" album
   discovered: Record<string, string[]>;
+  // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
+  lastPageId?: string;
 }

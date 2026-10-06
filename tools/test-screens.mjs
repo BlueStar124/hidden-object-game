@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Screen-size tests of the web app: the game screen and every dialog — with its longest content,
+ * Screen-size tests of the web app: the home screen, the game screen and every dialog — with its longest content,
  * from the gallery in app/test/screens — on the screens players have: phones held sideways and
  * upright (what is left once the browser's bars are drawn), tablets, computers.
  *
@@ -168,9 +168,10 @@ try {
     const errors = [];
     page.on('pageerror', (e) => errors.push(String(e)));
 
-    // The game itself: rotate prompt (upright phones), case file, then the sketchbook
+    // The game itself: rotate prompt (upright phones), home screen (a new player: "Bắt Đầu Điều
+    // Tra"), case file, then the sketchbook
     await page.goto(origin, { waitUntil: 'load' });
-    await page.getByText(/Mở Cuốn Sổ|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
+    await page.getByText(/^Bắt Đầu Điều Tra$|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
     await settle(page);
     const keepPortrait = page.getByText('Vẫn chơi màn hình dọc');
     if (await keepPortrait.count()) {
@@ -178,6 +179,10 @@ try {
       await keepPortrait.first().click();
       await settle(page);
     }
+    results.push(await check(page, viewport, 'game-home'));
+    await page.getByText('Bắt Đầu Điều Tra', { exact: true }).click();
+    await page.getByText('Mở Cuốn Sổ').first().waitFor({ timeout: 10000 });
+    await settle(page);
     results.push(await check(page, viewport, 'game-prologue'));
     await page.getByText('Mở Cuốn Sổ').first().click();
     await settle(page, 1500);

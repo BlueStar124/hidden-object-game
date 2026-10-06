@@ -1,0 +1,234 @@
+{
+  "id": "wat-arun-night",
+  "isNight": true,
+  "title": "Wat Arun Hoàng Hôn Lên Đèn",
+  "subtitle": "Trang 1 · Đêm — Đêm huyền ảo bên bờ Chao Phraya",
+  "art": "wat-arun",
+  "timeLimit": 240,
+  "storyClue": "Đêm buông xuống trên dòng sông Chao Phraya. Bảo tháp Wat Arun được thắp sáng rực rỡ sắc vàng kim, phản chiếu lung linh trên mặt nước. Hãy cầm kính lúp đèn pin soi vào những góc tối ven sông!",
+  "nightLights": [
+    {
+      "x": 0.562,
+      "y": 0.36,
+      "r": 0.08,
+      "color": "rgba(255, 205, 80, 0.65)"
+    },
+    {
+      "x": 0.562,
+      "y": 0.524,
+      "r": 0.07,
+      "color": "rgba(255, 200, 80, 0.55)"
+    },
+    {
+      "x": 0.625,
+      "y": 0.484,
+      "r": 0.05,
+      "color": "rgba(255, 210, 100, 0.55)"
+    },
+    {
+      "x": 0.386,
+      "y": 0.5,
+      "r": 0.045,
+      "color": "rgba(255, 210, 100, 0.55)"
+    },
+    {
+      "x": 0.614,
+      "y": 0.694,
+      "r": 0.045,
+      "color": "rgba(255, 170, 70, 0.7)"
+    },
+    {
+      "x": 0.273,
+      "y": 0.718,
+      "r": 0.035,
+      "color": "rgba(255, 180, 90, 0.6)"
+    },
+    {
+      "x": 0.18,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.25,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.33,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.43,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.53,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.7,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.82,
+      "y": 0.62,
+      "r": 0.012,
+      "color": "rgba(255, 220, 140, 0.85)"
+    }
+  ],
+  "objects": [
+    {
+      "id": "night-owl",
+      "name": "Cú Mèo Đêm Wat Arun",
+      "clue": "Chú cú mèo nép trên chóp bảo tháp nhỏ bên phải — đôi mắt tròn xoe đang phản chiếu ánh đèn vàng.",
+      "x": 0.64,
+      "y": 0.48,
+      "radius": 0.046,
+      "score": 150,
+      "spriteType": "owl",
+      "scale": 0.82,
+      "camo": "ink",
+      "foundText": "Chú cú đêm tĩnh lặng ngắm nhìn đoàn thuyền rực rỡ lướt qua trên sông."
+    },
+    {
+      "id": "night-firefly",
+      "name": "Đom Đóm Bờ Sông",
+      "clue": "Đốm sáng đom đóm lập lòe bay lượn vòng quanh tán cây nhiệt đới ven bờ sông bên phải.",
+      "x": 0.767,
+      "y": 0.548,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "firefly",
+      "scale": 0.72,
+      "camo": "ink",
+      "roam": {
+        "path": [
+          [
+            0.767,
+            0.548
+          ],
+          [
+            0.81,
+            0.525
+          ],
+          [
+            0.835,
+            0.565
+          ],
+          [
+            0.78,
+            0.585
+          ]
+        ],
+        "period": 14,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Đom đóm bờ sông Chao Phraya như những ngôi sao nhỏ trôi bồng bềnh trong gió đêm."
+    },
+    {
+      "id": "night-bat",
+      "name": "Dơi Bay Chao Phraya",
+      "clue": "Chú dơi nhỏ chao liệng giữa bầu trời đêm phía trên dòng sông, đoạn giữa hai trang sổ.",
+      "x": 0.46,
+      "y": 0.42,
+      "radius": 0.045,
+      "score": 150,
+      "spriteType": "bat",
+      "scale": 0.78,
+      "camo": "ink",
+      "foundText": "Những chú dơi hoàng hôn rời nơi trú ngụ bắt đầu chuyến kiếm ăn đêm dọc sông."
+    },
+    {
+      "id": "night-koi",
+      "name": "Cá Chép Ánh Vàng",
+      "clue": "Chú cá chép quẫy đuôi dưới mặt nước lấp lánh ánh đèn gần mạn thuyền gỗ bên phải.",
+      "x": 0.58,
+      "y": 0.73,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "koi",
+      "scale": 0.75,
+      "waterline": 0.65,
+      "camo": "chameleon",
+      "foundText": "Đàn cá sông tụ lại quanh ánh đèn thuyền tạo nên vệt sáng bàng bạc dưới nước!"
+    },
+    {
+      "id": "night-gecko",
+      "name": "Tắc Kè Đêm Hoa Văn",
+      "clue": "Chú tắc kè đêm bám trên bờ tường gỗ bến phà bên trái, đón lấy làn gió mát từ sông thổi vào.",
+      "x": 0.216,
+      "y": 0.615,
+      "radius": 0.042,
+      "score": 120,
+      "spriteType": "gecko",
+      "scale": 0.72,
+      "camo": "ink",
+      "foundText": "Tắc kè đêm có đôi mắt cực kỳ tinh tường để săn côn trùng quanh bóng đèn bến phà!"
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện son đỏ cùng dòng chữ ngày tháng 'DEC 14 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.9,
+      "y": 0.722,
+      "radius": 0.045,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu ấn của kiến trúc sư xác nhận trang ký họa ban đêm tại Bangkok!"
+    },
+    {
+      "id": "secret-compass",
+      "name": "La Bàn Thám Tử Bí Mật",
+      "clue": "[BÍ MẬT] Chiếc la bàn thám tử vẽ bằng mực tàng hình ẩn hiện bên cạnh dòng chữ 'Wat Arun' trang trái.",
+      "x": 0.142,
+      "y": 0.452,
+      "radius": 0.048,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "compass",
+      "scale": 0.85,
+      "rotation": -10,
+      "camo": "invisible",
+      "foundText": "Kim la bàn chỉ về hướng Tây Bắc — gợi ý cho chuyến đi tiếp theo của bạn tại Thái Lan!"
+    },
+    {
+      "id": "bonus-moth",
+      "name": "Bướm Đêm Đèn Phà",
+      "clue": "Chú bướm đêm chập chờn bám cạnh mạn thuyền đuôi dài bên trái sông.",
+      "x": 0.273,
+      "y": 0.7,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "moth",
+      "scale": 0.65,
+      "camo": "chameleon",
+      "foundText": "Bướm đêm bị hấp dẫn bởi ánh đèn dầu ấm áp trên mạn thuyền."
+    },
+    {
+      "id": "bonus-frog",
+      "name": "Chú Ếch Bờ Kè",
+      "clue": "Chú ếch xanh ngồi thu lu trên bậc đá bờ kè gần mép nước bên trái.",
+      "x": 0.38,
+      "y": 0.63,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "frog",
+      "scale": 0.65,
+      "camo": "ink",
+      "foundText": "Tiếng ếch hòa cùng tiếng sóng vỗ tạo nên bản giao hưởng đêm sông nước Chao Phraya."
+    }
+  ]
+}

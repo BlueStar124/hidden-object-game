@@ -1,0 +1,166 @@
+{
+  "id": "ben-thanh-night",
+  "isNight": true,
+  "title": "Chợ Đêm Bến Thành",
+  "subtitle": "Trang 15 · Đêm — Đèn hoa phố thị",
+  "art": "ben-thanh",
+  "timeLimit": 240,
+  "storyClue": "Về đêm, xung quanh chợ Bến Thành biến thành khu chợ đêm sầm uất rực rỡ ánh đèn neon, nghi ngút khói thơm từ các quán hải sản và đồ nướng.",
+  "nightLights": [
+    {
+      "x": 0.49,
+      "y": 0.42,
+      "r": 0.065,
+      "color": "rgba(255, 215, 120, 0.7)"
+    },
+    {
+      "x": 0.34,
+      "y": 0.54,
+      "r": 0.055,
+      "color": "rgba(255, 180, 90, 0.6)"
+    },
+    {
+      "x": 0.74,
+      "y": 0.56,
+      "r": 0.055,
+      "color": "rgba(255, 180, 90, 0.6)"
+    },
+    {
+      "x": 0.45,
+      "y": 0.68,
+      "r": 0.055,
+      "color": "rgba(255, 230, 160, 0.5)"
+    },
+    {
+      "x": 0.11,
+      "y": 0.58,
+      "r": 0.045,
+      "color": "rgba(255, 150, 120, 0.5)"
+    }
+  ],
+  "objects": [
+    {
+      "id": "night-neon-cyclo",
+      "name": "Xích Lô Đèn Màu",
+      "clue": "Chiếc xích lô đêm bật đèn chờ khách bên dãy phố ẩm thực góc trái.",
+      "x": 0.11,
+      "y": 0.58,
+      "radius": 0.038,
+      "score": 150,
+      "spriteType": "cyclo",
+      "scale": 0.52,
+      "camo": "chameleon",
+      "foundText": "Thành phố không ngủ lung linh sắc màu trong mắt du khách thập phương."
+    },
+    {
+      "id": "night-food-lantern",
+      "name": "Đèn Lồng Phố Ẩm Thực",
+      "clue": "Ngọn đèn lồng đỏ treo trước quầy đồ ăn chợ đêm Bến Thành tỏa hương thơm nức.",
+      "x": 0.34,
+      "y": 0.54,
+      "radius": 0.034,
+      "score": 150,
+      "spriteType": "lantern",
+      "scale": 0.46,
+      "camo": "chameleon",
+      "foundText": "Hương vị ẩm thực đường phố Sài Gòn làm say lòng bất kỳ ai ghé chân."
+    },
+    {
+      "id": "night-market-cat",
+      "name": "Mèo Đêm Mắt Sáng",
+      "clue": "Chú mèo đêm ngồi canh chừng bên sạp hàng lưu niệm đóng cửa.",
+      "x": 0.74,
+      "y": 0.56,
+      "radius": 0.03,
+      "score": 120,
+      "spriteType": "cat",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Mèo đêm tinh ranh tận hưởng sự nhộn nhịp của phiên chợ tối."
+    },
+    {
+      "id": "night-owl-spire",
+      "name": "Cú Đêm Tháp Chuông",
+      "clue": "Chú cú mèo đêm đậu trên gờ tường tháp đồng hồ rực rỡ ánh đèn vàng.",
+      "x": 0.52,
+      "y": 0.36,
+      "radius": 0.032,
+      "score": 150,
+      "spriteType": "owl",
+      "scale": 0.44,
+      "camo": "chameleon",
+      "foundText": "Người gác đêm kiên định trên đỉnh biểu tượng của thành phố."
+    },
+    {
+      "id": "night-faithful-dog",
+      "name": "Cún Giữ Xe Chợ Đêm",
+      "clue": "Chú cún nhỏ ngoan ngoãn nằm bên hiên quán phố đêm góc trái dưới.",
+      "x": 0.12,
+      "y": 0.71,
+      "radius": 0.028,
+      "score": 100,
+      "spriteType": "dog",
+      "scale": 0.4,
+      "camo": "chameleon",
+      "foundText": "Người gác cổng bốn chân trung thành và mến khách."
+    },
+    {
+      "id": "artist-seal",
+      "name": "Dấu Triện Ký Họa",
+      "clue": "Mộc triện đỏ son của người họa sĩ nằm kín đáo ở góc dưới bên phải cuốn sổ.",
+      "x": 0.903,
+      "y": 0.716,
+      "radius": 0.04,
+      "score": 150,
+      "spriteType": "seal",
+      "foundText": "Dấu triện son xác nhận trang ký họa nguyên bản của cuốn sổ thám tử."
+    },
+    {
+      "id": "secret-night-coin",
+      "name": "Túi Tiền Xu Đông Dương",
+      "clue": "[BÍ MẬT] Túi tiền vàng may mắn phát sáng huyền ảo giữa bầu trời đêm Sài Gòn.",
+      "x": 0.32,
+      "y": 0.25,
+      "radius": 0.038,
+      "score": 300,
+      "isSecret": true,
+      "spriteType": "coin-pouch",
+      "scale": 0.48,
+      "camo": "invisible",
+      "foundText": "Những đồng bạc hoa xòe quý hiếm thời mở mang thương cảng Sài Gòn!"
+    },
+    {
+      "id": "bonus-night-moth",
+      "name": "Bướm Đêm Quanh Đèn Neon",
+      "clue": "Chú bướm đêm chao lượn quanh bảng hiệu đèn led rực rỡ.",
+      "x": 0.82,
+      "y": 0.52,
+      "radius": 0.028,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "moth",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Ánh sáng neon muôn màu thu hút những chú bướm đêm phố thị."
+    },
+    {
+      "id": "bonus-night-mouse",
+      "name": "Chuột Nhắt Chân Bục",
+      "clue": "Chú chuột nhỏ thoăn thoắt lướt qua hè phố nhộn nhịp.",
+      "x": 0.66,
+      "y": 0.72,
+      "radius": 0.026,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "mouse",
+      "scale": 0.36,
+      "camo": "chameleon",
+      "shy": {
+        "period": 6.5,
+        "offset": 1.0,
+        "from": "below"
+      },
+      "foundText": "Chú chuột nhỏ lẹ làng kiếm một mẩu bánh mì thơm nức."
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { BookOpen, CircleCheckBig, Lock, Moon, PawPrint, Star, X } from '../../ui/icons';
 import type { Country, Page, PageRef } from '../../core/model';
 import { progress } from '../../core/progress';
-import { artOf, COUNTRIES, pagesOf } from '../../content';
+import { COUNTRIES, pagesOf } from '../../content';
+import { BookThumb } from '../BookThumb';
 import { colors, fonts } from '../../ui/theme';
 import { formatNumber } from '../../ui/format';
 import { ModalShell } from '../../ui/ModalShell';
@@ -32,28 +33,6 @@ function critterProgress(page: Page) {
   const ids = page.objects.filter((o) => o.isBonus).map((o) => o.id);
   return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
 }
-
-// The artwork is the open book on a transparent margin: the thumbnail shows just the paper
-const BOOK = { x: 0.05, y: 0.218, w: 0.9, h: 0.564 };
-
-const BookThumb: React.FC<{ scene: Page; width: number }> = ({ scene, width }) => {
-  const height = (width * 9) / 16;
-  // Cover the 16:9 frame with the paper
-  const scale = Math.max(width / (BOOK.w * 1760), height / (BOOK.h * 1240));
-  const imgW = 1760 * scale;
-  const imgH = 1240 * scale;
-  const left = -(BOOK.x + BOOK.w / 2) * imgW + width / 2;
-  const top = -(BOOK.y + BOOK.h / 2) * imgH + height / 2;
-  return (
-    <View style={{ width, height, overflow: 'hidden', backgroundColor: '#e3ded3' }}>
-      <Image
-        source={artOf(scene)}
-        style={{ position: 'absolute', width: imgW, height: imgH, left, top }}
-        resizeMode="stretch"
-      />
-    </View>
-  );
-};
 
 /**
  * "Mục Lục" — every page of a country's sketchbook, with progress and the night variants. With

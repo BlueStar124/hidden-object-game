@@ -44,6 +44,8 @@ export const BESTIARY: Record<Exclude<SpriteType, 'seal'>, BestiaryEntry> = {
   'slow-loris': { name: 'Culi Sunda', kind: 'creature', fact: 'Culi là loài linh trưởng sống về đêm với đôi mắt to tròn giúp nhìn rõ trong bóng tối.' },
   colugo: { name: 'Chồn bay Sunda', kind: 'creature', fact: 'Chồn bay có thể lượn xa hàng chục mét giữa các thân cây nhờ lớp màng da như chiếc áo choàng.' },
   'stick-insect': { name: 'Bọ que', kind: 'creature', fact: 'Bọ que ngụy trang giỏi đến mức còn đung đưa theo gió cho giống một cành cây thật.' },
+  saola: { name: 'Sao la', kind: 'creature', fact: 'Được mệnh danh là "Kỳ lân châu Á", sao la là loài thú quý hiếm chỉ sinh sống tại vùng rừng già dãy Trường Sơn.' },
+  'water-buffalo': { name: 'Trâu nước', kind: 'creature', fact: 'Con trâu là đầu cơ nghiệp — loài vật hiền lành gắn liền với nền văn minh lúa nước ngàn đời của người Việt.' },
   // Đồ vật
   key: { name: 'Chìa khóa cổ', kind: 'object', fact: 'Chìa khóa cổ có phần răng được rèn thủ công, khớp với đúng một ổ khóa.' },
   compass: { name: 'La bàn', kind: 'object', fact: 'Kim la bàn luôn chỉ theo từ trường Trái Đất, dẫn đường cho thủy thủ suốt nhiều thế kỷ.' },
@@ -67,6 +69,9 @@ export const BESTIARY: Record<Exclude<SpriteType, 'seal'>, BestiaryEntry> = {
   'vintage-camera': { name: 'Máy ảnh cổ', kind: 'object', fact: 'Những chiếc máy ảnh đầu tiên cần tới vài phút phơi sáng để chụp một tấm hình.' },
   hourglass: { name: 'Đồng hồ cát', kind: 'object', fact: 'Đồng hồ cát từng được dùng trên tàu biển để đo thời gian và ước tính tốc độ.' },
   deerstalker: { name: 'Mũ thám tử', kind: 'object', fact: 'Chiếc mũ hai lưỡi trai gắn liền với Sherlock Holmes nhờ các bức tranh minh họa truyện.' },
+  'conical-hat': { name: 'Nón lá', kind: 'object', fact: 'Chiếc nón lá truyền thống đan từ lá cọ vừa che mưa nắng vừa là nét duyên dáng của người Việt Nam.' },
+  lantern: { name: 'Đèn lồng Hội An', kind: 'object', fact: 'Đèn lồng phố Hội được làm từ khung tre và lụa tơ tằm, thắp sáng lung linh sông Hoài vào những đêm rằm.' },
+  cyclo: { name: 'Xích lô', kind: 'object', fact: 'Xích lô là phương tiện giao thông ba bánh độc đáo, đưa du khách thong thả ngắm nhìn phố phường cổ kính.' },
 };
 
 export function isCreature(type?: SpriteType): boolean {

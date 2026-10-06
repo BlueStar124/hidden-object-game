@@ -58,6 +58,7 @@ export function readProgress(raw: unknown): GameProgress {
     sceneResults,
     totalScore: upToDate ? count(data.totalScore) : bestScores,
     discovered,
+    lastPageId: typeof data.lastPageId === 'string' ? data.lastPageId : undefined,
   };
 }
 
@@ -135,6 +136,23 @@ export const progress = {
     const seen = current.discovered[pageId] || [];
     if (seen.includes(objectId)) return;
     save({ ...current, discovered: { ...current.discovered, [pageId]: [...seen, objectId] } });
+  },
+
+  /** The player is in this page now: "Chơi tiếp" comes back to it next time. */
+  recordVisit(pageId: string): void {
+    const current = load();
+    if (current.lastPageId === pageId) return;
+    save({ ...current, lastPageId: pageId });
+  },
+
+  /** The page the player was last in (it may be gone from the content since), if any. */
+  lastPage(): string | undefined {
+    return load().lastPageId;
+  },
+
+  /** Sum of every page's best score. */
+  totalScore(): number {
+    return load().totalScore;
   },
 
   /** All object ids ever spotted on a page (older saves only kept the bonus critters). */
