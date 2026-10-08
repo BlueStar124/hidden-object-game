@@ -16,6 +16,16 @@ export function usePagesAround(library: SceneLibrary, page: Page, preload: Page[
   const around = preload;
 
   const { hasArt, isPrepared, preparedScene, prepare, bump, version, imageOf } = library;
+  // Prepare a cold destination while the old page is held still; the flip starts only when ready.
+  useEffect(() => {
+    if (!turningTo || isPrepared(turningTo) || !hasArt(turningTo)) return;
+    const t = setTimeout(() => {
+      prepare(turningTo);
+      bump();
+    }, 0);
+    return () => clearTimeout(t);
+  }, [turningTo, version, isPrepared, hasArt, prepare, bump]);
+
   useEffect(() => {
     if (busy) return;
     const next = around.find((p) => !isPrepared(p) && hasArt(p));

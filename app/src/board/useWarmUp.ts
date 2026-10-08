@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import type { SkPicture } from '@shopify/react-native-skia';
 import { motionNow } from '../core/motion';
-import { CAMO_INVISIBLE, recordPage, type FoundInfo, type FrameState, type SceneData } from './render';
+import { CAMO_INVISIBLE, type FoundInfo, type FrameState, type SceneData } from './render';
+import { snapshotPage } from './scene/snapshotPage';
 import type { Camera } from './useCamera';
 
 /**
@@ -46,7 +48,7 @@ function warmFrames(S: SceneData, camera: Camera): FrameState[] {
     warm: [],
   };
   // …and a leaf turning, the loupe over the spine: early, halfway, late, both ways
-  const page = recordPage(S, base);
+  const page = snapshotPage(S, base);
   const duration = 1000;
   const book = S.bookRRect.rect;
   const spine = { lx: (book.x + book.width / 2) * s + tx, ly: (book.y + book.height / 2) * s + ty };
@@ -60,7 +62,7 @@ function warmFrames(S: SceneData, camera: Camera): FrameState[] {
 }
 
 /** Frames for the renderer to warm up with (null: none now). `covered`: a dialog is over the board. */
-export function useWarmUp(scene: SceneData | null, covered: boolean, camera: Camera): FrameState[] | null {
+export function useWarmUp(scene: SceneData | null, covered: boolean, camera: Camera, retirePictures: (pictures: SkPicture[]) => void): FrameState[] | null {
   const [frames, setFrames] = useState<FrameState[] | null>(null);
   const kind = scene ? (scene.night ? 'night' : 'day') : null;
   const cameraRef = useRef(camera);
@@ -79,8 +81,12 @@ export function useWarmUp(scene: SceneData | null, covered: boolean, camera: Cam
   useEffect(() => {
     if (!frames) return;
     const t = setTimeout(() => setFrames(null), HOLD_MS);
-    return () => clearTimeout(t);
-  }, [frames]);
+    return () => {
+      clearTimeout(t);
+      const picture = frames.find((frame) => frame.flip)?.flip?.from;
+      if (picture) retirePictures([picture]);
+    };
+  }, [frames, retirePictures]);
 
   return frames;
 }

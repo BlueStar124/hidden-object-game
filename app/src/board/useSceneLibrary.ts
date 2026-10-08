@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PixelRatio } from 'react-native';
-import type { SkImage } from '@shopify/react-native-skia';
+import type { SkImage, SkPicture } from '@shopify/react-native-skia';
+import { scheduleOnRN, scheduleOnUI } from 'react-native-worklets';
 import type { Page } from '../core/model';
 import { artIdOf, artOf } from '../content';
 import { loadSceneImage, type LoadedScene } from '../platform/sceneImage';
 import type { SceneData } from './render';
 import { analyzeScene, SAMPLE_WIDTH, type SceneAnalysis } from './scene/analyze';
 import { buildScene } from './scene/buildScene';
+import { disposeScene } from './scene/disposeScene';
 import type { LoupePaints } from './scene/paints';
 
 /**
@@ -19,6 +21,7 @@ import type { LoupePaints } from './scene/paints';
 const images = new Map<string, LoadedScene>();
 const loading = new Set<string>();
 const MAX_IMAGES = 5;
+const retiredArt = new Set<LoadedScene>();
 
 // What a painting tells about a page (chameleon tints, where the paper is): read once per page
 const analyses = new Map<string, SceneAnalysis>();
@@ -48,6 +51,9 @@ export interface SceneLibrary {
   /** Loads the artwork of these pages; beyond a few, the rest is let go */
   keepArt: (pages: Page[]) => void;
   imageOf: (page: Page) => SkImage | undefined;
+  /** Called after the frame mapper was updated, keeping anything it still draws alive. */
+  releaseUnused: (live: SceneData[], warm: SkImage[], pictures: SkPicture[]) => void;
+  retirePictures: (pictures: SkPicture[]) => void;
 }
 
 /**
@@ -56,10 +62,19 @@ export interface SceneLibrary {
 export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean, density: number): SceneLibrary {
   const [version, setVersion] = useState(0);
   const bump = useCallback(() => setVersion((n) => n + 1), []);
+  const retiredScenes = useRef(new Set<SceneData>()).current;
+  const retiredPictures = useRef(new Set<SkPicture>()).current;
+  const retirePictures = useCallback((pictures: SkPicture[]) => {
+    for (const picture of pictures) retiredPictures.add(picture);
+  }, [retiredPictures]);
 
   // Pages laid out for this loupe size, layout and sprite sharpness
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact, density]);
+  useEffect(() => () => {
+    for (const cached of scenes.values()) retiredScenes.add(cached);
+    scenes.clear();
+  }, [scenes, retiredScenes]);
   const prepare = useCallback(
     (p: Page): SceneData | null => {
       const cached = scenes.get(p.id);
@@ -98,13 +113,47 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
       }
       for (const id of [...images.keys()]) {
         if (images.size <= MAX_IMAGES) break;
-        if (!wanted.includes(id)) images.delete(id);
+        if (!wanted.includes(id)) {
+          retiredArt.add(images.get(id)!);
+          images.delete(id);
+        }
       }
       const alive = new Set([...images.values()].map((art) => art.image));
-      for (const [id, prepared] of scenes) if (!alive.has(prepared.image)) scenes.delete(id);
+      for (const [id, prepared] of scenes) {
+        if (alive.has(prepared.image)) continue;
+        retiredScenes.add(prepared);
+        scenes.delete(id);
+      }
     },
-    [scenes, bump]
+    [scenes, bump, retiredScenes]
   );
+
+  const releaseUnused = useCallback((live: SceneData[], warm: SkImage[], pictures: SkPicture[]) => {
+    const held = new Set(warm);
+    for (const s of [...scenes.values(), ...live]) {
+      held.add(s.image);
+      if (s.atlas) held.add(s.atlas.image);
+    }
+    const oldScenes = [...retiredScenes].filter((s) => !live.includes(s) && (!s.atlas || !held.has(s.atlas.image)));
+    const oldArt = [...retiredArt].filter((art) => !held.has(art.image));
+    const oldPictures = [...retiredPictures].filter((picture) => !pictures.includes(picture));
+    for (const s of oldScenes) retiredScenes.delete(s);
+    for (const art of oldArt) retiredArt.delete(art);
+    for (const picture of oldPictures) retiredPictures.delete(picture);
+    if (!oldScenes.length && !oldArt.length && !oldPictures.length) return;
+    const oldImages = oldArt.map((art) => art.image);
+    const closeSources = () => {
+      for (const art of oldArt) art.closeSource?.();
+    };
+    // FIFO with Reanimated's mapper update: the next frame cannot read retired wrappers.
+    scheduleOnUI(() => {
+      'worklet';
+      for (let i = 0; i < oldScenes.length; i++) disposeScene(oldScenes[i]);
+      for (let i = 0; i < oldImages.length; i++) oldImages[i].dispose();
+      for (let i = 0; i < oldPictures.length; i++) oldPictures[i].dispose();
+      if (oldImages.length) scheduleOnRN(closeSources);
+    });
+  }, [scenes, retiredScenes, retiredPictures]);
 
   return {
     scene,
@@ -117,6 +166,8 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
     bump,
     keepArt,
     imageOf: useCallback((p: Page) => images.get(artIdOf(p))?.image, []),
+    releaseUnused,
+    retirePictures,
   };
 }
 

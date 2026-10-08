@@ -19,7 +19,7 @@ yếu lẫn web (CanvasKit/WebAssembly). Tải nhanh, bundle nhỏ.
 
 | Luồng | Chạy gì |
 |---|---|
-| **UI thread** | Cử chỉ (react-native-gesture-handler, native), shared value của Reanimated, `renderFrame` (worklet) mỗi khung → **một `SkPicture`** cho `<Canvas><Picture/></Canvas>`. |
+| **UI thread** | Cử chỉ (react-native-gesture-handler, native), shared value của Reanimated, `renderFrame` (worklet) mỗi khung → **một `SkPicture`**, đưa thẳng vào picture-view API của `<Canvas>`; không ghi thêm picture bao ngoài. |
 | **JS thread** | React, `useCase` (luật chơi), đồng hồ 1 s, dựng trang (`buildScene`, `analyzeScene`, sprite sheet), giải mã tranh (native). |
 | **Trình duyệt (web)** | Giải mã tranh ngoài luồng chính (`createImageBitmap`). |
 
@@ -34,7 +34,9 @@ mỗi giây, mở hộp thoại.
 2. **Không tạo Paint, Shader, Path, ColorFilter trong khung hình.** Tạo một lần trên JS thread: dùng chung thì đặt ở
    `scene/paints.ts` (`createBoardPaints`, `createLoupePaints`), riêng từng trang thì ở `scene/buildScene.ts` (lưu vào
    `SceneData` / `SceneSprite`). Renderer chỉ đổi alpha hay màu của paint có sẵn.
-3. Recorder hay `SkPicture` tạo trong một khung thì phải `.dispose()` ngay trong khung đó (xem `frame.ts`).
+3. Recorder và picture tạm trong một khung phải `.dispose()` ngay trong khung đó (xem `frame.ts`). Picture đầu ra
+   giữ tới khi khung kế thay thế (`Board` sở hữu một buffer ổn định); snapshot lật trang/warm-up chỉ giải phóng sau
+   khi worklet đã bỏ chúng. Không giải phóng tài nguyên còn được scene, kính lúp hay trang đang lật dùng.
 4. Vòng lặp trong render dùng `for (let i = 0; i < a.length; i++)`. Không dùng `.map`, `.filter`, spread hay tạo
    object mới cho **từng sprite** mỗi khung.
 5. **Bỏ qua thứ nằm ngoài khung nhìn** (`inView` trong `book.ts`). Thứ mới được vẽ thì cũng phải tôn trọng phép cắt
@@ -55,8 +57,10 @@ mỗi giây, mở hộp thoại.
 
 ## 3. Luật cho dựng trang, cache, lật trang
 
-1. Việc nặng trên JS thread (`prepare`, `buildScene`, `analyzeScene`) **không bao giờ chạy trong lúc lật trang**
-   (`usePagesAround` kiểm tra `busy`). Hẹn giờ sau khi trang ổn định (`PREPARE_MS = 120`) và làm **mỗi lần một trang**.
+1. Việc nặng trên JS thread (`prepare`, `buildScene`, `analyzeScene`) **không chạy trong hoạt ảnh lật trang**.
+   `usePagesAround` ưu tiên dựng đích chưa có cache trong lúc giữ trang cũ đứng yên, thử lại khi ảnh tới (`version`).
+   `usePageTurn` chỉ đọc scene đã dựng; bắt đầu đồng hồ 900 ms khi đích sẵn sàng rồi gọi `completeTurn`.
+   Trang lân cận hẹn sau khi ổn định (`PREPARE_MS = 120`), mỗi lần một trang; đồng hồ vụ án dừng khi chờ/lật.
 2. Cache có sẵn, hãy dùng, đừng tạo cache song song:
    - tranh đã giải mã: `images` (module-level, khóa `artIdOf`, tối đa `MAX_IMAGES = 5`);
    - phân tích tranh: `analyses` (khóa id trang, đọc pixel một lần);
@@ -68,9 +72,20 @@ mỗi giây, mở hộp thoại.
    giữ **cùng một mảng** khi nội dung không đổi (xem `warmRef` trong `usePagesAround`), nếu không worklet khung hình sẽ
    bị dựng lại.
 5. Giải mã tranh: native dùng `makeNonTextureImage()` trên JS thread (tránh giải mã lười ngay trên UI thread giữa lúc
-   lật); web dùng `createImageBitmap` (CanvasKit tự giải mã sẽ khựng khoảng 40 ms mỗi trang). Đừng "đơn giản hóa" chỗ
-   này.
+   lật); web dùng `createImageBitmap`, sau đó copy pixel đã giải mã qua canvas 2D vào SkImage (CanvasKit tự giải mã
+   sẽ khựng khoảng 40 ms mỗi trang). Không dùng lazy texture source cho tranh: surface CPU của snapshot không vẽ
+   được loại ảnh đó; ảnh pixel còn dùng được trên context GPU riêng của snapshot. Đừng "đơn giản hóa" chỗ này.
 6. Thứ tự hook trong `Board.tsx` là thứ tự effect chạy: `usePageTurn` đọc camera trong effect của nó. Không đảo thứ tự.
+7. `useSceneLibrary.releaseUnused` giải phóng scene/atlas/tranh bị loại khỏi cache trên UI thread, sau khi mapper
+   cập nhật. Giữ cả scene nguồn/đích của lượt lật và ảnh warm; đóng `ImageBitmap` sau khi SkImage được giải phóng.
+8. Callback mỗi khung giữ identity bằng `useCallback`. Board và cuộn sát mép dừng dưới lớp phủ, chỉ bật lại
+   khi chơi, warm-up hoặc hoạt ảnh lật thực sự chạy.
+9. `scene/snapshotPage` raster hóa hai mặt giấy **một lần trước khi lật**, tối đa 2048 px mỗi chiều,
+   trên một surface GPU dùng lại suốt phiên (không tạo thêm context cho mỗi lượt).
+   Picture của mỗi mặt chỉ chứa một ảnh: các dải uốn và kính lúp không vẽ lại toàn bộ sprite/layer của scene.
+   Picture giữ ảnh tới lúc hết lượt lật; wrapper ảnh tạm được giải phóng ngay sau khi ghi. Ảnh snapshot đổi sang
+   pixel trước khi đưa qua context của Canvas; không replay texture thuộc context khác. Không raster hóa cả trang
+   bằng surface CPU: các phép blend và lọc ảnh sẽ chặn JS lâu trước lượt lật.
 
 ## 4. Luật cho React
 
