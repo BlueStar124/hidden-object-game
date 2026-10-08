@@ -30,20 +30,25 @@ class SoundBank {
   prepare(sources: Source[]) {
     for (const source of sources) {
       const entry = this.entry(source);
-      if (entry.list.length === 0) entry.list.push(createAudioPlayer(source));
+      if (entry.list.length !== 0) continue;
+      try {
+        entry.list.push(createAudioPlayer(source));
+      } catch {
+        // A failed prewarm can be retried at playback without interrupting the game.
+      }
     }
   }
 
   play(source: Source | undefined) {
     if (source === undefined) return;
-    const entry = this.entry(source);
-    let player = entry.list[entry.next % VOICES_PER_SOUND];
-    if (!player) {
-      player = createAudioPlayer(source);
-      entry.list.push(player);
-    }
-    entry.next++;
     try {
+      const entry = this.entry(source);
+      let player = entry.list[entry.next % VOICES_PER_SOUND];
+      if (!player) {
+        player = createAudioPlayer(source);
+        entry.list.push(player);
+      }
+      entry.next++;
       player.seekTo(0).catch(() => {});
       player.play();
     } catch {
@@ -59,8 +64,12 @@ class NativeSound implements GameSound {
 
   private init() {
     if (this.ready) return;
-    this.ready = true;
-    setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(() => {});
+    try {
+      setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' }).catch(() => { this.ready = false; });
+      this.ready = true;
+    } catch {
+      // Audio session setup may fail synchronously on an unavailable native module.
+    }
     this.bank.prepare([SFX.wrong, SFX.hint, SFX.pageTurn, SFX.fog, SFX.rustle, SFX.victory]);
   }
 

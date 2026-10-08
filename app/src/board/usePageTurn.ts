@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObjec
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { PAGE_TURN_MS, type Page, type PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
-import { recordPage, type FoundInfo, type FrameState, type PageFlip, type SceneData } from './render';
+import { type FoundInfo, type FrameState, type PageFlip, type SceneData } from './render';
+import { snapshotPage } from './scene/snapshotPage';
 import type { Camera } from './useCamera';
 import type { SceneLibrary } from './useSceneLibrary';
 
@@ -20,7 +21,7 @@ import type { SceneLibrary } from './useSceneLibrary';
 const FLIP_MS = PAGE_TURN_MS - 80;
 
 /** A turn, with the page it turns to. */
-type Flip = PageFlip & { page: Page };
+type Flip = PageFlip & { page: Page; request: PageTurn; source: SceneData };
 
 export interface PageTurnState {
   /** What the frame worklet needs of the turn (null: no turn on screen) */
@@ -29,6 +30,7 @@ export interface PageTurnState {
   flipStart: SharedValue<number>;
   /** The page being turned to, while a turn is on screen */
   turningTo: Page | null;
+  heldScenes: SceneData[];
 }
 
 export function usePageTurn(
@@ -37,15 +39,16 @@ export function usePageTurn(
   library: SceneLibrary,
   camera: Camera,
   foundNow: () => Record<string, FoundInfo>,
-  turning: MutableRefObject<boolean>
+  turning: MutableRefObject<boolean>,
+  onComplete: (request: PageTurn) => void
 ): PageTurnState {
   const [flip, setFlip] = useState<Flip | null>(null);
   const [landed, setLanded] = useState(false);
   const flipStart = useSharedValue(0);
-  turning.current = flip !== null;
+  turning.current = turn !== null || flip !== null;
 
   const { s, tx, ty, lx, ly, dims, centre } = camera;
-  const { scene, shown, prepare, version } = library;
+  const { scene, shown, preparedScene, version, retirePictures } = library;
 
   // The frame as it is on screen, to record a page with (optionally with the camera elsewhere)
   const frameFor = useCallback(
@@ -76,7 +79,7 @@ export function usePageTurn(
       const settled = centre(scale);
       return {
         ...pending,
-        to: recordPage(next, frameFor({}, settled)),
+        to: snapshotPage(next, frameFor({}, settled)),
         S: next,
         camera: { fromX: tx.value, fromY: ty.value, toX: settled.tx, toY: settled.ty },
       };
@@ -88,44 +91,49 @@ export function usePageTurn(
   const turnSeen = useRef<PageTurn | null>(null);
   useEffect(() => {
     if (!turn || turnSeen.current === turn || !shown) return;
+    const next = preparedScene(turn.to);
+    if (!next) return;
     turnSeen.current = turn;
     setLanded(false);
     const pending: Flip = {
-      from: recordPage(shown, frameFor(foundNow())),
+      from: snapshotPage(shown, frameFor(foundNow())),
       to: null,
       dir: turn.direction,
       S: shown,
       duration: FLIP_MS,
       page: turn.to,
+      request: turn,
+      source: shown,
     };
-    const next = prepare(turn.to);
-    setFlip(next ? openTo(pending, next) : pending);
-  }, [turn, shown, frameFor, foundNow, prepare, openTo]);
-
-  // 2. …or once the artwork of the page it turns to has decoded
-  useEffect(() => {
-    if (!flip || flip.to) return;
-    const next = prepare(flip.page);
-    if (next) setFlip(openTo(flip, next));
-  }, [flip, prepare, version, openTo]);
+    setFlip(openTo(pending, next));
+  }, [turn, shown, frameFor, foundNow, preparedScene, version, openTo]);
 
   // The clock of a turn starts when the page it opens is there. (Never reset it to 0 while a turn
   // is on screen: until React has dropped that turn, the frame would show its first page again —
   // the old page flashing back.) This effect runs before the frame worklet picks up the new turn
   const flipTo = flip?.to ?? null;
   const flipDuration = flip?.duration ?? 0;
+  const request = flip?.request ?? null;
+  const flipFrom = flip?.from ?? null;
+  useEffect(() => () => {
+    if (flipFrom) retirePictures(flipTo ? [flipFrom, flipTo] : [flipFrom]);
+  }, [flipFrom, flipTo, retirePictures]);
   useEffect(() => {
-    if (!flipTo) return;
+    if (!flipTo || !request) return;
     flipStart.value = motionNow();
     const t = setTimeout(() => setLanded(true), flipDuration);
-    return () => clearTimeout(t);
-  }, [flipTo, flipDuration, flipStart]);
+    const complete = setTimeout(() => onComplete(request), PAGE_TURN_MS);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(complete);
+    };
+  }, [flipTo, flipDuration, flipStart, request, onComplete]);
 
   // 3. Landed: back to the live page once the game has opened it
   useEffect(() => {
     if (!flip || !landed || !scene) return;
-    if (page.id !== flip.page.id && turn) return;
-    if (flip.camera) {
+    if (turn) return;
+    if (page.id === flip.page.id && flip.camera) {
       tx.value = flip.camera.toX;
       ty.value = flip.camera.toY;
     }
@@ -137,5 +145,6 @@ export function usePageTurn(
     [flip]
   );
 
-  return { flip: flipFrame, flipStart, turningTo: flip?.page ?? null };
+  const heldScenes = useMemo(() => flip ? [flip.source, flip.S] : [], [flip]);
+  return { flip: flipFrame, flipStart, turningTo: turn?.to ?? flip?.page ?? null, heldScenes };
 }

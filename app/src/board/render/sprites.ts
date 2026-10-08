@@ -1,14 +1,14 @@
-import { ClipOp, FilterMode, MipmapMode, type SkCanvas, type SkImage, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
+import { ClipOp, FilterMode, MipmapMode, type SkCanvas, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
 import { roamState, shyPhase } from '../../core/motion';
 import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, track } from '../anim';
 import { PAGE_H, PAGE_W } from '../constants';
-import type { AtlasCell } from '../scene/spriteAtlas';
+import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import { ANIM_BLINK, ANIM_GLOW_SPOT, ANIM_TAIL, ANIM_WAVE, ANIM_WING, type Part } from '../scene/spriteParts';
 import type { FoundInfo, FrameState, Pose, SceneData, SceneSprite } from './types';
 
 /** Hidden objects and creatures: where each one is this frame (its pose), and drawing it. */
 
-function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined): Pose {
+function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined, pose: Pose) {
   'worklet';
   let x = sp.x;
   let y = sp.y;
@@ -66,32 +66,29 @@ function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined): Pos
     glowFound = track([0, 0.5, 1], [1, 0.45, 1], EASE_IN_OUT, loop(age, 1800));
   }
 
-  return {
-    x,
-    y,
-    flip,
-    op,
-    dx,
-    dy,
-    rot,
-    bs,
-    br,
-    blink: blinkScale(now, -sp.blinkDelay),
-    wing,
-    tail,
-    wave,
-    glowFound,
-    glowNight: track([0, 0.35, 0.6, 1], [0.15, 1, 1, 0.15], EASE, loop(now, 2600, -sp.blinkDelay)),
-    found: !!f,
-    age,
-  };
+  pose.x = x;
+  pose.y = y;
+  pose.flip = flip;
+  pose.op = op;
+  pose.dx = dx;
+  pose.dy = dy;
+  pose.rot = rot;
+  pose.bs = bs;
+  pose.br = br;
+  pose.blink = blinkScale(now, -sp.blinkDelay);
+  pose.wing = wing;
+  pose.tail = tail;
+  pose.wave = wave;
+  pose.glowFound = glowFound;
+  pose.glowNight = track([0, 0.35, 0.6, 1], [0.15, 1, 1, 0.15], EASE, loop(now, 2600, -sp.blinkDelay));
+  pose.found = !!f;
+  pose.age = age;
 }
 
-export function posesAt(S: SceneData, F: FrameState): Pose[] {
+export function posesAt(S: SceneData, F: FrameState, poses = S.poses): Pose[] {
   'worklet';
-  const poses: Pose[] = [];
   for (let i = 0; i < S.sprites.length; i++) {
-    poses.push(spritePose(S.sprites[i], F.now, F.found[S.sprites[i].id]));
+    spritePose(S.sprites[i], F.now, F.found[S.sprites[i].id], poses[i]);
   }
   return poses;
 }
@@ -144,18 +141,9 @@ function drawParts(c: SkCanvas, parts: Part[], pose: Pose, glowMode: boolean, sp
   }
 }
 
-/** A sprite drawn whole from the page's sprite sheet instead of its shapes. */
-export interface SpriteCell {
-  sheet: SkImage;
-  cell: AtlasCell;
-  plain: SkPaint; // draws the cell inside a layer
-  modulate?: SkPaint[]; // opacity steps of an opaque, white-backed cell
-  baseOpacity?: number;
-}
-
 /**
  * One sprite, as a group: `layer` (camouflage blend, colour filter, shadow…) applies to the whole
- * drawing at `alpha`. From the sheet (`fromSheet`) a single image takes that paint itself; shapes
+ * drawing at `alpha`. From the sheet, a single image takes that paint itself; shapes
  * need a layer.
  */
 export function drawSprite(
@@ -167,7 +155,10 @@ export function drawSprite(
   alpha: number,
   glowMode: boolean,
   spotPaint: SkPaint,
-  fromSheet: SpriteCell | null = null
+  atlas: SpriteAtlas | null = null,
+  cell: AtlasCell | null = null,
+  modulate: SkPaint[] | null = null,
+  baseOpacity = 1
 ) {
   'worklet';
   const a = alpha * pose.op;
@@ -179,11 +170,11 @@ export function drawSprite(
   if (pose.flip < 0) c.scale(-1, 1);
   if (sp.water) c.clipRect(sp.box, ClipOp.Intersect, true);
   layer.setAlphaf(a);
-  const cellPaint = fromSheet?.modulate
-    ? fromSheet.modulate[Math.max(0, Math.min(128, Math.round(a / fromSheet.baseOpacity! * 128)))]
+  const cellPaint = cell && modulate
+    ? modulate[Math.max(0, Math.min(128, Math.round(a / baseOpacity * 128)))]
     : layer;
   // The waterline fades the group: that still takes a layer
-  const direct = fromSheet !== null && !sp.water;
+  const direct = atlas !== null && cell !== null && !sp.water;
   if (!direct) c.saveLayer(layer, sp.bounds);
   c.save();
   if (pose.dx !== 0 || pose.dy !== 0) c.translate(pose.dx * w, pose.dy * w);
@@ -193,9 +184,8 @@ export function drawSprite(
   const k = w / 48;
   c.scale(k, k);
   c.translate(-24, -24);
-  if (fromSheet) {
-    const { sheet, cell } = fromSheet;
-    c.drawImageRectOptions(sheet, cell.src, cell.dst, FilterMode.Linear, MipmapMode.None, direct ? cellPaint : fromSheet.plain);
+  if (atlas && cell) {
+    c.drawImageRectOptions(atlas.image, cell.src, cell.dst, FilterMode.Linear, MipmapMode.None, cellPaint);
   } else {
     drawParts(c, parts, pose, glowMode, spotPaint);
   }

@@ -185,6 +185,7 @@ export const GameScreen: React.FC = () => {
           radarTargetId={radarTargetId}
           nudgeTarget={nudgeTarget}
           turn={turn}
+          onTurnComplete={nav.completeTurn}
           fogged={kase.isFogged}
           onInspect={inspect}
           preload={preload}

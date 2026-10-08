@@ -151,7 +151,10 @@ function build(nodes: SpriteArtNode[], variant: PaintVariant, tint?: CamoTint): 
   let canvas: SkCanvas | null = null;
 
   const flush = () => {
-    if (recorder) parts.push({ k: 0, pic: recorder.finishRecordingAsPicture() });
+    if (recorder) {
+      parts.push({ k: 0, pic: recorder.finishRecordingAsPicture() });
+      recorder.dispose();
+    }
     recorder = null;
     canvas = null;
   };

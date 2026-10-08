@@ -164,6 +164,10 @@ hidden-object-game/
 
 Phụ thuộc đi một chiều: `core` không biết gì về giao diện; `content` chỉ là dữ liệu; `game` dùng `core` + `content`; `board` và `screens` hiển thị. Chi tiết từng phần: [app/README.md](app/README.md#-kiến-trúc).
 
+Trang đích được tải và dựng xong trước khi bắt đầu lật; vụ án mới chỉ mở sau khi hoạt ảnh hoàn tất. Board dừng vẽ
+khi bị lớp phủ che (ngoại trừ warm-up và lật trang), đồng thời giải phóng picture và tài nguyên đã rời cache sau khi
+đường vẽ bỏ tham chiếu tới chúng.
+
 ---
 
 ## 🌏 Thêm Một Quốc Gia (ví dụ Việt Nam)

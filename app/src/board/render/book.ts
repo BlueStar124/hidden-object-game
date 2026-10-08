@@ -1,6 +1,6 @@
 import { ClipOp, FilterMode, MipmapMode, type SkCanvas } from '@shopify/react-native-skia';
 import { bloom, clamp01, EASE_IN_OUT, loop, track } from '../anim';
-import { drawSprite, type SpriteCell } from './sprites';
+import { drawSprite } from './sprites';
 import {
   CAMO_CHAMELEON,
   CAMO_INVISIBLE,
@@ -98,16 +98,10 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
 
   // Sprites at rest come from the sheet while it is sharp enough at this zoom (never in the loupe)
   const atlas = S.atlas;
-  const fromSheet = (sp: SceneSprite, cell: AtlasCell | null, pose: Pose, hidden: boolean): SpriteCell | null => {
+  const fromSheet = (sp: SceneSprite, cell: AtlasCell | null, pose: Pose): AtlasCell | null => {
     const sheet = atlas;
     if (!sheet || inLoupe || F.s * S.pixelRatio > sheet.density * SHEET_STRETCH || !cell || (sp.blinks && pose.blink !== 1)) return null;
-    return {
-      sheet: sheet.image, cell, plain: P.sheet,
-      ...(hidden ? {
-        modulate: sp.camo === CAMO_CHAMELEON ? P.chameleonModulate : P.inkModulate,
-        baseOpacity: sp.camo === CAMO_CHAMELEON ? 0.95 : 0.8,
-      } : {}),
-    };
+    return cell;
   };
 
   // Still hidden (z 15) — fading out for a moment once found
@@ -118,14 +112,14 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (fade <= 0) continue;
     const parts = inLoupe ? sp.loupe : sp.page;
     if (!parts || !inView(view, pose.x, pose.y, 2.2 * sp.w)) continue;
-    const cell = fromSheet(sp, sp.pageCell, pose, true);
+    const cell = fromSheet(sp, sp.pageCell, pose);
     if (sp.camo === CAMO_CHAMELEON) {
-      drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, cell);
+      drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, atlas, cell, P.chameleonModulate, 0.95);
     } else if (sp.camo === CAMO_INVISIBLE) {
       const glow = track([0, 0.5, 1], [0.7, 1, 0.7], EASE_IN_OUT, loop(now, 2400));
-      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, cell);
+      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, atlas, cell);
     } else {
-      drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, cell);
+      drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, atlas, cell, P.inkModulate, 0.8);
     }
   }
 
@@ -167,7 +161,8 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       0.9 * clamp01(pose.age / FOUND_FADE_MS + 0.15),
       false,
       P.glowSpot,
-      fromSheet(sp, sp.foundCell, pose, false)
+      atlas,
+      fromSheet(sp, sp.foundCell, pose)
     );
   }
 

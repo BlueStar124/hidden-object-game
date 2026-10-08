@@ -71,7 +71,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 ### game/ — một lượt chơi (hooks)
 | File | Vai trò |
 |---|---|
-| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ chỉ chạy khi không có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Rời trang chủ thì ghi trang đang ở (`progress.recordVisit`). Kiểu trả về: `Game`. |
+| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Rời trang chủ thì ghi trang đang ở (`progress.recordVisit`). Kiểu trả về: `Game`. |
 | `useNavigation.ts` | Mở sẵn ở trang người chơi đang dở (`progress.lastPage()` + `placeOf`); người chơi mới bắt đầu ở trang 1 với prologue, người chơi cũ thì không. Nước, chỉ số trang, ngày/đêm, `visit` (tăng mỗi lần mở trang, kể cả chơi lại), `turn`, `next/prev/goTo/replay`, `showPrologue`, `showNightIntro`. Từ trang đêm bấm "sau" sẽ sang trang ngày kế; bấm "trước" về trang ngày của chính nó. Prologue mở lại khi `next()` sang chương mới hoặc `goTo` sang nước khác. Ở trang cuối, `next()` quay về trang 1 (không lật). |
 | `useCase.ts` | Vụ án của trang: `inspect`, `requestHint`, `togglePause`, `explore`, `isFogged`, `screenShake`, `unlockedNight`. Khi `visit` đổi thì reset vụ án **ngay trong lần render đó** (không lộ trạng thái cũ). Đây là nơi gọi `sound`, `notify`, `progress`. |
 | `useNotices.ts` | `notify(text, at, 'score' \| 'info')`. |
@@ -79,17 +79,19 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 ### board/ — cuốn sổ (Skia)
 | File | Vai trò |
 |---|---|
-| `Board.tsx` | Ghép các hook theo **đúng thứ tự**: `useSceneLibrary → useCamera → useCaseMarks → usePageTurn → usePagesAround → useWarmUp`; `useDerivedValue` gọi `renderFrame` mỗi khung; nút zoom. Prop `active=false` khi có hộp thoại phủ lên (cử chỉ native sẽ xuyên qua nếu không tắt). |
+| `Board.tsx` | Ghép các hook theo **đúng thứ tự**: `useSceneLibrary → useCamera → useCaseMarks → usePageTurn → usePagesAround → useWarmUp`; `useDerivedValue` gọi `renderFrame`, đưa picture thẳng vào Canvas và giải phóng đầu ra cũ. Dừng clock/cử chỉ khi bị che hoặc chờ đích (trừ warm-up/lật đang chạy); nút zoom. |
 | `constants.ts` | `PAGE_W/H`, `PX` (page units cho mỗi px CSS của bản web gốc rộng 960 px), `LOUPE_ZOOM`, `spriteSize`, `MIN/MAX_ZOOM`. |
 | `anim.ts` | Easing và đường cong hoạt ảnh (worklet): `track`, `loop`, `alternate`, `shyPeek`, `shyJump`, `foundBounce`, `bloom`, `blinkScale`… |
 | `useCamera.ts` | Shared value `s, tx, ty, lx, ly, dims`; `bounds`, `centre`, `placeLoupe`, `zoomTo`, `markZoomed`; `fittedScale`, `loupeDiameter`. Camera ôm khung giấy chứ không ôm cả ảnh. |
 | `useBoardGestures.ts` | Cử chỉ native: kéo kính lúp (tròng hoặc cán), thả là soi; chạm để soi; kéo trang, chụm để zoom, lăn chuột (web); kéo sát mép thì trang tự cuộn. Chạm ra mặt bàn không tính là soi. |
 | `useCaseMarks.ts` | Đẩy trạng thái vụ án sang UI thread: `found` (thời điểm + vị trí, để vật "nở" màu), `radar`, `fogStart`, `nudge`. |
 | `usePageTurn.ts` | Vòng đời một lần lật trang (mục 4). |
-| `usePagesAround.ts` | Dựng sẵn các trang trong `preload`, mỗi lần một trang, 120 ms sau khi ổn định, **không bao giờ trong lúc lật**. Trả về ảnh để giữ "ấm" trên GPU. |
+| `usePagesAround.ts` | Ưu tiên dựng đích chưa có cache trước khi hoạt ảnh bắt đầu; thử lại khi ảnh tới. Dựng trang lân cận mỗi lần một trang, 120 ms sau khi ổn định, **không trong hoạt ảnh lật**. Trả về ảnh để giữ "ấm" trên GPU. |
 | `useSceneLibrary.ts` | Cache cấp module: `images` (tranh đã giải mã, tối đa `MAX_IMAGES = 5`), `analyses` (theo id trang); cache `scenes` theo (loupe, compact, density). API: `prepare`, `keepArt`, `useKeepArt`… |
 | `useWarmUp.ts` | Mỗi loại trang (ngày, đêm) một lần, khi hộp thoại đang phủ: vẽ ẩn các khung "lần đầu" (tìm thấy, radar, mờ kính, lật trang) để GPU biên dịch shader trước. |
 | `scene/buildScene.ts` | Dựng `SceneData` một lần trên JS thread: sprite ở mọi biến thể ngụy trang, occluder, waterline, đêm (đèn, sao, trăng), sprite sheet. |
+| `scene/disposeScene.ts` | Giải phóng atlas, waterline, occluder, trăng và shader đèn của scene đã thôi dùng; tài nguyên dùng chung có chủ sở hữu riêng. |
+| `scene/snapshotPage.ts` | Chụp trang thành picture chứa một ảnh tạm, tối đa 2048 px mỗi chiều, trước khi lật/warm-up; dùng lại một surface GPU, chuyển snapshot sang pixel để vẽ qua context của Canvas. GPU không sẵn sàng thì giữ picture gốc. |
 | `scene/analyze.ts` | Đọc pixel tranh (thu nhỏ còn rộng 880): màu tắc kè hoa quanh từng vật `chameleon`; khung sổ = bounding box các pixel đục (alpha ≥ 128). |
 | `scene/paints.ts` | Mọi `SkPaint` và shader, tạo **một lần** (dịch từ CSS bản web gốc). Renderer chỉ đổi alpha. |
 | `scene/spriteParts.ts`, `spriteArt.ts` | Biến `SPRITE_ART` (sinh tự động) thành các phần vẽ được; cờ hoạt ảnh `ANIM_BLINK/WING/TAIL/WAVE/GLOW_SPOT`. |
@@ -118,7 +120,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `sound.native.ts` | iOS/Android: phát WAV đã sinh (`generated/sounds.ts`), mỗi âm 2 player; + rung. |
 | `synth/synth.ts`, `synth/voices.ts` | Bộ tổng hợp Web Audio: **nguồn gốc của mọi âm thanh**. `VOICE_OF: SpriteType → tên giọng`. |
 | `haptics.ts` | Rung theo từng sự kiện, kiểu fire-and-forget. |
-| `sceneImage.ts` / `.web.ts` | Giải mã tranh ngoài luồng vẽ (native: JS thread + `makeNonTextureImage`; web: `createImageBitmap`), `readPixels` để phân tích. |
+| `sceneImage.ts` / `.web.ts` | Giải mã tranh ngoài luồng vẽ (native: JS thread + `makeNonTextureImage`; web: `createImageBitmap` rồi copy pixel qua canvas 2D, tránh lazy texture không vẽ được trên surface CPU), `readPixels` để phân tích. |
 
 ### ui/
 `theme.ts` (`colors`, `fonts`, `gradients`, `shadow`), `ModalShell.tsx` (nền mờ + thẻ giấy; tự thu nhỏ tối thiểu 0.75×;
@@ -136,7 +138,8 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 `rules.test.ts` (điểm, phát hiện, chuyển động, gợi ý, hồ sơ vụ án), `progress.test.ts` (đọc/ghi/nâng cấp bản lưu),
 `content.test.ts` (soát **mọi trang**: tọa độ trong 0–1, `0 < radius < 0.2`, sprite có art và mục Sổ Tay, `roam` ≥ 2
 điểm, `occluder` ≥ 3 điểm, `0 < waterline < 1`, ≤ 1 bí mật, có ít nhất một vật chính, id vật không trùng trong trang,
-trang đêm dùng chung `art` với trang ngày), `screens/Gallery.tsx` (mọi hộp thoại với nội dung dài nhất, cho
+trang đêm dùng chung `art` với trang ngày), `session.test.tsx` (chờ đích, hủy completion cũ, dựng lại khi ảnh tới),
+`sound.test.ts` (âm thanh native lỗi không ngắt game), `screens/Gallery.tsx` (mọi hộp thoại với nội dung dài nhất, cho
 `test:screens`).
 
 ## 3. Luồng: mở game và trang chủ
@@ -165,11 +168,18 @@ useBoardGestures (UI thread) → onInspect(nx, ny, screenPos)        // GameScre
 
 ## 4. Luồng: lật trang
 
-`nav.next/prev/goTo` → `turnTo`: `setTurn({to, direction})` + âm lật trang → sau `PAGE_TURN_MS` thì `open()` (tăng
-`visit`, vụ án mới). Trong `Board`: `usePageTurn` ghi trang cũ thành `SkPicture` phẳng → khi trang đích đã dựng xong
-(thường là ngay, vì đã preload) thì ghi tiếp trang đích → `render/pageTurn.ts` vẽ tờ giấy quay quanh gáy sổ (giữa khung
-sổ) thành 7 dải phối cảnh, camera lướt về giữa → giữ khung cuối tới khi game mở trang mới. Trong lúc lật: tắt cử chỉ,
-tắt nút zoom, ẩn hộp thoại Victory/TimeUp.
+`nav.next/prev/goTo` → `turnTo`: giữ một yêu cầu `setTurn({to, direction})` + âm lật trang. Nếu đích chưa có cache,
+`usePagesAround` tải/dựng đích, giữ trang cũ đứng yên. `usePageTurn` chỉ đọc `preparedScene`, ghi nguồn và đích thành
+`SkPicture` chứa ảnh raster tạm qua `scene/snapshotPage`, rồi mới bắt đầu hoạt ảnh 900 ms.
+`render/pageTurn.ts` vẽ tờ giấy quay quanh gáy sổ thành 7 dải phối cảnh,
+camera lướt về giữa. Khi hết 900 ms, Board gọi `nav.completeTurn(request)` → `open()` tăng `visit`, mở vụ án mới;
+yêu cầu đã bị hủy/chơi lại thì bị bỏ qua. Giữ khung cuối tới khi game mở trang mới. Trong lúc chờ/lật: dừng đồng hồ
+vụ án, tắt cử chỉ và nút zoom, ẩn Victory/TimeUp. Timer thuộc Board và được hủy trong cleanup.
+
+Board đưa picture đã ghi thẳng vào picture-view API của Canvas, không qua lớp `<Picture>` ghi bao ngoài. Picture
+đầu ra được thay và giải phóng bằng buffer ổn định. `useSceneLibrary.releaseUnused` giải phóng tài nguyên bị loại
+khỏi cache sau khi mapper cập nhật, bảo vệ scene nguồn/đích và ảnh warm. `scene/disposeScene.ts` chỉ giải phóng
+atlas, waterline, occluder và tài nguyên đêm thuộc trang; sprite parts, tranh, paints dùng chung có chủ riêng.
 
 ## 5. Luồng: chuẩn bị trang và cache
 

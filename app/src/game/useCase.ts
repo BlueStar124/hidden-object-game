@@ -72,6 +72,14 @@ export function useCase(
   const update = useCallback((change: (s: CaseState) => CaseState) => setStore((s) => ({ ...s, state: change(s.state) })), []);
 
   const [screenShake, setScreenShake] = useState(false);
+  const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    setScreenShake(false);
+    return () => {
+      if (shakeTimer.current !== null) clearTimeout(shakeTimer.current);
+      shakeTimer.current = null;
+    };
+  }, [visit]);
   const lastLoupePos = useRef({ nx: 0.5, ny: 0.5 });
   const recentMisses = useRef({ visit, at: [] as number[] });
   const lastFogNotice = useRef(0);
@@ -182,7 +190,11 @@ export function useCase(
           sound.playWrong();
         }
         setScreenShake(true);
-        setTimeout(() => setScreenShake(false), 350);
+        if (shakeTimer.current !== null) clearTimeout(shakeTimer.current);
+        shakeTimer.current = setTimeout(() => {
+          shakeTimer.current = null;
+          setScreenShake(false);
+        }, 350);
         setStore((s) => ({ ...s, state: recordMiss(s.state), fogUntil: fogged ? now + FOG_DURATION_MS : s.fogUntil }));
       }
     },
