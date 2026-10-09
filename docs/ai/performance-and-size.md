@@ -129,7 +129,7 @@ Expo Go bằng `npm start`.
 | Tranh Singapore | 9 file WebP, 140–305 KB, tổng ≈ 2.0 MB | ~0.25 MB mỗi trang ngày; trang đêm 0 KB |
 | Mặt bàn | ≈ 0.55 MB (`paper-wash.jpg` + 2 WebP) | |
 | Âm thanh | 44 WAV ≈ 2.5 MB, **chỉ bản app** | web tổng hợp trực tiếp, không tải WAV |
-| `generated/spriteArt.ts` | ≈ 250 KB cho 57 sprite (~4.4 KB mỗi sprite) | vector |
+| `generated/spriteArt.ts` | ≈ 610 KB cho 112 sprite (~5.4 KB mỗi sprite), gzip ≈ 85 KB | vector; gộp các `<Limb>` liền nhau cùng màu, cùng độ dày thành một path để bớt hình |
 | JSON trang | ≈ 8 KB mỗi trang | |
 | Font | 8 file (4 Playfair, 4 Lora) | |
 

@@ -7,99 +7,69 @@
   "storyClue": "Leo qua hơn 300 bậc thang uốn lượn hình rồng Naga huyền thoại, thám tử đã chạm tới đỉnh núi Wat Phra That Doi Suthep. Bảo tháp Chedi dát vàng rực rỡ soi bóng trên biển mây bao la nhìn xuống toàn cảnh thung lũng Chiang Mai.",
   "objects": [
     {
-      "id": "mountain-pangolin",
-      "name": "Tê Tê Rừng Núi",
-      "clue": "Chú tê tê cuộn tròn vảy cứng thỉnh thoảng mới nhô đầu ra từ bụi hoa sứ góc sân bên trái.",
-      "x": 0.22,
-      "y": 0.72,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "pangolin",
-      "scale": 0.85,
-      "camo": "ink",
-      "shy": {
-        "period": 7.5,
-        "offset": 1.2,
-        "from": "below"
-      },
-      "foundText": "Tê tê Java quý hiếm sống ẩn dật trong những khu rừng nguyên sinh quanh sườn núi Doi Suthep."
-    },
-    {
-      "id": "hornbill-suthep",
-      "name": "Hồng Hoàng Rừng Già",
-      "clue": "Chú chim hồng hoàng sải cánh bay lượn trên nền trời mây trắng phía trên bảo tháp vàng.",
-      "x": 0.48,
-      "y": 0.38,
-      "radius": 0.045,
-      "score": 150,
-      "spriteType": "hornbill",
-      "scale": 0.8,
-      "camo": "chameleon",
-      "roam": {
-        "path": [
-          [
-            0.48,
-            0.38
-          ],
-          [
-            0.55,
-            0.32
-          ],
-          [
-            0.6,
-            0.4
-          ],
-          [
-            0.52,
-            0.42
-          ]
-        ],
-        "period": 16,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Tiếng đập cánh trầm hùng của hồng hoàng vang vọng giữa thung lũng sương mù non cao."
-    },
-    {
-      "id": "naga-bell-quill",
-      "name": "Bút Lông Ký Tên",
-      "clue": "Chiếc bút lông viết lời cầu nguyện đặt cạnh dãy chuông đồng treo dọc hành lang bên phải.",
-      "x": 0.72,
-      "y": 0.65,
-      "radius": 0.042,
-      "score": 120,
-      "spriteType": "quill",
-      "scale": 0.75,
-      "rotation": -20,
-      "camo": "ink",
-      "foundText": "Lữ khách hành hương thường rung từng quả chuông đồng và viết lời ước nguyện gửi vào thinh không."
-    },
-    {
-      "id": "mountain-kite",
-      "name": "Diều Gió Núi Cao",
-      "clue": "Chiếc diều giấy truyền thống Thái Lan vướng trên đỉnh mái điện thờ bên trái.",
-      "x": 0.38,
-      "y": 0.48,
-      "radius": 0.042,
-      "score": 120,
-      "spriteType": "kite",
-      "scale": 0.72,
-      "rotation": 15,
-      "camo": "chameleon",
-      "foundText": "Chiếc diều đón gió núi vi vu cất lên những giai điệu êm ái giữa chốn bồng lai tiên cảnh."
-    },
-    {
-      "id": "durian-mountain",
-      "name": "Sầu Riêng Dâng Lễ",
-      "clue": "Trái sầu riêng vàng ươm đặt trên bệ đá dưới chân bảo tháp Chedi dát vàng bên phải.",
-      "x": 0.66,
-      "y": 0.74,
+      "id": "pavilion-bell",
+      "name": "Chuông Đồng Hành Lang",
+      "clue": "Một chiếc chuông đồng lạ treo lẫn trong hàng chuông dưới mái hiên bên trái.",
+      "x": 0.27,
+      "y": 0.62,
       "radius": 0.044,
       "score": 120,
-      "spriteType": "durian",
-      "scale": 0.78,
+      "spriteType": "temple-bell",
+      "scale": 0.75,
+      "camo": "chameleon",
+      "foundText": "Khách hành hương gõ chuông dọc hành lang chùa để cầu may mắn."
+    },
+    {
+      "id": "suthep-umbrella",
+      "name": "Ô Giấy Trên Sân Chùa",
+      "clue": "Chiếc ô giấy Bo Sang ai đó để quên trên sân lát gạch trước ngôi điện bên trái.",
+      "x": 0.44,
+      "y": 0.69,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "paper-umbrella",
+      "scale": 0.75,
+      "camo": "chameleon",
+      "foundText": "Trên đỉnh núi nắng gắt, chiếc ô giấy là người bạn đồng hành của khách hành hương."
+    },
+    {
+      "id": "roof-peacock",
+      "name": "Công Lục Trên Mái Điện",
+      "clue": "Chú công lục đậu trên mái ngôi điện vàng bên phải ngọn tháp.",
+      "x": 0.73,
+      "y": 0.55,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "peacock",
+      "scale": 0.85,
+      "camo": "chameleon",
+      "foundText": "Tính cả bộ lông đuôi, công lục trống có thể dài tới hơn 2 mét."
+    },
+    {
+      "id": "white-elephant",
+      "name": "Voi Trắng Trong Truyền Thuyết",
+      "clue": "Chú voi trắng nhỏ đang leo trên sườn núi mờ sương phía sau ngôi điện bên trái.",
+      "x": 0.36,
+      "y": 0.5,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "elephant",
+      "scale": 0.72,
+      "camo": "chameleon",
+      "foundText": "Tương truyền, một con voi trắng chở xá lợi lên núi và dừng lại đúng nơi dựng chùa Doi Suthep."
+    },
+    {
+      "id": "suthep-kratip",
+      "name": "Giỏ Xôi Dâng Lễ",
+      "clue": "Giỏ xôi tre nằm cạnh khóm hoa sứ trắng ở góc dưới bên phải.",
+      "x": 0.775,
+      "y": 0.7,
+      "radius": 0.044,
+      "score": 100,
+      "spriteType": "kratip",
+      "scale": 0.7,
       "camo": "ink",
-      "foundText": "Hoa quả tươi ngon từ các nông trại vùng cao được dâng lên ngôi chùa thiêng liêng nhất miền Bắc."
+      "foundText": "Người miền Bắc Thái Lan mang xôi lên chùa dâng lễ vào những ngày rằm."
     },
     {
       "id": "artist-seal",
@@ -113,61 +83,60 @@
       "foundText": "Dấu ấn của kiến trúc sư ghi lại nét tôn nghiêm trên đỉnh mây Doi Suthep."
     },
     {
-      "id": "secret-compass",
-      "name": "La Bàn Đỉnh Núi",
-      "clue": "[BÍ MẬT] Chiếc la bàn vàng vẽ bằng mực tàng hình ẩn hiện trên khoảng giấy trống bên trang trái.",
-      "x": 0.16,
-      "y": 0.38,
+      "id": "secret-naga-head",
+      "name": "Naga Canh Cầu Thang",
+      "clue": "[BÍ MẬT] Đầu rắn thần Naga vẽ bằng mực tàng hình ẩn trên tấm vé tàu điện núi.",
+      "x": 0.17,
+      "y": 0.4,
       "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "compass",
+      "spriteType": "naga-head",
       "scale": 0.85,
-      "rotation": 25,
       "camo": "invisible",
-      "foundText": "Bí mật đỉnh cao: Kim la bàn chỉ xuống dòng sông Ping nơi lễ hội đèn Loy Krathong sắp bắt đầu!"
+      "foundText": "Bí mật đã mở ra: hai con Naga dài nhất canh 306 bậc thang dẫn lên đỉnh Doi Suthep!"
     },
     {
-      "id": "bonus-butterfly",
-      "name": "Bướm Rừng Doi Suthep",
-      "clue": "Cánh bướm đuôi kiếm hoa rực rỡ bay lượn sát cành hoa sứ bên trái.",
-      "x": 0.28,
-      "y": 0.62,
+      "id": "bonus-bee",
+      "name": "Ong Mật Hoa Sứ",
+      "clue": "Chú ong mật đang hút mật trên bông hoa sứ lớn ở góc dưới bên trái.",
+      "x": 0.24,
+      "y": 0.7,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "butterfly",
-      "scale": 0.65,
+      "spriteType": "bee",
+      "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Bướm rừng nhiệt đới tô điểm thêm sắc hương cho khu vườn thiền trên núi cao."
+      "foundText": "Hoa sứ là loài hoa chùa quen thuộc ở Thái Lan, thơm nồng nhất khi đêm xuống."
     },
     {
-      "id": "bonus-coin-pouch",
-      "name": "Túi Vải Phước Lành",
-      "clue": "Túi vải may mắn nhỏ xíu gài bên lan can chạm trổ hoa sen giữa sân.",
-      "x": 0.54,
-      "y": 0.72,
+      "id": "bonus-gibbon",
+      "name": "Vượn Đu Mái Chùa",
+      "clue": "Chú vượn tay trắng đu mình trên chóp mái ngôi điện bên phải.",
+      "x": 0.85,
+      "y": 0.46,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "coin-pouch",
-      "scale": 0.65,
+      "spriteType": "gibbon",
+      "scale": 0.62,
       "camo": "chameleon",
-      "foundText": "Túi phước lành mang lại bình an, sức khỏe và may mắn cho gia đình người hành hương."
+      "foundText": "Vượn tay trắng đu cành nhanh tới mức trông như đang bay giữa rừng."
     },
     {
-      "id": "bonus-stick-insect",
-      "name": "Bọ Que Rừng Già",
-      "clue": "Chú bọ que ngụy trang khéo léo như một cành thông khô trên mái hiên dãy chuông bên phải.",
-      "x": 0.78,
-      "y": 0.52,
+      "id": "bonus-flying-lizard",
+      "name": "Thằn Lằn Bay Cột Vàng",
+      "clue": "Chú thằn lằn bay bám trên cột vàng của chiếc lọng lớn trước tháp.",
+      "x": 0.553,
+      "y": 0.6,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "stick-insect",
-      "scale": 0.65,
+      "spriteType": "flying-lizard",
+      "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Khả năng ngụy trang tuyệt hảo giúp bọ que hòa lẫn hoàn toàn vào thiên nhiên non cao."
+      "foundText": "Thằn lằn bay chỉ dài cỡ một gang tay nhưng lượn được xa tới vài chục mét."
     }
   ]
 }

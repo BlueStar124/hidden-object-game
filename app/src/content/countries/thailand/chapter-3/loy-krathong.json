@@ -7,99 +7,90 @@
   "storyClue": "Đêm hội Loy Krathong và Yee Peng huyền ảo đã thắp sáng toàn bộ bầu trời và mặt nước Chiang Mai. Hàng ngàn chiếc đèn trời Khom Loi bay lượn như dải ngân hà, và vô số bè hoa Krathong kết bằng lá chuối thả trôi trên dòng sông Ping. Hãy tìm ra mảnh ghép cuối cùng của cuốn sổ ký họa!",
   "objects": [
     {
-      "id": "river-otter",
-      "name": "Rái Cá Sông Ping",
-      "clue": "Chú rái cá tinh nghịch thỉnh thoảng mới nhô đầu lên khỏi mặt nước cạnh bè hoa đăng bến gỗ bên trái.",
-      "x": 0.22,
-      "y": 0.72,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "otter",
-      "scale": 0.85,
-      "waterline": 0.65,
-      "camo": "ink",
-      "shy": {
-        "period": 7,
-        "offset": 1.2,
-        "from": "below"
-      },
-      "foundText": "Rái cá vuốt râu bơi lội giữa những bè hoa đăng rực rỡ trôi xuôi dòng nước."
-    },
-    {
-      "id": "heron-river",
-      "name": "Diệc Xám Ven Sông",
-      "clue": "Chú diệc xám đứng kiêu hãnh bên hiên nhà sàn gỗ Lanna bên bờ sông bên phải.",
-      "x": 0.78,
-      "y": 0.62,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "heron",
-      "scale": 0.85,
-      "camo": "chameleon",
-      "foundText": "Diệc xám tĩnh lặng ngắm nhìn hàng ngàn ánh đèn hoa đăng trôi bồng bềnh trong đêm hội."
-    },
-    {
-      "id": "paper-boat-krathong",
-      "name": "Thuyền Giấy Hoa Đăng",
-      "clue": "Chiếc thuyền giấy nhỏ thả nến trôi lững lờ trên dòng sông Ping giữa các bè hoa đăng.",
-      "x": 0.48,
-      "y": 0.71,
+      "id": "river-krathong",
+      "name": "Krathong Lạc Giữa Dòng",
+      "clue": "Một chiếc krathong nhỏ lẫn giữa các hoa đăng trôi trên sông, phía trước cây cầu gỗ.",
+      "x": 0.455,
+      "y": 0.64,
       "radius": 0.044,
-      "score": 120,
-      "spriteType": "paper-boat",
-      "scale": 0.75,
-      "waterline": 0.65,
-      "camo": "ink",
-      "foundText": "Bên trong thuyền giấy là bức thư cảm ơn của kiến trúc sư gửi tới vị thám tử tài ba!"
+      "score": 150,
+      "spriteType": "krathong",
+      "scale": 0.72,
+      "camo": "chameleon",
+      "waterline": 0.8,
+      "foundText": "Krathong làm từ thân và lá chuối, trôi một thời gian sẽ tự phân hủy."
     },
     {
-      "id": "lantern-kite",
-      "name": "Diều Giấy Đèn Trời",
-      "clue": "Chiếc diều giấy uốn lượn bay bổng giữa bầu trời hoàng hôn gần các ngọn tháp chùa xa xa.",
-      "x": 0.56,
+      "id": "yi-peng-lantern",
+      "name": "Đèn Trời Yi Peng",
+      "clue": "Chiếc đèn trời đang bay chầm chậm trên nền trời phía trên các mái nhà bên phải.",
+      "x": 0.6,
       "y": 0.38,
       "radius": 0.044,
       "score": 120,
-      "spriteType": "kite",
+      "spriteType": "sky-lantern",
       "scale": 0.75,
       "camo": "chameleon",
       "roam": {
         "path": [
           [
-            0.56,
+            0.6,
             0.38
           ],
           [
-            0.62,
-            0.34
+            0.65,
+            0.32
           ],
           [
-            0.68,
-            0.41
-          ],
-          [
-            0.6,
-            0.44
+            0.7,
+            0.36
           ]
         ],
-        "period": 16,
+        "period": 18,
         "loop": true,
         "bob": true
       },
-      "foundText": "Chiếc diều mang theo những điều ước tốt lành bay vút lên bầu trời sao Chiang Mai."
+      "foundText": "Ở Chiang Mai, Loy Krathong trùng với lễ Yi Peng nên cả trời lẫn sông cùng lung linh."
     },
     {
-      "id": "porcelain-vase",
-      "name": "Bình Gốm Hoa Sen Lễ",
-      "clue": "Chiếc bình gốm cắm sen hồng thơm ngát đặt bên sàn bến gỗ nhà sàn bên trái.",
-      "x": 0.32,
-      "y": 0.62,
-      "radius": 0.042,
+      "id": "lantern-duck",
+      "name": "Vịt Bơi Giữa Hoa Đăng",
+      "clue": "Chú vịt cổ xanh bơi giữa các krathong ở góc dưới bên phải.",
+      "x": 0.62,
+      "y": 0.71,
+      "radius": 0.044,
       "score": 120,
-      "spriteType": "vase",
-      "scale": 0.75,
+      "spriteType": "duck",
+      "scale": 0.72,
       "camo": "ink",
-      "foundText": "Những cánh sen hồng dâng lên lời tri ân mẹ nước Phra Mae Khongkha trong đêm hội thiêng liêng."
+      "waterline": 0.72,
+      "foundText": "Chú vịt tò mò bơi theo ánh nến của những chiếc hoa đăng."
+    },
+    {
+      "id": "festival-drum",
+      "name": "Trống Dài Bến Gỗ",
+      "clue": "Chiếc trống dài Lanna đặt trên bến gỗ trước ngôi đình bên trái.",
+      "x": 0.225,
+      "y": 0.605,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "long-drum",
+      "scale": 0.75,
+      "camo": "chameleon",
+      "foundText": "Đêm hội, tiếng trống dài rộn ràng theo chân đoàn người ra bến thả hoa đăng."
+    },
+    {
+      "id": "deck-clay-lamp",
+      "name": "Đèn Dầu Bến Sông",
+      "clue": "Ngọn đèn dầu đất nung đặt trên mép sàn gỗ bên phải, nơi hai người đang thả hoa đăng.",
+      "x": 0.67,
+      "y": 0.615,
+      "radius": 0.044,
+      "score": 100,
+      "spriteType": "clay-lamp",
+      "scale": 0.7,
+      "camo": "ink",
+      "foundText": "Người Lanna thắp đèn dầu đất nung để tỏ lòng thành kính với Đức Phật."
     },
     {
       "id": "artist-seal",
@@ -113,63 +104,85 @@
       "foundText": "Dấu triện son hoàn tất toàn bộ cuốn sổ ký họa Thái Lan — Xứ sở Chùa Vàng!"
     },
     {
-      "id": "secret-pocket-watch",
-      "name": "Đồng Hồ Giao Thừa Bí Mật",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ quả quýt vẽ bằng mực tàng hình ẩn dưới tấm vé lễ hội bên trang trái.",
-      "x": 0.18,
+      "id": "secret-royal-barge",
+      "name": "Thuyền Ngự Tàng Hình",
+      "clue": "[BÍ MẬT] Con thuyền ngự vẽ bằng mực tàng hình ẩn dưới tấm vé lễ hội ở góc trái.",
+      "x": 0.17,
       "y": 0.42,
       "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "pocket-watch",
+      "spriteType": "royal-barge",
       "scale": 0.85,
-      "rotation": -10,
       "camo": "invisible",
-      "foundText": "Bí mật cuối cùng đã mở: Khoảnh khắc đồng hồ điểm đúng nửa đêm khép lại một năm phiêu lưu tuyệt vời!"
+      "foundText": "Bí mật đã mở ra: con thuyền chở bức ký họa cuối cùng của kiến trúc sư xuôi dòng về Bangkok!"
     },
     {
-      "id": "bonus-koi",
-      "name": "Cá Chép Ánh Nến",
-      "clue": "Chú cá chép quẫy đuôi đớp bóng nến lung linh sát mạn bè hoa đăng giữa dòng sông.",
-      "x": 0.62,
+      "id": "bonus-swallow",
+      "name": "Chim Nhạn Qua Cầu",
+      "clue": "Cánh chim nhạn lướt qua cây cầu gỗ treo đèn lồng giữa trang.",
+      "x": 0.36,
+      "y": 0.48,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "swallow",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "roam": {
+        "path": [
+          [
+            0.36,
+            0.48
+          ],
+          [
+            0.42,
+            0.5
+          ],
+          [
+            0.46,
+            0.465
+          ]
+        ],
+        "period": 15,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Chiều tà, chim nhạn bay sát mặt sông bắt côn trùng bị ánh nến thu hút."
+    },
+    {
+      "id": "bonus-giant-catfish",
+      "name": "Cá Tra Dầu Đớp Mồi",
+      "clue": "Lưng cá tra dầu nhô lên khỏi mặt nước ở góc dưới bên trái.",
+      "x": 0.12,
       "y": 0.73,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "koi",
-      "scale": 0.65,
-      "waterline": 0.68,
+      "spriteType": "giant-catfish",
+      "scale": 0.62,
       "camo": "chameleon",
-      "foundText": "Ánh nến hoa đăng phản chiếu trên vảy cá lấp lánh như vảy rồng dát vàng."
+      "waterline": 0.6,
+      "shy": {
+        "period": 8,
+        "offset": 3,
+        "from": "below"
+      },
+      "foundText": "Cá tra dầu lớn rất nhanh, nhưng ngoài tự nhiên nay đã cực kỳ hiếm."
     },
     {
-      "id": "bonus-ladybug",
-      "name": "Bọ Rùa Bè Chuối",
-      "clue": "Bọ rùa đỏ đậu khẽ trên cánh đài sen của chiếc bè hoa đăng lớn nhất giữa sông.",
-      "x": 0.39,
-      "y": 0.74,
+      "id": "bonus-paper-umbrella",
+      "name": "Ô Giấy Ban Công",
+      "clue": "Chiếc ô giấy Bo Sang mở trên ban công tầng hai của ngôi nhà gỗ bên phải.",
+      "x": 0.86,
+      "y": 0.48,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "ladybug",
-      "scale": 0.65,
+      "spriteType": "paper-umbrella",
+      "scale": 0.58,
       "camo": "chameleon",
-      "foundText": "Chú bọ rùa vô tình trở thành vị khách tí hon đồng hành cùng bè hoa trôi sông."
-    },
-    {
-      "id": "bonus-paper-crane",
-      "name": "Hạc Giấy Ước Nguyện Đêm",
-      "clue": "Con hạc giấy nhỏ màu vàng nhạt gài bên lan can lồng đèn Lanna hiên nhà bên phải.",
-      "x": 0.68,
-      "y": 0.55,
-      "radius": 0.038,
-      "score": 100,
-      "isBonus": true,
-      "spriteType": "paper-crane",
-      "scale": 0.65,
-      "rotation": 18,
-      "camo": "chameleon",
-      "foundText": "Hạc giấy mang theo niềm hy vọng về những hành trình phiêu lưu mới trong tương lai."
+      "foundText": "Làng làm ô Bo Sang chỉ cách trung tâm Chiang Mai chừng mười cây số."
     }
   ]
 }

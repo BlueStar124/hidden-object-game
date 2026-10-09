@@ -122,6 +122,22 @@ Chi tiết cách chạy, kiến trúc và phát hành: [app/README.md](app/READM
 
 ---
 
+## 🐘 Bộ Hình Riêng Cho Thái Lan
+
+Cuốn sổ Thái Lan không còn dùng lại con vật, đồ vật nào của Singapore: **50 hình vẽ mới**, cả tên gọi lẫn hình dáng, đặt
+cho hợp với cảnh từng trang (cá thòi lòi ở chân bờ kè, voi đứng lẫn giữa hàng tượng voi đá Wat Chedi Luang, krathong trôi
+giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện tối đa 3 lần trong một nước, và đều có mục riêng trong Sổ Tay.
+
+- **Sinh vật:** cá xiêm, cá sấu Xiêm, cá thòi lòi, cá tra dầu, tôm càng xanh, cá đuối nước ngọt, cá vàng, rắn bay thiên
+  đường, thằn lằn bay, bọ cạp, voi, vượn tay trắng, gấu chó, nhím, mèo Xiêm, vịt cổ xanh, gà chọi, công lục, sáo nâu,
+  chim nhạn, bọ hung sừng, ve sầu, ong mật, bọ đèn mõm dài, vẹt ngực đỏ.
+- **Đồ vật:** chuông chùa, đầu rắn thần Naga, mặt nạ Khon, miếu thần đất, búp sen, thuyền đuôi dài, thuyền ngự
+  Suphannahong, krathong, đèn trời khom loi, đèn dầu đất nung, vòng hoa nhài, ô giấy Bo Sang, trống dài Lanna, tuk-tuk,
+  găng Muay Thái, xôi xoài, dừa xiêm, trà sữa Thái, măng cụt, mì thuyền, cối giã som tam, bàn tính, kinh lá buông, giỏ
+  xôi tre, bản đồ cổ.
+
+---
+
 ## 🛠️ Cài Đặt & Chạy Game
 
 Game chạy bằng bản app trong [`app/`](app/README.md) (iOS · Android · web):
@@ -156,7 +172,7 @@ hidden-object-game/
 │       ├── platform/           theo thiết bị: âm thanh (native/web), rung, tải tranh
 │       ├── ui/                 giao diện dùng chung: màu, chữ, nút, hộp thoại, icon
 │       └── generated/          hình vẽ & âm thanh sinh tự động (không sửa tay)
-├── tools/                      công cụ: sprites/ (bản vẽ gốc của 57 hình), generate-assets, generate-icons,
+├── tools/                      công cụ: sprites/ (bản vẽ gốc của 112 hình), generate-assets, generate-icons,
 │                               check-architecture (kiểm tra các tầng của app/src)
 ├── archive/web-vite.zip        bản web Vite cũ (không dùng)
 └── vercel.json                 deploy bản web

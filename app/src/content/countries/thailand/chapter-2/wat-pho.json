@@ -7,98 +7,69 @@
   "storyClue": "Kiến trúc sư đã tới Wat Pho — ngôi chùa cổ nhất Bangkok nơi lưu giữ tượng Phật nằm đồ sộ và những bảo tháp chedi đính gốm hoa văn lộng lẫy. Hãy tìm những dấu tích cổ kính giấu quanh các khoảng sân và dãy hành lang!",
   "objects": [
     {
-      "id": "reclining-cat",
+      "id": "temple-siamese-cat",
       "name": "Mèo Xiêm Sân Chùa",
-      "clue": "Chú mèo Xiêm lông màu kem thỉnh thoảng mới nhô đầu lên từ góc hiên chùa bên trái.",
-      "x": 0.23,
-      "y": 0.74,
-      "radius": 0.046,
+      "clue": "Chú mèo Xiêm nằm dài trên nền sân lát đá trước dãy hành lang bên trái.",
+      "x": 0.24,
+      "y": 0.72,
+      "radius": 0.044,
       "score": 150,
-      "spriteType": "cat",
+      "spriteType": "siamese-cat",
       "scale": 0.85,
       "camo": "ink",
-      "shy": {
-        "period": 7.5,
-        "offset": 1.5,
-        "from": "below"
-      },
-      "foundText": "Mèo Xiêm quý phái thảnh thơi tắm nắng dưới bóng mát của bảo tháp cổ kính."
+      "foundText": "Mèo chùa ở Thái Lan được các nhà sư cho ăn và sống thong dong khắp sân."
     },
     {
-      "id": "temple-dove",
-      "name": "Bồ Câu Sân Phật",
-      "clue": "Chú chim bồ câu trắng đậu trên bờ mái ngói nhiều tầng cong vút bên trái.",
-      "x": 0.35,
-      "y": 0.46,
-      "radius": 0.044,
-      "score": 150,
-      "spriteType": "dove",
-      "scale": 0.75,
-      "camo": "ink",
-      "roam": {
-        "path": [
-          [
-            0.35,
-            0.46
-          ],
-          [
-            0.4,
-            0.42
-          ],
-          [
-            0.45,
-            0.48
-          ],
-          [
-            0.38,
-            0.51
-          ]
-        ],
-        "period": 16,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Tiếng bồ câu gù nhẹ nhàng hòa vào tiếng chuông gió reo vang khắp Wat Pho."
-    },
-    {
-      "id": "fortune-cat",
-      "name": "Mèo May Mắn Sứ Vàng",
-      "clue": "Tượng mèo may mắn nhỏ đặt trên kệ đá cạnh lối vào ngôi điện thờ bên phải.",
-      "x": 0.72,
-      "y": 0.69,
+      "id": "eave-bell",
+      "name": "Chuông Đồng Mái Hiên",
+      "clue": "Chiếc chuông đồng nhỏ treo dưới góc mái của ngôi điện bên phải.",
+      "x": 0.885,
+      "y": 0.6,
       "radius": 0.044,
       "score": 120,
-      "spriteType": "fortune-cat",
-      "scale": 0.75,
+      "spriteType": "temple-bell",
+      "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Bức tượng nhỏ mang lại điềm lành và bình an cho những ai ghé thăm đất Phật."
+      "foundText": "Mỗi khi gió thổi, hàng trăm chiếc chuông nhỏ dưới mái chùa ngân lên leng keng."
     },
     {
-      "id": "monk-quill",
-      "name": "Bút Lông Kinh Cổ",
-      "clue": "Chiếc bút lông chép kinh của thiền sư đặt trên phiến đá cẩm thạch giữa sân chùa.",
-      "x": 0.53,
-      "y": 0.68,
-      "radius": 0.042,
-      "score": 120,
-      "spriteType": "quill",
-      "scale": 0.75,
-      "rotation": -25,
+      "id": "guardian-lotus",
+      "name": "Búp Sen Dưới Chân Tượng",
+      "clue": "Búp sen hồng đặt dưới chân pho tượng đá canh cửa ở bên phải.",
+      "x": 0.8,
+      "y": 0.71,
+      "radius": 0.044,
+      "score": 100,
+      "spriteType": "lotus-bud",
+      "scale": 0.72,
       "camo": "ink",
-      "foundText": "Wat Pho được xem là trường đại học đầu tiên của Thái Lan, nơi lưu truyền y học cổ truyền và thi ca."
+      "foundText": "Tượng đá canh cửa Wat Pho từng là đá dằn khoang những thuyền buôn từ Trung Hoa sang."
     },
     {
-      "id": "coin-pouch",
-      "name": "Túi Xu Công Đức",
-      "clue": "Chiếc túi gấm thêu đựng đồng xu may mắn đặt cạnh chân cột đá hiên chùa bên trái.",
-      "x": 0.28,
-      "y": 0.63,
-      "radius": 0.042,
+      "id": "ramakien-mask",
+      "name": "Mặt Nạ Hanuman",
+      "clue": "Chiếc mặt nạ Hanuman ẩn trên đầu hồi chạm vàng của ngôi điện bên trái.",
+      "x": 0.26,
+      "y": 0.57,
+      "radius": 0.044,
       "score": 120,
-      "spriteType": "coin-pouch",
+      "spriteType": "khon-mask",
+      "scale": 0.72,
+      "camo": "chameleon",
+      "foundText": "Chân điện chính Wat Pho có hàng trăm phù điêu đá tạc cảnh sử thi Ramakien."
+    },
+    {
+      "id": "chedi-parakeet",
+      "name": "Vẹt Ngực Đỏ Trên Tháp",
+      "clue": "Chú vẹt ngực đỏ đậu trên tầng tháp khảm sứ cao nhất bên trang trái.",
+      "x": 0.415,
+      "y": 0.47,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "parakeet",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Du khách thường thả 108 đồng xu vào 108 chiếc bát đồng để cầu chúc bình an và may mắn."
+      "foundText": "Bốn ngọn tháp lớn của Wat Pho khảm gốm bốn màu: xanh lá, trắng, vàng và xanh dương."
     },
     {
       "id": "artist-seal",
@@ -112,62 +83,61 @@
       "foundText": "Dấu ấn của kiến trúc sư ghi lại sự tĩnh lặng uy nghiêm của chùa Wat Pho."
     },
     {
-      "id": "secret-spyglass",
-      "name": "Ống Nhòm Bí Mật",
-      "clue": "[BÍ MẬT] Ống nhòm đồng vẽ bằng mực tàng hình ẩn hiện trên khoảng giấy trống trang bên trái.",
+      "id": "secret-palm-leaf-book",
+      "name": "Kinh Lá Buông Wat Pho",
+      "clue": "[BÍ MẬT] Bó kinh lá buông viết bằng mực tàng hình ẩn trên tấm vé vào chùa.",
       "x": 0.17,
       "y": 0.38,
       "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "spyglass",
+      "spriteType": "palm-leaf-book",
       "scale": 0.85,
-      "rotation": 25,
+      "rotation": 8,
       "camo": "invisible",
-      "foundText": "Bí mật hé lộ: Ống nhòm giúp thám tử nhìn thấy hình vẽ mật mã ẩn trên ngọn bảo tháp cao nhất!"
+      "foundText": "Bí mật đã mở ra: Wat Pho được xem là \"trường đại học\" đầu tiên của Thái Lan, tri thức khắc lên đá!"
     },
     {
-      "id": "bonus-snail",
-      "name": "Ốc Sên Thềm Hoa",
-      "clue": "Chú ốc sên bò chậm rãi ven bờ gạch lát sân chùa bên trái.",
-      "x": 0.32,
-      "y": 0.79,
+      "id": "bonus-flying-lizard",
+      "name": "Thằn Lằn Bay Cột Trắng",
+      "clue": "Chú thằn lằn bay bám trên cột trắng của dãy hành lang giữa trang.",
+      "x": 0.36,
+      "y": 0.66,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "snail",
-      "scale": 0.65,
+      "spriteType": "flying-lizard",
+      "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Chú ốc sên thanh thản tận hưởng buổi sáng mát lành bên vườn thảo dược Wat Pho."
+      "foundText": "Thằn lằn bay giương chiếc \"cờ\" vàng dưới cằm để chào hỏi bạn bè."
     },
     {
-      "id": "bonus-ladybug",
-      "name": "Bọ Rùa Cây Bồ Đề",
-      "clue": "Bọ rùa đỏ bé xíu bám trên thân bảo tháp khảm gốm hoa văn bên phải.",
-      "x": 0.65,
-      "y": 0.52,
+      "id": "bonus-myna",
+      "name": "Sáo Nâu Lùm Cây",
+      "clue": "Chú sáo nâu đậu trong lùm cây xanh phía sau pho tượng đá giữa trang bên phải.",
+      "x": 0.64,
+      "y": 0.585,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "ladybug",
-      "scale": 0.65,
+      "spriteType": "myna",
+      "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Đốm đỏ rực rỡ của bọ rùa nổi bật giữa màu xanh ngọc của ngói gốm bảo tháp."
+      "foundText": "Sáo nâu thường đi thành cặp và gắn bó với nhau suốt đời."
     },
     {
-      "id": "bonus-letter",
-      "name": "Lá Thư Ghi Chép",
-      "clue": "Lá thư phong bì cổ in mờ dưới phần ghi chép trang ký họa bên trái.",
-      "x": 0.16,
-      "y": 0.52,
+      "id": "bonus-cicada",
+      "name": "Ve Sầu Cây Kiểng",
+      "clue": "Chú ve sầu bám vào cây kiểng trong chậu ở giữa sân.",
+      "x": 0.565,
+      "y": 0.65,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "letter",
-      "scale": 0.65,
-      "rotation": -8,
+      "spriteType": "cicada",
+      "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Bức thư chứa đựng ghi chép về kỹ thuật ghép sành sứ tráng men tinh xảo của nghệ nhân xưa."
+      "foundText": "Tiếng ve có thể to như tiếng máy cắt cỏ, vang cả sân chùa!"
     }
   ]
 }
