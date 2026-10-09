@@ -76,84 +76,80 @@
   ],
   "objects": [
     {
-      "id": "night-owl-suthep",
-      "name": "Cú Mèo Rừng Sương",
-      "clue": "Chú cú mèo núi đậu tĩnh lặng trên chóp mái cong điện thờ bên phải ngắm nhìn biển mây.",
-      "x": 0.64,
-      "y": 0.46,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "owl",
-      "scale": 0.82,
-      "camo": "ink",
-      "foundText": "Đôi mắt tròn xoe của cú mèo phản chiếu ánh sáng dát vàng lung linh của ngôi bảo tháp thiêng."
-    },
-    {
-      "id": "night-colugo",
-      "name": "Chồn Bay Lemur Rừng Núi",
-      "clue": "Chú chồn bay thỉnh thoảng mới nhô đầu ra từ mái điện thờ bên trái bảo tháp.",
-      "x": 0.32,
-      "y": 0.48,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "colugo",
-      "scale": 0.82,
-      "camo": "ink",
-      "shy": {
-        "period": 7,
-        "offset": 1.5,
-        "from": "above"
-      },
-      "foundText": "Chồn bay Lanna lượn êm như cánh diều giữa các vòm cây sương mù đỉnh Doi Suthep."
-    },
-    {
-      "id": "night-firefly-swarm",
-      "name": "Đom Đóm Núi Cao",
-      "clue": "Đốm sáng đom đóm bay lượn vòng quanh bụi hoa sứ đêm bên trái sân.",
-      "x": 0.26,
-      "y": 0.65,
+      "id": "night-sun-bear",
+      "name": "Gấu Chó Tìm Mật",
+      "clue": "Chú gấu chó lần mò bên chân ngôi điện bên trái, ngay sau lưng mấy người đang ngồi nghỉ.",
+      "x": 0.4,
+      "y": 0.6,
       "radius": 0.044,
       "score": 150,
-      "spriteType": "firefly",
-      "scale": 0.72,
+      "spriteType": "sun-bear",
+      "scale": 0.85,
+      "camo": "chameleon",
+      "foundText": "Gấu chó có chiếc lưỡi rất dài để liếm mật ong và mối trong thân cây."
+    },
+    {
+      "id": "night-porcupine",
+      "name": "Nhím Đi Đêm",
+      "clue": "Chú nhím nhỏ lạch bạch giữa những bông hoa sứ ở góc dưới bên phải.",
+      "x": 0.8,
+      "y": 0.7,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "porcupine",
+      "scale": 0.75,
+      "camo": "chameleon",
+      "shy": {
+        "period": 7,
+        "offset": 2.5,
+        "from": "right"
+      },
+      "foundText": "Khi gặp nguy, nhím xù lông và rung lông kêu lách cách để dọa kẻ thù."
+    },
+    {
+      "id": "night-sky-lantern",
+      "name": "Đèn Trời Bay Lên",
+      "clue": "Một chiếc đèn trời khom loi đang chầm chậm bay lên trên dãy núi bên trái.",
+      "x": 0.3,
+      "y": 0.5,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "sky-lantern",
+      "scale": 0.75,
       "camo": "ink",
       "roam": {
         "path": [
           [
-            0.26,
-            0.65
+            0.3,
+            0.5
           ],
           [
-            0.31,
-            0.61
+            0.34,
+            0.42
           ],
           [
-            0.35,
-            0.66
-          ],
-          [
-            0.29,
-            0.69
+            0.4,
+            0.46
           ]
         ],
-        "period": 14,
+        "period": 18,
         "loop": true,
         "bob": true
       },
-      "foundText": "Những chấm sáng đom đóm lấp lánh như những hạt bụi vàng rơi ra từ bảo tháp linh thiêng."
+      "foundText": "Thả đèn trời là gửi điều xui xẻo bay đi và đón may mắn về."
     },
     {
-      "id": "night-moth",
-      "name": "Bướm Đêm Chuông Đồng",
-      "clue": "Chú bướm đêm cánh gấm khổng lồ đậu gần quả chuông đồng bên phải sân chùa.",
-      "x": 0.72,
-      "y": 0.68,
-      "radius": 0.042,
+      "id": "night-clay-lamp",
+      "name": "Đèn Dầu Bên Tháp",
+      "clue": "Ngọn đèn dầu đất nung leo lét trên bệ đá dưới chân chiếc lọng vàng lớn.",
+      "x": 0.555,
+      "y": 0.715,
+      "radius": 0.044,
       "score": 120,
-      "spriteType": "moth",
+      "spriteType": "clay-lamp",
       "scale": 0.72,
-      "camo": "chameleon",
-      "foundText": "Bướm đêm núi rừng nghỉ ngơi bên tiếng chuông đồng ngân vang trầm mặc."
+      "camo": "ink",
+      "foundText": "Ánh đèn dầu nhỏ soi sáng con đường quanh tháp vàng trong đêm lễ."
     },
     {
       "id": "artist-seal",
@@ -167,47 +163,46 @@
       "foundText": "Dấu ấn của kiến trúc sư ghi lại sự kỳ vĩ của đêm trên đỉnh Doi Suthep!"
     },
     {
-      "id": "secret-magnifying-glass",
-      "name": "Kính Lúp Phát Quang",
-      "clue": "[BÍ MẬT] Chiếc kính lúp vẽ bằng mực tàng hình ẩn hiện trên phần trang giấy bên trái.",
-      "x": 0.16,
-      "y": 0.38,
+      "id": "secret-temple-bell",
+      "name": "Chuông Bạc Tàng Hình",
+      "clue": "[BÍ MẬT] Chiếc chuông vẽ bằng mực tàng hình ẩn trên tấm vé tàu điện núi bên trái.",
+      "x": 0.17,
+      "y": 0.4,
       "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "magnifying-glass",
+      "spriteType": "temple-bell",
       "scale": 0.85,
-      "rotation": -15,
       "camo": "invisible",
-      "foundText": "Bí mật hé mở: Manh mối cuối cùng dẫn thẳng đến dòng sông Ping trong đêm hội hoa đăng!"
+      "foundText": "Bí mật đã mở ra: tiếng chuông cuối cùng dẫn lối xuống sông Ping, nơi đêm hội hoa đăng đang chờ!"
     },
     {
-      "id": "bonus-bat",
-      "name": "Dơi Núi Chao Liệng",
-      "clue": "Chú dơi nhỏ chao liệng săn mồi trên bầu trời đêm giữa ngọn tháp và vòm cây.",
-      "x": 0.44,
-      "y": 0.32,
+      "id": "bonus-gibbon",
+      "name": "Vượn Ngủ Mái Hiên",
+      "clue": "Chú vượn tay trắng đu mình dưới mái hiên hành lang chuông bên trái.",
+      "x": 0.13,
+      "y": 0.56,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "bat",
-      "scale": 0.65,
-      "camo": "ink",
-      "foundText": "Cánh dơi lướt êm ru trong gió núi se lạnh của miền sơn cước phía Bắc."
-    },
-    {
-      "id": "bonus-spider",
-      "name": "Nhện Tơ Sương Mù",
-      "clue": "Chú nhện giăng tơ phủ đầy giọt sương đọng dưới mái hiên chùa bên trái.",
-      "x": 0.36,
-      "y": 0.58,
-      "radius": 0.038,
-      "score": 100,
-      "isBonus": true,
-      "spriteType": "spider",
-      "scale": 0.65,
+      "spriteType": "gibbon",
+      "scale": 0.62,
       "camo": "chameleon",
-      "foundText": "Từng giọt sương sớm đọng trên mạng nhện lấp lánh như chuỗi hạt ngọc bích."
+      "foundText": "Đêm xuống, vượn ngủ ngồi trên cành cao chứ không làm ổ như nhiều loài khỉ lớn."
+    },
+    {
+      "id": "bonus-lantern-bug",
+      "name": "Bọ Đèn Dưới Trăng",
+      "clue": "Chú bọ đèn mõm đỏ đậu trên mái điện vàng bên phải.",
+      "x": 0.72,
+      "y": 0.57,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "lantern-bug",
+      "scale": 0.58,
+      "camo": "chameleon",
+      "foundText": "Đôi cánh sau màu vàng chỉ lộ ra khi bọ đèn xòe cánh bay."
     }
   ]
 }

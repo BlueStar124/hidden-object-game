@@ -7,93 +7,69 @@
   "storyClue": "Con phố Yaowarat nhộn nhịp tại khu Chinatown Bangkok là thiên đường của các bảng hiệu chữ Hán, xe tuk tuk luồn lách và hàng trăm quầy hàng ẩm thực. Kiến trúc sư đã để lại manh mối giữa những con hẻm cổ kính!",
   "objects": [
     {
-      "id": "street-dog",
-      "name": "Chú Chó Phố Cổ",
-      "clue": "Chú chó nhỏ ngoan ngoãn nằm nghỉ bên bánh chiếc xe tuk tuk ở giữa phố.",
-      "x": 0.58,
-      "y": 0.71,
-      "radius": 0.046,
-      "score": 150,
-      "spriteType": "dog",
-      "scale": 0.82,
-      "camo": "chameleon",
-      "foundText": "Những chú chó thân thiện của phố Yaowarat luôn quen thuộc với tiếng động cơ xe tuk tuk qua lại."
-    },
-    {
-      "id": "satay-stall",
-      "name": "Xiên Thịt Nướng Satay",
-      "clue": "Đĩa xiên que satay vàng óng đặt trên quầy xe đẩy bán hủ tiếu bên phải con đường.",
-      "x": 0.78,
-      "y": 0.62,
-      "radius": 0.044,
-      "score": 120,
-      "spriteType": "satay",
-      "scale": 0.75,
-      "camo": "ink",
-      "foundText": "Mùi thơm nức của sốt đậu phộng và thịt nướng than hoa đặc trưng cho ẩm thực đường phố Bangkok."
-    },
-    {
-      "id": "red-envelope",
-      "name": "Bao Lì Xì Cát Tường",
-      "clue": "Chiếc phong bao lì xì đỏ thắm gài trên khung cửa tiệm vàng lớn bên trái đường.",
-      "x": 0.28,
-      "y": 0.58,
-      "radius": 0.042,
-      "score": 120,
-      "spriteType": "red-envelope",
-      "scale": 0.72,
-      "rotation": 12,
-      "camo": "chameleon",
-      "foundText": "Yaowarat là trung tâm giao dịch vàng lớn nhất Thái Lan, nơi ngập tràn sắc đỏ may mắn."
-    },
-    {
-      "id": "sparrow-sunbird",
-      "name": "Chim Hút Mật Phố Hoa",
-      "clue": "Chú chim hút mật rực rỡ chao lượn quanh các biển hiệu treo cao giữa phố.",
-      "x": 0.52,
-      "y": 0.42,
+      "id": "little-tuktuk",
+      "name": "Tuk-tuk Cuối Phố",
+      "clue": "Một chiếc tuk-tuk nhỏ xíu đang chạy tít cuối con phố bên trái, giữa dòng người.",
+      "x": 0.37,
+      "y": 0.64,
       "radius": 0.044,
       "score": 150,
-      "spriteType": "sunbird",
-      "scale": 0.75,
+      "spriteType": "tuk-tuk",
+      "scale": 0.65,
       "camo": "chameleon",
-      "roam": {
-        "path": [
-          [
-            0.52,
-            0.42
-          ],
-          [
-            0.58,
-            0.38
-          ],
-          [
-            0.62,
-            0.45
-          ],
-          [
-            0.55,
-            0.46
-          ]
-        ],
-        "period": 15,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Chú chim nhỏ lượn qua những dải cờ và biển hiệu quảng cáo rực rỡ màu sắc."
+      "foundText": "Tuk-tuk Bangkok sơn đủ màu sặc sỡ, ồn ào nhưng len lỏi phố đông rất tài."
     },
     {
-      "id": "tiffin-carrier",
-      "name": "Cà Mên Tráng Men",
-      "clue": "Cặp lồng tráng men nhiều tầng đặt trên quầy xe đồ ăn nhỏ bên phải.",
-      "x": 0.71,
-      "y": 0.62,
-      "radius": 0.042,
+      "id": "shop-goldfish",
+      "name": "Bình Cá Vàng May Mắn",
+      "clue": "Bình cá vàng đặt trên quầy xe hàng rong bên phải, ngay sau chiếc tuk-tuk lớn.",
+      "x": 0.735,
+      "y": 0.565,
+      "radius": 0.044,
       "score": 120,
-      "spriteType": "tiffin",
-      "scale": 0.72,
+      "spriteType": "goldfish",
+      "scale": 0.68,
       "camo": "ink",
-      "foundText": "Chiếc cặp lồng giữ ấm những phần chè mè đen và canh thảo mộc truyền thống."
+      "foundText": "Chủ tiệm người Hoa nuôi cá vàng để cầu buôn may bán đắt."
+    },
+    {
+      "id": "cart-mortar",
+      "name": "Cối Giã Som Tam",
+      "clue": "Chiếc cối đất nung đặt trên quầy xe đẩy bằng gỗ ở góc phải.",
+      "x": 0.79,
+      "y": 0.605,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "mortar-pestle",
+      "scale": 0.68,
+      "camo": "ink",
+      "foundText": "Som tam chua, cay, mặn, ngọt hòa quyện — món gỏi đu đủ quốc dân của Thái Lan."
+    },
+    {
+      "id": "bag-thai-tea",
+      "name": "Túi Trà Sữa Thái",
+      "clue": "Túi trà sữa Thái màu cam treo lủng lẳng bên hông xe hàng rong giữa trang phải.",
+      "x": 0.69,
+      "y": 0.62,
+      "radius": 0.044,
+      "score": 100,
+      "spriteType": "thai-tea",
+      "scale": 0.68,
+      "camo": "chameleon",
+      "foundText": "Trà sữa Thái đựng túi nhựa buộc dây, xách tay vừa đi vừa uống!"
+    },
+    {
+      "id": "stool-mango-rice",
+      "name": "Đĩa Xôi Xoài",
+      "clue": "Đĩa xôi xoài vàng ươm đặt trên chiếc xe đẩy nhỏ phía xa, cuối dãy phố bên trái.",
+      "x": 0.445,
+      "y": 0.6,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "mango-sticky-rice",
+      "scale": 0.62,
+      "camo": "ink",
+      "foundText": "Xôi nếp rưới nước cốt dừa ăn cùng xoài chín là món tráng miệng được yêu thích bậc nhất Thái Lan."
     },
     {
       "id": "artist-seal",
@@ -107,67 +83,61 @@
       "foundText": "Dấu ấn của kiến trúc sư ghi lại nhịp sống náo nhiệt tại con phố Chinatown Yaowarat."
     },
     {
-      "id": "secret-magnifying-glass",
-      "name": "Kính Lúp Phố Tàu",
-      "clue": "[BÍ MẬT] Chiếc kính lúp vẽ bằng mực tàng hình ẩn phía trên tờ biên nhận trà bên trang trái.",
-      "x": 0.16,
-      "y": 0.35,
+      "id": "secret-abacus",
+      "name": "Bàn Tính Tiệm Vàng",
+      "clue": "[BÍ MẬT] Chiếc bàn tính mực tàng hình ẩn trên tờ hóa đơn trà bên trang trái.",
+      "x": 0.155,
+      "y": 0.5,
       "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "magnifying-glass",
+      "spriteType": "abacus",
       "scale": 0.85,
-      "rotation": -15,
+      "rotation": -6,
       "camo": "invisible",
-      "foundText": "Bí mật hé mở: Dưới kính lúp, địa chỉ một lò gốm cổ tại cố đô Ayutthaya dần xuất hiện!"
+      "foundText": "Bí mật đã mở ra: các hạt bàn tính xếp thành mật mã chỉ đường tới cố đô Ayutthaya!"
     },
     {
-      "id": "bonus-mouse",
-      "name": "Chuột Nhỏ Phố Đêm",
-      "clue": "Chú chuột nhỏ tinh nghịch thỉnh thoảng mới nhòm ra từ chân dãy nhà phố bên trái.",
-      "x": 0.35,
-      "y": 0.68,
+      "id": "bonus-river-prawn",
+      "name": "Tôm Càng Xe Hải Sản",
+      "clue": "Chú tôm càng xanh rơi xuống vỉa hè lát gạch, ngay dưới chiếc xe hàng rong bên phải.",
+      "x": 0.8,
+      "y": 0.7,
       "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "mouse",
-      "scale": 0.65,
+      "spriteType": "river-prawn",
+      "scale": 0.58,
+      "camo": "chameleon",
+      "foundText": "Yaowarat về đêm nổi tiếng với hải sản nướng bày ngay trên vỉa hè."
+    },
+    {
+      "id": "bonus-spirit-house",
+      "name": "Miếu Thần Đất Góc Phố",
+      "clue": "Ngôi miếu thần đất nhỏ nép ở chân dãy nhà phố bên trái.",
+      "x": 0.27,
+      "y": 0.59,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "spirit-house",
+      "scale": 0.6,
+      "camo": "chameleon",
+      "foundText": "Người buôn bán thắp nhang ở miếu thần đất mỗi sáng trước khi mở hàng."
+    },
+    {
+      "id": "bonus-tuktuk-garland",
+      "name": "Vòng Hoa Đầu Xe",
+      "clue": "Vòng hoa nhài treo ở đầu chiếc tuk-tuk lớn bên phải.",
+      "x": 0.625,
+      "y": 0.585,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "jasmine-garland",
+      "scale": 0.5,
       "camo": "ink",
-      "shy": {
-        "period": 6.5,
-        "offset": 0.8,
-        "from": "below"
-      },
-      "foundText": "Chú chuột ranh mãnh nhặt nhạnh hạt vừng rơi vãi sau giờ buôn bán tấp nập."
-    },
-    {
-      "id": "bonus-teacup",
-      "name": "Tách Trà Hoa Cúc",
-      "clue": "Tách trà nhỏ in mờ ngay trên tờ biên nhận quán trà ở trang bên trái.",
-      "x": 0.16,
-      "y": 0.52,
-      "radius": 0.038,
-      "score": 100,
-      "isBonus": true,
-      "spriteType": "teacup",
-      "scale": 0.65,
-      "camo": "chameleon",
-      "foundText": "Trà hoa cúc giải nhiệt là thức uống không thể thiếu của cư dân Yaowarat."
-    },
-    {
-      "id": "bonus-paper-crane",
-      "name": "Hạc Giấy Cát Tường",
-      "clue": "Con hạc giấy đỏ gấp tỉ mỉ bay lơ lửng gần hàng lồng đèn đỏ bên phải.",
-      "x": 0.64,
-      "y": 0.52,
-      "radius": 0.038,
-      "score": 100,
-      "isBonus": true,
-      "spriteType": "paper-crane",
-      "scale": 0.65,
-      "rotation": 20,
-      "camo": "chameleon",
-      "foundText": "Hạc giấy tượng trưng cho lời chúc an khang và thịnh vượng trường tồn."
+      "foundText": "Tài xế tuk-tuk treo vòng hoa nhài ở đầu xe để cầu chạy xe bình an."
     }
   ]
 }
