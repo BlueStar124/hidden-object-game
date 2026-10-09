@@ -8,15 +8,15 @@
   "objects": [
     {
       "id": "conical-hat-bench",
-      "name": "Nón Lá Nghiêng Che",
-      "clue": "Chiếc nón lá nhỏ để trên lan can lối đi dạo ven hồ bên trái.",
+      "name": "Chén Trà Sen Tây Hồ",
+      "clue": "Chén gốm bốc khói ngát hương sen Tây Hồ ven ghế đá.",
       "x": 0.22,
       "y": 0.46,
       "radius": 0.034,
       "score": 150,
-      "spriteType": "conical-hat",
+      "spriteType": "teacup",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!"
     },
     {
@@ -33,7 +33,7 @@
       "waterline": 0.6,
       "shy": {
         "period": 7.5,
-        "offset": 1.0,
+        "offset": 1,
         "from": "below"
       },
       "foundText": "Cụ Rùa Vàng Kim Quy huyền thoại nổi lên trao thanh gươm báu Thuận Thiên!"

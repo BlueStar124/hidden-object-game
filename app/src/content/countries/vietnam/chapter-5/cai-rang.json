@@ -61,15 +61,15 @@
     },
     {
       "id": "river-otter",
-      "name": "Ly Cà Phê Phin Sông Hậu",
-      "clue": "Ly cà phê phin nhỏ giọt thơm nồng đặt cạnh mạn ghe bồng bềnh sóng nước.",
+      "name": "Cá Thòi Lòi Sông Nước Miền Tây",
+      "clue": "Chú cá thòi lòi lanh lợi nhảy tưng tưng trên bãi bồi ven sông Hậu.",
       "x": 0.44,
       "y": 0.68,
       "radius": 0.03,
       "score": 120,
-      "spriteType": "coffee-phin",
+      "spriteType": "mudskipper",
       "scale": 0.42,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Cà phê kho, cà phê phin đón bình minh trên sông là nét sinh hoạt thi vị của người Nam Bộ."
     },
     {

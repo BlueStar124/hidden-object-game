@@ -84,14 +84,14 @@
     },
     {
       "id": "secret-pocket-watch",
-      "name": "Trống Đồng Ngọ Môn",
-      "clue": "[BÍ MẬT] Trống đồng cổ bảo vật hoàng gia ẩn hiện nơi hồ Kim Thủy góc trên trái.",
+      "name": "Máy Ảnh Cổ Cố Đô",
+      "clue": "[BÍ MẬT] Chiếc máy ảnh xưa ghi lại vẻ uy nghiêm trầm mặc của Ngọ Môn.",
       "x": 0.18,
       "y": 0.28,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "dong-son-drum",
+      "spriteType": "vintage-camera",
       "scale": 0.48,
       "camo": "invisible",
       "foundText": "Bảo vật ngàn năm biểu trưng cho sự trường tồn của non sông gấm vóc!"

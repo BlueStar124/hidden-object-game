@@ -61,15 +61,15 @@
     },
     {
       "id": "gps-compass",
-      "name": "Nón Lá Mốc Tọa Độ",
-      "clue": "Chiếc nón lá truyền thống nghiêng che bên cột mốc tọa độ quốc gia GPS 0001.",
+      "name": "La Bàn Mốc Tọa Độ GPS 0001",
+      "clue": "Chiếc la bàn hàng hải xác định điểm cực Nam Tổ quốc.",
       "x": 0.33,
       "y": 0.66,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "conical-hat",
+      "spriteType": "compass",
       "scale": 0.44,
-      "camo": "chameleon",
+      "camo": "tint",
       "foundText": "Cột mốc thiêng liêng khẳng định chủ quyền lãnh thổ bất khả xâm phạm của Tổ quốc."
     },
     {

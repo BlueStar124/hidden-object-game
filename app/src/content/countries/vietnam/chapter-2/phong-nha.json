@@ -85,14 +85,14 @@
     },
     {
       "id": "secret-underground-key",
-      "name": "Trống Đồng Triệu Năm",
-      "clue": "[BÍ MẬT] Trống đồng cổ bảo vật quốc gia phát sáng lung linh dưới chân cột thạch nhũ.",
+      "name": "La Bàn Thám Hiểm Hang Tối",
+      "clue": "[BÍ MẬT] Chiếc la bàn kim loại dẫn lối qua mê cung hang động kỳ vĩ.",
       "x": 0.78,
       "y": 0.71,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "dong-son-drum",
+      "spriteType": "compass",
       "scale": 0.48,
       "camo": "invisible",
       "foundText": "Bảo vật cổ ngàn năm được che chở trong lòng kỳ quan đệ nhất động Phong Nha!"

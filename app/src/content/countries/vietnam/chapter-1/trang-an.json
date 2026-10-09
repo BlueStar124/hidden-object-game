@@ -47,15 +47,15 @@
     },
     {
       "id": "ancient-scroll",
-      "name": "Chú Tễu Hội Đền Trần",
-      "clue": "Chú Tễu múa rối nước ngộ nghĩnh ẩn nấp dưới tán cây xanh trên đảo đền.",
+      "name": "Gà Đông Tảo Lễ Hội Hoa Lư",
+      "clue": "Chú gà quý chân rồng uy phong bên sân đền vua Đinh.",
       "x": 0.44,
       "y": 0.52,
       "radius": 0.03,
       "score": 120,
-      "spriteType": "water-puppet",
+      "spriteType": "dong-tao-chicken",
       "scale": 0.44,
-      "camo": "chameleon",
+      "camo": "gouache",
       "foundText": "Nghệ thuật múa rối nước tái hiện huyền sử thời Đinh - Tiền Lê ngàn năm."
     },
     {

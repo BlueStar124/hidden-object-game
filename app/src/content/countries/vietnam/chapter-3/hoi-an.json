@@ -8,15 +8,15 @@
   "objects": [
     {
       "id": "silk-lantern",
-      "name": "Đèn Lồng Phố Hội",
-      "clue": "Chiếc đèn lồng lụa đỏ thắm treo dưới mái hiên căn nhà cổ tường vàng bên trái.",
+      "name": "Chén Trà Thảo Mộc Phố Cổ",
+      "clue": "Chén trà thơm mát cánh sen đặt bên hiên nhà gỗ ngập nắng.",
       "x": 0.21,
       "y": 0.44,
       "radius": 0.034,
       "score": 150,
-      "spriteType": "lantern",
+      "spriteType": "teacup",
       "scale": 0.48,
-      "camo": "chameleon",
+      "camo": "tint",
       "foundText": "Đèn lồng truyền thống Hội An làm từ tre già ngâm muối và lụa Hà Đông."
     },
     {
@@ -48,15 +48,15 @@
     },
     {
       "id": "ancient-cat",
-      "name": "Áo Dài Phố Cổ Hoa Giấy",
-      "clue": "Tà áo dài lụa tơ tằm mềm mại bên ban công gỗ gác hai nhà cổ nhìn ra sông.",
+      "name": "Ô Giấy Dầu Phố Cổ",
+      "clue": "Chiếc ô nan giấy dầu thanh nhã nép bên bức tường vàng rêu phong.",
       "x": 0.42,
       "y": 0.38,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "ao-dai",
+      "spriteType": "paper-umbrella",
       "scale": 0.44,
-      "camo": "chameleon",
+      "camo": "gouache",
       "foundText": "Áo dài lụa phố Hội tôn thêm nét trầm mặc cổ kính của di sản văn hóa thế giới."
     },
     {

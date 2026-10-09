@@ -21,15 +21,15 @@
     },
     {
       "id": "hmong-hat",
-      "name": "Nón Lá Mùa Gặt",
-      "clue": "Chiếc nón lá che nắng gác bên hiên căn chòi canh lúa bằng gỗ bên phải.",
+      "name": "Cánh Diều Đồi Mâm Xôi",
+      "clue": "Cánh diều giấy sặc sỡ no gió trên sóng lúa vàng.",
       "x": 0.85,
       "y": 0.56,
       "radius": 0.034,
       "score": 120,
-      "spriteType": "conical-hat",
+      "spriteType": "kite",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "gouache",
       "foundText": "Mũ nón che nắng che mưa cho những đôi bàn tay dệt nên kỳ quan ruộng bậc thang."
     },
     {

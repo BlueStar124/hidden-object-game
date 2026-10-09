@@ -21,15 +21,15 @@
     },
     {
       "id": "market-conical-hat",
-      "name": "Nón Lá Chị Bán Hoa",
-      "clue": "Chiếc nón lá truyền thống của tiểu thương đặt bên sạp hàng trước cổng chợ.",
+      "name": "Cà Mèn Cơm Trưa Chợ Bến Thành",
+      "clue": "Cà mèn inox ba tầng đựng cơm trưa của tiểu thương chợ.",
       "x": 0.34,
       "y": 0.54,
       "radius": 0.034,
       "score": 120,
-      "spriteType": "conical-hat",
+      "spriteType": "tiffin",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "tint",
       "foundText": "Chợ hoa sớm mai ngạt ngào sắc hương của muôn loài hoa miền nhiệt đới."
     },
     {

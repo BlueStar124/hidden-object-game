@@ -62,15 +62,15 @@
     },
     {
       "id": "peace-dove-canyon",
-      "name": "Nón Lá Bến Nước Tu Sản",
-      "clue": "Chiếc nón lá nghiêng che để bên mỏm đá cạnh lối xuống bến thuyền Nho Quế.",
+      "name": "Chim Bồ Câu Hẻm Vực Tu Sản",
+      "clue": "Cánh bồ câu trắng chao liệng giữa hai vách hẻm vực kỳ vĩ.",
       "x": 0.44,
       "y": 0.46,
       "radius": 0.03,
       "score": 100,
-      "spriteType": "conical-hat",
+      "spriteType": "dove",
       "scale": 0.42,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Nón lá duyên dáng soi bóng xuống dòng sông màu ngọc bích phẳng lặng."
     },
     {
