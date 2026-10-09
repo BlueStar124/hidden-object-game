@@ -150,8 +150,9 @@ Mẫu một vật có đủ trường:
 
 ## 5. Sinh vật / đồ vật mới (sprite)
 
-Chỉ làm khi trong 57 loại có sẵn (`SpriteType` trong `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
-đèn lồng, xích lô.
+Chỉ làm khi trong 112 loại có sẵn (`SpriteType` trong `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
+đèn lồng, xích lô. Mỗi nước nên có bộ hình riêng (Thái Lan có 50 loại không dùng chung với Singapore) để người chơi không
+gặp lại cùng một con vật, cùng một đồ vật ở mọi cuốn sổ.
 
 1. **Vẽ** trong `tools/sprites/ObjectSprite.tsx`: thêm `case '<type>':` trả về
    `<svg viewBox="0 0 48 48" className="sprite-svg" fill="none">…</svg>`. Quy ước vẽ (comment đầu file):

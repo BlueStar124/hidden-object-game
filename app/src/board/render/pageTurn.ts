@@ -4,7 +4,7 @@ import { PAGE_H, PAGE_W } from '../constants';
 import { drawBook } from './book';
 import { drawStamps } from './marks';
 import { posesAt } from './sprites';
-import type { FrameState, PageFlip, SceneData } from './types';
+import type { FrameState, PageFlip, Pose, SceneData } from './types';
 
 /* ---------------------------------- Page turn ---------------------------------- */
 
@@ -166,9 +166,13 @@ export function recordPage(S: SceneData, F: FrameState): SkPicture {
   'worklet';
   const recorder = Skia.PictureRecorder();
   const c = recorder.beginRecording(S.pageRect);
+  // Snapshotting runs on JS too, where scene buffers captured by worklets are immutable.
+  const poses: Pose[] = [];
+  for (let i = 0; i < S.poses.length; i++) poses.push({ ...S.poses[i] });
+  posesAt(S, F, poses);
   c.save();
   c.clipRRect(S.pageRRect, ClipOp.Intersect, true);
-  drawBook(c, S, F, posesAt(S, F), false, null);
+  drawBook(c, S, F, poses, false, null);
   c.restore();
   drawStamps(c, S, F, true);
   const picture = recorder.finishRecordingAsPicture();

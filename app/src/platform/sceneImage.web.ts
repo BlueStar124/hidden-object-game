@@ -4,7 +4,7 @@ import type { LoadedScene, ScenePixels } from './sceneImage';
 /**
  * Web. CanvasKit would decode the painting in WebAssembly on the main thread (some 40 ms a page, a
  * visible hitch). The browser decodes it off the main thread instead; Skia then draws it as a
- * texture, and the analysis reads its pixels through a 2D canvas.
+ * image from decoded pixels, also usable on the CPU surface that snapshots a turning leaf.
  */
 export async function loadSceneImage(source: number): Promise<LoadedScene> {
   const uri = assetUri(source);
@@ -12,8 +12,20 @@ export async function loadSceneImage(source: number): Promise<LoadedScene> {
   if (!response.ok) throw new Error(`Could not load ${uri} (${response.status})`);
   // Straight alpha, as CanvasKit expects from a texture source
   const bitmap = await createImageBitmap(await response.blob(), { premultiplyAlpha: 'none' });
-  const image = Skia.Image.MakeImageFromNativeBuffer(bitmap);
-  return { image, readPixels: (width) => readPixels(bitmap, width) };
+  try {
+    // Lazy texture sources cannot be replayed on a CPU surface: a leaf would lose its artwork.
+    const canvas = document.createElement('canvas');
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) throw new Error('Could not copy decoded artwork');
+    ctx.drawImage(bitmap, 0, 0);
+    const image = Skia.Image.MakeImageFromNativeBuffer(canvas);
+    return { image, readPixels: (width) => readPixels(bitmap, width), closeSource: () => bitmap.close() };
+  } catch (error) {
+    bitmap.close();
+    throw error;
+  }
 }
 
 /**

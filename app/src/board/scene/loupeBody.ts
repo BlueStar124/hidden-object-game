@@ -119,11 +119,15 @@ export function makeLoupeBody(L: LoupeBodyShapes, pixelRatio: number): LoupeBody
   const h = Math.ceil((box.b - y) * pixelRatio);
   const surface = Skia.Surface.Make(w, h);
   if (!surface) return null;
-  const c = surface.getCanvas();
-  c.clear(Float32Array.of(0, 0, 0, 0));
-  c.scale(pixelRatio, pixelRatio);
-  c.translate(-x, -y);
-  drawLoupeBody(c, L);
-  surface.flush();
-  return { image: surface.makeImageSnapshot(), rect: Skia.XYWHRect(x, y, w / pixelRatio, h / pixelRatio) };
+  try {
+    const c = surface.getCanvas();
+    c.clear(Float32Array.of(0, 0, 0, 0));
+    c.scale(pixelRatio, pixelRatio);
+    c.translate(-x, -y);
+    drawLoupeBody(c, L);
+    surface.flush();
+    return { image: surface.makeImageSnapshot(), rect: Skia.XYWHRect(x, y, w / pixelRatio, h / pixelRatio) };
+  } finally {
+    surface.dispose();
+  }
 }

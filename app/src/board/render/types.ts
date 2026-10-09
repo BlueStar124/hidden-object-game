@@ -76,6 +76,7 @@ export interface SceneData {
   bookRRect: SkRRect; // the paper inside the artwork's transparent margin
   paperRRect: SkRRect; // the same with the paper's rounded corners (shadows stay on the paper)
   sprites: SceneSprite[];
+  poses: Pose[]; // scratch buffer, updated only by the renderer worklet
   marks: SceneMark[];
   night: NightScene | null;
   paints: BoardPaints;

@@ -7,167 +7,168 @@
   "storyClue": "Rời Bangkok xuôi về phương Bắc, thám tử đã đặt chân tới Công viên Lịch sử Ayutthaya — cố đô huyền thoại của Xiêm La. Giữa những tháp gạch nung rêu phong và rễ cây bồ đề ôm trọn đầu tượng Phật là những báu vật thời gian đang chờ được khai quật.",
   "objects": [
     {
-      "id": "ruin-monkey",
-      "name": "Chú Khỉ Cố Đô",
-      "clue": "Chú khỉ tinh nghịch thỉnh thoảng mới nhô đầu lên từ bờ tường gạch đổ phế tích bên trái.",
-      "x": 0.24,
-      "y": 0.68,
-      "radius": 0.035,
+      "id": "ruin-elephant",
+      "name": "Voi Xám Phế Tích",
+      "clue": "Chú voi xám thong thả trên bãi cỏ trước những ngọn tháp cổ bên trái.",
+      "x": 0.18,
+      "y": 0.565,
+      "radius": 0.044,
       "score": 150,
-      "spriteType": "monkey",
-      "scale": 0.55,
+      "spriteType": "elephant",
+      "scale": 0.85,
       "camo": "chameleon",
+      "foundText": "Thời Ayutthaya, voi chiến là niềm tự hào của các vị vua Xiêm."
+    },
+    {
+      "id": "nai-khanom-gloves",
+      "name": "Găng Võ Sĩ Cố Đô",
+      "clue": "Đôi găng Muay Thái đỏ ai bỏ quên trên đống gạch vụn trước bức tường đổ.",
+      "x": 0.43,
+      "y": 0.67,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "boxing-gloves",
+      "scale": 0.72,
+      "camo": "ink",
+      "foundText": "Tương truyền, võ sĩ Nai Khanom Tom thời Ayutthaya một mình hạ liên tiếp nhiều võ sĩ Miến Điện."
+    },
+    {
+      "id": "naresuan-rooster",
+      "name": "Gà Chọi Trên Tường Cổ",
+      "clue": "Chú gà chọi oai vệ đứng trên đỉnh bức tường gạch đổ, ngay cạnh tán cây đa.",
+      "x": 0.445,
+      "y": 0.43,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "rooster",
+      "scale": 0.78,
+      "camo": "chameleon",
+      "foundText": "Tương truyền gà chọi của vua Naresuan thắng cả gà của hoàng tử Miến Điện."
+    },
+    {
+      "id": "banyan-snake",
+      "name": "Rắn Bay Rễ Đa",
+      "clue": "Chú rắn bay uốn mình giữa chằng chịt rễ đa bên phải, phía trên bức tường gạch.",
+      "x": 0.71,
+      "y": 0.48,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "flying-snake",
+      "scale": 0.8,
+      "rotation": 20,
+      "camo": "chameleon",
+      "foundText": "Thân rắn mảnh mai lẫn vào những rễ đa vặn xoắn như một sợi dây leo."
+    },
+    {
+      "id": "brick-scorpion",
+      "name": "Bọ Cạp Khe Gạch",
+      "clue": "Chú bọ cạp nâu nấp dưới bậc gạch cổ ở góc dưới bên phải.",
+      "x": 0.8,
+      "y": 0.665,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "scorpion",
+      "scale": 0.72,
+      "camo": "ink",
       "shy": {
-        "period": 7.2,
-        "offset": 1.8,
+        "period": 7,
+        "offset": 1.5,
         "from": "below"
       },
-      "foundText": "Những đàn khỉ tinh nghịch tự do dạo chơi giữa các công trình cổ kính của cố đô Ayutthaya."
-    },
-    {
-      "id": "ancient-kingfisher",
-      "name": "Bói Cá Hồ Nước",
-      "clue": "Chú chim bói cá có bộ lông xanh biếc bay lượn sát mặt cỏ quanh chân tháp Wat Mahathat.",
-      "x": 0.56,
-      "y": 0.52,
-      "radius": 0.032,
-      "score": 150,
-      "spriteType": "kingfisher",
-      "scale": 0.5,
-      "camo": "chameleon",
-      "roam": {
-        "path": [
-          [
-            0.56,
-            0.52
-          ],
-          [
-            0.61,
-            0.48
-          ],
-          [
-            0.66,
-            0.54
-          ],
-          [
-            0.59,
-            0.56
-          ]
-        ],
-        "period": 16,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Chim bói cá rình mồi bên những hào nước cổ bao quanh quần thể đền tháp linh thiêng."
-    },
-    {
-      "id": "archaeologist-compass",
-      "name": "La Bàn Khảo Cổ",
-      "clue": "Chiếc la bàn đồng của nhà khảo cổ nằm trên phiến đá nứt gần rễ cây bồ đề bên phải.",
-      "x": 0.68,
-      "y": 0.72,
-      "radius": 0.032,
-      "score": 120,
-      "spriteType": "compass",
-      "scale": 0.52,
-      "rotation": 18,
-      "camo": "chameleon",
-      "foundText": "Chiếc kim la bàn chỉ về hướng Bắc — lộ trình đưa bước thám tử đến vùng đất Chiang Mai xa xôi."
-    },
-    {
-      "id": "terracotta-vase",
-      "name": "Bình Gốm Đất Nung Cổ",
-      "clue": "Chiếc bình gốm nung hoa văn cổ chạm khắc tinh xảo đặt cạnh thềm gạch phế tích bên trái.",
-      "x": 0.32,
-      "y": 0.74,
-      "radius": 0.032,
-      "score": 120,
-      "spriteType": "vase",
-      "scale": 0.5,
-      "camo": "chameleon",
-      "foundText": "Gốm nung thời vương triều Ayutthaya từng là mặt hàng giao thương nức tiếng khắp Đông Nam Á."
-    },
-    {
-      "id": "hourglass-relic",
-      "name": "Đồng Hồ Cát Cổ Xưa",
-      "clue": "Chiếc đồng hồ cát bọc đồng đặt trên bậc thềm gạch đỏ dưới chân bảo tháp lớn.",
-      "x": 0.48,
-      "y": 0.65,
-      "radius": 0.03,
-      "score": 120,
-      "spriteType": "hourglass",
-      "scale": 0.5,
-      "camo": "ink",
-      "foundText": "Dòng cát thời gian như ngừng trôi trước vẻ đẹp trầm mặc của thành phố di sản ngàn năm."
+      "foundText": "Ban ngày bọ cạp trốn dưới gạch đá mát, đêm mới bò ra săn mồi."
     },
     {
       "id": "artist-seal",
       "name": "Dấu Triện Ký Họa",
-      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 25 2023' ở góc dưới cùng bên phải trang sách.",
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 24 2023' ở góc dưới cùng bên phải trang sách.",
       "x": 0.898,
-      "y": 0.722,
-      "radius": 0.04,
+      "y": 0.725,
+      "radius": 0.045,
       "score": 150,
       "spriteType": "seal",
       "foundText": "Dấu ấn của kiến trúc sư khép lại chương khảo cứu cố đô Ayutthaya."
     },
     {
-      "id": "secret-scroll",
-      "name": "Cuộn Da Mật Thư Bí Mật",
-      "clue": "[BÍ MẬT] Cuộn giấy da cổ vẽ bằng mực tàng hình ẩn hiện trên phần lề giấy trống trang bên trái.",
-      "x": 0.15,
-      "y": 0.38,
-      "radius": 0.038,
+      "id": "secret-treasure-map",
+      "name": "Bản Đồ Kinh Thành Cổ",
+      "clue": "[BÍ MẬT] Tấm bản đồ kinh thành vẽ bằng mực tàng hình lơ lửng trên bầu trời góc trái.",
+      "x": 0.18,
+      "y": 0.32,
+      "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "scroll",
-      "scale": 0.6,
-      "rotation": -10,
+      "spriteType": "treasure-map",
+      "scale": 0.85,
+      "rotation": -6,
       "camo": "invisible",
-      "foundText": "Bí mật được giải mã: Bản đồ cổ hé lộ con đường hành hương tiến về miền sơn cước phía Bắc!"
+      "foundText": "Bí mật đã mở ra: bản đồ cổ vẽ Ayutthaya như một hòn đảo giữa ba dòng sông!"
     },
     {
-      "id": "bonus-mantis",
-      "name": "Bọ Ngựa Nhánh Cây",
-      "clue": "Chú bọ ngựa ngụy trang xanh ngát bám trên cành rễ bồ đề cổ thụ bên phải.",
-      "x": 0.75,
-      "y": 0.56,
-      "radius": 0.026,
+      "id": "bonus-porcupine",
+      "name": "Nhím Chân Tường",
+      "clue": "Chú nhím nhỏ ló ra từ chân bức tường gạch bên phải, sát mép cỏ.",
+      "x": 0.735,
+      "y": 0.605,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "mantis",
-      "scale": 0.42,
+      "spriteType": "porcupine",
+      "scale": 0.6,
       "camo": "chameleon",
-      "foundText": "Bọ ngựa đứng bất động như một mầm cây non đâm chồi từ kẽ gạch cổ xưa."
+      "shy": {
+        "period": 8,
+        "offset": 5,
+        "from": "right"
+      },
+      "foundText": "Nhím chỉ ra kiếm ăn khi chiều tối, ban ngày ngủ trong hang."
     },
     {
-      "id": "bonus-turtle",
-      "name": "Rùa Đầm Phế Tích",
-      "clue": "Chú rùa nước nhỏ bò chậm chạp trên bờ cỏ xanh ven hào nước bên trái.",
-      "x": 0.2,
-      "y": 0.8,
-      "radius": 0.026,
+      "id": "bonus-bee",
+      "name": "Ong Mật Cành Hoa Đại",
+      "clue": "Chú ong mật bay quanh cành hoa sứ trắng ở góc trên bên trái.",
+      "x": 0.13,
+      "y": 0.44,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "turtle",
-      "scale": 0.42,
+      "spriteType": "bee",
+      "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Rùa nước Ayutthaya tượng trưng cho sự trường tồn và bình yên của đất cố đô."
+      "roam": {
+        "path": [
+          [
+            0.13,
+            0.44
+          ],
+          [
+            0.17,
+            0.42
+          ],
+          [
+            0.19,
+            0.47
+          ]
+        ],
+        "period": 14,
+        "loop": true,
+        "bob": true
+      },
+      "foundText": "Hoa sứ từng có tên Thái \"lan thom\", nghe gần với chữ \"buồn đau\", nên được đổi thành \"lilawadee\"."
     },
     {
-      "id": "bonus-key",
-      "name": "Chìa Khóa Cổng Thành",
-      "clue": "Chiếc chìa khóa rỉ sét nằm vùi dưới lớp cỏ mềm cạnh chân tháp gạch nung.",
-      "x": 0.42,
-      "y": 0.72,
-      "radius": 0.026,
+      "id": "bonus-rhino-beetle",
+      "name": "Bọ Hung Thân Đa",
+      "clue": "Chú bọ hung sừng bò trên thân cây đa, phía trên bức tường gạch đổ.",
+      "x": 0.53,
+      "y": 0.45,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "key",
-      "scale": 0.45,
-      "rotation": 30,
-      "camo": "ink",
-      "foundText": "Chìa khóa cổ từng mở chiếc cổng thành kiên cố của kinh đô Xiêm La thế kỷ 16."
+      "spriteType": "rhino-beetle",
+      "scale": 0.55,
+      "rotation": 70,
+      "camo": "chameleon",
+      "foundText": "Ấu trùng bọ hung sống trong gỗ mục và đất mùn suốt nhiều tháng."
     }
   ]
 }

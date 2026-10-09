@@ -52,6 +52,9 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
    dòng đầu và không chạm tới React state. Paint, shader, path được tạo **một lần** trên JS thread (`scene/paints.ts`,
    `scene/buildScene.ts`), không tạo trong từng khung hình.
 7. **Thứ tự các hook trong `Board.tsx` chính là thứ tự effect chạy**: không đảo.
+   Đích phải được dựng xong trước hoạt ảnh lật; Board báo hoàn tất cho `useNavigation.completeTurn`, không mở trang
+   bằng timer độc lập. Tài nguyên bị loại khỏi cache chỉ giải phóng sau khi mapper bỏ tham chiếu (kể cả nguồn/đích
+   đang lật và ảnh warm). Picture đầu ra đưa thẳng vào Canvas, không ghi thêm lớp picture bao ngoài.
 8. **Thư viện:** chỉ dùng `npx expo install <pkg>`, chỉ module có sẵn trong Expo Go, ưu tiên module của Expo. Expo hay
    đổi API: đọc docs đúng phiên bản `https://docs.expo.dev/versions/v57.0.0/`, đừng đoán theo trí nhớ.
 9. **Dung lượng:** tranh dùng WebP, sprite là vector sinh tự động, âm thanh tổng hợp bằng synth. Icon và font import

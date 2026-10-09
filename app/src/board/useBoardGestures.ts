@@ -89,7 +89,9 @@ export function useBoardGestures(
   );
 
   // Loupe held near the edge of a zoomed page: scroll the page under it
-  useFrameCallback(() => {
+  const scrollAtEdge = useCallback(() => {
+    'worklet';
+    if (!enabled.value) return;
     if (mode.value === LOUPE) {
       const { w, h } = dims.value;
       const f = finger.value;
@@ -106,7 +108,12 @@ export function useBoardGestures(
     } else {
       placeLoupe(lx.value, ly.value);
     }
-  });
+  }, [enabled, mode, dims, finger, bounds, s, tx, ty, placeLoupe, grab, lx, ly]);
+  const edgeFrame = useFrameCallback(scrollAtEdge, false);
+  useEffect(() => {
+    edgeFrame.setActive(enabledNow);
+    if (!enabledNow) mode.value = NONE;
+  }, [enabledNow, edgeFrame, mode]);
 
   /* -------------------------- Taps → the game (JS) -------------------------- */
 
@@ -118,28 +125,49 @@ export function useBoardGestures(
   onInspectRef.current = onInspect;
   const pendingTap = useRef(false);
   const queuedTaps = useRef<[number, number, number, number][]>([]);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const acceptingTaps = useRef(enabledNow);
+  acceptingTaps.current = enabledNow;
+  const clearPendingTap = useCallback(() => {
+    if (tapTimer.current !== null) clearTimeout(tapTimer.current);
+    tapTimer.current = null;
+    pendingTap.current = false;
+  }, []);
+  useEffect(() => () => {
+    acceptingTaps.current = false;
+    clearPendingTap();
+    queuedTaps.current = [];
+  }, [clearPendingTap]);
   const deliverTap = useCallback(
     (nx: number, ny: number, x: number, y: number) => {
+      if (!acceptingTaps.current) return;
+      clearPendingTap();
       pendingTap.current = true;
       onInspectRef.current(nx, ny, { x: windowOffset.current.x + x, y: windowOffset.current.y + y });
       // A tap the game ignores (paused, page turning…) triggers no render: don't wait forever
-      setTimeout(() => {
+      tapTimer.current = setTimeout(() => {
+        tapTimer.current = null;
         if (!pendingTap.current) return;
         pendingTap.current = false;
         const next = queuedTaps.current.shift();
         if (next) deliverTap(...next);
       }, 300);
     },
-    [windowOffset]
+    [windowOffset, clearPendingTap]
   );
   useEffect(() => {
     // Every render of the board follows the game's state: the next queued tap can go
-    pendingTap.current = false;
+    clearPendingTap();
+    if (!enabledNow) {
+      queuedTaps.current = [];
+      return;
+    }
     const next = queuedTaps.current.shift();
     if (next) deliverTap(...next);
   });
   const inspect = useCallback(
     (nx: number, ny: number, x: number, y: number) => {
+      if (!acceptingTaps.current) return;
       if (pendingTap.current) queuedTaps.current.push([nx, ny, x, y]);
       else deliverTap(nx, ny, x, y);
     },

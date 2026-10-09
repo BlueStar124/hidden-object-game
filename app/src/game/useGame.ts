@@ -19,7 +19,7 @@ export function useGame({ browsing }: { browsing: boolean }) {
     nav.page,
     nav.visit,
     {
-      clockRuns: !home && !nav.showPrologue && !nav.showNightIntro && !browsing,
+      clockRuns: !home && !nav.turn && !nav.showPrologue && !nav.showNightIntro && !browsing,
       isTurning: nav.turn !== null,
       nextPage: nav.nextPage,
       night: nav.isNight ? undefined : nav.ref.night,

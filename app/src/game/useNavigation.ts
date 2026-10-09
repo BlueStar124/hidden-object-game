@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { PAGE_TURN_MS, type Country, type Page, type PageRef, type PageTurn } from '../core/model';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { Country, Page, PageRef, PageTurn } from '../core/model';
 import { progress } from '../core/progress';
 import { countryById, FIRST_COUNTRY, pagesOf, placeOf } from '../content';
 import { sound } from '../platform/sound';
@@ -21,6 +21,8 @@ export interface Navigation {
   visit: number;
   /** The page turn in progress */
   turn: PageTurn | null;
+  /** The board finished this request after its destination was ready. */
+  completeTurn: (request: PageTurn) => void;
   /** The next page of the book (clearing this one unlocks it), if any */
   nextPage: Page | null;
   showPrologue: boolean;
@@ -47,6 +49,14 @@ function pageAt(country: Country, index: number, night: boolean): Page {
   return (night && ref.night) || ref.day;
 }
 
+interface PendingTurn {
+  request: PageTurn;
+  countryId: string;
+  index: number;
+  night: boolean;
+  then?: () => void;
+}
+
 /** The page the player was last in, if it is still in the books. */
 function savedPlace(): Place | null {
   const id = progress.lastPage();
@@ -59,6 +69,8 @@ export function useNavigation(): Navigation {
   const [saved] = useState(savedPlace);
   const [place, setPlace] = useState<Place>(() => saved ?? { countryId: FIRST_COUNTRY.id, index: 0, night: false, visit: 0 });
   const [turn, setTurn] = useState<PageTurn | null>(null);
+  const pending = useRef<PendingTurn | null>(null);
+  useEffect(() => () => { pending.current = null; }, []);
   // A new player gets the case file of the first chapter (how to play); one coming back goes straight on
   const [showPrologue, setShowPrologue] = useState(!saved);
   const [showNightIntro, setShowNightIntro] = useState(false);
@@ -71,6 +83,7 @@ export function useNavigation(): Navigation {
 
   // Opens a page (night: the page's night variant, if it has one)
   const open = useCallback((countryId: string, index: number, night: boolean = false) => {
+    pending.current = null;
     const target = countryById(countryId);
     const book = pagesOf(target);
     const valid = Math.max(0, Math.min(index, book.length - 1));
@@ -80,18 +93,26 @@ export function useNavigation(): Navigation {
     setShowNightIntro(nightOn);
   }, []);
 
-  // Starts turning the page; the target opens once the leaf has come down
+  // The board owns the animation clock: a cold destination must not open before it lands.
   const turnTo = useCallback(
     (countryId: string, index: number, night: boolean, direction: 1 | -1, then?: () => void) => {
-      setTurn({ to: pageAt(countryById(countryId), index, night), direction });
+      if (pending.current) return;
+      const target = countryById(countryId);
+      const valid = Math.max(0, Math.min(index, pagesOf(target).length - 1));
+      const request = { to: pageAt(target, valid, night), direction };
+      pending.current = { request, countryId: target.id, index: valid, night, then };
+      setTurn(request);
       sound.playPageTurn();
-      setTimeout(() => {
-        open(countryId, index, night);
-        then?.();
-      }, PAGE_TURN_MS);
     },
-    [open]
+    []
   );
+
+  const completeTurn = useCallback((request: PageTurn) => {
+    const target = pending.current;
+    if (!target || target.request !== request) return;
+    open(target.countryId, target.index, target.night);
+    target.then?.();
+  }, [open]);
 
   // A night page continues with the next day page; a new chapter opens with its case file
   const next = useCallback(() => {
@@ -138,6 +159,7 @@ export function useNavigation(): Navigation {
     isNight: place.night,
     visit: place.visit,
     turn,
+    completeTurn,
     nextPage: pages[place.index + 1]?.day ?? null,
     showPrologue,
     setShowPrologue,

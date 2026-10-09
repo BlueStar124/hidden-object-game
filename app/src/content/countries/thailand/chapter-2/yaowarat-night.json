@@ -76,138 +76,114 @@
   ],
   "objects": [
     {
-      "id": "night-civet",
-      "name": "Cầy Hương Mái Nhà",
-      "clue": "Chú cầy hương mắt sáng quắc thỉnh thoảng mới nhô đầu ra từ khe mái tôn hiên nhà bên trái.",
-      "x": 0.32,
-      "y": 0.48,
-      "radius": 0.035,
-      "score": 150,
-      "spriteType": "civet",
-      "scale": 0.55,
-      "camo": "chameleon",
-      "shy": {
-        "period": 7,
-        "offset": 1.2,
-        "from": "above"
-      },
-      "foundText": "Cầy hương đô thị là loài động vật chuyên hoạt động về đêm len lỏi trên các mái nhà phố cổ Bangkok."
-    },
-    {
-      "id": "night-moth",
-      "name": "Bướm Đêm Đèn Neon",
-      "clue": "Chú bướm đêm chao liệng quanh biển hiệu neon sáng rực giữa ngã tư.",
+      "id": "night-siamese-cat",
+      "name": "Mèo Xiêm Trên Mui Xe",
+      "clue": "Chú mèo Xiêm nằm trên mui chiếc tuk-tuk lớn, đôi mắt xanh lóe sáng dưới đèn lồng.",
       "x": 0.58,
-      "y": 0.38,
-      "radius": 0.032,
+      "y": 0.565,
+      "radius": 0.044,
       "score": 150,
-      "spriteType": "moth",
-      "scale": 0.48,
+      "spriteType": "siamese-cat",
+      "scale": 0.82,
       "camo": "chameleon",
-      "roam": {
-        "path": [
-          [
-            0.58,
-            0.38
-          ],
-          [
-            0.63,
-            0.35
-          ],
-          [
-            0.66,
-            0.42
-          ],
-          [
-            0.6,
-            0.44
-          ]
-        ],
-        "period": 14,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Bướm đêm bị lôi cuốn bởi muôn vàn sắc màu lung linh của bảng hiệu chữ Hán."
+      "foundText": "Mắt mèo phản chiếu ánh sáng nên lóe lên trong bóng tối, giúp chúng nhìn rõ ban đêm."
     },
     {
-      "id": "night-bat",
-      "name": "Dơi Bay Phố Hoa",
-      "clue": "Chú dơi đêm săn mồi lượn vòng trên bầu trời đêm tối giữa hai dãy phố.",
-      "x": 0.46,
-      "y": 0.32,
-      "radius": 0.034,
-      "score": 150,
-      "spriteType": "bat",
-      "scale": 0.52,
-      "camo": "ink",
-      "foundText": "Những cánh dơi chớp nhoáng lướt qua ranh giới giữa bóng tối và ánh đèn đường rực rỡ."
-    },
-    {
-      "id": "night-street-cat",
-      "name": "Mèo Đêm Đi Dạo",
-      "clue": "Chú mèo tam thể bước đi thong thả trên gờ tường cạnh quầy hải sản bên phải.",
-      "x": 0.76,
-      "y": 0.72,
-      "radius": 0.032,
+      "id": "night-noodles",
+      "name": "Bát Mì Đêm",
+      "clue": "Bát mì nóng đặt trên quầy xe hàng rong bên phải, dưới dãy đèn lồng đỏ.",
+      "x": 0.81,
+      "y": 0.6,
+      "radius": 0.044,
       "score": 120,
-      "spriteType": "cat",
-      "scale": 0.52,
+      "spriteType": "noodle-bowl",
+      "scale": 0.72,
+      "camo": "ink",
+      "foundText": "Khi đèn bật sáng, Yaowarat thành khu ẩm thực đường phố nhộn nhịp bậc nhất Bangkok."
+    },
+    {
+      "id": "night-tuktuk",
+      "name": "Tuk-tuk Chạy Đêm",
+      "clue": "Chiếc tuk-tuk nhỏ chạy dưới tấm biển hiệu vàng dọc ở cuối phố bên trái.",
+      "x": 0.33,
+      "y": 0.62,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "tuk-tuk",
+      "scale": 0.65,
       "camo": "chameleon",
-      "foundText": "Mèo phố Chinatown luôn được các chủ quán ưu ái dành cho những phần cá nướng ngon lành."
+      "foundText": "Đèn xe tuk-tuk lấp lánh nối đuôi nhau trên phố Hoa kiều suốt đêm."
+    },
+    {
+      "id": "night-thai-tea",
+      "name": "Túi Trà Sữa Khuya",
+      "clue": "Túi trà sữa Thái treo bên hông xe hàng rong đầu tiên, cạnh chiếc tuk-tuk lớn.",
+      "x": 0.69,
+      "y": 0.62,
+      "radius": 0.044,
+      "score": 120,
+      "spriteType": "thai-tea",
+      "scale": 0.7,
+      "camo": "chameleon",
+      "foundText": "Thêm một túi trà sữa mát lạnh cho buổi điều tra đêm!"
     },
     {
       "id": "artist-seal",
       "name": "Dấu Triện Ký Họa",
-      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 22 2023' ở góc dưới cùng bên phải trang sách.",
-      "x": 0.902,
-      "y": 0.728,
-      "radius": 0.04,
+      "clue": "Mộc triện son đỏ cùng dòng ngày tháng 'DEC 20 2023' ở góc dưới cùng bên phải trang sách.",
+      "x": 0.895,
+      "y": 0.725,
+      "radius": 0.045,
       "score": 150,
       "spriteType": "seal",
       "foundText": "Dấu ấn của kiến trúc sư ghi lại đêm không ngủ tại phố cổ Yaowarat!"
     },
     {
-      "id": "secret-pocket-watch",
-      "name": "Đồng Hồ Quả Quýt Bí Mật",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ cổ vẽ bằng mực tàng hình ẩn hiện trên phần giấy ghi chép bên trang trái.",
+      "id": "secret-goldfish",
+      "name": "Cá Vàng Mực Tàng Hình",
+      "clue": "[BÍ MẬT] Chú cá vàng vẽ bằng mực tàng hình bơi trên khoảng giấy trống phía trên tờ hóa đơn.",
       "x": 0.16,
       "y": 0.35,
-      "radius": 0.038,
+      "radius": 0.048,
       "score": 300,
       "isSecret": true,
-      "spriteType": "pocket-watch",
-      "scale": 0.65,
-      "rotation": -15,
+      "spriteType": "goldfish",
+      "scale": 0.85,
       "camo": "invisible",
-      "foundText": "Bí mật sáng tỏ: Chiếc đồng hồ chỉ đúng nửa đêm — thời điểm các xe bán súp tổ yến bắt đầu mở cửa!"
+      "foundText": "Bí mật đã mở ra: cá vàng tượng trưng cho \"năm nào cũng dư dả\" trong ngày Tết của người Hoa!"
     },
     {
-      "id": "bonus-firefly",
-      "name": "Đom Đóm Góc Hẻm",
-      "clue": "Đốm sáng đom đóm lập lòe gần chậu cây nhỏ dưới chân bảng hiệu bên trái.",
-      "x": 0.22,
-      "y": 0.6,
-      "radius": 0.026,
+      "id": "bonus-scorpion",
+      "name": "Bọ Cạp Chân Tường",
+      "clue": "Chú bọ cạp bò ra từ chân tường dãy nhà phố bên trái khi phố đã lên đèn.",
+      "x": 0.26,
+      "y": 0.66,
+      "radius": 0.038,
       "score": 100,
       "isBonus": true,
-      "spriteType": "firefly",
-      "scale": 0.42,
-      "camo": "ink",
-      "foundText": "Đốm sáng lập lòe nhỏ bé đung đưa như một ngọn đèn lồng tí hon trong hẻm sâu."
-    },
-    {
-      "id": "bonus-spider",
-      "name": "Nhện Giăng Tơ Đêm",
-      "clue": "Chú nhện giăng tơ mảnh dưới góc mái che quán ăn bên phải.",
-      "x": 0.66,
-      "y": 0.62,
-      "radius": 0.026,
-      "score": 100,
-      "isBonus": true,
-      "spriteType": "spider",
-      "scale": 0.42,
+      "spriteType": "scorpion",
+      "scale": 0.58,
       "camo": "chameleon",
-      "foundText": "Mạng nhện lấp lánh phản chiếu ánh đèn đỏ từ lồng đèn tiệm vàng gần đó."
+      "shy": {
+        "period": 7,
+        "offset": 2,
+        "from": "left"
+      },
+      "foundText": "Bọ cạp săn mồi về đêm và ngủ suốt ngày dưới khe đá."
+    },
+    {
+      "id": "bonus-betta",
+      "name": "Cá Xiêm Trong Hũ",
+      "clue": "Chú cá xiêm đỏ tím bơi sát quầy kính của xe hàng rong bên phải.",
+      "x": 0.745,
+      "y": 0.585,
+      "radius": 0.038,
+      "score": 100,
+      "isBonus": true,
+      "spriteType": "betta",
+      "scale": 0.55,
+      "camo": "ink",
+      "foundText": "Cá xiêm đực phải nuôi riêng từng hũ, vì gặp nhau là chúng đánh nhau ngay."
     }
   ]
 }

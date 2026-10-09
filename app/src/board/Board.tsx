@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PixelRatio, Pressable, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
-import { Canvas, Picture, Skia, type SkPicture } from '@shopify/react-native-skia';
+import { Canvas, Skia, useCanvasRef, type ISkiaViewApi, type SkPicture } from '@shopify/react-native-skia';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
+import { useAnimatedReaction, useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
+import { scheduleOnUI } from 'react-native-worklets';
 import type { HiddenObject, Page, PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { ZoomIn, ZoomOut } from '../ui/icons';
@@ -41,6 +42,7 @@ export interface BoardProps {
   nudgeTarget: HiddenObject | null; // Hint tier 2
   /** The page turn in progress: the leaf turns over (left or right) to that page */
   turn: PageTurn | null;
+  onTurnComplete: (request: PageTurn) => void;
   fogged: boolean;
   /** A spot to inspect: normalized spread coordinates, and the point in the window */
   onInspect: (nx: number, ny: number, screenPos: { x: number; y: number }) => void;
@@ -54,8 +56,12 @@ export interface BoardProps {
 const emptyPicture = (() => {
   const rec = Skia.PictureRecorder();
   rec.beginRecording(Skia.XYWHRect(0, 0, 1, 1));
-  return rec.finishRecordingAsPicture();
+  const picture = rec.finishRecordingAsPicture();
+  rec.dispose();
+  return picture;
 })();
+// Skia exposes the same picture-view API on native and web; capture it for worklets.
+const viewApi = (globalThis as typeof globalThis & { SkiaViewApi: ISkiaViewApi }).SkiaViewApi;
 
 export const Board = React.memo<BoardProps>(function Board({
   page,
@@ -64,6 +70,7 @@ export const Board = React.memo<BoardProps>(function Board({
   radarTargetId,
   nudgeTarget,
   turn,
+  onTurnComplete,
   fogged,
   onInspect,
   preload,
@@ -94,25 +101,33 @@ export const Board = React.memo<BoardProps>(function Board({
   const library = useSceneLibrary(page, loupePaints, compact, density);
   const camera = useCamera(size, library.shown, page.id, diameter, turning);
   const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera);
-  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning);
+  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning, onTurnComplete);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);
-  const warmUp = useWarmUp(library.scene, !active, camera);
+  const warmUp = useWarmUp(library.scene, !active, camera, library.retirePictures);
 
   /* --------------------------------- Frame --------------------------------- */
 
   const clock = useSharedValue(motionNow());
-  useFrameCallback(() => {
+  const tickFrame = useCallback(() => {
+    'worklet';
     clock.value = motionNow();
-  });
+  }, [clock]);
+  const frameClock = useFrameCallback(tickFrame, false);
+  useEffect(() => {
+    // Warm-up and turns still need frames under overlays; an otherwise covered board is static.
+    frameClock.setActive((active && turn === null) || pageTurn.flip !== null || warmUp !== null);
+  }, [active, turn, pageTurn.flip, warmUp, frameClock]);
   const { shown } = library;
   const { flip, flipStart } = pageTurn;
   const { s, tx, ty, lx, ly, dims } = camera;
   const { found, radar, fogStart, nudge } = marks;
+  // Keep one owner across mapper rebuilds so a retired output cannot be deleted twice.
+  const frameBuffer = useMemo(() => ({ picture: null as SkPicture | null }), []);
   const picture = useDerivedValue<SkPicture>(() => {
     const base = shown ?? flip?.S;
     if (!base) return emptyPicture;
     const { w, h } = dims.value;
-    return renderFrame(base, {
+    const next = renderFrame(base, {
       now: clock.value,
       width: w,
       height: h,
@@ -130,24 +145,62 @@ export const Board = React.memo<BoardProps>(function Board({
       warm,
       warmUp,
     });
-  }, [shown, flip, warm, warmUp]);
+    frameBuffer.picture?.dispose();
+    frameBuffer.picture = next;
+    return next;
+  }, [shown, flip, warm, warmUp, frameBuffer]);
 
-  const { gesture, zoomRect, bannerRect } = useBoardGestures(camera, active && !flip, onInspect, windowOffset, viewRef, turning);
+  const canvasRef = useCanvasRef();
+  const canvasId = useSharedValue(-1);
+  useEffect(() => {
+    canvasId.value = canvasRef.current?.getNativeId() ?? -1;
+    return () => { canvasId.value = -1; };
+  }, [canvasId, canvasRef]);
+  useAnimatedReaction(
+    () => ({ id: canvasId.value, frame: picture.value }),
+    ({ id, frame }) => {
+      // This frame is already a picture: avoid recording a second wrapper through <Picture>.
+      if (id !== -1) viewApi.setJsiProperty(id, 'picture', frame);
+    },
+    [canvasId, picture]
+  );
+
+  const { releaseUnused } = library;
+  useEffect(() => {
+    const live = [shown, ...pageTurn.heldScenes, ...(warmUp?.map((frame) => frame.flip?.S) ?? [])]
+      .filter((scene): scene is NonNullable<typeof shown> => !!scene);
+    const heldPictures = [picture.value, flip?.from, flip?.to, ...(warmUp?.map((frame) => frame.flip?.from) ?? [])]
+      .filter((value): value is SkPicture => !!value);
+    releaseUnused(live, warm, heldPictures);
+  }, [releaseUnused, library.version, shown, pageTurn.heldScenes, flip, warm, warmUp, picture]);
+  const releaseRef = useRef(releaseUnused);
+  releaseRef.current = releaseUnused;
+  useEffect(() => () => {
+    // Let Canvas cancel its pending redraw and Reanimated stop the mapper before releasing output.
+    setTimeout(() => {
+      scheduleOnUI(() => {
+        'worklet';
+        frameBuffer.picture?.dispose();
+        frameBuffer.picture = null;
+      });
+      releaseRef.current([], [], []);
+    }, 0);
+  }, [frameBuffer]);
+
+  const { gesture, zoomRect, bannerRect } = useBoardGestures(camera, active && !turn && !flip, onInspect, windowOffset, viewRef, turning);
 
   /* ------------------------------ Zoom buttons ------------------------------ */
 
   const { zoom, zoomTo } = camera;
   // The buttons move in tenths of what the label shows (1.0×, 1.1×, 1.2×…), also after a pinch
   const stepZoom = (dir: 1 | -1) => zoomTo((Math.round(zoom * 10) + dir) / 10);
-  const zoomIdle = flip !== null; // the page turn moves the camera
+  const zoomIdle = turn !== null || flip !== null; // includes a destination still loading
 
   return (
     <View ref={viewRef} style={styles.root} onLayout={onLayout}>
       <GestureDetector gesture={gesture}>
         <View style={StyleSheet.absoluteFill} collapsable={false}>
-          <Canvas style={StyleSheet.absoluteFill}>
-            <Picture picture={picture} />
-          </Canvas>
+          <Canvas ref={canvasRef} style={StyleSheet.absoluteFill} />
         </View>
       </GestureDetector>
 
