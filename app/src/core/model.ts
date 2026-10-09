@@ -67,6 +67,15 @@ export type SpriteType =
   | 'stick-insect'
   | 'saola'
   | 'water-buffalo'
+  | 'golden-turtle'
+  | 'dong-tao-chicken'
+  | 'hmong-dog'
+  | 'langur'
+  | 'highland-elephant'
+  | 'mudskipper'
+  | 'ca-mau-crab'
+  | 'phu-quoc-dog'
+  | 'dugong'
   // Đồ vật văn hóa & thám tử
   | 'durian'
   | 'fortune-cat'
@@ -79,7 +88,23 @@ export type SpriteType =
   | 'deerstalker'
   | 'conical-hat'
   | 'lantern'
-  | 'cyclo';
+  | 'cyclo'
+  | 'water-puppet'
+  | 'khen'
+  | 'cham-statue'
+  | 'gong'
+  | 'dragon-boat'
+  | 'dan-bau'
+  | 'banh-mi'
+  | 'coffee-phin'
+  | 'sampan'
+  | 'dong-son-drum'
+  | 'pho-bowl'
+  | 'brocade'
+  | 'basket-boat'
+  | 'ao-dai'
+  | 't-rung'
+  | 'coconut';
 
 /**
  * How an unfound object blends into the watercolour painting.

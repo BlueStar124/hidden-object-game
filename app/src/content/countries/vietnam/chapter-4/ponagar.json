@@ -8,68 +8,68 @@
   "objects": [
     {
       "id": "cham-vase",
-      "name": "Bình Gốm Đất Nung",
-      "clue": "Bình gốm Chăm Pa hoa văn đất nung đặt bên chân tháp chính Po Nagar.",
+      "name": "Tượng Vũ Nữ Apsara",
+      "clue": "Tượng sa thạch vũ nữ Chăm Pa Apsara uyển chuyển đặt bên chân tháp chính Po Nagar.",
       "x": 0.42,
       "y": 0.68,
-      "radius": 0.032,
+      "radius": 0.034,
       "score": 150,
-      "spriteType": "vase",
-      "scale": 0.44,
+      "spriteType": "cham-statue",
+      "scale": 0.48,
       "camo": "chameleon",
-      "foundText": "Kỹ thuật nung gạch và chất kết dính của người Chăm cổ đến nay vẫn là ẩn số bí ẩn."
+      "foundText": "Điệu múa Apsara huyền bí dâng lên Nữ thần Mẹ Xứ Sở Yan Po Nagar."
     },
     {
       "id": "temple-monkey",
-      "name": "Khỉ Đồi Cù Lao",
-      "clue": "Chú khỉ tinh nghịch chuyền cành trên tán cây sứ cổ thụ cạnh tháp Po Nagar.",
+      "name": "Thuyền Thúng Cửa Sông Cái",
+      "clue": "Chiếc thuyền thúng nan tròn đan tre neo bên bến sông Cái dưới chân đồi Cù Lao.",
       "x": 0.75,
       "y": 0.44,
       "radius": 0.034,
       "score": 150,
-      "spriteType": "monkey",
+      "spriteType": "basket-boat",
       "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Bầy khỉ thân thiện sống quanh khuôn viên tháp được du khách rất yêu quý."
+      "foundText": "Thuyền thúng nan theo ngư dân miền biển Khánh Hòa vượt sóng ra khơi."
     },
     {
       "id": "sanskrit-scroll",
-      "name": "Bia Ký Phạn Tự",
-      "clue": "Bản khắc văn tự Phạn cổ ẩn mình giữa những kẽ gạch nung ngàn năm.",
+      "name": "Cồng Chiêng Lễ Hội Ka-tê",
+      "clue": "Chiếc chiêng đồng lễ hội Chăm đặt bên bệ gạch nung ngàn năm.",
       "x": 0.58,
       "y": 0.54,
       "radius": 0.03,
       "score": 120,
-      "spriteType": "scroll",
-      "scale": 0.42,
+      "spriteType": "gong",
+      "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Văn bia ca ngợi công đức của Nữ thần Mẹ Xứ Sở Yan Po Nagar."
+      "foundText": "Tiếng cồng chiêng rộn rã hòa cùng tiếng trống Baranưng trong ngày hội Ka-tê."
     },
     {
       "id": "sacred-dove",
-      "name": "Bồ Câu Mái Tháp",
-      "clue": "Chú bồ câu đậu sưởi nắng trên tầng mái nhọn bằng gạch nung đỏ thắm.",
+      "name": "Áo Dài Trắng Lễ Hội",
+      "clue": "Tà áo dài trắng thanh tao thấp thoáng bên vòm cổng tháp gạch nung đỏ thắm.",
       "x": 0.48,
       "y": 0.36,
       "radius": 0.032,
       "score": 100,
-      "spriteType": "dove",
+      "spriteType": "ao-dai",
       "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Tiếng gù của bồ câu hòa cùng tiếng chuông gió ngân nga trong nắng sớm."
+      "foundText": "Tà áo dài duyên dáng trong không gian văn hóa lễ hội Tháp Bà truyền thống."
     },
     {
       "id": "ceremony-teacup",
-      "name": "Chén Nước Tẩy Trần",
-      "clue": "Chén nước lễ đặt trang nghiêm trên bàn thờ ngoài sân tháp bên phải.",
+      "name": "Đàn Bầu Tiếng Tơ Tháp Cổ",
+      "clue": "Cây đàn bầu mộc mạc đặt trên bàn nhạc lễ ngoài sân tháp bên phải.",
       "x": 0.78,
       "y": 0.61,
       "radius": 0.03,
       "score": 120,
-      "spriteType": "teacup",
-      "scale": 0.42,
+      "spriteType": "dan-bau",
+      "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Nước thơm ngâm cánh hoa sứ và trầm hương dùng trong nghi lễ múa thiêng."
+      "foundText": "Thanh âm đàn bầu độc huyền cầm ngân nga trầm bổng giữa nắng gió tháp Chàm."
     },
     {
       "id": "artist-seal",
@@ -84,17 +84,17 @@
     },
     {
       "id": "secret-cham-key",
-      "name": "Chìa Khóa Đền Tháp",
-      "clue": "[BÍ MẬT] Chìa khóa mật thất Chăm Pa ẩn hiện giữa bầu trời sông Cái Nha Trang.",
+      "name": "Khèn Bè Huyền Thoại",
+      "clue": "[BÍ MẬT] Cây khèn bè huyền ảo phát sáng giữa bầu trời sông Cái Nha Trang.",
       "x": 0.28,
       "y": 0.25,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "key",
+      "spriteType": "khen",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật thiêng liêng mở lối vào phòng mật dưới lòng đền tháp!"
+      "foundText": "Nhạc cụ cổ truyền giao hòa âm hưởng giữa núi rừng và biển cả miền Trung!"
     },
     {
       "id": "bonus-gecko",

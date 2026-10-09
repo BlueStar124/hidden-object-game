@@ -152,22 +152,16 @@
     },
     {
       "id": "night-otter",
-      "name": "Rái Cá Bơi Đêm",
-      "clue": "Chú rái cá bơi thong thả men theo doi cát ngầm chân đảo.",
+      "name": "Voọc Cát Bà Ngủ Đêm",
+      "clue": "Chú voọc Cát Bà nép mình trong hốc đá kín gió dưới chân đảo.",
       "x": 0.25,
       "y": 0.61,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "otter",
+      "spriteType": "langur",
       "scale": 0.44,
       "camo": "chameleon",
-      "waterline": 0.6,
-      "shy": {
-        "period": 7,
-        "offset": 2,
-        "from": "below"
-      },
-      "foundText": "Rái cá lặn ngụp bắt cá đêm, miệng ngậm chiếc vòng hạt cườm."
+      "foundText": "Voọc Cát Bà cuộn tròn giữ ấm qua đêm sương lạnh trên vịnh."
     },
     {
       "id": "artist-seal",
@@ -182,17 +176,17 @@
     },
     {
       "id": "secret-night-compass",
-      "name": "La Bàn Sao Bắc Đẩu",
-      "clue": "[BÍ MẬT] Kim la bàn sao phát sáng giữa dải sương mù đêm trên nền trời vịnh.",
+      "name": "Thuyền Rồng Đêm Sương",
+      "clue": "[BÍ MẬT] Thuyền rồng hoàng gia phát sáng lấp lánh giữa dải sương mù đêm trên nền trời vịnh.",
       "x": 0.55,
       "y": 0.32,
       "radius": 0.036,
       "score": 300,
       "isSecret": true,
-      "spriteType": "compass",
+      "spriteType": "dragon-boat",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "La bàn thiên văn chỉ đúng phương hướng đến trang sách tiếp theo!"
+      "foundText": "Thuyền rồng rẽ màn sương đêm vịnh Hạ Long, mở lối đến hành trình mới!"
     },
     {
       "id": "bonus-night-moth",
@@ -211,16 +205,16 @@
     {
       "id": "bonus-night-crab",
       "name": "Cua Biển Đi Đêm",
-      "clue": "Chú cua nhỏ dạo bước trên mỏm đá ướt sương đêm dưới ánh trăng.",
+      "clue": "Chú cua biển càng đỏ dạo bước trên mỏm đá ướt sương đêm dưới ánh trăng.",
       "x": 0.74,
       "y": 0.69,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "crab",
+      "spriteType": "ca-mau-crab",
       "scale": 0.45,
       "camo": "ink",
-      "foundText": "Cua đêm bò ngang tìm mồi trên phiến đá rêu."
+      "foundText": "Cua biển đi đêm lùng sục tìm mồi trên phiến đá rêu phong."
     }
   ]
 }

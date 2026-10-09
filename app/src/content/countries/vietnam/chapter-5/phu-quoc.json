@@ -8,30 +8,30 @@
   "objects": [
     {
       "id": "sea-turtle-island",
-      "name": "Rùa Biển Đồi Mồi",
-      "clue": "Chú rùa biển đồi mồi bơi lội thong dong dưới vòm Cầu Hôn hùng vĩ.",
+      "name": "Bò Biển Dugong Đảo Ngọc",
+      "clue": "Chú bò biển Dugong quý hiếm bơi lội thong dong dưới làn nước ngọc bích Cầu Hôn.",
       "x": 0.42,
       "y": 0.56,
       "radius": 0.036,
       "score": 150,
-      "spriteType": "turtle",
-      "scale": 0.48,
+      "spriteType": "dugong",
+      "scale": 0.5,
       "camo": "chameleon",
       "waterline": 0.65,
-      "foundText": "Vườn quốc gia Phú Quốc là khu dự trữ sinh quyển thế giới được UNESCO công nhận."
+      "foundText": "Bò biển Dugong hiền lành là sinh vật biển quý hiếm được bảo tồn tại vùng biển đảo Phú Quốc."
     },
     {
       "id": "coral-crab",
-      "name": "Cua Huỳnh Đế",
-      "clue": "Chú cua đá bò trên rạn san hô gần khán đài biểu diễn trên biển.",
+      "name": "Cua Huỳnh Đế Phú Quốc",
+      "clue": "Chú cua huỳnh đế đỏ rực nép mình dưới rạn san hô gần khán đài Cầu Hôn.",
       "x": 0.24,
       "y": 0.54,
       "radius": 0.028,
       "score": 120,
-      "spriteType": "crab",
+      "spriteType": "ca-mau-crab",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà."
+      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà danh bất hư truyền."
     },
     {
       "id": "coral-seahorse",
@@ -44,35 +44,34 @@
       "spriteType": "seahorse",
       "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương.",
-      "waterline": 0.6
+      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương."
     },
     {
       "id": "squid-boat",
-      "name": "Thuyền Câu Mực Đêm",
-      "clue": "Chiếc thuyền nan câu mực cập bến cảng thị trấn Hoàng Hôn.",
+      "name": "Thuyền Thúng Đảo Ngọc",
+      "clue": "Chiếc thuyền thúng tròn đan tre bồng bềnh cập bến cảng thị trấn Hoàng Hôn.",
       "x": 0.36,
       "y": 0.52,
       "radius": 0.036,
       "score": 150,
-      "spriteType": "paper-boat",
+      "spriteType": "basket-boat",
       "scale": 0.48,
       "camo": "chameleon",
-      "foundText": "Đêm xuống, hàng trăm ngọn đèn câu mực rực sáng như thành phố nổi trên biển.",
+      "foundText": "Thuyền thúng nan mộc mạc đưa ngư dân câu mực đêm giữa muôn ngàn ánh đèn rực sáng.",
       "waterline": 0.6
     },
     {
       "id": "island-spyglass",
-      "name": "Ống Nhòm Mũi Gành Dầu",
-      "clue": "Ống nhòm hải đăng đặt trên bệ đá tháp đồng hồ Venice phía trước.",
+      "name": "Chó Xoáy Phú Quốc",
+      "clue": "Chú chó xoáy Phú Quốc dũng mãnh đứng hóng gió trên bờ kè đá tháp đồng hồ Venice.",
       "x": 0.28,
       "y": 0.68,
       "radius": 0.032,
       "score": 100,
-      "spriteType": "spyglass",
-      "scale": 0.44,
+      "spriteType": "phu-quoc-dog",
+      "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Từ mũi Gành Dầu có thể nhìn thấy hòn đảo nước bạn Campuchia rất gần."
+      "foundText": "Chó xoáy Phú Quốc với xoáy lông dọc sống lưng và biệt tài bơi lội là quốc khuyển trứ danh của Việt Nam."
     },
     {
       "id": "artist-seal",
@@ -87,17 +86,17 @@
     },
     {
       "id": "secret-pearl-compass",
-      "name": "La Bàn Khảm Ngọc Trai",
-      "clue": "[BÍ MẬT] La bàn ngọc trai Phú Quốc phát sáng diệu kỳ giữa ánh hoàng hôn tím biếc.",
+      "name": "Trái Dừa Xiêm Bãi Sao",
+      "clue": "[BÍ MẬT] Trái dừa thơm ngọt ngào ẩn mình trong vạt nắng chiều hoàng hôn tím biếc.",
       "x": 0.38,
       "y": 0.26,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "compass",
+      "spriteType": "coconut",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Ngọc trai đảo Phú Quốc sáng bóng tự nhiên, nức danh khắp thế giới!"
+      "foundText": "Rặng dừa nghiêng soi bóng bãi cát trắng mịn như kem tạo nên vẻ đẹp thiên đường Phú Quốc!"
     },
     {
       "id": "bonus-jellyfish",
@@ -115,14 +114,14 @@
     },
     {
       "id": "bonus-koi",
-      "name": "Cá Cảnh Biển Xanh",
-      "clue": "Cá lội tung tăng dưới bóng đèn hoa ven lối đi dạo thị trấn.",
+      "name": "Rùa Vàng Biển Nam",
+      "clue": "Chú rùa vàng bơi lội tung tăng dưới bóng đèn hoa ven lối đi dạo thị trấn.",
       "x": 0.62,
       "y": 0.62,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "koi",
+      "spriteType": "golden-turtle",
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Thế giới đại dương phong phú với hàng trăm loài sinh vật kỳ thú."

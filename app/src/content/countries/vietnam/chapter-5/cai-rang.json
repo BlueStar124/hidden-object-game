@@ -8,13 +8,13 @@
   "objects": [
     {
       "id": "cairang-boat",
-      "name": "Ghe Tam Bản Trái Cây",
-      "clue": "Chiếc ghe chở đầy dưa hấu, khóm tươi len lỏi giữa chợ nổi Cái Răng.",
+      "name": "Xuồng Ba Lá Trái Cây",
+      "clue": "Chiếc xuồng ba lá chở đầy hoa trái len lỏi giữa chợ nổi Cái Răng.",
       "x": 0.34,
       "y": 0.65,
       "radius": 0.036,
       "score": 150,
-      "spriteType": "paper-boat",
+      "spriteType": "sampan",
       "scale": 0.48,
       "camo": "chameleon",
       "foundText": "Cây bẹo dựng đầu ghe: treo gì bán nấy, nét văn hóa giao thương độc đáo miền Tây.",
@@ -35,7 +35,7 @@
     },
     {
       "id": "river-buffalo",
-      "name": "Trâu Tắm Bến Sông",
+      "name": "Trâu Nước Tắm Sông",
       "clue": "Chú trâu nước hiền lành tắm mát bên bờ sông rợp bóng dừa nước bên trái.",
       "x": 0.18,
       "y": 0.44,
@@ -48,35 +48,29 @@
     },
     {
       "id": "mekong-durian",
-      "name": "Sầu Riêng Ri6 Cái Mơn",
-      "clue": "Trái sầu riêng thơm lừng treo trên cây bẹo đầu mũi thuyền buôn.",
+      "name": "Trái Dừa Xiêm Sông Nước",
+      "clue": "Trái dừa tươi ngọt nước treo trên cọc bẹo đầu mũi thuyền buôn Cái Răng.",
       "x": 0.32,
       "y": 0.58,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "durian",
+      "spriteType": "coconut",
       "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Sầu riêng cơm vàng hạt lép thơm lừng nức tiếng miền Tây Nam Bộ."
+      "foundText": "Nước dừa xiêm mát lành làm dịu đi cái nắng gắt phương Nam."
     },
     {
       "id": "river-otter",
-      "name": "Rái Cá Lông Mượt",
-      "clue": "Chú rái cá sông tinh nghịch ngụp lặn giữa các mạn ghe thuyền tấp nập.",
+      "name": "Ly Cà Phê Phin Sông Hậu",
+      "clue": "Ly cà phê phin nhỏ giọt thơm nồng đặt cạnh mạn ghe bồng bềnh sóng nước.",
       "x": 0.44,
       "y": 0.68,
       "radius": 0.03,
       "score": 120,
-      "spriteType": "otter",
+      "spriteType": "coffee-phin",
       "scale": 0.42,
       "camo": "chameleon",
-      "waterline": 0.6,
-      "shy": {
-        "period": 7.5,
-        "offset": 1.0,
-        "from": "below"
-      },
-      "foundText": "Rái cá bơi lượn săn cá bống dừa trên dòng sông màu phù sa đỏ nặng."
+      "foundText": "Cà phê kho, cà phê phin đón bình minh trên sông là nét sinh hoạt thi vị của người Nam Bộ."
     },
     {
       "id": "artist-seal",
@@ -91,31 +85,31 @@
     },
     {
       "id": "secret-coin-pouch",
-      "name": "Túi Tiền Xu Thương Hồ",
-      "clue": "[BÍ MẬT] Túi tiền may mắn của thương hồ chìm sâu dưới làn phù sa màu mỡ sông Hậu.",
+      "name": "Cây Đàn Bầu Tài Tử",
+      "clue": "[BÍ MẬT] Cây đàn bầu ngân vang giai điệu dạ cổ hoài lang ẩn hiện bên bóng dừa nước.",
       "x": 0.22,
       "y": 0.62,
       "radius": 0.036,
       "score": 300,
       "isSecret": true,
-      "spriteType": "coin-pouch",
+      "spriteType": "dan-bau",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "Đồng tiền giao thương của những thương hồ rong ruổi khắp nẻo sông rạch!"
+      "foundText": "Tiếng đàn bầu réo rắt hồn quê sông nước Cửu Long, di sản văn hóa phi vật thể của nhân loại!"
     },
     {
       "id": "bonus-river-crab",
-      "name": "Cua Đồng Càng Xanh",
-      "clue": "Chú cua đồng bám vào rễ cây dừa nước ven bờ sông.",
+      "name": "Cua Biển Càng Xanh",
+      "clue": "Chú cua càng xanh bám vào rễ cây dừa nước ven bờ sông.",
       "x": 0.12,
       "y": 0.71,
       "radius": 0.028,
       "score": 100,
       "isBonus": true,
-      "spriteType": "crab",
+      "spriteType": "ca-mau-crab",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Cua đồng béo ngậy nấu canh rau đay mồng tơi là món ăn dân dã tuyệt hảo."
+      "foundText": "Cua đồng, cua sông béo ngậy bồi đắp bởi nguồn phù sa màu mỡ phù sa sông Cửu Long."
     },
     {
       "id": "bonus-kingfisher",

@@ -152,16 +152,16 @@
     },
     {
       "id": "night-civet-rock",
-      "name": "Cầy Vòi Hương Kiếm Ăn",
-      "clue": "Chú cầy hương đêm thoăn thoắt di chuyển dọc theo bờ ruộng bậc thang.",
+      "name": "Chó H'Mông Cộc Gác Đêm",
+      "clue": "Chú chó H'Mông cộc đuôi kiên cường canh gác sườn đèo Mã Pí Lèng trong đêm lạnh.",
       "x": 0.32,
       "y": 0.64,
       "radius": 0.032,
       "score": 120,
-      "spriteType": "civet",
+      "spriteType": "hmong-dog",
       "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Cầy vòi hương leo trèo điệu nghệ tìm trái rừng chín rụng."
+      "foundText": "Quốc khuyển vùng cao trung thành thức canh sự bình yên cho bản làng."
     },
     {
       "id": "artist-seal",
@@ -176,17 +176,17 @@
     },
     {
       "id": "secret-pocket-watch-moon",
-      "name": "Đồng Hồ Trăng Khuyết",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ quả quýt ánh trăng phát sáng giữa bầu trời đêm lấp lánh sao.",
+      "name": "Khèn H'Mông Đêm Trăng",
+      "clue": "[BÍ MẬT] Cây khèn H'Mông huyền ảo phát sáng giữa bầu trời đêm lấp lánh ngàn sao.",
       "x": 0.45,
       "y": 0.24,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "pocket-watch",
+      "spriteType": "khen",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật thời gian ghi lại khoảnh khắc trăng soi đáy vực Tu Sản!"
+      "foundText": "Khèn đêm trao duyên réo rắt phá tan sự tĩnh lặng của thung lũng đá tai mèo!"
     },
     {
       "id": "bonus-night-moth",

@@ -47,29 +47,29 @@
     },
     {
       "id": "field-frog",
-      "name": "Chàng Hiu Nước Ngọt",
-      "clue": "Chú ếch nhỏ nấp dưới lọn lúa uốn câu trĩu hạt bên bờ nước tràn.",
+      "name": "Khèn H'Mông Mùa Gặt",
+      "clue": "Cây khèn trúc H'Mông gác bên bờ ruộng bậc thang uốn lượn thơm ngát hương nếp mới.",
       "x": 0.38,
       "y": 0.68,
       "radius": 0.032,
-      "score": 100,
-      "spriteType": "frog",
-      "scale": 0.5,
-      "camo": "ink",
-      "foundText": "Tiếng ếch râm ran báo hiệu vụ mùa bội thu no ấm."
+      "score": 120,
+      "spriteType": "khen",
+      "scale": 0.46,
+      "camo": "chameleon",
+      "foundText": "Điệu khèn rộn rã đón mừng mùa vàng no ấm của bà con vùng cao Mù Cang Chải."
     },
     {
       "id": "hill-camera",
-      "name": "Máy Ảnh Nhiếp Ảnh",
-      "clue": "Chiếc máy ảnh cổ của du khách đặt trên tảng đá ngắm cảnh bên sườn đồi phải.",
+      "name": "Thổ Cẩm Mâm Xôi",
+      "clue": "Tấm thổ cẩm hoa văn rực rỡ vắt trên phiến đá ngắm cảnh bên sườn đồi phải.",
       "x": 0.62,
       "y": 0.64,
       "radius": 0.034,
       "score": 120,
-      "spriteType": "vintage-camera",
-      "scale": 0.55,
+      "spriteType": "brocade",
+      "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Ống kính thu trọn những dải mâm xôi vàng rực rỡ nhất Mù Cang Chải."
+      "foundText": "Họa tiết thổ cẩm mô phỏng từng bậc thang vàng trùng điệp của đất trời Tây Bắc."
     },
     {
       "id": "artist-seal",
@@ -84,17 +84,17 @@
     },
     {
       "id": "secret-harvest-kite",
-      "name": "Cánh Diều Lúa Vàng",
-      "clue": "[BÍ MẬT] Cánh diều no gió ngày mùa bay bổng trên bầu trời Tây Bắc lộng gió.",
+      "name": "Chó H'Mông Cộc Trông Nương",
+      "clue": "[BÍ MẬT] Chú chó H'Mông cộc đuôi dũng cảm ẩn hiện giữa tầng mây lượn quanh đỉnh đồi lúa.",
       "x": 0.32,
       "y": 0.26,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "kite",
+      "spriteType": "hmong-dog",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Cánh diều mang ước vọng về cuộc sống ấm no nơi bản làng vùng cao."
+      "foundText": "Quốc khuyển bản địa kiên trung, người bạn tri kỷ bảo vệ nương rẫy của đồng bào Mông!"
     },
     {
       "id": "bonus-dragonfly",

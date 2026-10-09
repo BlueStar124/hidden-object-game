@@ -109,16 +109,16 @@
     },
     {
       "id": "night-boat-candle",
-      "name": "Thuyền Hoa Đăng Tỏa Sáng",
-      "clue": "Cụm đèn lồng rực rỡ thắp sáng trên chiếc thuyền hoa đăng bên phải.",
+      "name": "Xuồng Hoa Đăng Tỏa Sáng",
+      "clue": "Cụm hoa đăng rực rỡ thắp sáng trên chiếc xuồng nan bên phải.",
       "x": 0.78,
       "y": 0.71,
       "radius": 0.036,
       "score": 150,
-      "spriteType": "paper-boat",
+      "spriteType": "sampan",
       "scale": 0.48,
       "camo": "chameleon",
-      "foundText": "Từng ngọn nến thả trôi mang theo lời chúc bình an và hạnh phúc."
+      "foundText": "Từng ngọn nến hoa đăng thả trôi mang theo lời chúc bình an và hạnh phúc."
     },
     {
       "id": "night-owl-roof",
@@ -182,17 +182,17 @@
     },
     {
       "id": "secret-night-lantern",
-      "name": "Hoa Đăng Thất Truyền",
-      "clue": "[BÍ MẬT] Chiếc đèn lồng thần kỳ phát sáng huyền ảo giữa bầu trời đêm sông Hoài.",
+      "name": "Thuyền Rồng Đêm Hoa Đăng",
+      "clue": "[BÍ MẬT] Thuyền rồng hoàng gia lung linh phát sáng giữa bầu trời đêm sông Hoài.",
       "x": 0.58,
       "y": 0.25,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "lantern",
+      "spriteType": "dragon-boat",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật hoa đăng của nghệ nhân gia truyền xứ Quảng!"
+      "foundText": "Thuyền rồng lộng lẫy tái hiện lễ hội hoa đăng tráng lệ của thương cảng xưa!"
     },
     {
       "id": "bonus-night-moth",

@@ -8,16 +8,16 @@
   "objects": [
     {
       "id": "french-camera",
-      "name": "Máy Ảnh Cổ Phố Núi",
-      "clue": "Máy ảnh du lịch để trên bàn cà phê quảng trường nhìn ra hồ Xuân Hương.",
+      "name": "Phin Cà Phê Nhôm Phố Núi",
+      "clue": "Chiếc phin cà phê nhôm nhỏ giọt tí tách đặt trên bàn nhìn ra hồ Xuân Hương.",
       "x": 0.72,
       "y": 0.56,
       "radius": 0.032,
       "score": 150,
-      "spriteType": "vintage-camera",
-      "scale": 0.44,
+      "spriteType": "coffee-phin",
+      "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Bác sĩ Alexandre Yersin là người đã tìm ra cao nguyên Lang Biang vào năm 1893."
+      "foundText": "Thưởng thức ly cà phê phin nóng hổi trong tiết trời se lạnh phố sương mù."
     },
     {
       "id": "pine-squirrel",
@@ -34,42 +34,42 @@
     },
     {
       "id": "highland-teacup",
-      "name": "Tách Cà Phê Moka",
-      "clue": "Tách trà atiso nóng đặt trên bậc thang đá trước khối hoa dã quỳ.",
+      "name": "Đàn T'rưng Ống Nứa",
+      "clue": "Cây đàn T'rưng ống nứa đặt trên bậc thang đá trước khối nụ hoa atiso.",
       "x": 0.28,
       "y": 0.55,
-      "radius": 0.03,
+      "radius": 0.032,
       "score": 120,
-      "spriteType": "teacup",
-      "scale": 0.42,
+      "spriteType": "t-rung",
+      "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Cà phê Arabica Cầu Đất nức tiếng thế giới bởi vị chua thanh và hương thơm quyến rũ."
+      "foundText": "Thanh âm đàn T'rưng trong trẻo tựa tiếng suối ngàn reo ca khắp đại ngàn Tây Nguyên."
     },
     {
       "id": "pine-owl",
-      "name": "Cú Rừng Lang Biang",
-      "clue": "Chú cú mèo ẩn mình trong rặng thông xanh ngắt sườn đồi bên trái.",
+      "name": "Voi Bản Đôn Cao Nguyên",
+      "clue": "Chú voi Bản Đôn hiền lành thoắt ẩn hiện nơi bìa rừng thông sườn đồi bên trái.",
       "x": 0.16,
       "y": 0.42,
-      "radius": 0.032,
+      "radius": 0.036,
       "score": 120,
-      "spriteType": "owl",
-      "scale": 0.44,
+      "spriteType": "highland-elephant",
+      "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Người bạn lặng lẽ của rừng già, canh giữ sự yên bình của xứ sở ngàn hoa."
+      "foundText": "Voi Bản Đôn là biểu tượng sức mạnh và người bạn gắn bó thân thiết của buôn làng Tây Nguyên."
     },
     {
       "id": "garden-butterfly",
-      "name": "Bướm Hoa Cẩm Tú Cầu",
-      "clue": "Cánh bướm bay lượn quanh búp hoa atiso bằng kính xanh rực rỡ.",
+      "name": "Cồng Chiêng Tây Nguyên",
+      "clue": "Chiếc cồng chiêng đồng cổ đặt bên vòm hoa rực rỡ đón nắng sớm.",
       "x": 0.88,
       "y": 0.52,
-      "radius": 0.026,
+      "radius": 0.03,
       "score": 100,
-      "spriteType": "butterfly",
-      "scale": 0.36,
+      "spriteType": "gong",
+      "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Cẩm tú cầu đổi sắc theo độ pH của đất đỏ bazan vùng cao."
+      "foundText": "Không gian văn hóa cồng chiêng Tây Nguyên là kiệt tác di sản truyền khẩu của nhân loại."
     },
     {
       "id": "artist-seal",
@@ -84,17 +84,17 @@
     },
     {
       "id": "secret-pocket-watch",
-      "name": "Đồng Hồ Quả Quýt Thụy Sĩ",
-      "clue": "[BÍ MẬT] Đồng hồ quả quýt phát ra giai điệu lãng mạn giữa màn sương chiều phố núi.",
+      "name": "Thổ Cẩm Cao Nguyên",
+      "clue": "[BÍ MẬT] Tấm thổ cẩm dệt hoa văn rực rỡ ẩn hiện giữa màn sương chiều phố núi.",
       "x": 0.48,
       "y": 0.25,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "pocket-watch",
+      "spriteType": "brocade",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Kỷ vật thời gian của ga xe lửa răng cưa răng cưa huyền thoại Đà Lạt!"
+      "foundText": "Bản sắc văn hóa rực rỡ của đồng bào các dân tộc sinh sống trên cao nguyên đất đỏ!"
     },
     {
       "id": "bonus-snail",

@@ -34,30 +34,30 @@
     },
     {
       "id": "river-boat",
-      "name": "Thuyền Hoa Đăng",
-      "clue": "Con thuyền gỗ chở đầy hoa đăng dập dềnh sát cụm thuyền hoa đăng trên sông Hoài.",
+      "name": "Xuồng Hoa Đăng Sông Hoài",
+      "clue": "Con xuồng nan chở đầy hoa đăng dập dềnh sát cụm thuyền hoa đăng trên sông Hoài.",
       "x": 0.36,
       "y": 0.72,
       "radius": 0.036,
       "score": 150,
-      "spriteType": "paper-boat",
+      "spriteType": "sampan",
       "scale": 0.48,
       "camo": "chameleon",
-      "foundText": "Thuyền hoa đăng đưa những ước nguyện may mắn trôi xuôi dòng nước.",
+      "foundText": "Thuyền hoa đăng đưa những ước nguyện may mắn trôi xuôi dòng nước sông Hoài.",
       "waterline": 0.6
     },
     {
       "id": "ancient-cat",
-      "name": "Mèo Lười Mái Ngói",
-      "clue": "Chú mèo tam thể nằm lim dim trên lan can gỗ gác hai nhà cổ bên bờ sông.",
+      "name": "Áo Dài Phố Cổ Hoa Giấy",
+      "clue": "Tà áo dài lụa tơ tằm mềm mại bên ban công gỗ gác hai nhà cổ nhìn ra sông.",
       "x": 0.42,
       "y": 0.38,
-      "radius": 0.03,
+      "radius": 0.032,
       "score": 120,
-      "spriteType": "cat",
-      "scale": 0.42,
+      "spriteType": "ao-dai",
+      "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Chú mèo lười biếng tận hưởng nhịp sống chậm rãi thanh bình của phố cổ."
+      "foundText": "Áo dài lụa phố Hội tôn thêm nét trầm mặc cổ kính của di sản văn hóa thế giới."
     },
     {
       "id": "hoian-cyclo",
@@ -85,17 +85,17 @@
     },
     {
       "id": "secret-fortune-cat",
-      "name": "Mèo Thần Tài Thương Cảng",
-      "clue": "[BÍ MẬT] Mèo chiêu tài may mắn vẫy tay trên mái ngói âm dương phủ rêu phong.",
+      "name": "Thuyền Thúng Rừng Dừa",
+      "clue": "[BÍ MẬT] Chiếc thuyền thúng nan tròn độc đáo ẩn hiện trên mái ngói âm dương phủ rêu phong.",
       "x": 0.78,
       "y": 0.42,
       "radius": 0.038,
       "score": 300,
       "isSecret": true,
-      "spriteType": "fortune-cat",
+      "spriteType": "basket-boat",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Dấu tích giao thương phồn thịnh với thương nhân Nhật Bản từ thế kỷ 17!"
+      "foundText": "Thuyền thúng nan đặc trưng của vùng sông nước Cẩm Thanh - Hội An nức tiếng gần xa!"
     },
     {
       "id": "bonus-koi",
