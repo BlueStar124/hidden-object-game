@@ -24,7 +24,7 @@ thì tin code, rồi sửa file này.
 | `radius` của vật | phần của **bề ngang** trang; khoảng cách đo theo tỉ lệ `ASPECT = 1760/1240` | `core/detection.ts` |
 | Page units | pixel của tranh 1760 × 1240: `PAGE_W`, `PAGE_H` | `board/constants.ts` |
 | Màn hình | `screen = page * s + t` (`s`, `tx`, `ty` là shared value) | `board/useCamera.ts` |
-| Kích thước sprite | `SPRITE_BASE_WIDTH (0.044) * scale * PAGE_W`; view box của sprite 48 × 48 | `core/model.ts`, `board/constants.ts` |
+| Kích thước sprite | `SPRITE_BASE_WIDTH (0.058) * scale * PAGE_W`; view box của sprite 48 × 48 | `core/model.ts`, `board/constants.ts` |
 | Khung giấy mẫu | `TEMPLATE_PAPER = 1584 × 700` page units (giấy ở x 88–1672, y 270–969) | `board/useCamera.ts` |
 | Zoom | `MIN_ZOOM 1` → `MAX_ZOOM 4`, nút bấm mỗi lần 0.1× | `board/constants.ts`, `Board.tsx` |
 | Kính lúp | phóng `LOUPE_ZOOM 2.4`; đường kính `clamp(110, 0.42·min(w,h), 220)` | `constants.ts`, `useCamera.ts` |

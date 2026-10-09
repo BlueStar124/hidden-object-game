@@ -98,7 +98,7 @@ bức vẽ trên giấy. Có hai cách:
 ## 4. Bố cục để giấu đồ
 
 Mỗi trang ngày giấu khoảng **10 vật** (6 vật chính, 1 bí mật, 3 bonus). Mỗi sprite rộng **≈ 26–70 px** trên
-tranh (`0.044 × scale × 1760`). Tranh phải có đủ chỗ cho chừng ấy vật.
+tranh (`0.058 × scale × 1760`). Tranh phải có đủ chỗ cho chừng ấy vật.
 
 - **Vùng đặt vật:** x 0.1–0.9, y 0.27–0.74 (= x 175–1585, y 335–920 px). Nên có chi tiết **trải đều cả hai trang**.
 - **Chỗ nấp có màu:** vùng chi tiết vừa phải như tán lá, ô cửa sổ, mái ngói, gợn nước, lan can, bàn ghế, đám đông nhỏ.

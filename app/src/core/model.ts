@@ -105,6 +105,58 @@ export type SpriteType =
   | 'basket-boat'
   | 'ao-dai'
   | 't-rung'
+  // Sinh vật đặc hữu Việt Nam mới
+  | 'nghe'
+  | 'red-crowned-crane'
+  | 'dong-ho-pig'
+  | 'bamboo-dragonfly'
+  | 'black-carp'
+  | 'giant-water-bug'
+  | 'green-peafowl'
+  | 'pygmy-loris'
+  | 'gray-shanked-douc'
+  | 'binturong'
+  | 'indochinese-tiger'
+  | 'white-cheeked-gibbon'
+  | 'flying-squirrel'
+  | 'treeshrew'
+  | 'water-rail'
+  | 'tiger-prawn'
+  | 'climbing-perch'
+  | 'giant-featherback'
+  | 'mangrove-clam'
+  | 'pearl-oyster'
+  | 'horned-owl'
+  | 'centipede'
+  | 'silver-pheasant'
+  | 'bamboo-rat'
+  | 'river-snail'
+  // Đồ vật văn hóa Việt Nam mới
+  | 'crane-statue'
+  | 'ly-dragon'
+  | 'hoan-kiem-sword'
+  | 'star-lantern'
+  | 'bamboo-flute'
+  | 'to-he'
+  | 'non-quai-thao'
+  | 'lotus-flower'
+  | 'banh-chung'
+  | 'bat-trang-pottery'
+  | 'bamboo-basket'
+  | 'h-mong-flute'
+  | 'terraced-sheaf'
+  | 'champa-relief'
+  | 'hue-kite'
+  | 'incense-burner'
+  | 'palm-leaf-fan'
+  | 'cham-lamp'
+  | 'royal-umbrella'
+  | 'sea-shell-curtain'
+  | 'highland-crossbow'
+  | 'southern-scarf'
+  | 'dan-kim'
+  | 'clay-piggy'
+  | 'coconut-candy'
   // Sinh vật Thái Lan
   | 'betta'
   | 'crocodile'
@@ -214,7 +266,7 @@ export interface HiddenObject {
 export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus;
 
 /** Sprite width as a fraction of the spread width, before the per-object `scale`. */
-export const SPRITE_BASE_WIDTH = 0.044;
+export const SPRITE_BASE_WIDTH = 0.058;
 
 /* ------------------------------------------------------------------------- */
 /*                                   Content                                 */
