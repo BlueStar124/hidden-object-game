@@ -376,6 +376,7 @@ export interface CaseState {
   combo: number;
   comboTimer: number; // seconds left before combo resets
   activeHint: ActiveHint | null;
+  revealedTextIds: string[]; // List of object IDs whose text/clue has been revealed by hint
 }
 
 /* ------------------------------------------------------------------------- */

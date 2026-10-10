@@ -197,7 +197,9 @@ export const GameScreen: React.FC = () => {
         layout={layout}
         objects={page.objects}
         foundIds={c.foundItems}
+        revealedTextIds={c.revealedTextIds}
         activeHintId={hint?.objectId}
+        onHintObject={requestHint}
         bottomInset={insets.bottom}
         insetLeft={insets.left}
         insetRight={insets.right}

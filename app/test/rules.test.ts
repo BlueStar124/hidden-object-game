@@ -147,10 +147,28 @@ describe('hints', () => {
     expect(nextHint(5, objects, [], loupe)?.level).toBe(3);
   });
 
-  test('main objects first, then the secret; optional critters are never hinted', () => {
-    expect(nextHint(0, objects, ['first'], loupe)?.targetObject.id).toBe('second');
-    expect(nextHint(0, objects, ['first', 'second'], loupe)?.targetObject.id).toBe('secret');
-    expect(nextHint(0, objects, ['first', 'second', 'secret'], loupe)).toBeNull();
+  test('progressive 2-step hints per object: step 1 reveals text, step 2 reveals position', () => {
+    // Initially, no text revealed
+    const step1 = nextHint(null, [], objects, [], loupe);
+    expect(step1).toMatchObject({ level: 1, targetObject: objects[0], clueText: 'clue of first', radarPoint: undefined });
+
+    // With active hint at level 1 on 'first', asking again yields level 2 (position) on 'first'
+    const step2 = nextHint({ level: 1, objectId: 'first' }, ['first'], objects, [], loupe);
+    expect(step2).toMatchObject({ level: 2, targetObject: objects[0], radarPoint: { x: 0.6, y: 0.5 } });
+
+    // When 'first' is found, next hint targets 'second' at level 1
+    const nextObjStep1 = nextHint(null, ['first'], objects, ['first'], loupe);
+    expect(nextObjStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+  });
+
+  test('targeted hint directly on a specific object card', () => {
+    // Tapping 'second' card directly while 'first' is unrevealed
+    const targetedStep1 = nextHint(null, [], objects, [], loupe, 'second');
+    expect(targetedStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+
+    // Tapping 'second' card again when its text is revealed yields position
+    const targetedStep2 = nextHint({ level: 1, objectId: 'second' }, ['second'], objects, [], loupe, 'second');
+    expect(targetedStep2).toMatchObject({ level: 2, targetObject: objects[1], radarPoint: { x: 0.5, y: 0.5 } });
   });
 });
 
@@ -213,6 +231,15 @@ describe('case file', () => {
     const hinted = recordHint(c, nextHint(1, page.objects, [], { nx: 0, ny: 0 })!);
     expect(hinted).toMatchObject({ hintsUsed: 1, score: 200, activeHint: { level: 2, objectId: 'first' } });
     expect(recordFind(hinted, page, first, undefined).changes.activeHint).toBeNull();
+  });
+
+  test('hint reveals text id and records it into revealedTextIds', () => {
+    const opened = openCase(page);
+    expect(opened.revealedTextIds).toEqual([]);
+    const step1 = nextHint(null, opened.revealedTextIds, page.objects, [], { nx: 0, ny: 0 });
+    const afterHint = recordHint(opened, step1!);
+    expect(afterHint.revealedTextIds).toContain('first');
+    expect(afterHint.activeHint?.level).toBe(1);
   });
 
   test('after the case is closed, leftovers can still be found for the album', () => {

@@ -39,9 +39,10 @@ tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý
 Phá án: thưởng `floor(giây còn lại × 4)`. **3 sao** khi sai ≤ 2, gợi ý ≤ 1 và còn > 60 s; **2 sao** khi sai ≤ 5 và gợi
 ý ≤ 2; còn lại 1 sao.
 
-**Gợi ý** (`core/hints.ts`): nhắm vào vật chính đầu tiên chưa tìm **theo thứ tự trong mảng `objects`**, hết vật chính
-thì tới bí mật. **Không bao giờ gợi ý vật bonus.** Cấp 1: nhắc lại `clue`; cấp 2: kính lúp nhích về phía vật; cấp 3:
-radar, camera tự lướt tới nếu vật đang khuất màn hình.
+**Gợi ý** (`core/hints.ts`): Ban đầu mọi chữ (tên, manh mối) trên thẻ chưa tìm bị ẩn (chỉ hiển thị bóng đen silhouette và `???`). Gợi ý vận hành 2 bước cho từng vật (bấm nút Gợi Ý trên HUD hoặc chạm trực tiếp vào thẻ):
+- **Bước 1**: Mở khóa chữ (tên và câu đố manh mối) của riêng vật đó trên thẻ.
+- **Bước 2**: Định vị vị trí vật trên tranh (radar phát xung, kính lúp nhích về phía vật, camera tự lướt tới nếu đang khuất màn hình).
+Sau khi tìm thấy, gợi ý chuyển sang vật chính tiếp theo chưa tìm, hết vật chính thì tới bí mật. **Không bao giờ gợi ý vật bonus.**
 
 **Phá án** khi mọi vật chính (`isMainObject`: không `isSecret`, không `isBonus`) đã được tìm. Phá án xong có thể bấm
 "Soi Tiếp" (`isExploring`) để tìm nốt bonus và bí mật: không điểm, không đồng hồ, vẫn ghi vào Sổ Tay. Phá án trang ngày

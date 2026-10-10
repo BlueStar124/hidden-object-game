@@ -27,6 +27,7 @@ export function openCase(page: Page): CaseState {
     combo: 1,
     comboTimer: 0,
     activeHint: null,
+    revealedTextIds: [],
   };
 }
 
@@ -67,6 +68,11 @@ export function recordFind(
   const bonus = solved ? completionBonus(c.remainingTime, c.mistakes, c.hintsUsed) : null;
   const score = bonus ? newScore + bonus.timeBonus : newScore;
 
+  const currentRevealed = c.revealedTextIds ?? [];
+  const revealedTextIds = currentRevealed.includes(object.id)
+    ? currentRevealed
+    : [...currentRevealed, object.id];
+
   const changes: Partial<CaseState> = {
     foundItems,
     foundAt,
@@ -74,6 +80,7 @@ export function recordFind(
     combo: combo + 1,
     comboTimer: COMBO_WINDOW,
     activeHint: null,
+    revealedTextIds,
   };
   if (object.isSecret) changes.secretFound = true;
   if (solved) changes.isCompleted = true;
@@ -96,10 +103,16 @@ export function recordMiss(c: CaseState): CaseState {
 }
 
 export function recordHint(c: CaseState, hint: HintResult): CaseState {
+  const currentRevealed = c.revealedTextIds ?? [];
+  const revealedTextIds = currentRevealed.includes(hint.targetObject.id)
+    ? currentRevealed
+    : [...currentRevealed, hint.targetObject.id];
+
   return {
     ...c,
     hintsUsed: c.hintsUsed + 1,
     score: hintPenalty(c.score, hint.level),
+    revealedTextIds,
     activeHint: {
       level: hint.level,
       objectId: hint.targetObject.id,
