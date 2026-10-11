@@ -328,4 +328,10 @@ export interface GameProgress {
   discovered: Record<string, string[]>;
   // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
   lastPageId?: string;
+  settings?: GameSettings;
+}
+
+/** The player's preferences, saved with the progress (the first web version already wrote them here). */
+export interface GameSettings {
+  soundEnabled: boolean; // false: the player muted the game
 }

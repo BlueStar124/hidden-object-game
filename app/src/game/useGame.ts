@@ -33,10 +33,14 @@ export function useGame({ browsing }: { browsing: boolean }) {
     if (!home) progress.recordVisit(pageId);
   }, [home, pageId]);
 
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  // The sound switch is saved: a player who muted the game finds it muted next time
+  const [soundEnabled, setSoundEnabled] = useState(() => progress.soundEnabled());
+  useEffect(() => {
+    sound.setSoundEnabled(soundEnabled);
+  }, [soundEnabled]);
   const toggleSound = useCallback(() => {
     setSoundEnabled(!soundEnabled);
-    sound.setSoundEnabled(!soundEnabled);
+    progress.setSoundEnabled(!soundEnabled);
   }, [soundEnabled]);
 
   return { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome };
