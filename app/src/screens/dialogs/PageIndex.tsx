@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScrollText, Star, X } from '../../ui/icons';
-import type { Chapter, Country, Page, PageRef } from '../../core/model';
+import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScanEye, ScrollText, Star, X } from '../../ui/icons';
+import { isCritter, type Chapter, type Country, type Page, type PageRef } from '../../core/model';
+import { withTools } from '../../core/tools';
+import { ownedTools } from '../../game/ownedTools';
 import { canDeduce, hasMystery, mysteryProgress } from '../../core/mystery';
 import { progress } from '../../core/progress';
 import { COUNTRIES, pagesOf } from '../../content';
@@ -55,7 +57,14 @@ const Stars: React.FC<{ count: number; size?: number }> = ({ count, size = 12 })
 
 function critterProgress(page: Page) {
   const seen = new Set(progress.discovered(page.id));
-  const ids = page.objects.filter((o) => o.isBonus).map((o) => o.id);
+  const ids = page.objects.filter(isCritter).map((o) => o.id);
+  return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
+}
+
+/** The invisible-ink messages of a page the player's tools reveal: found and how many. */
+function inkProgress(page: Page, tools: ReturnType<typeof ownedTools>) {
+  const seen = new Set(progress.discovered(page.id));
+  const ids = withTools(page, tools).objects.filter((o) => o.requires).map((o) => o.id);
   return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
 }
 
@@ -65,6 +74,7 @@ function critterProgress(page: Page) {
  */
 export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onOpenDeduction, onClose }) => {
   const [country, setCountry] = useState(playing);
+  const tools = useMemo(() => ownedTools(), []);
   const pages = pagesOf(country);
   const here = country.id === playing.id; // the book being played is the one shown
   const { width } = useWindowDimensions();
@@ -129,6 +139,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                 const result = progress.pageResult(scene.id);
                 const passed = !!result && result.stars > 0;
                 const critters = critterProgress(scene);
+                const ink = inkProgress(scene, tools);
                 const night = ref.night;
                 const nightResult = night ? progress.pageResult(night.id) : undefined;
                 const nightCritters = night ? critterProgress(night) : null;
@@ -176,6 +187,14 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                             <PawPrint size={11} color={critters.spotted === critters.total ? colors.emerald : colors.inkFaint} />
                             <Text style={[styles.critters, critters.spotted === critters.total && { color: colors.emerald }]}>
                               {critters.spotted}/{critters.total}
+                            </Text>
+                          </View>
+                        )}
+                        {ink.total > 0 && (
+                          <View style={styles.row} accessibilityLabel={`Lời nhắn mực tàng hình: ${ink.spotted} trên ${ink.total}`}>
+                            <ScanEye size={11} color={ink.spotted === ink.total ? colors.emerald : '#0284c7'} />
+                            <Text style={[styles.critters, { color: ink.spotted === ink.total ? colors.emerald : '#0284c7' }]}>
+                              {ink.spotted}/{ink.total}
                             </Text>
                           </View>
                         )}

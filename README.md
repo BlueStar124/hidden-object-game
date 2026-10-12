@@ -150,6 +150,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian.
 - **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
   án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
+- **Kính Tia Tím:** giải bí ẩn cuối của Singapore thì nhận kính; soi lại các trang Singapore sẽ thấy 9 lời nhắn mực
+  tàng hình, ghép lại thành bức thư của vị kiến trúc sư gửi người giữ sổ tiếp theo.
 - **Sinh vật ánh vàng:** thỉnh thoảng một sinh vật phụ trên trang là bản ánh vàng hiếm (thẻ của nó sáng lên, trên
   tranh có ánh lấp lánh). Bắt được thì Sổ Tay viền vàng loài đó.
 - **Sinh vật giật mình:** bị bắt, mèo nhảy lên, cua bò ngang, cá quẫy đuôi, chim vỗ cánh bay lên rồi đậu lại.

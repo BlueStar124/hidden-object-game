@@ -76,7 +76,7 @@ export function dailyPage(page: Page, puzzle: DailyPuzzle): Page {
     objects: laidOut.objects.filter((o) => puzzle.objectIds.includes(o.id)),
     focus: puzzle.focus,
     timeLimit: DAILY_TIME_LIMIT,
-    layout: `d${puzzle.day}`,
+    layout: `${laidOut.layout ?? ''}d${puzzle.day}`,
   };
 }
 

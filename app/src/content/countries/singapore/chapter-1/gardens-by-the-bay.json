@@ -200,6 +200,21 @@
       "rotation": -6,
       "camo": "ink",
       "foundText": "Mở chiếc hạc giấy ra: “Người đi theo tôi, hãy tìm nơi cất giữ một chiếc răng thiêng.”"
+    },
+    {
+      "id": "uv-note-2",
+      "name": "Lời Nhắn Mực Tàng Hình 2/9",
+      "clue": "Lời nhắn mực tàng hình ở góc trời trên cùng bên trái.",
+      "x": 0.13,
+      "y": 0.33,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "quill",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(2/9) Ta vẽ cuốn sổ này bằng mắt, nhưng giữ nó bằng trái tim.”"
     }
   ]
 }

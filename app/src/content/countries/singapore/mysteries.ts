@@ -45,5 +45,7 @@ export const RIVERSIDE: Mystery = {
   epilogue: [
     'Đèn hoa đăng krathong, cuốn sách lá buông và chiếc la bàn chỉ về hướng bắc: vị kiến trúc sư đã sang Thái Lan.',
     'Ở góc trang cuối, một dòng chữ viết bằng mực tàng hình hiện lên dưới kính lúp: “Hẹn gặp ở Bangkok, ngày 14 tháng 12.”',
+    'Kẹp trong trang cuối là một chiếc kính tia tím. Dưới ánh kính, những trang Singapore bạn đã đi qua bỗng hiện thêm nét chữ lạ…',
   ],
+  reward: 'uv-lens',
 };

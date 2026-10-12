@@ -141,6 +141,9 @@ export type SpriteType =
  */
 export type CamoStyle = 'ink' | 'chameleon' | 'invisible';
 
+/** The detective's tools, handed over by chapter mysteries (Mystery.reward, core/tools). */
+export type ToolId = 'uv-lens'; // ultraviolet lens: invisible-ink messages left by earlier keepers
+
 /** A shy creature hides most of the time and only peeks out for a moment every cycle. */
 export interface ShyBehavior {
   period: number; // Seconds for one hide → peek → hide cycle
@@ -210,10 +213,15 @@ export interface HiddenObject {
   order?: number;
   // Set for one visit by core/rare, never in the JSON: this critter is a rare golden one
   rare?: boolean;
+  // Only there for a player who has this tool (core/tools); always optional (isBonus)
+  requires?: ToolId;
 }
 
 /** Objects that must be found to close the case: not the secret, the critters or the mystery clues. */
 export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus && !o.isClue;
+
+/** An optional critter of the page (not the invisible-ink messages a tool reveals, core/tools). */
+export const isCritter = (o: HiddenObject) => !!o.isBonus && !o.requires;
 
 /** Optional finds (secret, critters, mystery clues): still there to find once the case is closed. */
 export const isOptionalObject = (o: HiddenObject) => !isMainObject(o);
@@ -281,6 +289,7 @@ export interface Mystery {
   question: string;
   options: MysteryOption[]; // Exactly one is correct
   epilogue: string[]; // Paragraphs revealed once solved
+  reward?: ToolId; // The tool solving it hands over
 }
 
 export interface MysteryOption {

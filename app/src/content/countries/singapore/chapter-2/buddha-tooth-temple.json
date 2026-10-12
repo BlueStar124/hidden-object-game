@@ -160,6 +160,21 @@
       "rotation": -12,
       "camo": "chameleon",
       "foundText": "Chiếc ống nhòm vẫn còn hơi ấm: có người vừa đứng trên lan can này dõi theo bạn."
+    },
+    {
+      "id": "uv-note-4",
+      "name": "Lời Nhắn Mực Tàng Hình 4/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống góc trên bên phải.",
+      "x": 0.885,
+      "y": 0.33,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "letter",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(4/9) Thầy của ta dạy: muốn vẽ một ngôi chùa, hãy ngồi nghe tiếng chuông của nó trước.”"
     }
   ]
 }

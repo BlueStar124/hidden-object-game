@@ -136,6 +136,7 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `isSecret`, `isBonus`, `isClue` | xem ở trên | |
 | `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`** (test). Vẽ thử trên tranh trước khi ghi |
 | `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy (ẩn cả hình bóng) | tùy chọn |
+| `requires` | chỉ hiện khi người chơi có dụng cụ (`'uv-lens'`): luôn kèm `isBonus`, thường `camo: invisible`, đặt trên vùng giấy sáng. Phải có chương trao dụng cụ đó (`Mystery.reward`, test) | id `uv-note-<n>` |
 | `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
 
 Mẫu một vật có đủ trường:

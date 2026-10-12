@@ -19,7 +19,7 @@ export function layOutPage(page: Page, seed: number): Page {
     const pick = draw(random, o.spots.length + 1); // 0: where the JSON puts it
     return pick === 0 ? o : placedAt(o, o.spots[pick - 1]);
   });
-  return { ...page, objects, layout: `s${seed}` };
+  return { ...page, objects, layout: `${page.layout ?? ''}s${seed}` };
 }
 
 function placedAt(o: HiddenObject, spot: ObjectSpot): HiddenObject {

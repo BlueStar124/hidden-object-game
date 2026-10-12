@@ -182,6 +182,21 @@
       "rotation": 6,
       "camo": "ink",
       "foundText": "“Gửi người sẽ nhận cuốn sổ: nếu bạn đọc được dòng này, bạn đã đi đúng đường.”"
+    },
+    {
+      "id": "uv-note-5",
+      "name": "Lời Nhắn Mực Tàng Hình 5/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống góc trên bên trái.",
+      "x": 0.13,
+      "y": 0.31,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "quill",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(5/9) Mỗi ô cửa sổ là một câu chuyện. Con không cần vẽ hết, chỉ cần nhìn hết.”"
     }
   ]
 }

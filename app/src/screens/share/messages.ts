@@ -1,5 +1,5 @@
 import { encodeChallenge } from '../../core/challenge';
-import type { HiddenObject, Page } from '../../core/model';
+import { isCritter, type HiddenObject, type Page } from '../../core/model';
 import { challengeOf, placeOf } from '../../content';
 import { challengeLink } from '../../platform/launchLink';
 import { formatDuration, formatNumber } from '../../ui/format';
@@ -22,14 +22,14 @@ export function challengeMessage(page: Page, seed: number, time: number): { code
 /** The point a postcard frames: the secret if found, else a critter, else any find. */
 function highlight(page: Page, foundIds: string[]): HiddenObject | undefined {
   const found = page.objects.filter((o) => foundIds.includes(o.id));
-  return found.find((o) => o.isSecret) ?? found.find((o) => o.isBonus) ?? found[0];
+  return found.find((o) => o.isSecret) ?? found.find((o) => o.rare) ?? found.find(isCritter) ?? found[0];
 }
 
 const countryOf = (page: Page) => placeOf(page.id)?.ref.country.name ?? '';
 
 /** A postcard of a page just solved. */
 export function victoryPostcard(page: Page, result: { foundIds: string[]; score: number; stars: number; time: number; code: string }): PostcardContent {
-  const critters = page.objects.filter((o) => o.isBonus);
+  const critters = page.objects.filter(isCritter);
   const spotted = critters.filter((o) => result.foundIds.includes(o.id)).length;
   return {
     page,

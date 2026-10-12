@@ -1,5 +1,5 @@
 import type { Challenge } from '../core/challenge';
-import type { Country, Page, PageRef } from '../core/model';
+import type { Chapter, Country, Page, PageRef } from '../core/model';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
 import { vietnam } from './countries/vietnam';
@@ -101,6 +101,9 @@ export function pageOfChallenge(c: Challenge): { ref: PageRef; night: boolean } 
   if (!ref || (c.night && !ref.night)) return null;
   return { ref, night: c.night };
 }
+
+/** Every chapter of every country, in reading order. */
+export const allChapters = (): Chapter[] => COUNTRIES.flatMap((c) => c.chapters);
 
 /** Every page there is — day and night, all countries (the album lists their creatures). */
 export function allPages(): Page[] {

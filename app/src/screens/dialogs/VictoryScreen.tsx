@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
 import { ArrowRight, Moon, PawPrint, RotateCcw, ScanSearch, Sparkles, Star, Trophy } from '../../ui/icons';
-import { isOptionalObject, type Page } from '../../core/model';
+import { isCritter, isOptionalObject, type Page } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { formatDuration, formatNumber } from '../../ui/format';
 import { ModalShell } from '../../ui/ModalShell';
@@ -78,7 +78,7 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
   onReplay,
   onExplore,
 }) => {
-  const critters = page.objects.filter((o) => o.isBonus);
+  const critters = page.objects.filter(isCritter);
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
   const leftovers = page.objects.filter((o) => isOptionalObject(o) && !foundIds.includes(o.id)).length;
 

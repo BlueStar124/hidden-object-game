@@ -171,6 +171,21 @@
       "rotation": -8,
       "camo": "ink",
       "foundText": "Dòng chữ Thái khắc trên lá buông: “Chùa Bình Minh”, tên gọi của Wat Arun ở Bangkok."
+    },
+    {
+      "id": "uv-note-9",
+      "name": "Lời Nhắn Mực Tàng Hình 9/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống phía trên bên phải.",
+      "x": 0.885,
+      "y": 0.3,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "scroll",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(9/9) Hẹn con ở nơi đất liền kết thúc. Ta sẽ đợi, dù phải đợi bao lâu.” Ký tên: người giữ sổ thứ ba."
     }
   ]
 }

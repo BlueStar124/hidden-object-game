@@ -3,9 +3,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Chapter } from '../../core/model';
 import { cluesOf, isRightAnswer } from '../../core/mystery';
 import { progress } from '../../core/progress';
+import { TOOLS } from '../../content/tools';
 import { PrimaryButton } from '../../ui/Buttons';
 import { DialogHeader } from '../../ui/DialogHeader';
-import { CircleCheckBig, Lightbulb, Lock } from '../../ui/icons';
+import { CircleCheckBig, Lightbulb, Lock, ScanEye } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
 import { SpriteIcon } from '../../ui/SpriteIcon';
 import { colors, fonts } from '../../ui/theme';
@@ -78,6 +79,15 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
               {p}
             </Text>
           ))}
+          {mystery.reward && (
+            <View style={styles.reward}>
+              <ScanEye size={22} color="#0284c7" />
+              <View style={styles.rewardText}>
+                <Text style={styles.rewardTitle}>Bạn nhận được: {TOOLS[mystery.reward].name}</Text>
+                <Text style={styles.rewardBody}>{TOOLS[mystery.reward].description}</Text>
+              </View>
+            </View>
+          )}
         </View>
       ) : (
         <View style={styles.quiz}>
@@ -236,6 +246,30 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     fontSize: 14,
     lineHeight: 22,
+    color: colors.ink,
+  },
+  reward: {
+    flexDirection: 'row',
+    gap: 10,
+    padding: 12,
+    marginTop: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(2, 132, 199, 0.35)',
+    backgroundColor: 'rgba(2, 132, 199, 0.07)',
+  },
+  rewardText: {
+    flexShrink: 1,
+    gap: 3,
+  },
+  rewardTitle: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 14,
+    color: '#0369a1',
+  },
+  rewardBody: {
+    fontSize: 13,
+    lineHeight: 19,
     color: colors.ink,
   },
 });

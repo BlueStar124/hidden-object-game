@@ -14,6 +14,7 @@ jest.mock('../src/core/progress', () => ({
   progress: {
     lastPage: () => undefined,
     pageResult: (id: string) => (mockSolved.has(id) ? { stars: 3 } : undefined),
+    isMysterySolved: () => false,
   },
 }));
 jest.mock('../src/board/useSceneLibrary', () => ({ useKeepArt: jest.fn() }));
@@ -98,13 +99,16 @@ describe('Page-turn ownership', () => {
 describe('Ways of playing a page', () => {
   test('a page already solved is laid out anew on a replay; a first visit never is', () => {
     act(() => { renderer = create(<NavigationProbe />); });
-    expect(navigation.page.layout).toBeUndefined();
+    // A first visit is never laid out anew (the page may only lack what the player's tools reveal)
+    expect(navigation.seed).toBe(0);
+    expect(navigation.page.layout ?? '').not.toContain('s');
     mockSolved.add(navigation.page.id);
     jest.spyOn(Math, 'random').mockReturnValue(0.5);
     act(() => navigation.replay());
     expect(navigation.page.id).toBe(pagesOf(FIRST_COUNTRY)[0].day.id);
     expect(navigation.seed).toBeGreaterThan(0);
-    expect(navigation.page.layout).toBe(`s${navigation.seed}`);
+    // (after the mark of the tools the player lacks, if the page has objects needing one)
+    expect(navigation.page.layout?.endsWith(`s${navigation.seed}`)).toBe(true);
   });
 
   test('the daily page is a corner of a page, and leaving it goes back to the book', () => {

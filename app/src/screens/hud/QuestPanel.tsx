@@ -22,7 +22,7 @@ import {
   type LucideIcon,
 } from '../../ui/icons';
 import type { HiddenObject } from '../../core/model';
-import { isMainObject } from '../../core/model';
+import { isCritter, isMainObject } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { SpriteIcon } from '../../ui/SpriteIcon';
 import type { HudLayout } from './HUD';
@@ -161,8 +161,10 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
 
   const normal = objects.filter(isMainObject);
   const secret = objects.find((o) => o.isSecret);
-  const critters = objects.filter((o) => o.isBonus);
+  const critters = objects.filter(isCritter);
   const clues = objects.filter((o) => o.isClue);
+  const inkNotes = objects.filter((o) => o.requires);
+  const inkFound = inkNotes.filter((o) => foundIds.includes(o.id)).length;
   const normalFound = normal.filter((o) => foundIds.includes(o.id)).length;
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
   const cluesFound = clues.filter((o) => foundIds.includes(o.id)).length;
@@ -203,6 +205,18 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           </View>
           <Text style={styles.critterCount}>
             {crittersFound}/{critters.length}
+          </Text>
+        </View>
+      )}
+      {inkNotes.length > 0 && (
+        <View
+          style={[styles.secret, inkFound === inkNotes.length ? styles.secretOpen : styles.secretLocked]}
+          accessibilityLabel={`Lời nhắn mực tàng hình: ${inkFound} trên ${inkNotes.length}`}
+        >
+          <ScanEye size={13} color="#0284c7" />
+          {wide && <Text style={[styles.secretText, { color: '#0284c7' }]}>MỰC TÀNG HÌNH</Text>}
+          <Text style={[styles.secretText, { color: '#0284c7' }]}>
+            {inkFound}/{inkNotes.length}
           </Text>
         </View>
       )}

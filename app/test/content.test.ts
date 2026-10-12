@@ -5,6 +5,7 @@ import { encodeChallenge, parseChallenge } from '../src/core/challenge';
 import { dailyPuzzle } from '../src/core/daily';
 import { isMainObject, type Chapter, type Page } from '../src/core/model';
 import { cluesOf } from '../src/core/mystery';
+import { chapterGiving } from '../src/core/tools';
 import { localDay } from '../src/core/random';
 import { SPRITE_ART } from '../src/generated/spriteArt';
 
@@ -172,4 +173,15 @@ test('every creature startles its own way when caught; objects do not', () => {
   const kinds = Object.entries(BESTIARY);
   expect(kinds.filter(([type, e]) => e.kind === 'creature' && !STARTLE[type as keyof typeof STARTLE]).map(([type]) => type)).toEqual([]);
   expect(kinds.filter(([type, e]) => e.kind === 'object' && STARTLE[type as keyof typeof STARTLE]).map(([type]) => type)).toEqual([]);
+});
+
+test('every tool a page needs is handed over by some chapter; its objects are optional', () => {
+  const chapters = COUNTRIES.flatMap((c) => c.chapters);
+  for (const page of allPages()) {
+    for (const o of page.objects) {
+      if (!o.requires) continue;
+      expect(o.isBonus).toBe(true);
+      expect(chapterGiving(chapters, o.requires)).not.toBeNull();
+    }
+  }
 });

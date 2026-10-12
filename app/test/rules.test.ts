@@ -10,6 +10,7 @@ import { isMainObject, type Chapter, type HiddenObject, type Page, type RoamBeha
 import { canDeduce, cluesOf, hasMystery, isRightAnswer, mysteryProgress } from '../src/core/mystery';
 import { hashString, localDay, rng, SEED_COUNT, shuffled } from '../src/core/random';
 import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
+import { chapterGiving, toolsOwned, withTools } from '../src/core/tools';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
@@ -463,5 +464,42 @@ describe('golden critters', () => {
     expect(withRareCritter(plain, 0)).toBe(plain);
     const gold = withRareCritter(page, 0).objects.find((o) => o.rare)!;
     expect(isMainObject(gold)).toBe(false);
+  });
+});
+
+describe('the detective tools', () => {
+  const note = object('note', { isBonus: true, requires: 'uv-lens', camo: 'invisible' });
+  const page = pageOf('toolpage', [object('main'), note]);
+  const giving: Chapter = {
+    id: 'giving',
+    title: '',
+    subtitle: '',
+    prologue: [],
+    pages: [{ day: page }],
+    mystery: { question: '?', options: [{ text: 'a', correct: true }], epilogue: [], reward: 'uv-lens' },
+  };
+
+  test('a solved mystery hands its tool over', () => {
+    expect(toolsOwned([giving], () => false)).toEqual([]);
+    expect(toolsOwned([giving, giving], () => true)).toEqual(['uv-lens']);
+    expect(chapterGiving([giving], 'uv-lens')).toBe(giving);
+  });
+
+  test('without the tool its objects are not there; with it, the page is as written', () => {
+    const without = withTools(page, []);
+    expect(without.objects.map((o) => o.id)).toEqual(['main']);
+    expect(withTools(page, [])).toBe(without); // the same page every time
+    expect(layoutKey(without)).not.toBe(layoutKey(page));
+    expect(withTools(page, ['uv-lens'])).toBe(page);
+    const plain = pageOf('plain', [object('main')]);
+    expect(withTools(plain, [])).toBe(plain);
+  });
+
+  test('a page laid out after the tools keeps both marks apart in its layout', () => {
+    const moving = pageOf('both', [object('m', { spots: [{ x: 0.2, y: 0.3, clue: 'there' }] }), note]);
+    const laid = layOutPage(withTools(moving, []), 7);
+    // 't' + the tools there are (none), then 's' + the seed
+    expect(laid.layout).toBe('ts7');
+    expect(layoutKey(laid)).not.toBe(layoutKey(layOutPage(moving, 7)));
   });
 });
