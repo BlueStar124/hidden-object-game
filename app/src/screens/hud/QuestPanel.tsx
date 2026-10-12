@@ -197,7 +197,8 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           {wide && <Text style={styles.critterLabel}>SINH VẬT ẨN NẤP</Text>}
           <View style={styles.slots}>
             {critters.map((o) => (
-              <SpriteIcon key={o.id} type={o.spriteType} size={17} revealed={foundIds.includes(o.id)} />
+              // A golden critter on this visit: its slot glows, so the player knows to look for it
+              <SpriteIcon key={o.id} type={o.spriteType} size={17} revealed={foundIds.includes(o.id)} glow={o.rare} />
             ))}
           </View>
           <Text style={styles.critterCount}>

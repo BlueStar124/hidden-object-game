@@ -89,6 +89,30 @@ function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
   }
 }
 
+// Where the two glints of a golden critter sit (fractions of its box) and how long one twinkle lasts (ms)
+const GLINTS = [
+  { dx: 0.34, dy: -0.3, r: 0.3, delay: 0 },
+  { dx: -0.3, dy: 0.24, r: 0.22, delay: 900 },
+];
+const GLINT_MS = 1800;
+
+/** A golden critter still hiding: two small glints come and go on it. */
+function drawGlints(c: SkCanvas, S: SceneData, sp: SceneSprite, pose: Pose, now: number, fade: number) {
+  'worklet';
+  const glint = S.paints.goldGlint;
+  for (let i = 0; i < GLINTS.length; i++) {
+    const g = GLINTS[i];
+    const twinkle = track([0, 0.15, 0.3, 1], [0, 1, 0, 0], EASE_IN_OUT, loop(now, GLINT_MS, g.delay));
+    if (twinkle <= 0) continue;
+    glint.setAlphaf(twinkle * fade);
+    c.save();
+    c.translate(pose.x + g.dx * sp.w, pose.y + g.dy * sp.w);
+    c.scale(g.r * sp.w, g.r * sp.w);
+    c.drawCircle(0, 0, 1, glint);
+    c.restore();
+  }
+}
+
 /**
  * The watercolour wash (see WASH_ALPHA): one layer over what is seen of the page, with a soft patch
  * cleared around every find. Day pages only, never in the loupe.
@@ -165,6 +189,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     } else {
       drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, atlas, cell, P.inkModulate, 0.8);
     }
+    if (sp.gold) drawGlints(c, S, sp, pose, now, fade);
   }
 
   // Scraps of painting over tucked-away sprites (z 16)
@@ -204,7 +229,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       sp,
       pose,
       sp.found,
-      inLoupe ? P.foundLoupe : P.foundPage,
+      sp.gold ? (inLoupe ? P.foundGoldLoupe : P.foundGoldPage) : inLoupe ? P.foundLoupe : P.foundPage,
       0.9 * clamp01(pose.age / FOUND_FADE_MS + 0.15),
       false,
       P.glowSpot,

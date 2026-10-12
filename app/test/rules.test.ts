@@ -9,6 +9,7 @@ import { isShyVisible, objectPosition, roamState, shyPhase } from '../src/core/m
 import { isMainObject, type Chapter, type HiddenObject, type Page, type RoamBehavior, type ShyBehavior } from '../src/core/model';
 import { canDeduce, cluesOf, hasMystery, isRightAnswer, mysteryProgress } from '../src/core/mystery';
 import { hashString, localDay, rng, SEED_COUNT, shuffled } from '../src/core/random';
+import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
@@ -440,5 +441,27 @@ describe('challenge codes', () => {
 
   test('anything else is not a code', () => {
     for (const text of ['', 'xin chào', 'SG-0000', 'SG0-0000', 'SG3-00', 'SG3-UUUU']) expect(parseChallenge(text)).toBeNull();
+  });
+});
+
+describe('golden critters', () => {
+  const critters = [object('gecko', { isBonus: true, spriteType: 'gecko' }), object('crab', { isBonus: true, spriteType: 'crab' })];
+  const page = pageOf('golden', [object('main'), ...critters]);
+
+  test('most visits have none; a lucky roll makes one critter golden, and only that visit looks different', () => {
+    expect(withRareCritter(page, RARE_CHANCE)).toBe(page);
+    expect(withRareCritter(page, 0.9)).toBe(page);
+    const lucky = withRareCritter(page, 0);
+    expect(lucky.objects.filter((o) => o.rare).map((o) => o.id)).toEqual(['gecko']);
+    expect(withRareCritter(page, RARE_CHANCE * 0.99).objects.find((o) => o.rare)?.id).toBe('crab');
+    expect(layoutKey(lucky)).not.toBe(layoutKey(page));
+    expect(lucky.objects.map((o) => o.id)).toEqual(page.objects.map((o) => o.id));
+  });
+
+  test('a page without critters never has one; a golden critter stays optional', () => {
+    const plain = pageOf('plain', [object('main')]);
+    expect(withRareCritter(plain, 0)).toBe(plain);
+    const gold = withRareCritter(page, 0).objects.find((o) => o.rare)!;
+    expect(isMainObject(gold)).toBe(false);
   });
 });

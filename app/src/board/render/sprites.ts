@@ -1,6 +1,6 @@
 import { ClipOp, FilterMode, MipmapMode, type SkCanvas, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
 import { roamState, shyPhase } from '../../core/motion';
-import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, track } from '../anim';
+import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, startle, STARTLE_MS, track } from '../anim';
 import { PAGE_H, PAGE_W } from '../constants';
 import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import { ANIM_BLINK, ANIM_GLOW_SPOT, ANIM_TAIL, ANIM_WAVE, ANIM_WING, type Part } from '../scene/spriteParts';
@@ -59,6 +59,14 @@ function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined, pose
       const b = foundBounce(age / 600);
       bs = b.scale;
       br = b.rotate;
+    }
+    // A creature startles at its capture (it ends back where it was caught). Offsets apply after the
+    // sprite is mirrored (drawSprite): a dash aside is always towards where it faces
+    if (sp.startle && age < STARTLE_MS) {
+      const r = startle(sp.startle, age / STARTLE_MS);
+      dx = r.dx;
+      dy = r.dy;
+      rot = r.rot;
     }
     wing = lerp(1, 0.72, alternate(age, 900, EASE_IN_OUT));
     tail = lerp(-4, 5, alternate(age, 1600, EASE_IN_OUT));

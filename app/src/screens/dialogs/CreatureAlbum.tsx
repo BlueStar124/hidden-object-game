@@ -70,6 +70,8 @@ export const CreatureAlbum: React.FC<CreatureAlbumProps> = ({ pages, onClose }) 
     });
   }, [pages]);
 
+  // Kinds caught as a rare golden critter (core/rare): their card wears a gold frame
+  const golden = useMemo(() => new Set(progress.rareFound()), []);
   const shown = entries.filter((e) => filter === 'all' || BESTIARY[e.type].kind === filter);
   const discovered = entries.filter((e) => e.discovered).length;
   const pct = Math.round((discovered / Math.max(1, entries.length)) * 100);
@@ -95,6 +97,7 @@ export const CreatureAlbum: React.FC<CreatureAlbumProps> = ({ pages, onClose }) 
                 <Text style={styles.title}>Sổ Tay Sinh Vật</Text>
                 <Text style={styles.desc}>
                   Đã phát hiện {discovered}/{entries.length} loài & cổ vật · {pct}%
+                  {golden.size > 0 ? ` · ✨ ${golden.size} ánh vàng` : ''}
                 </Text>
               </View>
             </View>
@@ -127,9 +130,12 @@ export const CreatureAlbum: React.FC<CreatureAlbumProps> = ({ pages, onClose }) 
         {shown.map((entry) => {
           const info = BESTIARY[entry.type];
           return (
-            <View key={entry.type} style={[styles.card, { width: cardWidth }, !entry.discovered && styles.cardUnknown]}>
+            <View
+              key={entry.type}
+              style={[styles.card, { width: cardWidth }, !entry.discovered && styles.cardUnknown, golden.has(entry.type) && styles.cardGolden]}
+            >
               <View style={styles.sprite}>
-                <SpriteIcon type={entry.type} size={44} revealed={entry.discovered} />
+                <SpriteIcon type={entry.type} size={44} revealed={entry.discovered} glow={golden.has(entry.type)} />
               </View>
               <View style={styles.cardBody}>
                 <Text style={[styles.name, !entry.discovered && styles.nameUnknown]}>{entry.discovered ? info.name : '???'}</Text>
@@ -239,6 +245,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.hairline,
     backgroundColor: '#fff',
+  },
+  cardGolden: {
+    borderColor: '#facc15',
+    borderWidth: 2,
+    backgroundColor: '#fffbea',
   },
   cardUnknown: {
     backgroundColor: '#faf6f0',

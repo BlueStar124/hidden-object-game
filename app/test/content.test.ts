@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { allPages, artOf, challengeOf, codeOf, COUNTRIES, pageOfChallenge, pagesOf, placeOf } from '../src/content';
-import { BESTIARY } from '../src/content/bestiary';
+import { BESTIARY, STARTLE } from '../src/content/bestiary';
 import { encodeChallenge, parseChallenge } from '../src/core/challenge';
 import { dailyPuzzle } from '../src/core/daily';
 import { isMainObject, type Chapter, type Page } from '../src/core/model';
@@ -156,10 +156,20 @@ describe.each(allPages().map((page): [string, Page] => [page.id, page]))('%s, ot
     }
   });
 
+  test('golden critters are a visit thing, never written in a page', () => {
+    for (const o of page.objects) expect(o.rare).toBeUndefined();
+  });
+
   test('riddles have words; a sequence counts 1, 2, 3… on objects that must be found', () => {
     for (const o of page.objects) if (o.riddle !== undefined) expect(o.riddle.trim()).toBeTruthy();
     const orders = page.objects.filter((o) => o.order !== undefined);
     for (const o of orders) expect(isMainObject(o)).toBe(true);
     expect(orders.map((o) => o.order).sort((a, b) => a! - b!)).toEqual(orders.map((_, i) => i + 1));
   });
+});
+
+test('every creature startles its own way when caught; objects do not', () => {
+  const kinds = Object.entries(BESTIARY);
+  expect(kinds.filter(([type, e]) => e.kind === 'creature' && !STARTLE[type as keyof typeof STARTLE]).map(([type]) => type)).toEqual([]);
+  expect(kinds.filter(([type, e]) => e.kind === 'object' && STARTLE[type as keyof typeof STARTLE]).map(([type]) => type)).toEqual([]);
 });

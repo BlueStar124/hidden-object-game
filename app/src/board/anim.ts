@@ -154,6 +154,42 @@ export function foundBounce(p: number): { scale: number; rotate: number } {
   };
 }
 
+/* ---- A creature startled by its capture ---- */
+
+export const STARTLE_NONE = 0;
+export const STARTLE_HOP = 1;
+export const STARTLE_SCURRY = 2;
+export const STARTLE_SPLASH = 3;
+export const STARTLE_FLUTTER = 4;
+/** How long a creature's startle lasts (ms). */
+export const STARTLE_MS = 760;
+
+/**
+ * Where a startled creature is, moment by moment (p: 0–1): offsets in fractions of its box, a turn in
+ * degrees. It always ends where it was caught, which its found mark keeps showing.
+ */
+export function startle(kind: number, p: number): { dx: number; dy: number; rot: number } {
+  'worklet';
+  const arc = Math.sin(Math.PI * p);
+  const fade = 1 - p;
+  switch (kind) {
+    case STARTLE_HOP:
+      // A leap up, a little lean back
+      return { dx: 0, dy: -0.55 * arc, rot: -8 * arc };
+    case STARTLE_SCURRY:
+      // A dash aside and back
+      return { dx: 0.32 * Math.sin(2 * Math.PI * p) * fade, dy: 0, rot: 6 * Math.sin(4 * Math.PI * p) * fade };
+    case STARTLE_SPLASH:
+      // A dive under, a flick of the tail coming up
+      return { dx: 0, dy: 0.3 * arc, rot: 14 * Math.sin(3 * Math.PI * p) * fade };
+    case STARTLE_FLUTTER:
+      // Up into the air, a wobble, and back down
+      return { dx: 0.12 * Math.sin(3 * Math.PI * p) * fade, dy: -0.4 * arc, rot: 10 * Math.sin(3 * Math.PI * p) * fade };
+    default:
+      return { dx: 0, dy: 0, rot: 0 };
+  }
+}
+
 /** watercolorBloom 1.1s ease-out: a wash of colour spreading behind a found sprite. */
 export function bloom(p: number): { scale: number; opacity: number } {
   'worklet';

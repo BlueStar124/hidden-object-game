@@ -208,6 +208,8 @@ export interface HiddenObject {
   riddle?: string;
   // Sequence hunt: catchable only once every object of a lower order on the page is found (1, 2, 3…)
   order?: number;
+  // Set for one visit by core/rare, never in the JSON: this critter is a rare golden one
+  rare?: boolean;
 }
 
 /** Objects that must be found to close the case: not the secret, the critters or the mystery clues. */
@@ -388,6 +390,7 @@ export interface GameProgress {
   solvedMysteries?: string[]; // Chapter ids whose mystery was solved on the deduction board
   stamps?: Record<string, DailyStamp>; // Daily pages done, by the player's local day ('2026-10-12')
   cover?: CoverSticker[]; // The player's own inside cover
+  rareFound?: string[]; // Kinds (SpriteType) of golden critters caught at least once
 }
 
 /** A daily page done: a stamp in the detective's passport. */

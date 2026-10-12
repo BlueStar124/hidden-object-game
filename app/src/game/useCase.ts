@@ -105,10 +105,16 @@ export function useCase(
     return () => clearInterval(timer);
   }, [c.isPaused, c.isCompleted, c.isGameOver, clockRuns, update]);
 
-  // A find is remembered at once; the last clue fragment of a chapter opens its deduction board
+  // A find is remembered at once; a golden critter goes into the album's gold collection; the last
+  // clue fragment of a chapter opens its deduction board
   const discover = useCallback(
     (found: HiddenObject, at: { x: number; y: number }) => {
       progress.recordDiscovery(page.id, found.id);
+      if (found.rare && found.spriteType) {
+        const first = progress.recordRareFind(found.spriteType);
+        sound.playCreature();
+        notify(first ? '✨ Sinh vật ánh vàng! Đã ghi vào Sổ Tay' : '✨ Lại một sinh vật ánh vàng!', { x: at.x, y: at.y - 44 }, 'info');
+      }
       if (!found.isClue) return;
       const chapter = placeOf(page.id)?.ref.chapter;
       if (chapter && canDeduce(chapter, progress.discovered) && !progress.isMysterySolved(chapter.id)) {

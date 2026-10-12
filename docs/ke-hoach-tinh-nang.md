@@ -11,8 +11,9 @@
 | 0.1–0.3 Nền tảng (seed, `layOutPage`, `spots`) | **Đã làm** | `spots` mới có ở 7 vật của chương 1 Singapore; thêm dần cho các trang khác |
 | 0.4 ErrorBoundary, lưu âm thanh, sao lưu | **Đã làm**: cả xuất/nhập bản lưu (gộp, không ghi đè), `storage.persist()`, chặn khóa `__proto__`, header bảo mật web | |
 | 1.1 Tranh lên màu dần | **Đã làm** theo phương án lớp phủ, đã đo trước/sau (không tụt fps); tắt được trong menu Tạm Dừng | |
-| 1.2 Phản ứng sinh vật | Chưa làm (vật đã có hiệu ứng nảy chung khi tìm thấy) | Phản ứng riêng theo loài |
-| 2 Đồ nghề, di cư, biến thể hiếm | Chưa làm | |
+| 1.2 Phản ứng sinh vật | **Đã làm**: 4 kiểu (nhảy, bò ngang, quẫy nước, vỗ cánh) cho mọi sinh vật | |
+| 2.3 Biến thể hiếm | **Đã làm**: sinh vật ánh vàng 1/25 lượt, Sổ Tay viền vàng | |
+| 2.1–2.2 Đồ nghề, di cư | Chưa làm | |
 | 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm**: 11 chương, 37 mảnh manh mối; lời mở đầu chương cuối Singapore và Thái Lan đã sửa để dẫn sang nước tiếp theo | |
 | 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |
 | 4.2 Hộ chiếu | **Đã làm** | Tem vàng hiện chỉ để sưu tầm, chưa mở khung bưu thiếp riêng |

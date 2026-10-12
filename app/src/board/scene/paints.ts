@@ -98,6 +98,9 @@ function compose(a: M20, b: M20): M20 {
   return out;
 }
 
+/** A golden critter, found: its drawing turned to old gold (`sepia(1) saturate(2.6) brightness(1.12)`). */
+const GOLD_FILTER = [saturate(2.6), brightness(1.12)].reduce((acc, m) => compose(m, acc), sepia(1));
+
 /** `filter: saturate(0.35) sepia(0.4) contrast(0.92) brightness(1.04)` — the "ink" camouflage. */
 const INK_FILTER = [sepia(0.4), contrast(0.92), brightness(1.04)].reduce((acc, m) => compose(m, acc), saturate(0.35));
 
@@ -152,6 +155,20 @@ export function createBoardPaints() {
     foundLoupe: paint((p) =>
       p.setImageFilter(dropShadow((2 * PX) / LOUPE_ZOOM, (3 * PX) / LOUPE_ZOOM, 'rgba(44, 36, 27, 0.32)'))
     ),
+    // A golden critter, found: gold, with a warm glow instead of the shadow
+    foundGoldPage: paint((p) => {
+      p.setColorFilter(Skia.ColorFilter.MakeMatrix(GOLD_FILTER));
+      p.setImageFilter(dropShadow(0, 8 * PX, 'rgba(250, 204, 21, 0.85)'));
+    }),
+    foundGoldLoupe: paint((p) => {
+      p.setColorFilter(Skia.ColorFilter.MakeMatrix(GOLD_FILTER));
+      p.setImageFilter(dropShadow(0, (8 * PX) / LOUPE_ZOOM, 'rgba(250, 204, 21, 0.85)'));
+    }),
+    // …and still hidden: two glints twinkle on it, for sharp eyes (unit radius)
+    goldGlint: paint((p) => {
+      p.setShader(radial(['rgba(255, 246, 200, 1)', 'rgba(250, 204, 21, 0.7)', 'rgba(250, 204, 21, 0)'], [0, 0.35, 1]));
+      p.setBlendMode(BlendMode.Screen);
+    }),
     glowSpot: paint(),
     // Watercolour bloom behind a newly found sprite (unit radius = gradient radius)
     bloom: paint((p) =>

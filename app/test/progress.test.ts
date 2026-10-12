@@ -202,6 +202,15 @@ describe('chapter mysteries', () => {
   });
 });
 
+describe('golden critters', () => {
+  test('a kind caught golden is remembered once, the first time told apart', () => {
+    expect(progress.recordRareFind('gecko')).toBe(true);
+    expect(progress.recordRareFind('gecko')).toBe(false);
+    expect(progress.rareFound()).toEqual(['gecko']);
+    expect(saved().rareFound).toEqual(['gecko']);
+  });
+});
+
 describe('the passport', () => {
   const stamp = (time: number) => ({ pageId: 'merlion-park', countryId: 'singapore', time });
 

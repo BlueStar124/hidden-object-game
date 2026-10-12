@@ -85,6 +85,7 @@ export function readProgress(raw: unknown): GameProgress {
   }
   // (Damaged values are dropped rather than kept as unknown fields)
   const solvedMysteries = Array.isArray(data.solvedMysteries) ? strings(data.solvedMysteries) : undefined;
+  const rareFound = Array.isArray(data.rareFound) ? strings(data.rareFound) : undefined;
   const stamps = readStamps(data.stamps);
   const cover = readCover(data.cover);
 
@@ -105,6 +106,7 @@ export function readProgress(raw: unknown): GameProgress {
     solvedMysteries,
     stamps,
     cover,
+    rareFound,
   };
 }
 
@@ -145,6 +147,7 @@ export function mergeProgress(current: GameProgress, other: GameProgress): GameP
     if (!stamps[day] || stamp.time <= stamps[day].time) stamps[day] = stamp;
   }
   const solved = union(current.solvedMysteries, other.solvedMysteries);
+  const rare = union(current.rareFound, other.rareFound);
   return {
     ...other,
     ...current,
@@ -156,6 +159,7 @@ export function mergeProgress(current: GameProgress, other: GameProgress): GameP
     lastPageId: current.lastPageId ?? other.lastPageId,
     settings: current.settings ?? other.settings,
     solvedMysteries: solved.length ? solved : undefined,
+    rareFound: rare.length ? rare : undefined,
     stamps: Object.keys(stamps).length ? stamps : undefined,
     cover: current.cover?.length ? current.cover : other.cover,
   };
@@ -297,6 +301,22 @@ export const progress = {
     const solved = current.solvedMysteries ?? [];
     if (solved.includes(chapterId)) return;
     save({ ...current, solvedMysteries: [...solved, chapterId] });
+  },
+
+  /* ---- Golden critters ---- */
+
+  /** Kinds of golden critters caught at least once. */
+  rareFound(): string[] {
+    return load().rareFound ?? [];
+  },
+
+  /** A golden critter caught: true the first time of its kind. */
+  recordRareFind(kind: string): boolean {
+    const current = load();
+    const found = current.rareFound ?? [];
+    if (found.includes(kind)) return false;
+    save({ ...current, rareFound: [...found, kind] });
+    return true;
   },
 
   /* ---- Passport ---- */

@@ -1,7 +1,8 @@
 import { BlendMode, Skia, TileMode, type SkImage, type SkRect } from '@shopify/react-native-skia';
 import { SPRITE_BASE_WIDTH, type HiddenObject, type Page, type SpriteType } from '../../core/model';
 import { hashString, rng } from '../../core/random';
-import { isCreature } from '../../content/bestiary';
+import { isCreature, STARTLE } from '../../content/bestiary';
+import { STARTLE_FLUTTER, STARTLE_HOP, STARTLE_NONE, STARTLE_SCURRY, STARTLE_SPLASH } from '../anim';
 import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
 import {
   CAMO_CHAMELEON,
@@ -134,8 +135,13 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     pageCell: null,
     foundCell: null,
     blinks: partsAnimate(found, [ANIM_BLINK]),
+    gold: !!obj.rare,
+    startle: STARTLE_KIND[STARTLE[type] ?? 'none'],
   };
 }
+
+// The startles of the bestiary, as the renderer's numbers
+const STARTLE_KIND = { none: STARTLE_NONE, hop: STARTLE_HOP, scurry: STARTLE_SCURRY, splash: STARTLE_SPLASH, flutter: STARTLE_FLUTTER };
 
 // What keeps moving in a found sprite
 const FOUND_MOTION = [ANIM_WING, ANIM_TAIL, ANIM_WAVE, ANIM_GLOW_SPOT];
@@ -162,7 +168,8 @@ function layOutAtlas(sprites: SceneSprite[], objects: HiddenObject[], density: n
     const type = types.get(sp.id)!;
     return {
       page: sp.page && sp.page.length ? entryOf(sp.page, type, sp.w) : -1,
-      found: partsAnimate(sp.found, FOUND_MOTION) ? -1 : entryOf(sp.found, type, sp.w),
+      // A golden critter, found, is filtered as a whole: drawn from its shapes, not the sheet
+      found: sp.gold || partsAnimate(sp.found, FOUND_MOTION) ? -1 : entryOf(sp.found, type, sp.w),
     };
   });
   // Both kinds share one texture, but only hidden cells are backed with white.

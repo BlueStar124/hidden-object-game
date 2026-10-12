@@ -21,7 +21,7 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 | Tầng | Vai trò | Được import |
 |---|---|---|
-| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách) | chỉ `core` — **không package nào** |
+| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách), `rare.ts` (sinh vật ánh vàng) | chỉ `core` — **không package nào** |
 | `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts` | `core`, `content` — **không package nào** |
 | `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices` | `core`, `content`, `platform`, `game` |
 | `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |

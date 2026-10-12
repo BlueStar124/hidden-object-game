@@ -59,6 +59,8 @@ export interface SceneSprite {
   pageCell: AtlasCell | null; // hidden, on the page
   foundCell: AtlasCell | null; // found (only sprites that stay still once found)
   blinks: boolean; // its eyes close now and then (drawn from its shapes meanwhile)
+  gold: boolean; // a rare golden critter on this visit (core/rare): glints while hidden, gold once found
+  startle: number; // STARTLE_* (board/anim): how it reacts when caught
 }
 
 export interface SceneMark {

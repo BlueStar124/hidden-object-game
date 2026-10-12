@@ -158,6 +158,9 @@ Mẫu một vật có đủ trường:
 
 ## 5. Sinh vật / đồ vật mới (sprite)
 
+> Sinh vật mới cần thêm vào `STARTLE` trong `content/bestiary.ts` (cách nó giật mình khi bị bắt: `hop`, `scurry`,
+> `splash`, `flutter`); test `content.test.ts` sẽ báo nếu thiếu.
+
 Chỉ làm khi trong 112 loại có sẵn (`SpriteType` trong `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
 đèn lồng, xích lô. Mỗi nước nên có bộ hình riêng (Thái Lan có 50 loại không dùng chung với Singapore) để người chơi không
 gặp lại cùng một con vật, cùng một đồ vật ở mọi cuốn sổ.

@@ -127,3 +127,15 @@ export const BESTIARY: Record<Exclude<SpriteType, 'seal'>, BestiaryEntry> = {
 export function isCreature(type?: SpriteType): boolean {
   return !!type && type !== 'seal' && BESTIARY[type].kind === 'creature';
 }
+
+/** How a creature startles when it is caught (board/anim.ts startle); objects just bounce. */
+export type Startle = 'hop' | 'scurry' | 'splash' | 'flutter';
+
+const startles = (kind: Startle, types: SpriteType[]) => types.map((t): [SpriteType, Startle] => [t, kind]);
+
+export const STARTLE: Partial<Record<SpriteType, Startle>> = Object.fromEntries([
+  ...startles('hop', ['cat', 'dog', 'squirrel', 'frog', 'mouse', 'monkey', 'gibbon', 'siamese-cat', 'rooster', 'saola', 'civet', 'slow-loris', 'sun-bear', 'porcupine', 'mudskipper', 'water-buffalo', 'elephant']),
+  ...startles('scurry', ['gecko', 'chameleon', 'crab', 'snail', 'ladybug', 'spider', 'turtle', 'pangolin', 'monitor-lizard', 'scorpion', 'crocodile', 'flying-lizard', 'stick-insect', 'mantis', 'lantern-bug', 'rhino-beetle']),
+  ...startles('splash', ['koi', 'goldfish', 'betta', 'giant-catfish', 'stingray', 'jellyfish', 'seahorse', 'otter', 'duck', 'river-prawn']),
+  ...startles('flutter', ['butterfly', 'moth', 'dragonfly', 'dove', 'owl', 'bat', 'kingfisher', 'heron', 'hornbill', 'sunbird', 'firefly', 'swallow', 'myna', 'parakeet', 'peacock', 'bee', 'cicada', 'colugo', 'flying-snake']),
+]);
