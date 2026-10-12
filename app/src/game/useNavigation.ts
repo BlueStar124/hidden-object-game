@@ -2,12 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Challenge } from '../core/challenge';
 import { dailyPage, type DailyPuzzle } from '../core/daily';
 import { hasSpots, layOutPage } from '../core/layout';
+import { withVisitors } from '../core/migrants';
 import type { Country, Page, PageRef, PageTurn, ToolId } from '../core/model';
 import { progress } from '../core/progress';
-import { SEED_COUNT } from '../core/random';
+import { localDay, SEED_COUNT } from '../core/random';
 import { withRareCritter } from '../core/rare';
 import { withTools } from '../core/tools';
 import { countryById, FIRST_COUNTRY, pageOfChallenge, pagesOf, placeOf } from '../content';
+import { MIGRANTS } from '../content/migrants';
 import { sound } from '../platform/sound';
 import { ownedTools } from './ownedTools';
 
@@ -79,6 +81,7 @@ interface Place extends Spot {
   mode: PlayMode;
   roll: number; // this visit's chance of a golden critter (core/rare), rolled when it opens
   tools: ToolId[]; // the tools the player had when it opened (core/tools)
+  day: string; // the day it opened: which travelling creatures visit (core/migrants)
 }
 
 function pageAt(country: Country, index: number, night: boolean): Page {
@@ -86,10 +89,15 @@ function pageAt(country: Country, index: number, night: boolean): Page {
   return (night && ref.night) || ref.day;
 }
 
-/** The page as a visit plays it (a daily corner has only main objects: no golden critter there). */
-function pageFor(country: Country, index: number, night: boolean, seed: number, mode: PlayMode, roll: number, tools: ToolId[]): Page {
-  const page = withTools(pageAt(country, index, night), tools);
-  return mode.kind === 'daily' ? dailyPage(page, mode.puzzle) : withRareCritter(layOutPage(page, seed), roll);
+/** A page as it opens on a day, before this visit's layout and chance: tools, travelling visitors. */
+const openingPage = (page: Page, tools: ToolId[], day: string) => withVisitors(withTools(page, tools), day, MIGRANTS);
+
+/** The page as a visit plays it (a daily corner has only main objects: no visitor, no golden critter). */
+function pageFor(country: Country, index: number, night: boolean, seed: number, mode: PlayMode, roll: number, tools: ToolId[], day: string): Page {
+  const page = pageAt(country, index, night);
+  return mode.kind === 'daily'
+    ? dailyPage(withTools(page, tools), mode.puzzle)
+    : withRareCritter(layOutPage(openingPage(page, tools, day), seed), roll);
 }
 
 /** A first visit plays the page as written; once solved, its objects may hide elsewhere. */
@@ -119,6 +127,7 @@ function savedPlace(): Place | null {
         mode: BOOK,
         roll: Math.random(),
         tools: ownedTools(),
+        day: localDay(new Date()),
       }
     : null;
 }
@@ -128,7 +137,7 @@ export function useNavigation(): Navigation {
   const [saved] = useState(savedPlace);
   const [place, setPlace] = useState<Place>(
     // (No golden critter on a new player's very first page: it would not mean anything yet)
-    () => saved ?? { countryId: FIRST_COUNTRY.id, index: 0, night: false, visit: 0, seed: 0, mode: BOOK, roll: 1, tools: [] }
+    () => saved ?? { countryId: FIRST_COUNTRY.id, index: 0, night: false, visit: 0, seed: 0, mode: BOOK, roll: 1, tools: [], day: localDay(new Date()) }
   );
   const [turn, setTurn] = useState<PageTurn | null>(null);
   const pending = useRef<PendingTurn | null>(null);
@@ -142,11 +151,11 @@ export function useNavigation(): Navigation {
   const country = countryById(place.countryId);
   const pages = pagesOf(country);
   const ref = pages[place.index];
-  const { index, night, seed, mode, roll, tools } = place;
+  const { index, night, seed, mode, roll, tools, day } = place;
   // Laid out once per visit: the board's caches and memoised children see the same page object
   const page = useMemo(
-    () => pageFor(country, index, night, seed, mode, roll, tools),
-    [country, index, night, seed, mode, roll, tools]
+    () => pageFor(country, index, night, seed, mode, roll, tools, day),
+    [country, index, night, seed, mode, roll, tools, day]
   );
   const inBook = mode.kind === 'book';
   const isTurning = turn !== null;
@@ -159,7 +168,17 @@ export function useNavigation(): Navigation {
     const valid = Math.max(0, Math.min(index, book.length - 1));
     const nightOn = night && !!book[valid].night;
     if (mode.kind === 'book') bookSpot.current = { countryId: target.id, index: valid, night: nightOn };
-    setPlace((prev) => ({ countryId: target.id, index: valid, night: nightOn, visit: prev.visit + 1, seed, mode, roll, tools: ownedTools() }));
+    setPlace((prev) => ({
+      countryId: target.id,
+      index: valid,
+      night: nightOn,
+      visit: prev.visit + 1,
+      seed,
+      mode,
+      roll,
+      tools: ownedTools(),
+      day: localDay(new Date()),
+    }));
     setTurn(null);
     setShowNightIntro(nightOn);
   }, []);
@@ -170,7 +189,7 @@ export function useNavigation(): Navigation {
       if (pending.current) return;
       const target = countryById(countryId);
       const valid = Math.max(0, Math.min(index, pagesOf(target).length - 1));
-      const page = withTools(pageAt(target, valid, night), ownedTools());
+      const page = openingPage(pageAt(target, valid, night), ownedTools(), localDay(new Date()));
       // The leaf turns onto the page as it will be played, laid out already
       const seed = seedFor(page);
       const roll = Math.random();
@@ -294,4 +313,4 @@ export function useNavigation(): Navigation {
 }
 
 /** A page as it opens for the player now, before this visit's layout and chance. */
-const preparedPage = (page: Page) => withTools(page, ownedTools());
+const preparedPage = (page: Page) => openingPage(page, ownedTools(), localDay(new Date()));

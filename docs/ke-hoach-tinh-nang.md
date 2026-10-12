@@ -14,7 +14,7 @@
 | 1.2 Phản ứng sinh vật | **Đã làm**: 4 kiểu (nhảy, bò ngang, quẫy nước, vỗ cánh) cho mọi sinh vật | |
 | 2.3 Biến thể hiếm | **Đã làm**: sinh vật ánh vàng 1/25 lượt, Sổ Tay viền vàng | |
 | 2.1 Đồ nghề | **Đã làm**: Kính Tia Tím (thưởng bí ẩn chương 3 Singapore) + 9 lời nhắn mực tàng hình | Thêm dụng cụ cho Thái Lan, Việt Nam |
-| 2.2 Sinh vật di cư | Chưa làm | |
+| 2.2 Sinh vật di cư | **Đã làm**: 3 sinh vật lữ hành, 12 chỗ ghé, theo dõi trong Hộ Chiếu | |
 | 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm**: 11 chương, 37 mảnh manh mối; lời mở đầu chương cuối Singapore và Thái Lan đã sửa để dẫn sang nước tiếp theo | |
 | 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |
 | 4.2 Hộ chiếu | **Đã làm**: tem vàng làm bưu thiếp của nước đó có viền vàng | |

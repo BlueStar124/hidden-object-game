@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { STAMPS_FOR_SEAL, stampsByCountry } from '../../core/daily';
+import { migrantProgress, migrantSpot } from '../../core/migrants';
 import { progress } from '../../core/progress';
 import { hashString } from '../../core/random';
-import { codeOf, COUNTRIES } from '../../content';
+import { codeOf, COUNTRIES, placeOf } from '../../content';
+import { MIGRANTS } from '../../content/migrants';
 import { PrimaryButton } from '../../ui/Buttons';
 import { DialogHeader } from '../../ui/DialogHeader';
 import { CalendarDays, ChevronLeft, ChevronRight, Sparkles, Stamp } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
+import { SpriteIcon } from '../../ui/SpriteIcon';
 import { colors, fonts } from '../../ui/theme';
 
 interface PassportProps {
@@ -42,6 +45,15 @@ export const Passport: React.FC<PassportProps> = ({ today, canPlayToday, onPlayD
   const inkOf = (countryId: string) => INKS[Math.max(0, COUNTRIES.findIndex((c) => c.id === countryId)) % INKS.length];
   const perCountry = useMemo(() => stampsByCountry(stamps), [stamps]);
   const total = Object.keys(stamps).length;
+  // The travelling creatures: where each one is today, and how far the player has followed it
+  const travellers = useMemo(
+    () =>
+      MIGRANTS.map((m) => {
+        const at = placeOf(m.spots[migrantSpot(m, today)].pageId)?.ref;
+        return { m, ...migrantProgress(m, progress.discovered), where: at ? `${at.country.name} · Trang ${at.number}` : '' };
+      }),
+    [today]
+  );
 
   return (
     <ModalShell
@@ -110,6 +122,20 @@ export const Passport: React.FC<PassportProps> = ({ today, canPlayToday, onPlayD
           );
         })}
       </View>
+
+      <Text style={styles.section}>BẠN ĐỒNG HÀNH LỮ HÀNH</Text>
+      {travellers.map(({ m, met, total: places, where }) => (
+        <View key={m.id} style={[styles.traveller, met === places && styles.travellerDone]}>
+          <SpriteIcon type={m.spriteType} size={34} revealed={met > 0} />
+          <View style={styles.travellerText}>
+            <Text style={styles.travellerName}>
+              {m.name} · {met}/{places} nơi
+            </Text>
+            <Text style={styles.travellerWhere}>Hôm nay ghé: {where}</Text>
+            {met === places && <Text style={styles.travellerStory}>{m.story}</Text>}
+          </View>
+        </View>
+      ))}
 
       <View style={styles.seals}>
         {COUNTRIES.map((c) => {
@@ -201,6 +227,51 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 0.5,
+  },
+  section: {
+    alignSelf: 'stretch',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+    color: colors.earth,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  traveller: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 8,
+    marginBottom: 6,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    backgroundColor: colors.paper,
+  },
+  travellerDone: {
+    borderColor: 'rgba(45, 122, 79, 0.4)',
+    backgroundColor: 'rgba(45, 122, 79, 0.06)',
+  },
+  travellerText: {
+    flex: 1,
+    gap: 2,
+  },
+  travellerName: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 13,
+    color: colors.ink,
+  },
+  travellerWhere: {
+    fontSize: 12,
+    color: colors.inkSoft,
+  },
+  travellerStory: {
+    fontFamily: fonts.bodyItalic,
+    fontSize: 12.5,
+    lineHeight: 18,
+    color: colors.ink,
+    marginTop: 2,
   },
   seals: {
     alignSelf: 'stretch',

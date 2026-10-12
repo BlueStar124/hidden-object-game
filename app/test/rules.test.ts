@@ -11,6 +11,8 @@ import { canDeduce, cluesOf, hasMystery, isRightAnswer, mysteryProgress } from '
 import { hashString, localDay, rng, SEED_COUNT, shuffled } from '../src/core/random';
 import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
 import { chapterGiving, toolsOwned, withTools } from '../src/core/tools';
+import { migrantObjectId, migrantProgress, migrantSpot, withVisitors } from '../src/core/migrants';
+import type { Migrant } from '../src/core/model';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
@@ -501,5 +503,45 @@ describe('the detective tools', () => {
     // 't' + the tools there are (none), then 's' + the seed
     expect(laid.layout).toBe('ts7');
     expect(layoutKey(laid)).not.toBe(layoutKey(layOutPage(moving, 7)));
+  });
+});
+
+describe('travelling creatures', () => {
+  const swallow: Migrant = {
+    id: 'swallow',
+    name: 'Swallow',
+    spriteType: 'swallow',
+    greeting: 'Hello',
+    story: 'Story',
+    spots: [
+      { pageId: 'a', x: 0.3, y: 0.4, clue: 'in a' },
+      { pageId: 'b', x: 0.6, y: 0.5, clue: 'in b' },
+    ],
+  };
+  const a = pageOf('a', [object('main')]);
+  const b = pageOf('b', [object('main')]);
+  const dayOf = (d: number) => `2026-03-${String(d).padStart(2, '0')}`;
+
+  test('each day it is on one page, the same for everyone; days move it about', () => {
+    const where = Array.from({ length: 20 }, (_, d) => migrantSpot(swallow, dayOf(d + 1)));
+    expect(where.map((_, d) => migrantSpot(swallow, dayOf(d + 1)))).toEqual(where);
+    expect(new Set(where)).toEqual(new Set([0, 1]));
+  });
+
+  test('it joins only the page it visits, as an optional critter with a lasting id', () => {
+    const day = dayOf([...Array(20).keys()].find((d) => migrantSpot(swallow, dayOf(d + 1)) === 0)! + 1);
+    const visited = withVisitors(a, day, [swallow]);
+    const visitor = visited.objects.find((o) => o.id === migrantObjectId(swallow))!;
+    expect(visitor).toMatchObject({ x: 0.3, y: 0.4, clue: 'in a', isBonus: true, spriteType: 'swallow' });
+    expect(isMainObject(visitor)).toBe(false);
+    expect(layoutKey(visited)).not.toBe(layoutKey(a));
+    expect(withVisitors(b, day, [swallow])).toBe(b);
+  });
+
+  test('its journey counts the places it was met', () => {
+    const seen: Record<string, string[]> = { a: [migrantObjectId(swallow)] };
+    expect(migrantProgress(swallow, (id) => seen[id] ?? [])).toEqual({ met: 1, total: 2 });
+    seen.b = [migrantObjectId(swallow)];
+    expect(migrantProgress(swallow, (id) => seen[id] ?? [])).toEqual({ met: 2, total: 2 });
   });
 });

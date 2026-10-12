@@ -6,6 +6,7 @@ import { dailyPuzzle } from '../src/core/daily';
 import { isMainObject, type Chapter, type Page } from '../src/core/model';
 import { cluesOf } from '../src/core/mystery';
 import { chapterGiving } from '../src/core/tools';
+import { MIGRANTS } from '../src/content/migrants';
 import { localDay } from '../src/core/random';
 import { SPRITE_ART } from '../src/generated/spriteArt';
 
@@ -184,4 +185,29 @@ test('every tool a page needs is handed over by some chapter; its objects are op
       expect(chapterGiving(chapters, o.requires)).not.toBeNull();
     }
   }
+});
+
+describe('travelling creatures', () => {
+  const ASPECT = 1760 / 1240;
+
+  test.each(MIGRANTS.map((m): [string, (typeof MIGRANTS)[number]] => [m.id, m]))('%s visits day pages, on the paper, clear of every object', (_id, m) => {
+    expect(BESTIARY[m.spriteType as keyof typeof BESTIARY]).toBeDefined();
+    expect(new Set(m.spots.map((s) => s.pageId)).size).toBe(m.spots.length);
+    for (const spot of m.spots) {
+      const at = placeOf(spot.pageId);
+      expect(at).not.toBeNull();
+      expect(at!.night).toBe(false);
+      expect(onPaper(spot.x, spot.y)).toBe(true);
+      const r = spot.radius ?? 0.03;
+      for (const o of at!.ref.day.objects) {
+        const d = Math.hypot((o.x - spot.x) * ASPECT, o.y - spot.y);
+        expect(d).toBeGreaterThan((o.radius + r) * ASPECT * 0.9);
+      }
+    }
+  });
+
+  test('migrant ids are unique', () => {
+    const ids = MIGRANTS.map((m) => m.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });

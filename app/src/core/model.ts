@@ -268,6 +268,29 @@ export interface SpreadRect {
   h: number;
 }
 
+/**
+ * A travelling creature (core/migrants): each day it is on one of its spots, a page of any country.
+ * Its id is saved with every find: once published, permanent.
+ */
+export interface Migrant {
+  id: string;
+  name: string; // on its clue card
+  spriteType: SpriteType;
+  greeting: string; // its found text, wherever it is met
+  story: string; // told once it has been met at every one of its places
+  spots: MigrantSpot[]; // one per page at most
+}
+
+export interface MigrantSpot {
+  pageId: string; // a day page
+  x: number; // normalized spread coordinates, as HiddenObject.x / y
+  y: number;
+  clue: string;
+  radius?: number;
+  scale?: number;
+  flip?: boolean;
+}
+
 /** A page in the book: the day spread, and its night variant when it has one. */
 export interface PageSlot {
   day: Page;

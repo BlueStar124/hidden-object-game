@@ -155,6 +155,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
   án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
 - **Hồi kết:** giải bí ẩn cuối cùng ở Mũi Cà Mau thì nhận Chứng Nhận Người Giữ Sổ Thứ Tư, kèm thống kê cả hành trình
   và bưu thiếp chứng nhận để gửi bạn bè.
+- **Bạn đồng hành lữ hành:** chim én, chú mèo của vị kiến trúc sư và một cánh bướm đường xa mỗi ngày ghé một trang khác
+  nhau qua ba nước. Hộ Chiếu cho biết hôm nay chúng ở đâu; gặp đủ mọi nơi thì đọc được câu chuyện của chúng.
 - **Kính Tia Tím:** giải bí ẩn cuối của Singapore thì nhận kính; soi lại các trang Singapore sẽ thấy 9 lời nhắn mực
   tàng hình, ghép lại thành bức thư của vị kiến trúc sư gửi người giữ sổ tiếp theo.
 - **Sinh vật ánh vàng:** thỉnh thoảng một sinh vật phụ trên trang là bản ánh vàng hiếm (thẻ của nó sáng lên, trên
