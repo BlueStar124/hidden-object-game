@@ -25,8 +25,8 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 | `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts` | `core`, `content` — **không package nào** |
 | `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices` | `core`, `content`, `platform`, `game` |
 | `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
-| `screens/` | `GameScreen`, `Desk`, `hud/`, `dialogs/` | mọi thứ |
-| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)` | `core`, `platform`, `generated` |
+| `screens/` | `GameScreen`, `ErrorBoundary`, `Desk`, `hud/`, `dialogs/` | mọi thứ |
+| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog` | `core`, `platform`, `generated` |
 | `ui/` | Dùng chung: `theme`, `ModalShell`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
 | `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động, **không sửa tay** | `core`, `board`, `generated` |
 

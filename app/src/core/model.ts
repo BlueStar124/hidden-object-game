@@ -435,4 +435,10 @@ export interface GameProgress {
   cover?: { s: string; x: number; y: number; r: number; k: number }[];
   // Number of times each page has been played (used as seed for replays)
   playCount?: Record<string, number>;
+  settings?: GameSettings;
+}
+
+/** The player's preferences, saved with the progress (the first web version already wrote them here). */
+export interface GameSettings {
+  soundEnabled: boolean; // false: the player muted the game
 }

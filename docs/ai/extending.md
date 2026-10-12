@@ -115,7 +115,7 @@ Ví dụ: vật "chớp tắt" ở trang đêm, vật chỉ hiện khi zoom ≥ 
 3. Nếu **ý nghĩa** dữ liệu cũ đổi: tăng `SCHEMA_VERSION`, chuyển bản lưu cũ trong `readProgress` (xem cách
    `totalScore` được tính lại ở bản 2), và ghi lại lịch sử phiên bản trong comment.
 4. Ghi dữ liệu bằng một method mới trên object `progress` (module này là nơi ghi duy nhất). Không gọi `localStorage`
-   ở chỗ khác.
+   ở chỗ khác (ngoại lệ duy nhất: `platform/crashLog.ts`, nhật ký lỗi ở khóa riêng, không phải tiến độ).
 5. `app/test/progress.test.ts`: test đọc bản lưu cũ, bản hỏng, và bản mới.
 6. **Không bao giờ** đổi `STORAGE_KEY` hay đổi tên id trang/vật đã phát hành. Nếu buộc phải đổi tên thì viết đoạn
    chuyển id trong `readProgress`, kèm test.

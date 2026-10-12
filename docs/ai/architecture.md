@@ -63,7 +63,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `resolvePage.ts` | `resolvePage(page, ctx)` | Dựng trang cho lượt chơi: hoán đổi vị trí theo `spots`, thêm sinh vật di cư, gắn cờ biến thể hiếm, ẩn vật cần dụng cụ chưa mở khóa. |
 | `tools.ts` | `toolsOwned`, `isCountryCleared` | Quản lý đồ nghề mở khóa (như `'uv-lens'` khi hoàn thành các nước). |
 | `migrants.ts` | `migrantsOn(pageId, day, migrants)` | Tính toán danh sách sinh vật di cư ghé trang theo ngày. |
-| `progress.ts` | `SCHEMA_VERSION` (=2), `readProgress(raw)`, `progress.{recordVictory, pageResult, recordDiscovery, discovered, recordVisit, lastPage, totalScore, exportSave, importSave, saveSoundEnabled, loadSoundEnabled, saveRevealEffect, loadRevealEffect}` | `lastPageId` (tùy chọn) là trang người chơi đang ở, cho nút "Chơi Tiếp". Lưu JSON trong localStorage. Lọc prototype pollution (`__proto__`, `constructor`). Hỗ trợ xuất/nhập save Base64. |
+| `progress.ts` | `SCHEMA_VERSION` (=2), `readProgress(raw)`, `progress.{recordVictory, pageResult, recordDiscovery, discovered, recordVisit, lastPage, soundEnabled, setSoundEnabled, totalScore, exportSave, importSave, saveRevealEffect, loadRevealEffect}` | `lastPageId` là trang dở dang; `settings.soundEnabled` là công tắc âm; lọc prototype pollution (`__proto__`, `constructor`); hỗ trợ xuất/nhập save Base64. |
 
 ### content/ — chỉ dữ liệu
 | File | Export | Ghi chú |
@@ -110,6 +110,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 |---|---|
 | `GameScreen.tsx` | Màn hình duy nhất. Tính `preload` (trang sau, trang trước, trang kế của đích đang lật), `boardActive`, `playing`; quyết định hộp thoại nào hiện (prologue, Tạm Dừng, Thắng, Hết Giờ chỉ hiện khi đã rời trang chủ). Layout HUD: `height < 500` → `'phoneLandscape'`, `width < 700` → `'phone'`, còn lại `'wide'`. |
 | `home/HomeScreen.tsx` | **Trang chủ**, lớp phủ zIndex 180 (trên HUD, dưới mọi hộp thoại): Chơi Tiếp / Bắt Đầu Điều Tra, thẻ từng cuốn sổ (mở ở trang chưa xong đầu tiên), Mục Lục, Sổ Tay, âm thanh, tổng điểm. Ngang ≥ 600 px: 2 cột; hẹp hơn: 1 cột cuộn. Số liệu trong `home/summary.ts` (`bookSummary`, `albumProgress`). |
+| `ErrorBoundary.tsx` | Bọc `GameScreen` trong `App.tsx`. Lỗi lúc render thì hiện màn "Cuốn sổ gặp chút sự cố" thay vì màn trắng: "Mở lại cuốn sổ" mount lại game (về trang chủ), "Gửi báo lỗi" chia sẻ hoặc chép `crashLog.report()`. |
 | `BookThumb.tsx` | Ảnh thu nhỏ một trang (cắt đúng khung giấy, 16:9), dùng ở Mục Lục và trang chủ. |
 | `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`). |
 | `useDeviceBehaviour.ts` | Giữ màn hình sáng, ẩn thanh điều hướng Android, rời app thì tạm dừng, nút Back Android. |
@@ -126,6 +127,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `sound.web.ts` | Web: synth chạy trực tiếp + rung. Mở AudioContext ở lần chạm đầu. |
 | `sound.native.ts` | iOS/Android: phát WAV đã sinh (`generated/sounds.ts`), mỗi âm 2 player; + rung. |
 | `synth/synth.ts`, `synth/voices.ts` | Bộ tổng hợp Web Audio: **nguồn gốc của mọi âm thanh**. `VOICE_OF: SpriteType → tên giọng`. |
+| `crashLog.ts` | 10 lỗi gần nhất lưu trên máy, khóa riêng `detective_sketchbook_crashes_v1` (không có server). `installCrashLog()` gọi trong `App.tsx`: native bọc `ErrorUtils` (giữ handler gốc), web nghe `error` / `unhandledrejection`. Không bao giờ throw. |
 | `haptics.ts` | Rung theo từng sự kiện, kiểu fire-and-forget. |
 | `sceneImage.ts` / `.web.ts` | Giải mã tranh ngoài luồng vẽ (native: JS thread + `makeNonTextureImage`; web: `createImageBitmap` rồi copy pixel qua canvas 2D, tránh lazy texture không vẽ được trên surface CPU), `readPixels` để phân tích. |
 
@@ -146,7 +148,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 `content.test.ts` (soát **mọi trang**: tọa độ trong 0–1, `0 < radius < 0.2`, sprite có art và mục Sổ Tay, `roam` ≥ 2
 điểm, `occluder` ≥ 3 điểm, `0 < waterline < 1`, ≤ 1 bí mật, có ít nhất một vật chính, id vật không trùng trong trang,
 trang đêm dùng chung `art` với trang ngày), `session.test.tsx` (chờ đích, hủy completion cũ, dựng lại khi ảnh tới),
-`sound.test.ts` (âm thanh native lỗi không ngắt game), `screens/Gallery.tsx` (mọi hộp thoại với nội dung dài nhất, cho
+`sound.test.ts` (âm thanh native lỗi không ngắt game), `crashLog.test.ts` (giới hạn 10 lỗi, storage hỏng không throw), `screens/Gallery.tsx` (mọi hộp thoại với nội dung dài nhất, cho
 `test:screens`).
 
 ## 3. Luồng: mở game và trang chủ

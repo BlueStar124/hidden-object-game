@@ -68,6 +68,9 @@ export function readProgress(raw: unknown): GameProgress {
     }
   }
 
+  // Sound stays on unless the player turned it off
+  const settings = isRecord(cleanData.settings) ? { ...cleanData.settings, soundEnabled: cleanData.settings.soundEnabled !== false } : undefined;
+
   const upToDate = typeof cleanData.schemaVersion === 'number' && cleanData.schemaVersion >= SCHEMA_VERSION;
   const bestScores = Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0);
   const result: GameProgress = {
@@ -77,6 +80,7 @@ export function readProgress(raw: unknown): GameProgress {
     sceneResults,
     totalScore: upToDate ? count(cleanData.totalScore) : bestScores,
     discovered,
+    settings, // (a damaged value is dropped rather than kept as an unknown field)
   };
   if (typeof cleanData.lastPageId === 'string') {
     result.lastPageId = cleanData.lastPageId;
@@ -192,6 +196,18 @@ export const progress = {
   /** The page the player was last in (it may be gone from the content since), if any. */
   lastPage(): string | undefined {
     return load().lastPageId;
+  },
+
+  /** Whether the player wants sound (on until they turn it off). */
+  soundEnabled(): boolean {
+    return load().settings?.soundEnabled !== false;
+  },
+
+  /** Remembers the sound switch for the next time the game opens. */
+  setSoundEnabled(enabled: boolean): void {
+    const current = load();
+    if ((current.settings?.soundEnabled !== false) === enabled) return;
+    save({ ...current, settings: { ...current.settings, soundEnabled: enabled } });
   },
 
   /** Sum of every page's best score. */

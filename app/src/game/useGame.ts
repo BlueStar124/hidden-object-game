@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { loadSoundEnabled, progress, saveSoundEnabled } from '../core/progress';
+import { progress } from '../core/progress';
 import { sound } from '../platform/sound';
 import { useCase } from './useCase';
 import { useNavigation } from './useNavigation';
@@ -33,18 +33,15 @@ export function useGame({ browsing }: { browsing: boolean }) {
     if (!home) progress.recordVisit(pageId);
   }, [home, pageId]);
 
-  const [soundEnabled, setSoundEnabled] = useState(loadSoundEnabled);
+  // The sound switch is saved: a player who muted the game finds it muted next time
+  const [soundEnabled, setSoundEnabled] = useState(() => progress.soundEnabled());
   useEffect(() => {
     sound.setSoundEnabled(soundEnabled);
   }, [soundEnabled]);
-
   const toggleSound = useCallback(() => {
-    setSoundEnabled((prev) => {
-      const next = !prev;
-      saveSoundEnabled(next);
-      return next;
-    });
-  }, []);
+    setSoundEnabled(!soundEnabled);
+    progress.setSoundEnabled(!soundEnabled);
+  }, [soundEnabled]);
 
   return { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome };
 }
