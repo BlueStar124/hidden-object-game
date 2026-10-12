@@ -5,17 +5,26 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Board } from '../board/Board';
 import { leftovers } from '../core/caseFile';
-import type { Page } from '../core/model';
+import { parseChallenge, type Challenge } from '../core/challenge';
+import { dailyPuzzle } from '../core/daily';
+import type { Chapter, Page } from '../core/model';
 import { progress } from '../core/progress';
+import { localDay } from '../core/random';
 import { completionBonus } from '../core/scoring';
 import { allPages } from '../content';
 import { useGame } from '../game/useGame';
+import { takeLaunchCode } from '../platform/launchLink';
 import { sound } from '../platform/sound';
 import { useStableCallback } from '../ui/useStableCallback';
 import { colors } from '../ui/theme';
 import { Desk } from './Desk';
+import { ChallengeEntry } from './dialogs/ChallengeEntry';
 import { CreatureAlbum } from './dialogs/CreatureAlbum';
+import { DailyDone } from './dialogs/DailyDone';
+import { Deduction } from './dialogs/Deduction';
+import { MyCover } from './dialogs/MyCover';
 import { PageIndex } from './dialogs/PageIndex';
+import { Passport } from './dialogs/Passport';
 import { PauseMenu } from './dialogs/PauseMenu';
 import { RotatePrompt } from './dialogs/RotatePrompt';
 import { StoryPrologue } from './dialogs/StoryPrologue';
@@ -25,7 +34,12 @@ import { HomeScreen } from './home/HomeScreen';
 import { FloatingScores } from './hud/FloatingScores';
 import { HUD, type HudLayout } from './hud/HUD';
 import { QuestPanel } from './hud/QuestPanel';
+import { challengeMessage, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
+import { useShare } from './share/useShare';
 import { useDeviceBehaviour } from './useDeviceBehaviour';
+
+/** A sheet over the game from the home screen (the index and the album have their own flags). */
+type Sheet = 'passport' | 'cover' | 'challenge' | null;
 
 /**
  * The one screen of the game: the desk with the sketchbook (Board), the HUD above it, the clue
@@ -35,8 +49,11 @@ import { useDeviceBehaviour } from './useDeviceBehaviour';
 export const GameScreen: React.FC = () => {
   const [showIndex, setShowIndex] = useState(false);
   const [showAlbum, setShowAlbum] = useState(false);
-  const { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome } = useGame({ browsing: showIndex || showAlbum });
-  const { country, pages, ref, page, isNight, turn, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
+  const [sheet, setSheet] = useState<Sheet>(null);
+  const [deduction, setDeduction] = useState<{ chapter: Chapter; number: number } | null>(null);
+  const browsing = showIndex || showAlbum || sheet !== null || deduction !== null;
+  const { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome } = useGame({ browsing });
+  const { country, pages, ref, page, isNight, turn, mode, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
   const isTurning = turn !== null;
 
@@ -81,13 +98,20 @@ export const GameScreen: React.FC = () => {
   }, [c.isExploring, left, explore]);
 
   const { timeBonus, stars } = completionBonus(c.remainingTime, c.mistakes, c.hintsUsed);
+  const timeTaken = page.timeLimit - c.remainingTime;
   const nightIntroOpen = showNightIntro && isNight;
+
+  // The daily page of today (the same for every player); the day is read at every render, so the
+  // page changes at midnight even with the game left open
+  const today = localDay(new Date());
+  const dayPages = useMemo(() => allPages().filter((p) => !p.isNight), []);
+  const puzzle = useMemo(() => dailyPuzzle(today, dayPages), [today, dayPages]);
+  const daily = !puzzle ? 'none' : progress.stamps()[today] ? 'done' : 'open';
 
   // Nothing covers the sketchbook (its gestures would otherwise fire under the dialogs)
   const boardActive =
     !home &&
-    !showIndex &&
-    !showAlbum &&
+    !browsing &&
     !showPrologue &&
     !nightIntroOpen &&
     !c.isPaused &&
@@ -105,11 +129,13 @@ export const GameScreen: React.FC = () => {
   }, [page]);
 
   const closeTopSheet = useCallback(() => {
-    if (showAlbum) setShowAlbum(false);
+    if (deduction) setDeduction(null);
+    else if (sheet) setSheet(null);
+    else if (showAlbum) setShowAlbum(false);
     else if (showIndex) setShowIndex(false);
     else return false;
     return true;
-  }, [showAlbum, showIndex]);
+  }, [deduction, sheet, showAlbum, showIndex]);
   useDeviceBehaviour({ playing, paused: c.isPaused, onPause: togglePause, closeTopSheet });
 
   // Screen shake on a wrong guess
@@ -139,6 +165,53 @@ export const GameScreen: React.FC = () => {
     [goTo, setHome]
   );
 
+  /* ------------------------- Daily page, challenges, sharing ------------------------- */
+
+  const { openDaily: openDailyPage, openChallenge, leaveSpecial } = nav;
+  const openPassport = useCallback(() => setSheet('passport'), []);
+  const openCover = useCallback(() => setSheet('cover'), []);
+  const enterChallenge = useCallback(() => setSheet('challenge'), []);
+  const closeSheet = useCallback(() => setSheet(null), []);
+  const openDeduction = useCallback((chapter: Chapter, number: number) => setDeduction({ chapter, number }), []);
+
+  const openDaily = useCallback(() => {
+    if (!puzzle || !openDailyPage(puzzle)) return;
+    setSheet(null);
+    setHome(false);
+  }, [puzzle, openDailyPage, setHome]);
+
+  const playChallenge = useCallback(
+    (challenge: Challenge) => {
+      if (!openChallenge(challenge)) return false;
+      setSheet(null);
+      setShowIndex(false);
+      setHome(false);
+      return true;
+    },
+    [openChallenge, setHome]
+  );
+
+  // Opened from a challenge link (web): straight into that hunt
+  const launched = useRef(false);
+  useEffect(() => {
+    if (launched.current) return;
+    launched.current = true;
+    const code = takeLaunchCode();
+    const challenge = code ? parseChallenge(code) : null;
+    if (challenge) playChallenge(challenge);
+  }, [playChallenge]);
+
+  const leaveToHome = useCallback(() => {
+    leaveSpecial();
+    setHome(true);
+  }, [leaveSpecial, setHome]);
+
+  const share = useShare();
+  const solvedChallenge = useMemo(
+    () => (c.isCompleted && mode.kind !== 'daily' ? challengeMessage(page, nav.seed, timeTaken) : null),
+    [c.isCompleted, mode.kind, page, nav.seed, timeTaken]
+  );
+
   const measureRoot = useCallback(() => {
     rootRef.current?.measureInWindow((x, y) => setRootOffset({ x, y }));
   }, []);
@@ -156,6 +229,7 @@ export const GameScreen: React.FC = () => {
         chapterNumber={ref.chapterNumber}
         pageIndex={ref.index}
         pageCount={pages.length}
+        huntLabel={mode.kind === 'daily' ? 'Trang của ngày' : mode.kind === 'challenge' ? 'Thử thách' : undefined}
         score={c.score}
         remainingTime={c.remainingTime}
         combo={c.combo}
@@ -216,14 +290,34 @@ export const GameScreen: React.FC = () => {
           onOpenIndex={openIndex}
           onOpenAlbum={openAlbum}
           onToggleSound={toggleSound}
+          daily={daily}
+          onOpenDaily={openDaily}
+          onOpenPassport={openPassport}
+          onOpenCover={openCover}
+          onEnterChallenge={enterChallenge}
         />
       )}
 
       {showIndex && (
-        <PageIndex country={country} current={ref} isNight={isNight} onSelect={selectPage} onClose={() => setShowIndex(false)} />
+        <PageIndex
+          country={country}
+          current={ref}
+          isNight={isNight}
+          onSelect={selectPage}
+          onOpenDeduction={openDeduction}
+          onClose={() => setShowIndex(false)}
+        />
       )}
 
       {showAlbum && <CreatureAlbum pages={albumPages} onClose={() => setShowAlbum(false)} />}
+
+      {deduction && <Deduction chapter={deduction.chapter} chapterNumber={deduction.number} onClose={() => setDeduction(null)} />}
+
+      {sheet === 'passport' && <Passport today={today} canPlayToday={daily === 'open'} onPlayDaily={openDaily} onClose={closeSheet} />}
+
+      {sheet === 'cover' && <MyCover onClose={closeSheet} />}
+
+      {sheet === 'challenge' && <ChallengeEntry onPlay={playChallenge} onClose={closeSheet} />}
 
       {/* The case file and the night intro wait for the player to leave the home screen */}
       {!home && showPrologue && (
@@ -262,19 +356,54 @@ export const GameScreen: React.FC = () => {
 
       {askToRotate && <RotatePrompt onKeepPortrait={() => setKeepPortrait(true)} />}
 
-      {!home && c.isCompleted && !c.isExploring && !isTurning && (
+      {!home && mode.kind === 'daily' && c.isCompleted && !isTurning && (
+        <DailyDone
+          pageTitle={page.title}
+          country={country.name}
+          day={mode.puzzle.day}
+          timeTaken={timeTaken}
+          share={{
+            busy: share.busy,
+            note: share.note,
+            onPostcard: () => {
+              const shared = dailyShare(page, mode.puzzle.day, timeTaken);
+              share.sharePostcard(shared.postcard, shared.text);
+            },
+          }}
+          onOpenPassport={openPassport}
+          onHome={leaveToHome}
+        />
+      )}
+
+      {!home && mode.kind !== 'daily' && c.isCompleted && !c.isExploring && !isTurning && (
         <VictoryScreen
           page={page}
           score={c.score}
           stars={stars}
           timeBonus={timeBonus}
-          timeTaken={page.timeLimit - c.remainingTime}
+          timeTaken={timeTaken}
           mistakes={c.mistakes}
           hintsUsed={c.hintsUsed}
           isSecretFound={c.secretFound}
           foundIds={c.foundItems}
           hasNextPage={ref.index < pages.length - 1}
           nightUnlocked={kase.unlockedNight ?? undefined}
+          rivalTime={mode.kind === 'challenge' ? mode.challenge.time : undefined}
+          share={
+            solvedChallenge
+              ? {
+                  busy: share.busy,
+                  note: share.note,
+                  code: solvedChallenge.code,
+                  onPostcard: () =>
+                    share.sharePostcard(
+                      victoryPostcard(page, { foundIds: c.foundItems, score: c.score, stars, time: timeTaken, code: solvedChallenge.code }),
+                      postcardMessage(page, solvedChallenge.text)
+                    ),
+                  onChallenge: () => share.shareMessage(solvedChallenge.text),
+                }
+              : undefined
+          }
           onNextPage={nav.next}
           onReplay={nav.replay}
           onExplore={() => explore(true)}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PixelRatio } from 'react-native';
 import type { SkImage, SkPicture } from '@shopify/react-native-skia';
 import { scheduleOnRN, scheduleOnUI } from 'react-native-worklets';
+import { layoutKey } from '../core/layout';
 import type { Page } from '../core/model';
 import { artIdOf, artOf } from '../content';
 import { loadSceneImage, type LoadedScene } from '../platform/sceneImage';
@@ -23,13 +24,18 @@ const loading = new Set<string>();
 const MAX_IMAGES = 5;
 const retiredArt = new Set<LoadedScene>();
 
-// What a painting tells about a page (chameleon tints, where the paper is): read once per page
+// What a painting tells about a page (chameleon tints, where the paper is): read once per layout of
+// a page (core/layout: tints follow where objects are). Replays may lay pages out anew, so only the
+// latest few are kept
 const analyses = new Map<string, SceneAnalysis>();
+const MAX_ANALYSES = 40;
 function analysisOf(page: Page, art: LoadedScene): SceneAnalysis {
-  let analysis = analyses.get(page.id);
+  const key = layoutKey(page);
+  let analysis = analyses.get(key);
   if (!analysis) {
     analysis = analyzeScene(art.readPixels(SAMPLE_WIDTH), page.objects);
-    analyses.set(page.id, analysis);
+    analyses.set(key, analysis);
+    if (analyses.size > MAX_ANALYSES) analyses.delete(analyses.keys().next().value!);
   }
   return analysis;
 }
@@ -68,7 +74,8 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
     for (const picture of pictures) retiredPictures.add(picture);
   }, [retiredPictures]);
 
-  // Pages laid out for this loupe size, layout and sprite sharpness
+  // Pages laid out for this loupe size, layout and sprite sharpness (by core/layout.layoutKey: a
+  // replay with objects elsewhere is another scene of the same page)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact, density]);
   useEffect(() => () => {
@@ -77,13 +84,14 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   }, [scenes, retiredScenes]);
   const prepare = useCallback(
     (p: Page): SceneData | null => {
-      const cached = scenes.get(p.id);
+      const key = layoutKey(p);
+      const cached = scenes.get(key);
       if (cached) return cached;
       const art = images.get(artIdOf(p));
       if (!art) return null;
       const { tints, book } = analysisOf(p, art);
       const prepared = buildScene({ page: p, image: art.image, tints, book, loupe, compact, density, pixelRatio: PixelRatio.get() });
-      scenes.set(p.id, prepared);
+      scenes.set(key, prepared);
       return prepared;
     },
     [scenes, loupe, compact, density]
@@ -159,8 +167,8 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
     scene,
     shown,
     prepare,
-    isPrepared: useCallback((p: Page) => scenes.has(p.id), [scenes]),
-    preparedScene: useCallback((p: Page) => scenes.get(p.id), [scenes]),
+    isPrepared: useCallback((p: Page) => scenes.has(layoutKey(p)), [scenes]),
+    preparedScene: useCallback((p: Page) => scenes.get(layoutKey(p)), [scenes]),
     hasArt: useCallback((p: Page) => images.has(artIdOf(p)), []),
     version,
     bump,

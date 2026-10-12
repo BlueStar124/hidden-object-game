@@ -138,6 +138,35 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 
 ---
 
+## 🔎 Phiên Bản 0.6 — Bí Ẩn Chương, Trang Của Ngày & Thử Thách Bạn Bè
+
+- **Bí ẩn chương:** mỗi trang ngày giấu thêm một **mảnh manh mối** (không bắt buộc để qua màn). Đủ mảnh của chương thì
+  mở **Bảng Suy Luận** trong Mục Lục: chọn đáp án đúng để đọc đoạn kết. Chọn sai không bị phạt, chỉ được nhắc lại manh
+  mối. Ba chương Singapore đã có bí ẩn; Thái Lan và Việt Nam sẽ thêm sau.
+- **Chơi lại không nhàm:** trang đã giải có thể đặt vật ở chỗ nấp khác (kèm gợi ý mới) mỗi lần chơi lại.
+- **Trang của ngày:** mỗi ngày một góc tranh với 3–5 vật, giống nhau cho mọi người chơi (không cần server). Xong thì
+  được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
+- **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
+- **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian.
+- **Thử thách bạn bè:** mỗi lần thắng có một mã như `SG3-7K2P-142` (trang, cách đặt vật, thời gian). Bạn bè nhập mã ở
+  trang chủ (hoặc mở link `…/?c=SG3-7K2P-142` trên web) để chơi đúng ván đó và so thời gian.
+
+### Trường mới trong file màn chơi
+
+```jsonc
+{
+  "isClue": true,                      // mảnh manh mối của bí ẩn chương (tùy chọn như bonus)
+  "spots": [                           // chỗ nấp khác cho lần chơi lại, mỗi chỗ một gợi ý riêng
+    { "x": 0.585, "y": 0.625, "clue": "Ngồi giữa hàng cây, dưới chân tòa tháp thứ ba." }
+  ],
+  "riddle": "Thứ gì kêu tích tắc mà không có tim?", // câu đố thay cho tên trên thẻ
+  "order": 1                           // trang theo dấu: tìm theo thứ tự 1, 2, 3…
+}
+```
+
+Câu hỏi của bí ẩn chương nằm trong `countries/<nước>/mysteries.ts` (trường `mystery` của chương). Mỗi nước có thêm
+`code` (2 chữ in hoa) dùng trong mã thử thách.
+
 ## 🛠️ Cài Đặt & Chạy Game
 
 Game chạy bằng bản app trong [`app/`](app/README.md) (iOS · Android · web):
@@ -207,5 +236,8 @@ File [`vercel.json`](vercel.json) ở thư mục gốc cho Vercel deploy **bản
 2. Mỗi nhánh được push lên có một bản **Preview** riêng để thử; push/merge vào `main` thì thay bản chính thức trên tên miền của project (xem ở mục *Domains* trên dashboard).
 3. Cùng tên miền nên người chơi **giữ nguyên tiến độ** (app đọc đúng khóa lưu của bản Vite).
 4. Cần quay về bản trước thì dùng **Instant Rollback** trên dashboard. (Bản Vite cũ nằm trong `archive/web-vite.zip`; muốn deploy lại nó phải giải nén và khôi phục `package.json` như hướng dẫn trong zip.)
+
+Bản app (iOS/Android) gửi link thử thách khi biết địa chỉ bản web: đặt biến môi trường `EXPO_PUBLIC_WEB_URL` (ví dụ
+`https://ten-du-an.vercel.app`) lúc build. Bản web tự dùng địa chỉ của chính nó.
 
 `package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 57 cần Node ≥ 22.13 (hoặc 24.3).

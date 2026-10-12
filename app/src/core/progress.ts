@@ -1,4 +1,4 @@
-import type { GameProgress, PageResult } from './model';
+import type { CoverSticker, DailyStamp, GameProgress, PageResult, SpriteType } from './model';
 
 /**
  * Saved progress: stars, best scores, and every object ever spotted. Stored as JSON in
@@ -20,6 +20,37 @@ type Fields = Record<string, unknown>;
 const isRecord = (v: unknown): v is Fields => typeof v === 'object' && v !== null && !Array.isArray(v);
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : []);
 const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, v) : 0);
+const between = (v: unknown, min: number, max: number, fallback: number): number =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+
+/** Passport stamps kept: about a year of daily pages, so the save never keeps growing. */
+export const MAX_STAMPS = 400;
+/** Stickers on the inside cover, at most. */
+export const MAX_STICKERS = 60;
+
+function readStamps(v: unknown): Record<string, DailyStamp> | undefined {
+  if (!isRecord(v)) return undefined;
+  const stamps: Record<string, DailyStamp> = {};
+  for (const [day, s] of Object.entries(v)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !isRecord(s) || typeof s.pageId !== 'string') continue;
+    stamps[day] = { pageId: s.pageId, countryId: typeof s.countryId === 'string' ? s.countryId : '', time: count(s.time) };
+  }
+  return stamps;
+}
+
+function readCover(v: unknown): CoverSticker[] | undefined {
+  if (!Array.isArray(v)) return undefined;
+  return v
+    .filter((s): s is Record<string, unknown> => isRecord(s) && typeof s.type === 'string')
+    .slice(0, MAX_STICKERS)
+    .map((s) => ({
+      type: s.type as SpriteType, // an unknown drawing is skipped where stickers are shown
+      x: between(s.x, 0, 1, 0.5),
+      y: between(s.y, 0, 1, 0.5),
+      rotation: between(s.rotation, -360, 360, 0),
+      scale: between(s.scale, 0.4, 3, 1),
+    }));
+}
 
 /**
  * A save of any version, read back safely: missing or damaged fields become empty ones, fields
@@ -48,6 +79,10 @@ export function readProgress(raw: unknown): GameProgress {
   if (isRecord(data.discovered)) {
     for (const [pageId, seen] of Object.entries(data.discovered)) discovered[pageId] = strings(seen);
   }
+  // (Damaged values are dropped rather than kept as unknown fields)
+  const solvedMysteries = Array.isArray(data.solvedMysteries) ? strings(data.solvedMysteries) : undefined;
+  const stamps = readStamps(data.stamps);
+  const cover = readCover(data.cover);
 
   // Sound stays on unless the player turned it off
   const settings = isRecord(data.settings) ? { ...data.settings, soundEnabled: data.settings.soundEnabled !== false } : undefined;
@@ -63,6 +98,9 @@ export function readProgress(raw: unknown): GameProgress {
     discovered,
     lastPageId: typeof data.lastPageId === 'string' ? data.lastPageId : undefined,
     settings, // (a damaged value is dropped rather than kept as an unknown field)
+    solvedMysteries,
+    stamps,
+    cover,
   };
 }
 
@@ -153,6 +191,51 @@ export const progress = {
   lastPage(): string | undefined {
     return load().lastPageId;
   },
+
+  /* ---- Chapter mysteries ---- */
+
+  isMysterySolved(chapterId: string): boolean {
+    return (load().solvedMysteries ?? []).includes(chapterId);
+  },
+
+  recordMysterySolved(chapterId: string): void {
+    const current = load();
+    const solved = current.solvedMysteries ?? [];
+    if (solved.includes(chapterId)) return;
+    save({ ...current, solvedMysteries: [...solved, chapterId] });
+  },
+
+  /* ---- Passport ---- */
+
+  /** Daily pages done, by day. */
+  stamps(): Record<string, DailyStamp> {
+    return load().stamps ?? {};
+  },
+
+  /** A daily page done: its stamp (the best time, when the same day is played again). */
+  recordStamp(day: string, stamp: DailyStamp): void {
+    const current = load();
+    const stamps = { ...current.stamps };
+    const existing = stamps[day];
+    if (existing && existing.time <= stamp.time) return;
+    stamps[day] = stamp;
+    // Days sort as text ('2026-10-12'): drop the oldest beyond the limit
+    const days = Object.keys(stamps).sort();
+    for (const old of days.slice(0, Math.max(0, days.length - MAX_STAMPS))) delete stamps[old];
+    save({ ...current, stamps });
+  },
+
+  /* ---- Inside cover ---- */
+
+  cover(): CoverSticker[] {
+    return load().cover ?? [];
+  },
+
+  saveCover(stickers: CoverSticker[]): void {
+    save({ ...load(), cover: stickers.slice(0, MAX_STICKERS) });
+  },
+
+  /* ---- Settings ---- */
 
   /** Whether the player wants sound (on until they turn it off). */
   soundEnabled(): boolean {

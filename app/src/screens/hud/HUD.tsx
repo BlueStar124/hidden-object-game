@@ -35,6 +35,8 @@ interface HUDProps {
   chapterNumber: number;
   pageIndex: number; // position in the country's book (0-based)
   pageCount: number;
+  /** A hunt beside the book (daily page, challenge): shown instead of the page number, no arrows */
+  huntLabel?: string;
   score: number;
   remainingTime: number;
   combo: number;
@@ -83,13 +85,22 @@ const IconButton: React.FC<{
   </Pressable>
 );
 
-const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
+const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'huntLabel' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
   pageIndex,
   pageCount,
+  huntLabel,
   onPrevPage,
   onNextPage,
   onOpenIndex,
-}) => (
+}) =>
+  huntLabel ? (
+    // Outside the book there is no page before or after: the index still leads back to it
+    <Pressable onPress={onOpenIndex} hitSlop={6} accessibilityLabel={`${huntLabel}. Mở mục lục để về cuốn sổ`} style={styles.picker}>
+      <BookOpen size={13} color={colors.ink} />
+      <Text style={styles.pickerText}>{huntLabel}</Text>
+      <Text style={styles.caret}>▾</Text>
+    </Pressable>
+  ) : (
   <View style={styles.switcher}>
     <Pressable
       onPress={onPrevPage}
@@ -117,7 +128,8 @@ const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPr
       <ChevronRight size={16} color={colors.inkSoft} />
     </Pressable>
   </View>
-));
+  )
+);
 
 const NightBadge = () => (
   <View style={styles.nightBadge}>
@@ -242,6 +254,7 @@ export const HUD: React.FC<HUDProps> = (props) => {
     <PageSwitcher
       pageIndex={props.pageIndex}
       pageCount={props.pageCount}
+      huntLabel={props.huntLabel}
       onPrevPage={props.onPrevPage}
       onNextPage={props.onNextPage}
       onOpenIndex={props.onOpenIndex}

@@ -232,6 +232,15 @@ export function createBoardPaints() {
       )
     ),
 
+    // Daily page: the spread outside the corner in play, washed over with paper, and the corner's edge
+    focusVeil: paint((p) => p.setColor(color('rgba(236, 231, 220, 0.82)'))),
+    focusEdge: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(3 * PX);
+      p.setColor(color('rgba(154, 106, 62, 0.6)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([14 * PX, 8 * PX], 0));
+    }),
+
     // Keeps the next pages' artwork on the GPU (one pixel, all but transparent)
     warm: paint((p) => p.setAlphaf(1 / 255)),
   };

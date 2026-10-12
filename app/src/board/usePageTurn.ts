@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
+import { layoutKey } from '../core/layout';
 import { PAGE_TURN_MS, type Page, type PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { type FoundInfo, type FrameState, type PageFlip, type SceneData } from './render';
@@ -130,15 +131,16 @@ export function usePageTurn(
   }, [flipTo, flipDuration, flipStart, request, onComplete]);
 
   // 3. Landed: back to the live page once the game has opened it
+  const pageKey = layoutKey(page);
   useEffect(() => {
     if (!flip || !landed || !scene) return;
     if (turn) return;
-    if (page.id === flip.page.id && flip.camera) {
+    if (pageKey === layoutKey(flip.page) && flip.camera) {
       tx.value = flip.camera.toX;
       ty.value = flip.camera.toY;
     }
     setFlip(null);
-  }, [flip, landed, scene, page.id, turn, tx, ty]);
+  }, [flip, landed, scene, pageKey, turn, tx, ty]);
 
   const flipFrame = useMemo<PageFlip | null>(
     () => (flip ? { from: flip.from, to: flip.to, dir: flip.dir, S: flip.S, duration: flip.duration, camera: flip.camera } : null),

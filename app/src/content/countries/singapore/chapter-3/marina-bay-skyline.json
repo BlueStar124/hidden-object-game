@@ -165,6 +165,20 @@
         "bob": true
       },
       "foundText": "Chim mỏ sừng vỗ cánh phành phạch rất to — nghe thấy trước khi nhìn thấy!"
+    },
+    {
+      "id": "clue-compass",
+      "name": "La Bàn Chỉnh Sẵn",
+      "clue": "Chiếc la bàn vẽ lẫn vào mặt kính của tòa tháp ngoài cùng bên phải.",
+      "x": 0.82,
+      "y": 0.48,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "compass",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Kim la bàn bị cố định, chỉ mãi về hướng bắc."
     }
   ]
 }

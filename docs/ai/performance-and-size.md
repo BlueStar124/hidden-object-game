@@ -63,8 +63,9 @@ mỗi giây, mở hộp thoại.
    Trang lân cận hẹn sau khi ổn định (`PREPARE_MS = 120`), mỗi lần một trang; đồng hồ vụ án dừng khi chờ/lật.
 2. Cache có sẵn, hãy dùng, đừng tạo cache song song:
    - tranh đã giải mã: `images` (module-level, khóa `artIdOf`, tối đa `MAX_IMAGES = 5`);
-   - phân tích tranh: `analyses` (khóa id trang, đọc pixel một lần);
-   - trang đã dựng: `scenes`, chỉ dựng lại khi `loupe`, `compact` hoặc `density` đổi. `atlasDensity` làm tròn theo bước
+   - phân tích tranh: `analyses` (khóa `layoutKey`, đọc pixel một lần mỗi cách sắp đặt);
+   - trang đã dựng: `scenes` (khóa `layoutKey`: cùng trang, vật ở chỗ khác là một scene khác), chỉ dựng lại khi `loupe`,
+     `compact` hoặc `density` đổi. `atlasDensity` làm tròn theo bước
      0.25 để thay đổi layout nhỏ không dựng lại sheet. **Đừng thêm dependency hay đổi liên tục vào các memo này.**
 3. Trang sắp tới được **preload** (`GameScreen.preload`). Mở đường điều hướng mới (nhảy trang, đổi nước…) thì thêm đích
    vào `preload` để lật không bị khựng.

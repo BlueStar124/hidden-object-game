@@ -145,6 +145,21 @@
       "rotation": -50,
       "camo": "chameleon",
       "foundText": "Bọ que nằm im đến mức các nhà sư tưởng đó là một mẩu gỗ vụn!"
+    },
+    {
+      "id": "clue-spyglass",
+      "name": "Ống Nhòm Gấp",
+      "clue": "Chiếc ống nhòm gấp gác trên lan can tầng lầu cao của ngôi chùa bên phải.",
+      "x": 0.79,
+      "y": 0.432,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "spyglass",
+      "scale": 0.45,
+      "rotation": -12,
+      "camo": "chameleon",
+      "foundText": "Chiếc ống nhòm vẫn còn hơi ấm: có người vừa đứng trên lan can này dõi theo bạn."
     }
   ]
 }

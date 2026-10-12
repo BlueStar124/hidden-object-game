@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { BookOpen, CircleCheckBig, Lock, Moon, PawPrint, Star, X } from '../../ui/icons';
-import type { Country, Page, PageRef } from '../../core/model';
+import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScrollText, Star, X } from '../../ui/icons';
+import type { Chapter, Country, Page, PageRef } from '../../core/model';
+import { canDeduce, hasMystery, mysteryProgress } from '../../core/mystery';
 import { progress } from '../../core/progress';
 import { COUNTRIES, pagesOf } from '../../content';
 import { BookThumb } from '../BookThumb';
@@ -17,8 +18,32 @@ interface PageIndexProps {
   isNight: boolean;
   /** A page of a country's book (its index), day or night */
   onSelect: (index: number, night: boolean, countryId: string) => void;
+  /** The deduction board of a chapter whose clue fragments are all found */
+  onOpenDeduction: (chapter: Chapter, chapterNumber: number) => void;
   onClose: () => void;
 }
+
+/** A chapter's mystery in its heading: fragments found, then the way to the deduction board. */
+const MysteryBadge: React.FC<{ chapter: Chapter; onOpen: () => void }> = ({ chapter, onOpen }) => {
+  const { found, total } = mysteryProgress(chapter, progress.discovered);
+  if (!canDeduce(chapter, progress.discovered)) {
+    return (
+      <View style={styles.clues} accessibilityLabel={`Đã tìm ${found} trên ${total} mảnh manh mối của chương`}>
+        <ScrollText size={12} color={colors.earth} />
+        <Text style={styles.cluesText}>
+          {found}/{total} mảnh manh mối
+        </Text>
+      </View>
+    );
+  }
+  const solved = progress.isMysterySolved(chapter.id);
+  return (
+    <Pressable onPress={onOpen} accessibilityRole="button" style={({ pressed }) => [styles.deduce, solved && styles.deduceSolved, pressed && { opacity: 0.8 }]}>
+      {solved ? <CircleCheckBig size={13} color={colors.emerald} /> : <Lightbulb size={13} color="#fff" />}
+      <Text style={[styles.deduceText, solved && { color: colors.emerald }]}>{solved ? 'Bí ẩn đã giải' : 'Suy luận ngay!'}</Text>
+    </Pressable>
+  );
+};
 
 const Stars: React.FC<{ count: number; size?: number }> = ({ count, size = 12 }) => (
   <View style={{ flexDirection: 'row', gap: 2 }}>
@@ -38,7 +63,7 @@ function critterProgress(page: Page) {
  * "Mục Lục" — every page of a country's sketchbook, with progress and the night variants. With
  * several sketchbooks, a row of tabs switches between the countries.
  */
-export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onClose }) => {
+export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onOpenDeduction, onClose }) => {
   const [country, setCountry] = useState(playing);
   const pages = pagesOf(country);
   const here = country.id === playing.id; // the book being played is the one shown
@@ -94,6 +119,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
               <Text style={styles.chapterBadge}>CHƯƠNG {c + 1}</Text>
               <Text style={styles.chapterName}>{chapter.title}</Text>
               {columns > 1 && <Text style={styles.chapterSub}> — {chapter.subtitle}</Text>}
+              {hasMystery(chapter) && <MysteryBadge chapter={chapter} onOpen={() => onOpenDeduction(chapter, c + 1)} />}
             </View>
             <View style={styles.grid} onLayout={(e) => setGridWidth(e.nativeEvent.layout.width)}>
               {refs.map((ref) => {
@@ -282,6 +308,37 @@ const styles = StyleSheet.create({
   chapterSub: {
     fontSize: 12,
     color: colors.inkFaint,
+  },
+  clues: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 999,
+    backgroundColor: 'rgba(154, 106, 62, 0.1)',
+  },
+  cluesText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.earth,
+  },
+  deduce: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: colors.gold,
+  },
+  deduceSolved: {
+    backgroundColor: 'rgba(45, 122, 79, 0.12)',
+  },
+  deduceText: {
+    fontSize: 11.5,
+    fontWeight: '800',
+    color: '#fff',
   },
   grid: {
     flexDirection: 'row',

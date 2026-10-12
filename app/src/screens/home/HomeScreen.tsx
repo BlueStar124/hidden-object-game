@@ -11,12 +11,17 @@ import { formatNumber } from '../../ui/format';
 import {
   BookHeart,
   BookOpen,
+  CalendarDays,
+  Check,
   ChevronRight,
   CircleCheckBig,
   Moon,
   PawPrint,
   Play,
+  Stamp,
   Star,
+  Sticker,
+  Swords,
   Trophy,
   Volume2,
   VolumeX,
@@ -39,6 +44,12 @@ interface HomeScreenProps {
   onOpenIndex: () => void;
   onOpenAlbum: () => void;
   onToggleSound: () => void;
+  /** Today's daily page: there to play, already done, or none (no page has room for one) */
+  daily: 'open' | 'done' | 'none';
+  onOpenDaily: () => void;
+  onOpenPassport: () => void;
+  onOpenCover: () => void;
+  onEnterChallenge: () => void;
 }
 
 /**
@@ -47,7 +58,22 @@ interface HomeScreenProps {
  * book is laid out underneath meanwhile, so playing starts at once.
  */
 export const HomeScreen = React.memo<HomeScreenProps>(
-  ({ current, isNight, returning, soundEnabled, onPlay, onSelect, onOpenIndex, onOpenAlbum, onToggleSound }) => {
+  ({
+    current,
+    isNight,
+    returning,
+    soundEnabled,
+    onPlay,
+    onSelect,
+    onOpenIndex,
+    onOpenAlbum,
+    onToggleSound,
+    daily,
+    onOpenDaily,
+    onOpenPassport,
+    onOpenCover,
+    onEnterChallenge,
+  }) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
     // Side by side unless the screen is narrow (a phone held upright); little height: tighter
@@ -103,7 +129,22 @@ export const HomeScreen = React.memo<HomeScreenProps>(
             {soundEnabled ? <Volume2 size={18} color={colors.ink} /> : <VolumeX size={18} color={colors.inkSoft} />}
           </Pressable>
         </View>
-        <View style={[styles.stats, !columns && styles.centredRow]}>
+        {/* Little height: icons only, on one row */}
+        <View style={[styles.desk, tight && styles.rowTight, !columns && styles.centredRow]}>
+          {daily !== 'none' && (
+            <Chip
+              label={daily === 'done' ? 'Đã xong hôm nay' : 'Trang của ngày'}
+              icon={daily === 'done' ? <Check size={15} color={colors.emerald} /> : <CalendarDays size={15} color={colors.crimson} />}
+              onPress={daily === 'done' ? onOpenPassport : onOpenDaily}
+              highlight={daily === 'open'}
+              iconOnly={tight}
+            />
+          )}
+          <Chip label="Hộ chiếu" icon={<Stamp size={15} color={colors.crimson} />} onPress={onOpenPassport} iconOnly={tight} />
+          <Chip label="Trang bìa" icon={<Sticker size={15} color={colors.earth} />} onPress={onOpenCover} iconOnly={tight} />
+          <Chip label="Mã thử thách" icon={<Swords size={15} color={colors.earth} />} onPress={onEnterChallenge} iconOnly={tight} />
+        </View>
+        <View style={[styles.stats, tight && styles.statsTight, !columns && styles.centredRow]}>
           <Stat icon={<Trophy size={13} color={colors.gold} />} text={`${formatNumber(score)} điểm`} />
           <Stat icon={<CircleCheckBig size={13} color={colors.emerald} />} text={`${cleared}/${pageCount} trang`} />
           <Stat icon={<PawPrint size={13} color={colors.earth} />} text={`${album.found}/${album.total} loài`} />
@@ -187,6 +228,29 @@ const wash = (edge: number, middle: number) =>
 const LIGHT_WASH = wash(0.97, 0.88);
 const DENSE_WASH = wash(1, 0.95);
 const WASH_STOPS = [0, 0.25, 0.75, 1] as const;
+
+/** A small button of the detective's desk (daily page, passport, cover, challenge). */
+const Chip: React.FC<{ label: string; icon: React.ReactNode; onPress: () => void; highlight?: boolean; iconOnly?: boolean }> = ({
+  label,
+  icon,
+  onPress,
+  highlight,
+  iconOnly,
+}) => (
+  <Pressable
+    onPress={onPress}
+    accessibilityRole="button"
+    accessibilityLabel={label}
+    style={({ pressed }) => [styles.chip, iconOnly && styles.chipIcon, highlight && styles.chipHighlight, pressed && styles.pressed]}
+  >
+    {icon}
+    {!iconOnly && (
+      <Text style={styles.chipText} numberOfLines={1}>
+        {label}
+      </Text>
+    )}
+  </Pressable>
+);
 
 const Stat: React.FC<{ icon: React.ReactNode; text: string }> = ({ icon, text }) => (
   <View style={styles.stat}>
@@ -356,12 +420,46 @@ const styles = StyleSheet.create({
   pressed: {
     backgroundColor: '#fff',
   },
+  desk: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 10,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    minHeight: 36,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    backgroundColor: colors.paper,
+  },
+  chipIcon: {
+    width: 40,
+    paddingHorizontal: 0,
+    justifyContent: 'center',
+  },
+  chipHighlight: {
+    borderColor: 'rgba(166, 50, 50, 0.4)',
+    backgroundColor: 'rgba(166, 50, 50, 0.07)',
+  },
+  chipText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.ink,
+  },
   stats: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: 14,
     rowGap: 4,
     marginTop: 12,
+  },
+  statsTight: {
+    marginTop: 7,
   },
   stat: {
     flexDirection: 'row',

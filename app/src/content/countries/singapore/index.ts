@@ -11,6 +11,7 @@ import marinaBaySkyline from './chapter-3/marina-bay-skyline.json';
 import singaporeRiverQuay from './chapter-3/singapore-river-quay.json';
 import singaporeRiverQuayNight from './chapter-3/singapore-river-quay-night.json';
 import botanicGardensHeritage from './chapter-3/botanic-gardens-heritage.json';
+import { BAYFRONT, HERITAGE, RIVERSIDE } from './mysteries';
 
 // JSON imports are typed loosely (e.g. "camo": string): the files follow the Page shape
 const page = (json: unknown) => json as Page;
@@ -19,6 +20,7 @@ const page = (json: unknown) => json as Page;
 export const singapore: Country = {
   id: 'singapore',
   name: 'Singapore',
+  code: 'SG',
   chapters: [
     {
       id: 'chapter-01',
@@ -35,6 +37,7 @@ export const singapore: Country = {
         { day: page(gardensByTheBay), night: page(gardensByTheBayNight) },
         { day: page(merlionPark) },
       ],
+      mystery: BAYFRONT,
     },
     {
       id: 'chapter-02',
@@ -50,6 +53,7 @@ export const singapore: Country = {
         { day: page(jooChiatShophouses) },
         { day: page(lauPaSatMarket), night: page(lauPaSatMarketNight) },
       ],
+      mystery: HERITAGE,
     },
     {
       id: 'chapter-03',
@@ -65,6 +69,7 @@ export const singapore: Country = {
         { day: page(singaporeRiverQuay), night: page(singaporeRiverQuayNight) },
         { day: page(botanicGardensHeritage) },
       ],
+      mystery: RIVERSIDE,
     },
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)

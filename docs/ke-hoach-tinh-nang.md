@@ -1,8 +1,27 @@
 # Kế hoạch tính năng: giữ chân người chơi
 
-> Trạng thái: **đề xuất**, chưa làm. Viết 10/2026 dựa trên code nhánh `react-native`.
+> Viết 10/2026 dựa trên code nhánh `react-native`.
 > Ràng buộc chung: **không có backend**, mobile chơi offline hoàn toàn, chỉ dùng module có trong Expo Go,
 > tuân thủ `AGENTS.md` (luật chơi trong `core/`, nội dung là dữ liệu, không làm hỏng bản lưu).
+
+## Trạng thái (12/10/2026)
+
+| Mục | Trạng thái | Còn lại |
+|---|---|---|
+| 0.1–0.3 Nền tảng (seed, `layOutPage`, `spots`) | **Đã làm** | `spots` mới có ở 7 vật của chương 1 Singapore; thêm dần cho các trang khác |
+| 0.4 ErrorBoundary, lưu âm thanh | **Đã làm** | Xuất/nhập bản lưu, `storage.persist()`, chặn key `__proto__` |
+| 1 Tranh lên màu dần, phản ứng sinh vật | Chưa làm | Làm thử theo phương án lớp phủ (đã bàn), đo trước/sau |
+| 2 Đồ nghề, di cư, biến thể hiếm | Chưa làm | |
+| 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm** | Nội dung mới có 3 chương Singapore (9 mảnh). Thái Lan, Việt Nam chưa có. Lời mở đầu chương cuối Singapore và Thái Lan vẫn hứa "bí mật cuối cùng": nên sửa thành "dẫn sang nước tiếp theo" |
+| 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |
+| 4.2 Hộ chiếu | **Đã làm** | Tem vàng hiện chỉ để sưu tầm, chưa mở khung bưu thiếp riêng |
+| 5.1 Trang bìa | **Đã làm** | Bản 2: hiện sticker ở mép mặt bàn |
+| 5.2 Kiểu nhiệm vụ | Câu đố (`riddle`), theo dấu (`order`): **đã có cơ chế + test**, chưa có trang nào dùng | Ngày và đêm: chưa làm |
+| 6.1 Bưu thiếp | **Đã làm** (Skia, chia sẻ bằng `expo-sharing` / Web Share API) | |
+| 6.2 Mã thử thách | **Đã làm** (nhập ở trang chủ, link `?c=` trên web) | Bản app cần `EXPO_PUBLIC_WEB_URL` để gửi kèm link |
+
+Kịch bản tổng dùng theo đề xuất: vị kiến trúc sư cố ý để lại cuốn sổ để tìm người kế nghiệp, kết ở Mũi Cà Mau. Các câu
+hỏi ở mục 9 chưa chốt vẫn mở.
 
 ## Mục lục
 

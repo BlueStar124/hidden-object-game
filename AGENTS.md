@@ -21,13 +21,13 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 | Tầng | Vai trò | Được import |
 |---|---|---|
-| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ) | chỉ `core` — **không package nào** |
+| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách) | chỉ `core` — **không package nào** |
 | `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts` | `core`, `content` — **không package nào** |
 | `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices` | `core`, `content`, `platform`, `game` |
 | `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
-| `screens/` | `GameScreen`, `ErrorBoundary`, `Desk`, `hud/`, `dialogs/` | mọi thứ |
-| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog` | `core`, `platform`, `generated` |
-| `ui/` | Dùng chung: `theme`, `ModalShell`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
+| `screens/` | `GameScreen`, `ErrorBoundary`, `Desk`, `hud/`, `dialogs/`, `share/` (bưu thiếp, lời nhắn) | mọi thứ |
+| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)` | `core`, `platform`, `generated` |
+| `ui/` | Dùng chung: `theme`, `ModalShell`, `DialogHeader`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
 | `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động, **không sửa tay** | `core`, `board`, `generated` |
 
 `npm run check:architecture` (`tools/check-architecture.mjs`) bắt lỗi khi import sai chiều. Thêm thư mục cấp một mới
@@ -82,9 +82,10 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
 - **Kiểu dữ liệu chung khai báo trong `core/model.ts`**: trường mới là trường *tùy chọn* kèm comment đơn vị/ý nghĩa.
   Dùng union string (`'ink' | 'chameleon'`) thay cho enum. Hằng số đặt tên `UPPER_CASE` cạnh nơi dùng, kèm comment
   đơn vị (giây, ms, phần của bề ngang trang…).
-- **Không lặp logic**: "vật chính" dùng `isMainObject`; "là sinh vật" dùng `isCreature`; vị trí vật lúc này dùng
-  `objectPosition`; tranh của trang dùng `artOf` / `artIdOf`; danh sách trang dùng `pagesOf` / `allPages`. Tìm helper
-  có sẵn trong `docs/ai/architecture.md` trước khi viết hàm mới.
+- **Không lặp logic**: "vật chính" dùng `isMainObject` (vật tùy chọn: `isOptionalObject`); "là sinh vật" dùng
+  `isCreature`; vị trí vật lúc này dùng `objectPosition`; tranh của trang dùng `artOf` / `artIdOf`; danh sách trang dùng
+  `pagesOf` / `allPages`; trang theo một lượt chơi dùng `layOutPage` / `dailyPage`, cache theo trang dùng `layoutKey`
+  (không dùng `page.id`). Tìm helper có sẵn trong `docs/ai/architecture.md` trước khi viết hàm mới.
 - **Dữ liệu suy ra từ `COUNTRIES`**, không viết cứng danh sách trang/nước ở chỗ khác.
 - **Component**: `GameScreen` render lại mỗi giây vì đồng hồ, nên component con nặng phải bọc `React.memo`. Callback
   truyền xuống dùng `useCallback` hoặc `useStableCallback`; mảng/object truyền xuống dùng `useMemo`.

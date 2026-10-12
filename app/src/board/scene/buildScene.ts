@@ -1,4 +1,4 @@
-import { BlendMode, Skia, TileMode, type SkImage } from '@shopify/react-native-skia';
+import { BlendMode, Skia, TileMode, type SkImage, type SkRect } from '@shopify/react-native-skia';
 import type { HiddenObject, Page, SpriteType } from '../../core/model';
 import { isCreature } from '../../content/bestiary';
 import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
@@ -202,6 +202,18 @@ function buildNight(page: Page): NightScene {
   };
 }
 
+/** The four rectangles of the spread around a focus (page units), laid out once. */
+function veilAround(f: SkRect): SkRect[] {
+  const right = f.x + f.width;
+  const bottom = f.y + f.height;
+  return [
+    Skia.XYWHRect(0, 0, PAGE_W, f.y),
+    Skia.XYWHRect(0, bottom, PAGE_W, PAGE_H - bottom),
+    Skia.XYWHRect(0, f.y, f.x, f.height),
+    Skia.XYWHRect(right, f.y, PAGE_W - right, f.height),
+  ];
+}
+
 export interface SceneOptions {
   page: Page;
   image: SkImage;
@@ -227,6 +239,7 @@ export function buildScene({ page, image, tints, book, loupe, compact, density, 
   });
   const lensR = loupe.lensR;
   const bookRect = Skia.XYWHRect(book.x * PAGE_W, book.y * PAGE_H, book.w * PAGE_W, book.h * PAGE_H);
+  const focus = page.focus ? Skia.XYWHRect(page.focus.x * PAGE_W, page.focus.y * PAGE_H, page.focus.w * PAGE_W, page.focus.h * PAGE_H) : null;
   const painted = page.objects.filter(isPainted);
   const sprites = painted.map((o) => buildSprite(o, tints[o.id], night));
   return {
@@ -235,6 +248,8 @@ export function buildScene({ page, image, tints, book, loupe, compact, density, 
     pageRect,
     pageRRect: Skia.RRectXY(pageRect, 4 * PX, 4 * PX),
     bookRRect: Skia.RRectXY(bookRect, 4 * PX, 4 * PX),
+    focus,
+    focusVeil: focus ? veilAround(focus) : [],
     paperRRect: Skia.RRectXY(bookRect, PAPER_CORNER, PAPER_CORNER),
     sprites,
     poses: sprites.map((sp) => ({

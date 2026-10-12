@@ -133,8 +133,9 @@ export function useCamera(
   const placed = useRef<{ w: number; h: number } | null>(null);
   // Until the player zooms by hand, every new layout (or the book being measured) re-applies the default
   const userZoomed = useRef(false);
-  // The paper of the page on screen (the previous page's while the next one decodes: no jump)
-  const book = shown?.bookRRect.rect;
+  // The paper of the page on screen (the previous page's while the next one decodes: no jump), or
+  // the corner in play of a daily page
+  const book = shown?.focus ?? shown?.bookRRect.rect;
   const bx = book?.x ?? 0;
   const by = book?.y ?? 0;
   const bw = book?.width ?? PAGE_W;

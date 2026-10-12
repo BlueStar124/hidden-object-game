@@ -158,6 +158,21 @@ export interface RoamBehavior {
   bob?: boolean; // Gentle up-and-down flutter while moving (flying creatures)
 }
 
+/**
+ * Another place an object may be hidden on a replay (core/layout). Clues say WHERE an object is,
+ * so each spot brings its own; everything else not given here stays as on the object.
+ */
+export interface ObjectSpot {
+  x: number; // Normalized spread coordinates, as HiddenObject.x / y
+  y: number;
+  clue: string;
+  radius?: number;
+  scale?: number;
+  rotation?: number;
+  flip?: boolean;
+  occluder?: [number, number][]; // Painting laid back over the sprite at this spot (none otherwise)
+}
+
 export interface HiddenObject {
   id: string;
   name: string;
@@ -184,10 +199,22 @@ export interface HiddenObject {
   waterline?: number;
   // Night pages: eyes (and firefly lights) glow in the dark unless this is false
   glow?: boolean;
+  // Other hiding places, one of which a replay may pick (the object's own x/y stays one of them).
+  // Not for roaming or shy creatures: their paths and hiding directions belong to the painting
+  spots?: ObjectSpot[];
+  // A fragment of the chapter's mystery (Chapter.mystery): optional, like a bonus critter
+  isClue?: boolean;
+  // Shown on the clue card instead of the name and clue until found ("Thứ gì kêu tích tắc…?")
+  riddle?: string;
+  // Sequence hunt: catchable only once every object of a lower order on the page is found (1, 2, 3…)
+  order?: number;
 }
 
-/** Objects that must be found to close the case: not the secret, not the optional critters. */
-export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus;
+/** Objects that must be found to close the case: not the secret, the critters or the mystery clues. */
+export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus && !o.isClue;
+
+/** Optional finds (secret, critters, mystery clues): still there to find once the case is closed. */
+export const isOptionalObject = (o: HiddenObject) => !isMainObject(o);
 
 /** Sprite width as a fraction of the spread width, before the per-object `scale`. */
 export const SPRITE_BASE_WIDTH = 0.044;
@@ -216,6 +243,19 @@ export interface Page {
   // Night variant of a page: dark overlay, the loupe becomes a flashlight
   isNight?: boolean;
   nightLights?: NightLight[];
+  // Set by core/layout and core/daily on a visit laid out unlike the JSON (other spots, a daily
+  // crop): the page keeps its id (progress is saved by it) and the board's caches tell layouts apart
+  layout?: string;
+  // Daily page: the part of the spread in play, normalized (the camera frames it, the rest is veiled)
+  focus?: SpreadRect;
+}
+
+/** A rectangle of the spread, in normalized coordinates (0–1 of the whole 1760 × 1240 painting). */
+export interface SpreadRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 /** A page in the book: the day spread, and its night variant when it has one. */
@@ -230,6 +270,21 @@ export interface Chapter {
   subtitle: string;
   prologue: string[]; // Paragraphs of the case file opened at the start of the chapter
   pages: PageSlot[];
+  // Solved on the deduction board once every clue fragment (HiddenObject.isClue) of the chapter is found
+  mystery?: Mystery;
+}
+
+/** The question a chapter's clue fragments answer (core/mystery). */
+export interface Mystery {
+  question: string;
+  options: MysteryOption[]; // Exactly one is correct
+  epilogue: string[]; // Paragraphs revealed once solved
+}
+
+export interface MysteryOption {
+  text: string;
+  correct?: boolean;
+  nudge?: string; // Shown when this wrong answer is picked: points back at the clues, never punishes
 }
 
 /**
@@ -239,6 +294,7 @@ export interface Chapter {
 export interface Country {
   id: string;
   name: string; // "Singapore"
+  code?: string; // Two capital letters for challenge codes ("SG3-…"), unique across countries; once published, permanent
   chapters: Chapter[];
   /** Painting of each `Page.art` key: a bundled image (`require('….webp')`) */
   art: Record<string, number>;
@@ -329,6 +385,25 @@ export interface GameProgress {
   // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
   lastPageId?: string;
   settings?: GameSettings;
+  solvedMysteries?: string[]; // Chapter ids whose mystery was solved on the deduction board
+  stamps?: Record<string, DailyStamp>; // Daily pages done, by the player's local day ('2026-10-12')
+  cover?: CoverSticker[]; // The player's own inside cover
+}
+
+/** A daily page done: a stamp in the detective's passport. */
+export interface DailyStamp {
+  pageId: string;
+  countryId: string;
+  time: number; // Seconds the hunt took (the best of the day)
+}
+
+/** A sticker on the inside cover, at a place the player chose. */
+export interface CoverSticker {
+  type: SpriteType;
+  x: number; // Centre, 0–1 of the cover's width
+  y: number; // Centre, 0–1 of the cover's height
+  rotation: number; // Degrees
+  scale: number; // 1 = the default sticker size
 }
 
 /** The player's preferences, saved with the progress (the first web version already wrote them here). */

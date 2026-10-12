@@ -160,6 +160,20 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Thuyền trưởng ếch xin chào — chuyến du ngoạn sông sắp khởi hành!"
+    },
+    {
+      "id": "clue-krathong",
+      "name": "Đèn Hoa Đăng Krathong",
+      "clue": "Chiếc đèn hoa đăng bằng lá chuối trôi trên mặt sông, phía trước con thuyền bên phải.",
+      "x": 0.62,
+      "y": 0.735,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "krathong",
+      "scale": 0.5,
+      "camo": "chameleon",
+      "foundText": "Một chiếc krathong của Thái Lan trôi trên sông Singapore: ai đó đã thả nó để báo tin."
     }
   ]
 }

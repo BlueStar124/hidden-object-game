@@ -1,3 +1,4 @@
+import type { Challenge } from '../core/challenge';
 import type { Country, Page, PageRef } from '../core/model';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
@@ -42,6 +43,15 @@ for (const country of COUNTRIES) {
   pagesByCountry.set(country.id, refs);
 }
 
+/** The two letters of a country in challenge codes. */
+export const codeOf = (country: Country) => country.code ?? country.id.slice(0, 2).toUpperCase();
+
+{
+  const codes = COUNTRIES.map(codeOf);
+  const twice = codes.find((code, i) => codes.indexOf(code) !== i);
+  if (twice) throw new Error(`Two countries share the code "${twice}": challenge codes would be ambiguous`);
+}
+
 export function countryById(id: string): Country {
   return COUNTRIES.find((c) => c.id === id) ?? FIRST_COUNTRY;
 }
@@ -76,6 +86,20 @@ export function artOf(page: Page): number {
 /** A name for a painting that is unique across countries (a page and its night share one). */
 export function artIdOf(page: Page): string {
   return `${refOf(page).country.id}/${page.art}`;
+}
+
+/** The challenge of a hunt on a page (day or night) laid out with a seed, done in `time` seconds. */
+export function challengeOf(page: Page, seed: number, time?: number): Challenge {
+  const { ref, night } = placeOf(page.id) ?? { ref: refOf(page), night: false };
+  return { country: codeOf(ref.country), page: ref.number, night, seed, ...(time ? { time } : {}) };
+}
+
+/** The page a challenge is played on (null: no such page in this version of the books). */
+export function pageOfChallenge(c: Challenge): { ref: PageRef; night: boolean } | null {
+  const country = COUNTRIES.find((k) => codeOf(k) === c.country);
+  const ref = country ? pagesOf(country)[c.page - 1] : undefined;
+  if (!ref || (c.night && !ref.night)) return null;
+  return { ref, night: c.night };
 }
 
 /** Every page there is — day and night, all countries (the album lists their creatures). */

@@ -167,6 +167,21 @@
       "rotation": -80,
       "camo": "chameleon",
       "foundText": "Chú ốc sên đang leo lên tầng hai để thăm bạn tắc kè."
+    },
+    {
+      "id": "clue-unsent-letter",
+      "name": "Bức Thư Chưa Gửi",
+      "clue": "Bức thư kẹp giữa những cánh cửa chớp tầng trên của dãy nhà ngoài cùng bên phải.",
+      "x": 0.865,
+      "y": 0.51,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "letter",
+      "scale": 0.5,
+      "rotation": 6,
+      "camo": "ink",
+      "foundText": "“Gửi người sẽ nhận cuốn sổ: nếu bạn đọc được dòng này, bạn đã đi đúng đường.”"
     }
   ]
 }

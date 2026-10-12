@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from 'react-native-reanimated';
 import { ArrowRight, Moon, PawPrint, RotateCcw, ScanSearch, Sparkles, Star, Trophy } from '../../ui/icons';
-import type { Page } from '../../core/model';
+import { isOptionalObject, type Page } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { formatDuration, formatNumber } from '../../ui/format';
 import { ModalShell } from '../../ui/ModalShell';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { SpriteIcon } from '../../ui/SpriteIcon';
 import { useCompact, useShortLandscape } from '../../ui/layout';
+import { ShareNote, ShareRow, type ShareActions } from '../share/ShareRow';
 
 interface VictoryScreenProps {
   page: Page;
@@ -22,6 +23,10 @@ interface VictoryScreenProps {
   foundIds: string[];
   hasNextPage: boolean;
   nightUnlocked?: string; // Title of the night page this victory just unlocked
+  /** A friend's challenge: the time they dared the player to beat (seconds) */
+  rivalTime?: number;
+  /** Postcard & challenge */
+  share?: ShareActions;
   onNextPage: () => void;
   onReplay: () => void;
   onExplore: () => void;
@@ -67,13 +72,15 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
   foundIds,
   hasNextPage,
   nightUnlocked,
+  rivalTime,
+  share,
   onNextPage,
   onReplay,
   onExplore,
 }) => {
   const critters = page.objects.filter((o) => o.isBonus);
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
-  const leftovers = page.objects.filter((o) => (o.isBonus || o.isSecret) && !foundIds.includes(o.id)).length;
+  const leftovers = page.objects.filter((o) => isOptionalObject(o) && !foundIds.includes(o.id)).length;
 
   // Phone held sideways: the verdict on the left, the score sheet and the buttons on the right
   const columns = useShortLandscape();
@@ -100,6 +107,9 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
           <Text style={styles.exploreText}>Soi Tiếp Tìm Nốt {leftovers} Vật Ẩn</Text>
         </Pressable>
       )}
+      {/* Little height: the share buttons are icons beside the stars instead */}
+      {share && !compact && <ShareRow {...share} />}
+      {share?.note && compact && <ShareNote note={share.note} />}
       <View style={styles.actions}>
         <SecondaryButton label="Chơi Lại" icon={<RotateCcw size={16} color={colors.ink} />} onPress={onReplay} />
         <PrimaryButton
@@ -130,11 +140,23 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
           <Text style={[styles.title, compact && styles.titleCompact]}>ĐÃ PHÁ GIẢI MANH MỐI!</Text>
           <Text style={[styles.pageName, compact && styles.gapCompact]}>{page.title}</Text>
 
-          <View style={[styles.stars, compact && styles.gapCompact]}>
-            {[1, 2, 3].map((i) => (
-              <PopStar key={i} index={i} active={i <= stars} size={compact ? 30 : 36} />
-            ))}
-          </View>
+          {share && compact ? (
+            <View style={[styles.stars, styles.gapCompact]}>
+              <ShareRow {...share} layout="flank">
+                <View style={styles.starRow}>
+                  {[1, 2, 3].map((i) => (
+                    <PopStar key={i} index={i} active={i <= stars} size={30} />
+                  ))}
+                </View>
+              </ShareRow>
+            </View>
+          ) : (
+            <View style={[styles.stars, compact && styles.gapCompact]}>
+              {[1, 2, 3].map((i) => (
+                <PopStar key={i} index={i} active={i <= stars} size={compact ? 30 : 36} />
+              ))}
+            </View>
+          )}
 
           {isSecretFound && (
             <View style={[styles.secret, compact && styles.gapCompact]}>
@@ -190,7 +212,19 @@ export const VictoryScreen: React.FC<VictoryScreenProps> = ({
           )}
 
           <View style={[styles.stats, compact && styles.statsCompact]}>
-            <Stat label="Thời gian hoàn thành:" value={formatDuration(timeTaken)} />
+            {/* A friend's time: its own row, or beside the player's when height is short */}
+            <Stat
+              label={rivalTime !== undefined && compact ? 'Thời gian:' : 'Thời gian hoàn thành:'}
+              value={rivalTime !== undefined && compact ? `${formatDuration(timeTaken)} · bạn bè ${formatDuration(rivalTime)}` : formatDuration(timeTaken)}
+              tone={rivalTime !== undefined && compact ? (timeTaken <= rivalTime ? 'positive' : 'negative') : undefined}
+            />
+            {rivalTime !== undefined && !compact && (
+              <Stat
+                label="Thử thách bạn bè:"
+                value={timeTaken <= rivalTime ? `Thắng, nhanh hơn ${formatDuration(rivalTime - timeTaken)}` : `Chậm hơn ${formatDuration(timeTaken - rivalTime)}`}
+                tone={timeTaken <= rivalTime ? 'positive' : 'negative'}
+              />
+            )}
             <Stat label="Thưởng thời gian:" value={`+${timeBonus}`} tone="positive" />
             <Stat label="Số lần đoán nhầm:" value={String(mistakes)} tone={mistakes > 0 ? 'negative' : undefined} />
             <Stat label="Gợi ý đã dùng:" value={String(hintsUsed)} />
@@ -251,6 +285,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     marginBottom: 14,
+  },
+  starRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
   starGlow: {
     shadowColor: '#eab308',

@@ -44,7 +44,14 @@
       "scale": 0.55,
       "rotation": 20,
       "camo": "chameleon",
-      "foundText": "Ống nhòm hải trình giúp thám tử nhìn thấy toàn cảnh vịnh từ trên cao."
+      "foundText": "Ống nhòm hải trình giúp thám tử nhìn thấy toàn cảnh vịnh từ trên cao.",
+      "spots": [
+        {
+          "x": 0.715,
+          "y": 0.525,
+          "clue": "Chiếc ống nhòm gác trên lối đi trên không, đoạn uốn quanh thân siêu cây bên phải."
+        }
+      ]
     },
     {
       "id": "quill-ink",
@@ -57,7 +64,14 @@
       "spriteType": "quill",
       "scale": 0.7,
       "camo": "ink",
-      "foundText": "Dụng cụ vẽ ký họa màu nước nguyên bản của vị kiến trúc sư bí ẩn."
+      "foundText": "Dụng cụ vẽ ký họa màu nước nguyên bản của vị kiến trúc sư bí ẩn.",
+      "spots": [
+        {
+          "x": 0.455,
+          "y": 0.705,
+          "clue": "Cây bút lông ngỗng nằm dưới chân siêu cây lớn ở giữa, cạnh hai du khách đang dạo bộ."
+        }
+      ]
     },
     {
       "id": "vine-chameleon",
@@ -171,6 +185,21 @@
       "rotation": -30,
       "camo": "ink",
       "foundText": "Chuồn chuồn bay thấp — trời sắp mưa rào nhiệt đới!"
+    },
+    {
+      "id": "clue-paper-crane",
+      "name": "Hạc Giấy Gấp Thư",
+      "clue": "Chiếc hạc giấy đậu giữa những nhánh thép của siêu cây ngoài cùng bên phải.",
+      "x": 0.8,
+      "y": 0.415,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "paper-crane",
+      "scale": 0.45,
+      "rotation": -6,
+      "camo": "ink",
+      "foundText": "Mở chiếc hạc giấy ra: “Người đi theo tôi, hãy tìm nơi cất giữ một chiếc răng thiêng.”"
     }
   ]
 }

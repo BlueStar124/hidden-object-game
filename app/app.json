@@ -43,7 +43,8 @@
           "backgroundColor": "#ece7dc"
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "expo-sharing"
     ],
     "experiments": {
       "tsconfigPaths": false

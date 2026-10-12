@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { readProgress, SCHEMA_VERSION } from '../src/core/progress';
+import { MAX_STAMPS, MAX_STICKERS, readProgress, SCHEMA_VERSION } from '../src/core/progress';
 
 const KEY = 'detective_sketchbook_progress_v1';
 
@@ -175,6 +175,63 @@ describe('the sound switch', () => {
 
   test('a damaged switch counts as on', () => {
     expect(readProgress({ settings: { soundEnabled: 'no' } }).settings).toEqual({ soundEnabled: true });
+  });
+});
+
+describe('chapter mysteries', () => {
+  test('a solved mystery is remembered once', () => {
+    expect(progress.isMysterySolved('chapter-01')).toBe(false);
+    progress.recordMysterySolved('chapter-01');
+    progress.recordMysterySolved('chapter-01');
+    expect(saved().solvedMysteries).toEqual(['chapter-01']);
+    expect(progress.isMysterySolved('chapter-01')).toBe(true);
+  });
+
+  test('a damaged list is dropped', () => {
+    expect(readProgress({ solvedMysteries: 'chapter-01' }).solvedMysteries).toBeUndefined();
+    expect(readProgress({ solvedMysteries: ['a', 3] }).solvedMysteries).toEqual(['a']);
+  });
+});
+
+describe('the passport', () => {
+  const stamp = (time: number) => ({ pageId: 'merlion-park', countryId: 'singapore', time });
+
+  test('a daily page done stamps its day, keeping the best time of that day', () => {
+    progress.recordStamp('2026-10-12', stamp(90));
+    progress.recordStamp('2026-10-12', stamp(120));
+    expect(progress.stamps()['2026-10-12'].time).toBe(90);
+    progress.recordStamp('2026-10-12', stamp(60));
+    expect(saved().stamps).toEqual({ '2026-10-12': stamp(60) });
+  });
+
+  test('only the latest days are kept', () => {
+    for (let i = 0; i < MAX_STAMPS + 5; i++) {
+      const day = new Date(2026, 0, 1 + i);
+      progress.recordStamp(`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`, stamp(50));
+    }
+    const days = Object.keys(progress.stamps()).sort();
+    expect(days).toHaveLength(MAX_STAMPS);
+    expect(days[0]).toBe('2026-01-06');
+  });
+
+  test('damaged stamps are skipped', () => {
+    const read = readProgress({ stamps: { '2026-10-12': stamp(30), yesterday: stamp(10), '2026-10-11': { time: 5 } } });
+    expect(read.stamps).toEqual({ '2026-10-12': stamp(30) });
+  });
+});
+
+describe('the inside cover', () => {
+  test('stickers are saved where the player put them', () => {
+    const sticker = { type: 'cat' as const, x: 0.3, y: 0.6, rotation: -12, scale: 1.4 };
+    progress.saveCover([sticker]);
+    expect(progress.cover()).toEqual([sticker]);
+  });
+
+  test('damaged stickers are mended or skipped, and there are never too many', () => {
+    const read = readProgress({ cover: [{ type: 'cat', x: 4, y: 'a', rotation: 10, scale: 9 }, { x: 0.2 }, 'cat'] });
+    expect(read.cover).toEqual([{ type: 'cat', x: 1, y: 0.5, rotation: 10, scale: 3 }]);
+    progress.saveCover(Array.from({ length: MAX_STICKERS + 10 }, () => ({ type: 'owl' as const, x: 0.5, y: 0.5, rotation: 0, scale: 1 })));
+    expect(progress.cover()).toHaveLength(MAX_STICKERS);
   });
 });
 

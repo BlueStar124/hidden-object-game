@@ -160,6 +160,20 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Bướm đêm lao vào ánh lửa bếp than như thiêu thân."
+    },
+    {
+      "id": "clue-coin-pouch",
+      "name": "Túi Tiền Xu Ngoại",
+      "clue": "Chiếc túi nhỏ nằm trên mái tôn dốc bên phải của khu chợ.",
+      "x": 0.66,
+      "y": 0.47,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "coin-pouch",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Trong túi là tiền xu của nhiều nước: đồng baht Thái, đồng xu Việt Nam… như một lịch trình đã định sẵn."
     }
   ]
 }

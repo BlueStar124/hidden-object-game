@@ -17,7 +17,14 @@
       "spriteType": "cat",
       "scale": 0.8,
       "camo": "ink",
-      "foundText": "Chú mèo tam thể vẫy đuôi làm quen, mang theo mảnh giấy cuộn tròn dưới vòng cổ!"
+      "foundText": "Chú mèo tam thể vẫy đuôi làm quen, mang theo mảnh giấy cuộn tròn dưới vòng cổ!",
+      "spots": [
+        {
+          "x": 0.585,
+          "y": 0.625,
+          "clue": "Chú mèo tam thể ngồi thu lu giữa hàng cây ven vịnh, ngay dưới chân tòa tháp thứ ba."
+        }
+      ]
     },
     {
       "id": "glass-hourglass",
@@ -45,7 +52,14 @@
       "scale": 0.6,
       "rotation": -10,
       "camo": "ink",
-      "foundText": "Bức thư mật chứa tọa độ hành trình tiếp theo của kiến trúc sư!"
+      "foundText": "Bức thư mật chứa tọa độ hành trình tiếp theo của kiến trúc sư!",
+      "spots": [
+        {
+          "x": 0.47,
+          "y": 0.585,
+          "clue": "Bức thư mật nằm lẫn trên mái vòm của khu thương mại, khoảng giữa hai tòa tháp."
+        }
+      ]
     },
     {
       "id": "tourist-camera",
@@ -58,7 +72,14 @@
       "spriteType": "vintage-camera",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Tấm ảnh cuối cùng trong máy chụp hoàng hôn trên vịnh — và một bóng người đội mũ thám tử!"
+      "foundText": "Tấm ảnh cuối cùng trong máy chụp hoàng hôn trên vịnh — và một bóng người đội mũ thám tử!",
+      "spots": [
+        {
+          "x": 0.87,
+          "y": 0.585,
+          "clue": "Chiếc máy ảnh cổ bị bỏ quên trên mép mái tòa nhà ngoài cùng bên phải."
+        }
+      ]
     },
     {
       "id": "shy-otter",
@@ -164,6 +185,21 @@
       "rotation": -15,
       "camo": "chameleon",
       "foundText": "Chú ốc sên nghệ sĩ đang thưởng lãm bảo tàng nghệ thuật — dù phải mất cả tuần mới đi hết một gian!"
+    },
+    {
+      "id": "clue-torn-map",
+      "name": "Nửa Tấm Bản Đồ",
+      "clue": "Nửa tấm bản đồ xé vội, vẽ lẫn vào những ô cửa kính của tòa tháp bên phải.",
+      "x": 0.606,
+      "y": 0.47,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "treasure-map",
+      "scale": 0.5,
+      "rotation": 8,
+      "camo": "ink",
+      "foundText": "Nửa tấm bản đồ xé vội: một con đường nhỏ chạy về phía những mái ngói cong màu đỏ."
     }
   ]
 }

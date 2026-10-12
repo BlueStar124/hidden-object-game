@@ -35,6 +35,7 @@ const page = (json: unknown) => json as Page;
 export const vietnam: Country = {
   id: 'vietnam',
   name: 'Việt Nam',
+  code: 'VN',
   chapters: [
     {
       id: 'chapter-01',

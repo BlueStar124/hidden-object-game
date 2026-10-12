@@ -156,6 +156,21 @@
       "rotation": 70,
       "camo": "ink",
       "foundText": "Các hồ nước trong vườn bách thảo là nhà của nhiều chú rùa."
+    },
+    {
+      "id": "clue-palm-leaf-book",
+      "name": "Sách Lá Buông",
+      "clue": "Cuốn sách lá buông vẽ phác trên trang giấy trống, bên trái chiếc lá khô dán băng keo.",
+      "x": 0.62,
+      "y": 0.48,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "palm-leaf-book",
+      "scale": 0.5,
+      "rotation": -8,
+      "camo": "ink",
+      "foundText": "Dòng chữ Thái khắc trên lá buông: “Chùa Bình Minh”, tên gọi của Wat Arun ở Bangkok."
     }
   ]
 }

@@ -2,12 +2,20 @@ import React from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { FIRST_COUNTRY, pagesOf } from '../src/content';
+import { dailyPuzzle } from '../src/core/daily';
 import { useNavigation, type Navigation } from '../src/game/useNavigation';
 import { usePagesAround } from '../src/board/usePagesAround';
 import type { SceneLibrary } from '../src/board/useSceneLibrary';
 
 jest.mock('../src/platform/sound', () => ({ sound: { playPageTurn: jest.fn() } }));
-jest.mock('../src/core/progress', () => ({ progress: { lastPage: () => undefined } }));
+// Pages the player has solved (a replay of one may lay it out anew)
+const mockSolved = new Set<string>();
+jest.mock('../src/core/progress', () => ({
+  progress: {
+    lastPage: () => undefined,
+    pageResult: (id: string) => (mockSolved.has(id) ? { stars: 3 } : undefined),
+  },
+}));
 jest.mock('../src/board/useSceneLibrary', () => ({ useKeepArt: jest.fn() }));
 
 let renderer: ReactTestRenderer;
@@ -28,6 +36,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  mockSolved.clear();
   if (renderer) act(() => renderer.unmount());
   jest.useRealTimers();
   jest.restoreAllMocks();
@@ -83,5 +92,45 @@ describe('Page-turn ownership', () => {
     act(() => jest.runOnlyPendingTimers());
     expect(prepare).toHaveBeenCalledWith(pages[4].day);
     expect(bump).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Ways of playing a page', () => {
+  test('a page already solved is laid out anew on a replay; a first visit never is', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    expect(navigation.page.layout).toBeUndefined();
+    mockSolved.add(navigation.page.id);
+    jest.spyOn(Math, 'random').mockReturnValue(0.5);
+    act(() => navigation.replay());
+    expect(navigation.page.id).toBe(pagesOf(FIRST_COUNTRY)[0].day.id);
+    expect(navigation.seed).toBeGreaterThan(0);
+    expect(navigation.page.layout).toBe(`s${navigation.seed}`);
+  });
+
+  test('the daily page is a corner of a page, and leaving it goes back to the book', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    const book = navigation.page.id;
+    const day = pagesOf(FIRST_COUNTRY).map((ref) => ref.day);
+    const puzzle = dailyPuzzle('2026-10-12', day)!;
+    act(() => { navigation.openDaily(puzzle); });
+    expect(navigation.mode.kind).toBe('daily');
+    expect(navigation.page.id).toBe(puzzle.pageId);
+    expect(navigation.page.focus).toEqual(puzzle.focus);
+    expect(navigation.nextPage).toBeNull();
+    act(() => navigation.leaveSpecial());
+    expect(navigation.mode.kind).toBe('book');
+    expect(navigation.page.id).toBe(book);
+  });
+
+  test('a challenge opens its page, laid out as in the code; an unknown page is refused', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    let opened = false;
+    act(() => { opened = navigation.openChallenge({ country: 'SG', page: 2, night: false, seed: 4242, time: 60 }); });
+    expect(opened).toBe(true);
+    expect(navigation.mode.kind).toBe('challenge');
+    expect(navigation.page.id).toBe(pagesOf(FIRST_COUNTRY)[1].day.id);
+    expect(navigation.seed).toBe(4242);
+    act(() => { opened = navigation.openChallenge({ country: 'ZZ', page: 1, night: false, seed: 1 }); });
+    expect(opened).toBe(false);
   });
 });

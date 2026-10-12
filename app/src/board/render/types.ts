@@ -74,6 +74,9 @@ export interface SceneData {
   pageRect: SkRect;
   pageRRect: SkRRect;
   bookRRect: SkRRect; // the paper inside the artwork's transparent margin
+  // Daily page: the corner in play (the camera frames it) and the rectangles veiling the rest
+  focus: SkRect | null;
+  focusVeil: SkRect[];
   paperRRect: SkRRect; // the same with the paper's rounded corners (shadows stay on the paper)
   sprites: SceneSprite[];
   poses: Pose[]; // scratch buffer, updated only by the renderer worklet

@@ -43,8 +43,24 @@ const VIEWPORTS = [
 ];
 
 /** Gallery dialogs (app/test/screens/Gallery.tsx). Lists scroll; everything else must fit. */
-const DIALOGS = ['victory', 'victory-perfect', 'timeup', 'pause', 'prologue', 'night-intro', 'rotate', 'index', 'album'];
-const SCROLLING = new Set(['index', 'album']);
+const DIALOGS = [
+  'victory',
+  'victory-perfect',
+  'victory-challenge',
+  'timeup',
+  'pause',
+  'prologue',
+  'night-intro',
+  'rotate',
+  'index',
+  'album',
+  'deduction',
+  'passport',
+  'cover',
+  'challenge',
+  'daily-done',
+];
+const SCROLLING = new Set(['index', 'album', 'deduction', 'passport']);
 
 // A dialog may shrink to fit, down to this: below it, its smallest text gets hard to read
 const MIN_SCALE = 0.75;

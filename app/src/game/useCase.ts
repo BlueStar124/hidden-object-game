@@ -7,11 +7,15 @@ import {
   recordHint,
   recordMiss,
 } from '../core/caseFile';
+import { inFocus } from '../core/daily';
 import { detectObject } from '../core/detection';
 import { nextHint } from '../core/hints';
-import type { CaseState, Page } from '../core/model';
+import { isOptionalObject, type CaseState, type HiddenObject, type Page } from '../core/model';
+import { canDeduce } from '../core/mystery';
 import { progress } from '../core/progress';
+import { placeOf } from '../content';
 import { sound } from '../platform/sound';
+import type { PlayMode } from './useNavigation';
 import type { Notify } from './useNotices';
 
 // Anti-spam: this many wrong taps within the window mists up the loupe for a moment
@@ -54,10 +58,12 @@ export function useCase(
     nextPage: Page | null;
     /** This page's night variant (when this is a day page that has one) */
     night: Page | undefined;
+    /** A daily page earns a passport stamp rather than counting as playing the page */
+    mode: PlayMode;
   },
   notify: Notify
 ): Case {
-  const { clockRuns, isTurning, nextPage, night } = context;
+  const { clockRuns, isTurning, nextPage, night, mode } = context;
 
   // A page opened (or opened again) starts a new case — in the same render, so nothing of the
   // previous case ever shows on the new page
@@ -99,29 +105,45 @@ export function useCase(
     return () => clearInterval(timer);
   }, [c.isPaused, c.isCompleted, c.isGameOver, clockRuns, update]);
 
-  // After the case is closed: the remaining critters & secret go into the album (no score)
+  // A find is remembered at once; the last clue fragment of a chapter opens its deduction board
+  const discover = useCallback(
+    (found: HiddenObject, at: { x: number; y: number }) => {
+      progress.recordDiscovery(page.id, found.id);
+      if (!found.isClue) return;
+      const chapter = placeOf(page.id)?.ref.chapter;
+      if (chapter && canDeduce(chapter, progress.discovered) && !progress.isMysterySolved(chapter.id)) {
+        // Above the find's own notice, so both can be read
+        notify('Đủ manh mối của chương! Mở Mục Lục để suy luận', { x: at.x, y: at.y - 44 }, 'info');
+      }
+    },
+    [page.id, notify]
+  );
+
+  // After the case is closed: the remaining critters, clues & secret go into the album (no score)
   const inspectWhileExploring = useCallback(
     (nx: number, ny: number, at: { x: number; y: number }) => {
-      const leftovers = page.objects.filter((o) => o.isBonus || o.isSecret);
+      const leftovers = page.objects.filter(isOptionalObject);
       const result = detectObject(nx, ny, leftovers, c.foundItems);
       if (result.hit && result.object) {
         const found = result.object;
         sound.playFound(1);
         sound.playVoice(found.spriteType);
-        progress.recordDiscovery(page.id, found.id);
-        notify(`${found.name} · đã ghi vào Sổ Tay!`, at, 'info');
+        discover(found, at);
+        notify(found.isClue ? `${found.name} · mảnh manh mối!` : `${found.name} · đã ghi vào Sổ Tay!`, at, 'info');
         update((s) => recordExploreFind(s, found, result.position));
       } else if (result.hidingObject) {
         sound.playRustle();
         notify('Suỵt… nó vừa trốn mất! Chờ nó ló ra nhé', at, 'info');
       }
     },
-    [page, c.foundItems, notify, update]
+    [page, c.foundItems, notify, update, discover]
   );
 
   const inspect = useCallback(
     (nx: number, ny: number, at: { x: number; y: number }) => {
       if (c.isPaused || c.isGameOver || isTurning) return;
+      // A daily page: only its corner is in play (no mistake for a tap beside it)
+      if (!inFocus(page, nx, ny)) return;
       if (c.isCompleted) {
         if (c.isExploring) inspectWhileExploring(nx, ny, at);
         return;
@@ -144,14 +166,20 @@ export function useCase(
         recentMisses.current.at = [];
         sound.playFound(c.combo);
         sound.playVoice(found.spriteType);
-        progress.recordDiscovery(page.id, found.id);
+        discover(found, at);
 
         const find = recordFind(c, page, found, result.position);
-        const tag = found.isBonus ? ' · Sinh vật ẩn!' : found.isSecret ? ' · Bí mật!' : '';
+        const tag = found.isBonus ? ' · Sinh vật ẩn!' : found.isSecret ? ' · Bí mật!' : found.isClue ? ' · Mảnh manh mối!' : '';
         notify(`+${find.earned}${find.combo > 1 ? ` (×${find.combo})` : ''}${tag}`, at);
 
         let unlockedNight: string | null | undefined;
-        if (find.solved) {
+        if (find.solved && mode.kind === 'daily') {
+          // The daily hunt is a stamp in the passport, not a game of the page itself
+          sound.playVictory();
+          const countryId = placeOf(page.id)?.ref.country.id ?? '';
+          progress.recordStamp(mode.puzzle.day, { pageId: page.id, countryId, time: page.timeLimit - c.remainingTime });
+          unlockedNight = null;
+        } else if (find.solved) {
           sound.playVictory();
           const wasPassed = (progress.pageResult(page.id)?.stars ?? 0) > 0;
           const foundItems = find.changes.foundItems ?? c.foundItems;
@@ -176,6 +204,10 @@ export function useCase(
         // Right spot, wrong moment: the shy creature has ducked out of sight
         sound.playRustle();
         notify('Suỵt… nó vừa trốn mất! Chờ nó ló ra nhé', at, 'info');
+      } else if (result.outOfTurn) {
+        // Right object, too early: the trail is followed in order
+        sound.playRustle();
+        notify('Chưa tới lượt! Lần theo dấu vết đúng thứ tự nhé', at, 'info');
       } else {
         // A wrong guess; a burst of them mists up the loupe
         const now = Date.now();
@@ -198,7 +230,7 @@ export function useCase(
         setStore((s) => ({ ...s, state: recordMiss(s.state), fogUntil: fogged ? now + FOG_DURATION_MS : s.fogUntil }));
       }
     },
-    [c, page, isTurning, fogUntil, nextPage, night, notify, inspectWhileExploring]
+    [c, page, isTurning, fogUntil, nextPage, night, mode, notify, inspectWhileExploring, discover]
   );
 
   const requestHint = useCallback(() => {

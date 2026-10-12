@@ -5,6 +5,7 @@ import {
   CircleCheck,
   ChevronDown,
   ChevronUp,
+  CircleQuestionMark,
   Feather,
   Footprints,
   Layers,
@@ -13,6 +14,7 @@ import {
   Palette,
   PawPrint,
   ScanEye,
+  ScrollText,
   Search,
   Sparkles,
   Stamp,
@@ -63,6 +65,12 @@ function camoTrait(obj: HiddenObject): CamoTrait | null {
   return { key: 'ink', icon: Feather, label: 'Hòa vào nét vẽ' };
 }
 
+/** What a card is called: a riddle keeps the name hidden until found. */
+const cardName = (obj: HiddenObject, found: boolean) => (obj.riddle && !found ? 'Câu đố' : obj.name);
+
+/** What a card says: the found text, the riddle until solved, or the clue. */
+const cardText = (obj: HiddenObject, found: boolean) => (found ? obj.foundText || 'Đã tìm thấy!' : (obj.riddle ?? obj.clue));
+
 const QuestCard: React.FC<{
   obj: HiddenObject;
   found: boolean;
@@ -88,15 +96,23 @@ const QuestCard: React.FC<{
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel={`${obj.name}. ${found ? (obj.foundText ?? 'Đã tìm thấy!') : obj.clue}`}
+        accessibilityLabel={`${cardName(obj, found)}. ${cardText(obj, found)}`}
         style={[styles.card, { width }, compact && styles.cardCompact, found && styles.cardFound, hinted && styles.cardHint]}
       >
         <View style={[styles.thumb, compact && styles.thumbCompact]}>
-          {obj.spriteType && obj.spriteType !== 'seal' ? (
+          {obj.riddle && !found ? (
+            // A riddle: even the silhouette would give the answer away
+            <CircleQuestionMark size={22} color={colors.earth} />
+          ) : obj.spriteType && obj.spriteType !== 'seal' ? (
             // Only the silhouette until found — the colours are part of the surprise
             <SpriteIcon type={obj.spriteType} size={compact ? 22 : 28} revealed={found} />
           ) : (
             <Stamp size={20} color={colors.crimson} opacity={0.75} />
+          )}
+          {obj.order !== undefined && (
+            <View style={styles.order}>
+              <Text style={styles.orderText}>{obj.order}</Text>
+            </View>
           )}
           {found && (
             <View style={styles.check}>
@@ -114,11 +130,11 @@ const QuestCard: React.FC<{
             </View>
           )}
           <Text style={[styles.name, compact && { fontSize: 13 }, found && styles.nameFound]} numberOfLines={1}>
-            {obj.name}
+            {cardName(obj, found)}
           </Text>
           {(!compact || expanded) && (
             <Text style={styles.clue} numberOfLines={expanded ? undefined : 2}>
-              {found ? obj.foundText || 'Đã tìm thấy!' : obj.clue}
+              {cardText(obj, found)}
             </Text>
           )}
         </View>
@@ -146,8 +162,10 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
   const normal = objects.filter(isMainObject);
   const secret = objects.find((o) => o.isSecret);
   const critters = objects.filter((o) => o.isBonus);
+  const clues = objects.filter((o) => o.isClue);
   const normalFound = normal.filter((o) => foundIds.includes(o.id)).length;
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
+  const cluesFound = clues.filter((o) => foundIds.includes(o.id)).length;
   const secretFound = secret ? foundIds.includes(secret.id) : false;
 
   // Long clues are clipped: tapping a card reveals the whole text
@@ -184,6 +202,18 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           </View>
           <Text style={styles.critterCount}>
             {crittersFound}/{critters.length}
+          </Text>
+        </View>
+      )}
+      {clues.length > 0 && (
+        <View
+          style={[styles.secret, cluesFound === clues.length ? styles.secretOpen : styles.secretLocked]}
+          accessibilityLabel={`Mảnh manh mối của chương: ${cluesFound} trên ${clues.length}`}
+        >
+          <ScrollText size={13} color={cluesFound === clues.length ? '#854d0e' : colors.earth} />
+          {wide && <Text style={[styles.secretText, { color: colors.earth }]}>MẢNH MANH MỐI</Text>}
+          <Text style={[styles.secretText, { color: colors.earth }]}>
+            {cluesFound}/{clues.length}
           </Text>
         </View>
       )}
@@ -276,10 +306,8 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
         {expandedObj && (
           // Read-only and touch-through: it floats over the sketchbook, whose taps must still land
           <View pointerEvents="none" style={[styles.bubble, { left: insetLeft + 10, right: insetRight + 10 }]}>
-            <Text style={styles.bubbleName}>{expandedObj.isSecret && !found ? '??? Vật Phẩm Bí Mật' : expandedObj.name}</Text>
-            <Text style={styles.bubbleText}>
-              {found ? expandedObj.foundText || 'Đã tìm thấy!' : expandedObj.isSecret ? SECRET_CLUE : expandedObj.clue}
-            </Text>
+            <Text style={styles.bubbleName}>{expandedObj.isSecret && !found ? '??? Vật Phẩm Bí Mật' : cardName(expandedObj, found)}</Text>
+            <Text style={styles.bubbleText}>{expandedObj.isSecret && !found ? SECRET_CLUE : cardText(expandedObj, found)}</Text>
           </View>
         )}
         {counter}
@@ -500,6 +528,22 @@ const styles = StyleSheet.create({
     bottom: -4,
     backgroundColor: '#fff',
     borderRadius: 8,
+  },
+  order: {
+    position: 'absolute',
+    left: -5,
+    top: -5,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.earth,
+  },
+  orderText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#fff',
   },
   cardInfo: {
     flex: 1,

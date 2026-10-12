@@ -4,6 +4,7 @@ import { Canvas, Skia, useCanvasRef, type ISkiaViewApi, type SkPicture } from '@
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useAnimatedReaction, useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
 import { scheduleOnUI } from 'react-native-worklets';
+import { layoutKey } from '../core/layout';
 import type { HiddenObject, Page, PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { ZoomIn, ZoomOut } from '../ui/icons';
@@ -99,7 +100,7 @@ export const Board = React.memo<BoardProps>(function Board({
   // The order of these hooks is the order their effects run in: keep it
   const density = size ? atlasDensity(fittedScale(size.w, size.h), PixelRatio.get()) : 1;
   const library = useSceneLibrary(page, loupePaints, compact, density);
-  const camera = useCamera(size, library.shown, page.id, diameter, turning);
+  const camera = useCamera(size, library.shown, layoutKey(page), diameter, turning);
   const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera);
   const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning, onTurnComplete);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);

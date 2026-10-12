@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Easing, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
+import { layoutKey } from '../core/layout';
 import type { HiddenObject, Page } from '../core/model';
 import { motionNow, objectPosition, roamState } from '../core/motion';
 import { PAGE_H, PAGE_W } from './constants';
@@ -33,11 +34,12 @@ export function useCaseMarks(
   const fogStart = useSharedValue(0);
   const nudge = useSharedValue<{ x: number; y: number; t: number } | null>(null);
 
-  const foundRef = useRef<{ page: string; map: Record<string, FoundInfo> }>({ page: page.id, map: {} });
+  const foundRef = useRef<{ page: string; map: Record<string, FoundInfo> }>({ page: layoutKey(page), map: {} });
   useEffect(() => {
-    // A new page starts with nothing found (replays too: ids missing from foundIds are dropped)
-    const newPage = foundRef.current.page !== page.id;
-    if (newPage) foundRef.current = { page: page.id, map: {} };
+    // A new page (or layout) starts with nothing found (replays too: ids missing from foundIds are dropped)
+    const key = layoutKey(page);
+    const newPage = foundRef.current.page !== key;
+    if (newPage) foundRef.current = { page: key, map: {} };
     const map = { ...foundRef.current.map };
     const now = motionNow();
     let changed = false;

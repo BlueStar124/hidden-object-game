@@ -46,7 +46,14 @@
       "scale": 0.6,
       "rotation": -55,
       "camo": "ink",
-      "foundText": "Chìa khóa mở ra cánh cửa dẫn vào kho lưu trữ bí mật của hải quan cổ."
+      "foundText": "Chìa khóa mở ra cánh cửa dẫn vào kho lưu trữ bí mật của hải quan cổ.",
+      "spots": [
+        {
+          "x": 0.17,
+          "y": 0.4,
+          "clue": "Chiếc chìa khóa vàng được vẽ phác ở góc trên của trang giấy bên trái."
+        }
+      ]
     },
     {
       "id": "magnifying-glass",
@@ -60,7 +67,14 @@
       "scale": 0.6,
       "rotation": -25,
       "camo": "chameleon",
-      "foundText": "Kính lúp quang học thế hệ đầu tiên từng dùng để thẩm định bản thảo cổ."
+      "foundText": "Kính lúp quang học thế hệ đầu tiên từng dùng để thẩm định bản thảo cổ.",
+      "spots": [
+        {
+          "x": 0.885,
+          "y": 0.49,
+          "clue": "Chiếc kính lúp lẫn trong bóng dáng Marina Bay Sands mờ xa phía sau tượng sư tử biển."
+        }
+      ]
     },
     {
       "id": "leaping-koi",
@@ -147,6 +161,20 @@
       "scale": 0.4,
       "camo": "chameleon",
       "foundText": "Tượng Merlion cao 8,6 m — với chú nhện này thì đó là cả một ngọn núi!"
+    },
+    {
+      "id": "clue-red-envelope",
+      "name": "Phong Bao Đỏ",
+      "clue": "Phong bao đỏ nép giữa những tòa nhà cao tầng phía sau dòng nước phun.",
+      "x": 0.615,
+      "y": 0.5,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "red-envelope",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Trong phong bao là tấm thiệp mời dự lễ ở một ngôi chùa phố người Hoa."
     }
   ]
 }

@@ -1,5 +1,5 @@
 import type { HintResult } from './hints';
-import { isMainObject, type CaseState, type HiddenObject, type Page } from './model';
+import { isMainObject, isOptionalObject, type CaseState, type HiddenObject, type Page } from './model';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from './scoring';
 
 /**
@@ -80,7 +80,7 @@ export function recordFind(
   return { changes, earned: earnedScore, combo, solved: bonus ? { ...bonus, score } : null };
 }
 
-/** After the case is closed: a critter or the secret still found for the album (no score). */
+/** After the case is closed: a critter, a clue or the secret still found for the album (no score). */
 export function recordExploreFind(c: CaseState, object: HiddenObject, position: { x: number; y: number } | undefined): CaseState {
   return {
     ...c,
@@ -109,7 +109,7 @@ export function recordHint(c: CaseState, hint: HintResult): CaseState {
   };
 }
 
-/** Optional critters & the secret still hiding (what "explore" mode is for). */
+/** Optional critters, clues & the secret still hiding (what "explore" mode is for). */
 export function leftovers(c: CaseState, page: Page): HiddenObject[] {
-  return page.objects.filter((o) => (o.isBonus || o.isSecret) && !c.foundItems.includes(o.id));
+  return page.objects.filter((o) => isOptionalObject(o) && !c.foundItems.includes(o.id));
 }

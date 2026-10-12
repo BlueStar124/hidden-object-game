@@ -9,7 +9,22 @@ export interface DetectionResult {
   position?: { x: number; y: number };
   // A shy creature was right here but is currently hiding — not a mistake, just bad timing.
   hidingObject?: HiddenObject;
+  // Right object, too early in a sequence hunt — not a mistake either: the trail comes first.
+  outOfTurn?: HiddenObject;
 }
+
+/** Sequence hunts: the lowest order not found yet (null when the page has no sequence left). */
+export function nextInSequence(objects: HiddenObject[], foundIds: string[]): number | null {
+  let next: number | null = null;
+  for (const o of objects) {
+    if (o.order === undefined || foundIds.includes(o.id)) continue;
+    if (next === null || o.order < next) next = o.order;
+  }
+  return next;
+}
+
+/** An object of a sequence whose turn has not come yet. */
+export const waitsInSequence = (o: HiddenObject, next: number | null) => o.order !== undefined && next !== null && o.order > next;
 
 const ASPECT_RATIO = 1760 / 1240; // the sketchbook spread (~1.419)
 
@@ -30,6 +45,8 @@ export function detectObject(
   let hitPosition: { x: number; y: number } | undefined = undefined;
   let hitDistance = Infinity;
   let hidingObject: HiddenObject | undefined = undefined;
+  let outOfTurn: HiddenObject | undefined = undefined;
+  const next = nextInSequence(objects, foundIds);
 
   for (const obj of objects) {
     if (foundIds.includes(obj.id)) continue;
@@ -51,6 +68,11 @@ export function detectObject(
       continue;
     }
 
+    if (waitsInSequence(obj, next)) {
+      outOfTurn = obj;
+      continue;
+    }
+
     if (distance < hitDistance) {
       hitDistance = distance;
       hitObject = obj;
@@ -67,5 +89,6 @@ export function detectObject(
     object: closestObject,
     distance: minDistance,
     hidingObject,
+    outOfTurn,
   };
 }

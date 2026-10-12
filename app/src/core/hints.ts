@@ -1,3 +1,4 @@
+import { nextInSequence, waitsInSequence } from './detection';
 import type { HiddenObject } from './model';
 
 /**
@@ -19,8 +20,10 @@ export function nextHint(
   currentLoupePos: { nx: number; ny: number }
 ): HintResult | null {
   // Pick the first unfound non-secret object (or secret if all normal found).
-  // Optional hidden critters are for the sharp-eyed only — never hinted.
-  const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus);
+  // Optional hidden critters and mystery clues are for the sharp-eyed only — never hinted; in a
+  // sequence hunt, only the object whose turn it is.
+  const next = nextInSequence(objects, foundIds);
+  const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus && !o.isClue && !waitsInSequence(o, next));
   if (unfound.length === 0) return null;
 
   const normalUnfound = unfound.filter((o) => !o.isSecret);

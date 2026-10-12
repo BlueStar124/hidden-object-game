@@ -23,15 +23,18 @@ export function useGame({ browsing }: { browsing: boolean }) {
       isTurning: nav.turn !== null,
       nextPage: nav.nextPage,
       night: nav.isNight ? undefined : nav.ref.night,
+      mode: nav.mode,
     },
     notify
   );
 
   // "Chơi tiếp" comes back to the page the player is in — once they have left the home screen for it
+  // (a page of the book: a daily page or a challenge is a hunt beside it)
   const pageId = nav.page.id;
+  const inBook = nav.mode.kind === 'book';
   useEffect(() => {
-    if (!home) progress.recordVisit(pageId);
-  }, [home, pageId]);
+    if (!home && inBook) progress.recordVisit(pageId);
+  }, [home, pageId, inBook]);
 
   // The sound switch is saved: a player who muted the game finds it muted next time
   const [soundEnabled, setSoundEnabled] = useState(() => progress.soundEnabled());

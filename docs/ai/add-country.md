@@ -59,6 +59,7 @@ const page = (json: unknown) => json as Page;
 export const vietnam: Country = {
   id: 'vietnam',              // kebab-case, không đổi sau khi phát hành
   name: 'Việt Nam',           // hiện ở tab Mục Lục và trong Sổ Tay
+  code: 'VN',                 // 2 chữ in hoa cho mã thử thách, khác mọi nước khác, không đổi sau khi phát hành
   chapters: [
     {
       id: 'chapter-01',       // 'chapter-0N'
@@ -69,6 +70,7 @@ export const vietnam: Country = {
         { day: page(hoiAnOldTown), night: page(hoiAnOldTownNight) },
         // { day: page(…) },
       ],
+      mystery: LANTERN_TOWN,  // tùy chọn: bí ẩn chương (countries/<nước>/mysteries.ts, xem singapore)
     },
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)
@@ -107,6 +109,9 @@ riêng từng nước ("Trang 3 / 9"), tên nước trong Sổ Tay. Singapore c�
    `invisible` hoặc `chameleon`. Mỗi trang **tối đa 1** (có test).
 4. **Bonus**: `"isBonus": true`, `"score": 100`, id `bonus-<sprite>`. **3 cái ở trang ngày, 2 cái ở trang đêm.** Không bao
    giờ được gợi ý; chỉ người tinh mắt mới thấy.
+5. **Mảnh manh mối** (chỉ khi chương có `mystery`, §3): `"isClue": true`, `"score": 150`, id `clue-<…>`, thường 1 mảnh mỗi
+   trang ngày. Tùy chọn như bonus, không được gợi ý; `foundText` là nội dung của mảnh (người chơi đọc lại trên Bảng Suy
+   Luận), nên phải trả lời được câu hỏi của chương khi ghép đủ.
 
 Id vật chỉ cần **duy nhất trong trang** (các trang khác nhau được trùng, ví dụ `artist-seal`), nhưng **không được đổi
 sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
@@ -128,7 +133,10 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `occluder` | đa giác (≥ 3 điểm) phần tranh vẽ đè lên vật, để vật như nấp sau cột/thân cây | Thường 0–1 vật mỗi trang, và chỉ khi trong tranh có vật che thật |
 | `waterline` | phần chiều cao sprite nằm dưới mặt nước (0–1) | 0.55–0.8, cho vật bơi/thuyền |
 | `glow` | trang đêm: `false` để tắt mắt phát sáng | mặc định là phát sáng |
-| `isSecret`, `isBonus` | xem ở trên | |
+| `isSecret`, `isBonus`, `isClue` | xem ở trên | |
+| `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`** (test). Vẽ thử trên tranh trước khi ghi |
+| `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy (ẩn cả hình bóng) | tùy chọn |
+| `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
 
 Mẫu một vật có đủ trường:
 

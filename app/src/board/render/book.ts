@@ -166,6 +166,13 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     );
   }
 
+  // Daily page: the spread around the corner in play is washed over (z 19.5, under glowing eyes,
+  // which a daily page never has)
+  if (S.focus) {
+    for (let i = 0; i < S.focusVeil.length; i++) c.drawRect(S.focusVeil[i], P.focusVeil);
+    c.drawRect(S.focus, P.focusEdge);
+  }
+
   // Night: only the eyes of creatures still hiding shine above the darkness (z 20)
   if (!inLoupe && S.night) {
     for (let i = 0; i < S.sprites.length; i++) {
