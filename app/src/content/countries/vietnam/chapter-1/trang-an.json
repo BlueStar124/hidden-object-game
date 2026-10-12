@@ -137,6 +137,21 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Màu da hòa vào sắc đá rêu khiến đôi mắt tinh tường mới nhận ra."
+    },
+    {
+      "id": "clue-engraved-loupe",
+      "name": "Kính Lúp Khắc Chữ",
+      "clue": "Chiếc kính lúp vẽ lẫn vào vách núi xanh phía bên phải dòng sông.",
+      "x": 0.7,
+      "y": 0.4,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "magnifying-glass",
+      "scale": 0.45,
+      "rotation": -10,
+      "camo": "chameleon",
+      "foundText": "Cán kính khắc hai chữ cái, giống hệt chiếc kính lúp bạn đang cầm trên tay."
     }
   ]
 }

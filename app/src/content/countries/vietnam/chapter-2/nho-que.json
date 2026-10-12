@@ -140,6 +140,20 @@
       "camo": "chameleon",
       "waterline": 0.6,
       "foundText": "Rái cá tinh nghịch bơi lội trong dòng nước lạnh như băng."
+    },
+    {
+      "id": "clue-oil-lamp",
+      "name": "Ngọn Đèn Dầu Nhỏ",
+      "clue": "Ngọn đèn dầu nhỏ vẽ lẫn vào vách đá hẻm vực bên phải, phía trên dòng sông.",
+      "x": 0.63,
+      "y": 0.37,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "clay-lamp",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Kèm theo là mẩu giấy: “Vẽ cả khi trời tối, vì vẻ đẹp không chờ ai.”"
     }
   ]
 }

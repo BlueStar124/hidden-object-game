@@ -137,6 +137,21 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Loài bướm núi thích nghi kỳ diệu với cái lạnh khắc nghiệt đỉnh trời."
+    },
+    {
+      "id": "clue-summit-crane",
+      "name": "Hạc Giấy Trên Đỉnh Núi",
+      "clue": "Chiếc hạc giấy đậu trên lan can của sàn gỗ ngắm cảnh bên phải.",
+      "x": 0.79,
+      "y": 0.71,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "paper-crane",
+      "scale": 0.42,
+      "rotation": 6,
+      "camo": "chameleon",
+      "foundText": "Trong cánh hạc có dòng chữ: “Ta chưa đi xa đâu. Hãy đi tiếp về phía Nam.”"
     }
   ]
 }

@@ -13,7 +13,7 @@
 | 1.1 Tranh lên màu dần | **Đã làm** theo phương án lớp phủ, đã đo trước/sau (không tụt fps); tắt được trong menu Tạm Dừng | |
 | 1.2 Phản ứng sinh vật | Chưa làm (vật đã có hiệu ứng nảy chung khi tìm thấy) | Phản ứng riêng theo loài |
 | 2 Đồ nghề, di cư, biến thể hiếm | Chưa làm | |
-| 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm** | Nội dung mới có 3 chương Singapore (9 mảnh). Thái Lan, Việt Nam chưa có. Lời mở đầu chương cuối Singapore và Thái Lan vẫn hứa "bí mật cuối cùng": nên sửa thành "dẫn sang nước tiếp theo" |
+| 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm**: 11 chương, 37 mảnh manh mối; lời mở đầu chương cuối Singapore và Thái Lan đã sửa để dẫn sang nước tiếp theo | |
 | 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |
 | 4.2 Hộ chiếu | **Đã làm** | Tem vàng hiện chỉ để sưu tầm, chưa mở khung bưu thiếp riêng |
 | 5.1 Trang bìa | **Đã làm** | Bản 2: hiện sticker ở mép mặt bàn |

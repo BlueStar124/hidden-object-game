@@ -58,11 +58,11 @@ export const singapore: Country = {
     {
       id: 'chapter-03',
       title: 'Trái Tim Sông Nước & Rừng Bách Thảo',
-      subtitle: 'Riverside & Botanic Flora — Hồi Kết Cuốn Sổ',
+      subtitle: 'Riverside & Botanic Flora — Dấu Vết Rời Đảo Quốc',
       prologue: [
         'Chặng đường cuối cùng của cuộc phiêu lưu đã mở ra!',
         'Từ góc nhìn toàn cảnh đường chân trời Marina Bay Skyline, ngược dòng sông Singapore xuôi theo những con thuyền bumboat, tới cây đại thụ cổ kính tại Vườn Bách Thảo UNESCO.',
-        'Lời giải đáp cuối cùng về tung tích của vị kiến trúc sư và bí mật lớn nhất của cuốn sổ đang chờ bạn khám phá!',
+        'Những trang cuối ở Singapore sẽ cho bạn biết vị kiến trúc sư đã đi đâu tiếp, và vì sao cuốn sổ lại đến tay bạn!',
       ],
       pages: [
         { day: page(marinaBaySkyline) },

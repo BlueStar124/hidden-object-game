@@ -169,6 +169,21 @@
       "rotation": 70,
       "camo": "chameleon",
       "foundText": "Ấu trùng bọ hung sống trong gỗ mục và đất mùn suốt nhiều tháng."
+    },
+    {
+      "id": "clue-yellowed-sketch",
+      "name": "Trang Ký Họa Ố Vàng",
+      "clue": "Trang ký họa cũ cuộn tròn trên ngọn tháp chuông đứng riêng bên phải.",
+      "x": 0.83,
+      "y": 0.47,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "scroll",
+      "scale": 0.45,
+      "rotation": -10,
+      "camo": "chameleon",
+      "foundText": "Một trang ký họa cố đô Ayutthaya đã ố vàng, ghi năm vẽ cách đây gần trăm năm."
     }
   ]
 }

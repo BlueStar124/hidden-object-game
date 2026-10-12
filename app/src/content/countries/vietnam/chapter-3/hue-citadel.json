@@ -138,6 +138,20 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Vườn hoa ngự uyển ngạt ngào hương sắc bốn mùa."
+    },
+    {
+      "id": "clue-dried-lotus",
+      "name": "Nụ Sen Ép Khô",
+      "clue": "Nụ sen ép khô vẽ lẫn vào mái điện xa nhất, ở giữa trang.",
+      "x": 0.51,
+      "y": 0.3,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "lotus-bud",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Nụ sen kẹp trong lá thư: “Người giữ sổ đầu tiên là một họa sĩ cung đình Huế.”"
     }
   ]
 }

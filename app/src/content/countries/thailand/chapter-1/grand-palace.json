@@ -157,6 +157,21 @@
       "rotation": -15,
       "camo": "chameleon",
       "foundText": "Rắn bay thiên đường có thể lượn từ mái nhà này sang ngọn cây khác!"
+    },
+    {
+      "id": "clue-teacher-letter",
+      "name": "Bức Thư Của Người Thầy",
+      "clue": "Bức thư nép trên thân bảo tháp vàng ở giữa trang bên phải.",
+      "x": 0.63,
+      "y": 0.46,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "letter",
+      "scale": 0.45,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "“Thầy trao cuốn sổ này cho con ở Bangkok. Khi tóc con bạc, hãy trao nó cho người xứng đáng.”"
     }
   ]
 }

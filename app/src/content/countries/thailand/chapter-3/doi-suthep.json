@@ -137,6 +137,20 @@
       "scale": 0.55,
       "camo": "chameleon",
       "foundText": "Thằn lằn bay chỉ dài cỡ một gang tay nhưng lượn được xa tới vài chục mét."
+    },
+    {
+      "id": "clue-east-compass",
+      "name": "La Bàn Chỉ Hướng Đông",
+      "clue": "Chiếc la bàn vẽ lẫn vào những tầng vàng của bảo tháp trên núi.",
+      "x": 0.6,
+      "y": 0.43,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "compass",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Kim la bàn bị cố định chỉ về hướng đông. Phía bên kia những dãy núi là Việt Nam."
     }
   ]
 }

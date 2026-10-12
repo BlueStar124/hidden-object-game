@@ -145,6 +145,21 @@
       "scale": 0.4,
       "camo": "chameleon",
       "foundText": "Bóng diệc cô đơn kiêu hãnh giữa sóng gầm gió lộng."
+    },
+    {
+      "id": "clue-keeper-notes",
+      "name": "Sổ Chép Tay Của Người Giữ Sổ",
+      "clue": "Cuốn sổ chép tay vẽ lẫn vào những cột đá bazan cao nhất trên vách.",
+      "x": 0.56,
+      "y": 0.34,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "palm-leaf-book",
+      "scale": 0.45,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "“Ba người đã giữ cuốn sổ. Người thứ tư đang đọc những dòng này.”"
     }
   ]
 }

@@ -183,6 +183,20 @@
       "scale": 0.58,
       "camo": "chameleon",
       "foundText": "Làng làm ô Bo Sang chỉ cách trung tâm Chiang Mai chừng mười cây số."
+    },
+    {
+      "id": "clue-toy-cyclo",
+      "name": "Chiếc Xích Lô Tí Hon",
+      "clue": "Chiếc xích lô gỗ tí hon đậu trên cây cầu bắc ngang dòng sông đèn hoa đăng.",
+      "x": 0.555,
+      "y": 0.535,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "cyclo",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Một chiếc xích lô gỗ tí hon, món đồ chơi quen thuộc của trẻ con phố cổ Hà Nội."
     }
   ]
 }

@@ -168,6 +168,21 @@
         "bob": true
       },
       "foundText": "Cánh bướm mỏng manh dập dờn như chiếc lá thu rơi."
+    },
+    {
+      "id": "clue-old-red-envelope",
+      "name": "Phong Bao Lì Xì Cũ",
+      "clue": "Phong bao đỏ lẫn vào những ô cửa sổ của tòa nhà cao phía sau hàng cây bên trái.",
+      "x": 0.335,
+      "y": 0.315,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "red-envelope",
+      "scale": 0.42,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "Mặt sau phong bao viết: “Hà Nội, Tết năm ấy, trước khi theo thầy đi xa.”"
     }
   ]
 }

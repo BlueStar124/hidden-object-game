@@ -138,6 +138,20 @@
       "scale": 0.5,
       "camo": "ink",
       "foundText": "Tài xế tuk-tuk treo vòng hoa nhài ở đầu xe để cầu chạy xe bình an."
+    },
+    {
+      "id": "clue-engraved-watch",
+      "name": "Đồng Hồ Khắc Ba Cái Tên",
+      "clue": "Chiếc đồng hồ quả quýt treo bên ô cửa sổ tầng trên của dãy nhà bên phải.",
+      "x": 0.565,
+      "y": 0.4,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "pocket-watch",
+      "scale": 0.42,
+      "camo": "ink",
+      "foundText": "Mặt sau đồng hồ khắc ba cái tên, mỗi tên một nét chữ. Tên cuối cùng là của vị kiến trúc sư."
     }
   ]
 }

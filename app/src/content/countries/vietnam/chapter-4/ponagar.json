@@ -137,6 +137,20 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Ốc sên tận hưởng bóng râm mát dịu của ngôi tháp cổ."
+    },
+    {
+      "id": "clue-unlit-lantern",
+      "name": "Chiếc Đèn Trời Chưa Thả",
+      "clue": "Chiếc đèn trời vẽ lẫn vào những mái nhà thành phố phía xa bên trái.",
+      "x": 0.16,
+      "y": 0.39,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "sky-lantern",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Trên đèn vẽ một mũi đất nhọn nhô ra biển, nơi mặt trời mọc và lặn trên cùng một vùng nước."
     }
   ]
 }

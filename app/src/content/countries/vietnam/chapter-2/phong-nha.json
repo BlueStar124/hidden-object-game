@@ -138,6 +138,21 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Thạch sùng canh giữ ngưỡng cửa giữa ánh sáng và bóng tối hang động."
+    },
+    {
+      "id": "clue-cave-quill",
+      "name": "Ngòi Bút Trong Hang",
+      "clue": "Ngòi bút cắm trong khe của khối thạch nhũ vàng ở giữa hang.",
+      "x": 0.6,
+      "y": 0.53,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "quill",
+      "scale": 0.42,
+      "rotation": -14,
+      "camo": "chameleon",
+      "foundText": "Khắc trên ngòi bút: “Mỗi nét vẽ là một lần nhìn kỹ hơn.”"
     }
   ]
 }

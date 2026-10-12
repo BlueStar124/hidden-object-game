@@ -27,6 +27,7 @@ import ducBa from './chapter-5/duc-ba.json';
 import caiRang from './chapter-5/cai-rang.json';
 import phuQuoc from './chapter-5/phu-quoc.json';
 import caMau from './chapter-5/ca-mau.json';
+import { COAST, HIGHLANDS, KEEPERS, NORTH, SOUTH } from './mysteries';
 
 // JSON imports are typed loosely (e.g. "camo": string): the files follow the Page shape
 const page = (json: unknown) => json as Page;
@@ -53,6 +54,7 @@ export const vietnam: Country = {
         { day: page(trangAn) },
         { day: page(fansipan) },
       ],
+      mystery: NORTH,
     },
     {
       id: 'chapter-02',
@@ -68,6 +70,7 @@ export const vietnam: Country = {
         { day: page(nhoQue), night: page(nhoQueNight) },
         { day: page(phongNha) },
       ],
+      mystery: HIGHLANDS,
     },
     {
       id: 'chapter-03',
@@ -84,6 +87,7 @@ export const vietnam: Country = {
         { day: page(hoiAn), night: page(hoiAnNight) },
         { day: page(ghenhDaDia) },
       ],
+      mystery: KEEPERS,
     },
     {
       id: 'chapter-04',
@@ -99,6 +103,7 @@ export const vietnam: Country = {
         { day: page(daLat), night: page(daLatNight) },
         { day: page(caoDai) },
       ],
+      mystery: COAST,
     },
     {
       id: 'chapter-05',
@@ -116,6 +121,7 @@ export const vietnam: Country = {
         { day: page(phuQuoc) },
         { day: page(caMau) },
       ],
+      mystery: SOUTH,
     },
   ],
   art: {

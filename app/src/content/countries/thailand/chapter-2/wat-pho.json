@@ -138,6 +138,21 @@
       "scale": 0.5,
       "camo": "chameleon",
       "foundText": "Tiếng ve có thể to như tiếng máy cắt cỏ, vang cả sân chùa!"
+    },
+    {
+      "id": "clue-worn-quill",
+      "name": "Ngòi Bút Mòn Vẹt",
+      "clue": "Ngòi bút cũ vẽ lẫn vào thân ngọn tháp cao nhất bên phải.",
+      "x": 0.59,
+      "y": 0.43,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "quill",
+      "scale": 0.45,
+      "rotation": 12,
+      "camo": "chameleon",
+      "foundText": "Ngòi bút đã mòn vẹt, như đã vẽ qua tay rất nhiều người."
     }
   ]
 }

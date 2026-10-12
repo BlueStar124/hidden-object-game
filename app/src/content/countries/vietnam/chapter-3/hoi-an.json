@@ -139,6 +139,20 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Gió sông thổi nhẹ làm chuồn chuồn khẽ rung rinh đôi cánh."
+    },
+    {
+      "id": "clue-merchant-abacus",
+      "name": "Bàn Tính Của Người Thầy",
+      "clue": "Chiếc bàn tính vẽ lẫn vào những mái ngói phố cổ ở giữa trang bên phải.",
+      "x": 0.61,
+      "y": 0.33,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "abacus",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Bàn tính khắc tên người giữ sổ thứ hai: một thương nhân phố Hội từng sang Bangkok buôn bán."
     }
   ]
 }

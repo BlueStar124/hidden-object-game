@@ -144,6 +144,20 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Tiếng ếch òn è hòa cùng câu đờn ca tài tử văng vẳng bên sông."
+    },
+    {
+      "id": "clue-carved-coconut",
+      "name": "Trái Dừa Khắc Chữ",
+      "clue": "Trái dừa vẽ lẫn vào những mái nhà san sát bên bờ phải con sông.",
+      "x": 0.8,
+      "y": 0.58,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "coconut",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Khắc trên vỏ dừa: “Xuôi dòng Hậu Giang, ra tới biển là gặp.”"
     }
   ]
 }

@@ -137,6 +137,20 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Đôi cánh lấp lánh phản chiếu ánh sáng muôn màu từ các ô kính màu."
+    },
+    {
+      "id": "clue-small-bell",
+      "name": "Chiếc Chuông Khắc Tọa Độ",
+      "clue": "Chiếc chuông nhỏ vẽ lẫn vào tán cây rậm phía trên bên phải.",
+      "x": 0.76,
+      "y": 0.32,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "temple-bell",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Chuông khắc một dòng số: 8°37′ Bắc, 104°43′ Đông."
     }
   ]
 }

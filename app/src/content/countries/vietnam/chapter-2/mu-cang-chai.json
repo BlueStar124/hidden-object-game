@@ -142,6 +142,20 @@
       "scale": 0.42,
       "camo": "ink",
       "foundText": "Hiệp sĩ tí hon bảo vệ ruộng lúa khỏi sâu bệnh."
+    },
+    {
+      "id": "clue-lunch-tiffin",
+      "name": "Cặp Lồng Cơm Còn Ấm",
+      "clue": "Chiếc cặp lồng cơm đặt trên bờ ruộng bậc thang, phía trên chú ếch.",
+      "x": 0.36,
+      "y": 0.55,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "tiffin",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Cặp lồng cơm còn ấm: người vẽ đã ngồi đây rất lâu để vẽ cho bằng hết những bậc ruộng."
     }
   ]
 }

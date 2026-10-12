@@ -73,7 +73,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `index.ts` | `COUNTRIES`, `FIRST_COUNTRY` (=`COUNTRIES[0]`), `countryById`, `pagesOf(country)` → `PageRef[]`, `pageRefOf(page)`, `artOf(page)` → asset `require`, `artIdOf(page)` → `"<country>/<art>"`, `allPages()` (mọi trang ngày rồi tới mọi trang đêm), `placeOf(pageId)` → `{ref, night}` hoặc `null`, `codeOf(country)`, `challengeOf(page, seed, time?)`, `pageOfChallenge(challenge)` | Khi load sẽ **throw** nếu id trang bị trùng, `art` không có trong bảng `art` của nước, hoặc hai nước trùng `code`. |
 | `countries/<nước>/index.ts` | `const <nước>: Country` | Chương, prologue, `pages: [{ day }, { day, night }]`, bảng `art`. Ép kiểu JSON bằng `const page = (json: unknown) => json as Page`. |
 | `countries/<nước>/chapter-N/*.json` | — | Một trang mỗi file (định dạng: add-country.md). |
-| `countries/<nước>/mysteries.ts` | `Mystery` của từng chương | Câu hỏi, đáp án, đoạn kết của bí ẩn chương (chỉ Singapore có lúc này). |
+| `countries/<nước>/mysteries.ts` | `Mystery` của từng chương | Câu hỏi, đáp án, đoạn kết của bí ẩn chương. Cả 11 chương của 3 nước đều có; mạch truyện xuyên suốt: vị kiến trúc sư là người giữ sổ thứ ba, hẹn trao sổ cho người chơi ở Mũi Cà Mau. |
 | `bestiary.ts` | `BESTIARY: Record<Exclude<SpriteType,'seal'>, {name, kind, fact}>`, `isCreature(type)` | Sổ Tay Sinh Vật. TypeScript **bắt buộc** mỗi `SpriteType` có một mục. |
 
 ### game/ — một lượt chơi (hooks)

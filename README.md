@@ -142,7 +142,7 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 
 - **Bí ẩn chương:** mỗi trang ngày giấu thêm một **mảnh manh mối** (không bắt buộc để qua màn). Đủ mảnh của chương thì
   mở **Bảng Suy Luận** trong Mục Lục: chọn đáp án đúng để đọc đoạn kết. Chọn sai không bị phạt, chỉ được nhắc lại manh
-  mối. Ba chương Singapore đã có bí ẩn; Thái Lan và Việt Nam sẽ thêm sau.
+  mối. Cả 11 chương của Singapore, Thái Lan và Việt Nam đều có bí ẩn (37 mảnh manh mối), nối thành một câu chuyện: ai đã để lại cuốn sổ, và vì sao nó đến tay bạn.
 - **Chơi lại không nhàm:** trang đã giải có thể đặt vật ở chỗ nấp khác (kèm gợi ý mới) mỗi lần chơi lại.
 - **Trang của ngày:** mỗi ngày một góc tranh với 3–5 vật, giống nhau cho mọi người chơi (không cần server). Xong thì
   được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.

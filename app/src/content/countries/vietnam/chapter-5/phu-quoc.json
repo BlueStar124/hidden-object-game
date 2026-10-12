@@ -140,6 +140,20 @@
       "scale": 0.4,
       "camo": "chameleon",
       "foundText": "Bãi Sao với hàng dừa nghiêng là một trong những bãi biển đẹp nhất hành tinh."
+    },
+    {
+      "id": "clue-keeper-lantern",
+      "name": "Đèn Lồng Người Canh Biển",
+      "clue": "Chiếc đèn lồng vẽ lẫn vào những mái nhà phía bên phải bờ biển.",
+      "x": 0.74,
+      "y": 0.66,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "lantern",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Người canh biển nhắn lại: “Người giữ sổ đang chờ bạn ở mũi đất cuối cùng.”"
     }
   ]
 }

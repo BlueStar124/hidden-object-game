@@ -138,6 +138,21 @@
       "scale": 0.6,
       "camo": "chameleon",
       "foundText": "Miếu thần đất được dựng ở chỗ bóng của ngôi nhà chính không bao giờ đổ tới."
+    },
+    {
+      "id": "clue-conical-hat",
+      "name": "Chiếc Nón Lá Lạ",
+      "clue": "Chiếc nón lá vẽ lẫn vào những lớp gạch cổ trên đỉnh ngọn tháp Chedi Luang.",
+      "x": 0.42,
+      "y": 0.44,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "conical-hat",
+      "scale": 0.45,
+      "rotation": 6,
+      "camo": "chameleon",
+      "foundText": "Một chiếc nón lá Việt Nam giữa cố đô Lanna. Trên vành nón thêu hai chữ “về nhà”."
     }
   ]
 }

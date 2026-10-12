@@ -137,6 +137,21 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Mặt hồ Xuân Hương êm đềm như vần thơ của nữ sĩ tài hoa."
+    },
+    {
+      "id": "clue-south-kite",
+      "name": "Cánh Diều Bay Về Phương Nam",
+      "clue": "Cánh diều mắc giữa rừng thông tối phía sau tháp sắt.",
+      "x": 0.62,
+      "y": 0.44,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "kite",
+      "scale": 0.45,
+      "rotation": 12,
+      "camo": "chameleon",
+      "foundText": "Đuôi diều ghi: “Đi về phương Nam, tới nơi đất liền kết thúc.”"
     }
   ]
 }
