@@ -18,7 +18,8 @@
       "scale": 0.48,
       "camo": "chameleon",
       "waterline": 0.65,
-      "foundText": "Vườn quốc gia Phú Quốc là khu dự trữ sinh quyển thế giới được UNESCO công nhận."
+      "foundText": "Vườn quốc gia Phú Quốc là khu dự trữ sinh quyển thế giới được UNESCO công nhận.",
+      "order": 3
     },
     {
       "id": "coral-crab",
@@ -59,7 +60,8 @@
       "scale": 0.48,
       "camo": "chameleon",
       "foundText": "Đêm xuống, hàng trăm ngọn đèn câu mực rực sáng như thành phố nổi trên biển.",
-      "waterline": 0.6
+      "waterline": 0.6,
+      "order": 2
     },
     {
       "id": "island-spyglass",
@@ -72,7 +74,8 @@
       "spriteType": "spyglass",
       "scale": 0.44,
       "camo": "chameleon",
-      "foundText": "Từ mũi Gành Dầu có thể nhìn thấy hòn đảo nước bạn Campuchia rất gần."
+      "foundText": "Từ mũi Gành Dầu có thể nhìn thấy hòn đảo nước bạn Campuchia rất gần.",
+      "order": 1
     },
     {
       "id": "artist-seal",

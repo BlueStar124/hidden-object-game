@@ -173,11 +173,20 @@ export const GameScreen: React.FC = () => {
   const { openDaily: openDailyPage, openChallenge, leaveSpecial } = nav;
   const openPassport = useCallback(() => setSheet('passport'), []);
   const openCover = useCallback(() => setSheet('cover'), []);
+  // The inside cover's stickers lie on the desk too: read again when the cover closes
+  const [coverStickers, setCoverStickers] = useState(() => progress.cover());
+  const closeCover = useCallback(() => {
+    setSheet(null);
+    setCoverStickers(progress.cover());
+  }, []);
   const enterChallenge = useCallback(() => setSheet('challenge'), []);
   const openBackup = useCallback(() => setSheet('backup'), []);
   // A backup brought back: the home screen reads the progress again (it reads it once when it opens)
   const [homeKey, setHomeKey] = useState(0);
-  const restored = useCallback(() => setHomeKey((k) => k + 1), []);
+  const restored = useCallback(() => {
+    setHomeKey((k) => k + 1);
+    setCoverStickers(progress.cover());
+  }, []);
   const closeSheet = useCallback(() => setSheet(null), []);
   const openDeduction = useCallback((chapter: Chapter, number: number) => setDeduction({ chapter, number }), []);
 
@@ -228,7 +237,7 @@ export const GameScreen: React.FC = () => {
   return (
     <Animated.View ref={rootRef} style={[styles.root, shakeStyle]} onLayout={measureRoot}>
       <StatusBar hidden style={isNight ? 'light' : 'dark'} />
-      <Desk night={isNight} foliage={width > 800} />
+      <Desk night={isNight} foliage={width > 800} stickers={coverStickers} />
 
       <HUD
         layout={layout}
@@ -325,7 +334,7 @@ export const GameScreen: React.FC = () => {
 
       {sheet === 'passport' && <Passport today={today} canPlayToday={daily === 'open'} onPlayDaily={openDaily} onClose={closeSheet} />}
 
-      {sheet === 'cover' && <MyCover onClose={closeSheet} />}
+      {sheet === 'cover' && <MyCover onClose={closeCover} />}
 
       {sheet === 'challenge' && <ChallengeEntry onPlay={playChallenge} onClose={closeSheet} />}
 

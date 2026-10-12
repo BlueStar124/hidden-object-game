@@ -17,7 +17,8 @@
       "spriteType": "dove",
       "scale": 0.6,
       "camo": "ink",
-      "foundText": "Sứ giả hòa bình mang theo lời chúc tốt lành cho cảng biển Singapore."
+      "foundText": "Sứ giả hòa bình mang theo lời chúc tốt lành cho cảng biển Singapore.",
+      "riddle": "Mình trắng như bông, bay khắp quảng trường; ai cho hạt thóc, gật gù cảm ơn. Là con gì?"
     },
     {
       "id": "pond-turtle",
@@ -32,7 +33,8 @@
       "rotation": 20,
       "camo": "chameleon",
       "waterline": 0.62,
-      "foundText": "Chú rùa thọ ngàn năm bảo hộ nguồn nước trong lành của đảo quốc."
+      "foundText": "Chú rùa thọ ngàn năm bảo hộ nguồn nước trong lành của đảo quốc.",
+      "riddle": "Lưng đội nhà cứng, đi chậm từng bước; xuống nước thì bơi, lên bờ thì rụt. Là con gì?"
     },
     {
       "id": "golden-key",
@@ -53,7 +55,8 @@
           "y": 0.4,
           "clue": "Chiếc chìa khóa vàng được vẽ phác ở góc trên của trang giấy bên trái."
         }
-      ]
+      ],
+      "riddle": "Có răng mà chẳng cắn, chẳng ăn cũng chẳng nhai; cửa nào đóng thật chặt, có nó mở ngay. Là cái gì?"
     },
     {
       "id": "magnifying-glass",
@@ -74,7 +77,8 @@
           "y": 0.49,
           "clue": "Chiếc kính lúp lẫn trong bóng dáng Marina Bay Sands mờ xa phía sau tượng sư tử biển."
         }
-      ]
+      ],
+      "riddle": "Một con mắt tròn, nhìn đâu to đấy; thám tử cầm tay, soi từng dấu vết. Là cái gì?"
     },
     {
       "id": "leaping-koi",
@@ -92,7 +96,8 @@
         "offset": 0.8,
         "from": "jump"
       },
-      "foundText": "Cá koi vượt sóng — biểu tượng của lòng kiên trì. Chú cá ngậm một hạt ngọc trai nhỏ!"
+      "foundText": "Cá koi vượt sóng — biểu tượng của lòng kiên trì. Chú cá ngậm một hạt ngọc trai nhỏ!",
+      "riddle": "Vảy đỏ vảy vàng, vượt thác hóa rồng; khi vui nhảy vọt khỏi mặt nước trong. Là con gì?"
     },
     {
       "id": "artist-seal",

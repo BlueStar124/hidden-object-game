@@ -17,7 +17,8 @@
       "spriteType": "lantern",
       "scale": 0.48,
       "camo": "chameleon",
-      "foundText": "Đèn lồng truyền thống Hội An làm từ tre già ngâm muối và lụa Hà Đông."
+      "foundText": "Đèn lồng truyền thống Hội An làm từ tre già ngâm muối và lụa Hà Đông.",
+      "riddle": "Bụng tròn áo lụa, đêm đêm thắp sáng; treo dưới mái hiên, phố Hội lung linh. Là cái gì?"
     },
     {
       "id": "street-hat",
@@ -30,7 +31,8 @@
       "spriteType": "conical-hat",
       "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ."
+      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ.",
+      "riddle": "Chẳng phải ô dù mà che mưa nắng; tròn như vành trăng, quai thao duyên dáng. Là cái gì?"
     },
     {
       "id": "river-boat",
@@ -44,7 +46,8 @@
       "scale": 0.48,
       "camo": "chameleon",
       "foundText": "Thuyền hoa đăng đưa những ước nguyện may mắn trôi xuôi dòng nước.",
-      "waterline": 0.6
+      "waterline": 0.6,
+      "riddle": "Không chân mà đi, không cánh mà lướt; chở đầy hoa đăng trôi trên sông Hoài. Là cái gì?"
     },
     {
       "id": "ancient-cat",
@@ -57,7 +60,8 @@
       "spriteType": "cat",
       "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Chú mèo lười biếng tận hưởng nhịp sống chậm rãi thanh bình của phố cổ."
+      "foundText": "Chú mèo lười biếng tận hưởng nhịp sống chậm rãi thanh bình của phố cổ.",
+      "riddle": "Râu dài mấy sợi, mắt sáng đêm khuya; ngày ngủ trên mái, đêm rình chuột nhà. Là con gì?"
     },
     {
       "id": "hoian-cyclo",
@@ -70,7 +74,8 @@
       "spriteType": "cyclo",
       "scale": 0.52,
       "camo": "chameleon",
-      "foundText": "Tiếng chuông xích lô leng keng thong thả trên những con phố đi bộ."
+      "foundText": "Tiếng chuông xích lô leng keng thong thả trên những con phố đi bộ.",
+      "riddle": "Ba bánh hai người, một ngồi một đạp; dạo quanh phố cổ, chậm rãi ngắm nhìn. Là cái gì?"
     },
     {
       "id": "artist-seal",

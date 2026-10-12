@@ -17,9 +17,9 @@
 | 2.2 Sinh vật di cư | Chưa làm | |
 | 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm**: 11 chương, 37 mảnh manh mối; lời mở đầu chương cuối Singapore và Thái Lan đã sửa để dẫn sang nước tiếp theo | |
 | 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |
-| 4.2 Hộ chiếu | **Đã làm** | Tem vàng hiện chỉ để sưu tầm, chưa mở khung bưu thiếp riêng |
-| 5.1 Trang bìa | **Đã làm** | Bản 2: hiện sticker ở mép mặt bàn |
-| 5.2 Kiểu nhiệm vụ | Câu đố (`riddle`), theo dấu (`order`): **đã có cơ chế + test**, chưa có trang nào dùng | Ngày và đêm: chưa làm |
+| 4.2 Hộ chiếu | **Đã làm**: tem vàng làm bưu thiếp của nước đó có viền vàng | |
+| 5.1 Trang bìa | **Đã làm**, sticker cũng hiện trên mặt bàn khi chơi | |
+| 5.2 Kiểu nhiệm vụ | **Đã làm**: 3 trang câu đố (Merlion, Yaowarat, Hội An), 1 trang theo dấu (Phú Quốc) | Ngày và đêm: chưa làm |
 | 6.1 Bưu thiếp | **Đã làm** (Skia, chia sẻ bằng `expo-sharing` / Web Share API) | |
 | 6.2 Mã thử thách | **Đã làm** (nhập ở trang chủ, link `?c=` trên web) | Bản app cần `EXPO_PUBLIC_WEB_URL` để gửi kèm link |
 

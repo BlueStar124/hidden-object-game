@@ -54,7 +54,7 @@ export const Passport: React.FC<PassportProps> = ({ today, canPlayToday, onPlayD
         <DialogHeader
           icon={<Stamp size={24} color={colors.crimson} />}
           title="Hộ Chiếu Thám Tử"
-          description={`${total} con dấu · mỗi ngày một trang ngắn, lỡ ngày cũng không sao`}
+          description={`${total} con dấu · đủ ${STAMPS_FOR_SEAL} dấu một nước: tem vàng và bưu thiếp viền vàng`}
           onClose={onClose}
         />
       }

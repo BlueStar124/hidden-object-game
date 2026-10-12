@@ -17,7 +17,8 @@
       "spriteType": "tuk-tuk",
       "scale": 0.65,
       "camo": "chameleon",
-      "foundText": "Tuk-tuk Bangkok sơn đủ màu sặc sỡ, ồn ào nhưng len lỏi phố đông rất tài."
+      "foundText": "Tuk-tuk Bangkok sơn đủ màu sặc sỡ, ồn ào nhưng len lỏi phố đông rất tài.",
+      "riddle": "Ba bánh chạy rong, kêu “tục tục” mãi; chở khách khắp phố, Bangkok ai cũng hay. Là gì?"
     },
     {
       "id": "shop-goldfish",
@@ -30,7 +31,8 @@
       "spriteType": "goldfish",
       "scale": 0.68,
       "camo": "ink",
-      "foundText": "Chủ tiệm người Hoa nuôi cá vàng để cầu buôn may bán đắt."
+      "foundText": "Chủ tiệm người Hoa nuôi cá vàng để cầu buôn may bán đắt.",
+      "riddle": "Nhà bằng thủy tinh, áo vàng óng ả; bơi vòng quanh mãi, mang lộc cho nhà. Là con gì?"
     },
     {
       "id": "cart-mortar",
@@ -43,7 +45,8 @@
       "spriteType": "mortar-pestle",
       "scale": 0.68,
       "camo": "ink",
-      "foundText": "Som tam chua, cay, mặn, ngọt hòa quyện — món gỏi đu đủ quốc dân của Thái Lan."
+      "foundText": "Som tam chua, cay, mặn, ngọt hòa quyện — món gỏi đu đủ quốc dân của Thái Lan.",
+      "riddle": "Một kẻ nằm yên, một kẻ giã mãi; đu đủ, ớt, chanh hóa món som tam. Là cái gì?"
     },
     {
       "id": "bag-thai-tea",
@@ -56,7 +59,8 @@
       "spriteType": "thai-tea",
       "scale": 0.68,
       "camo": "chameleon",
-      "foundText": "Trà sữa Thái đựng túi nhựa buộc dây, xách tay vừa đi vừa uống!"
+      "foundText": "Trà sữa Thái đựng túi nhựa buộc dây, xách tay vừa đi vừa uống!",
+      "riddle": "Màu cam như nắng, ngọt béo mát lành; treo trong túi nhỏ, uống cùng đá lạnh. Là gì?"
     },
     {
       "id": "stool-mango-rice",
@@ -69,7 +73,8 @@
       "spriteType": "mango-sticky-rice",
       "scale": 0.62,
       "camo": "ink",
-      "foundText": "Xôi nếp rưới nước cốt dừa ăn cùng xoài chín là món tráng miệng được yêu thích bậc nhất Thái Lan."
+      "foundText": "Xôi nếp rưới nước cốt dừa ăn cùng xoài chín là món tráng miệng được yêu thích bậc nhất Thái Lan.",
+      "riddle": "Vàng ươm quả chín, trắng dẻo hạt nếp; rưới thêm nước cốt, ngọt thơm xứ Chùa Vàng. Là món gì?"
     },
     {
       "id": "artist-seal",

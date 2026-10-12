@@ -32,6 +32,8 @@ export interface PostcardContent {
   lines: string[];
   stars?: number;
   footer: string;
+  /** The country's gold seal is in the passport (core/daily STAMPS_FOR_SEAL): a gilded postcard */
+  gilded?: boolean;
 }
 
 // The postcard (pixels): the shape link previews and chat apps show whole
@@ -131,15 +133,17 @@ function cropOf(image: SkImage, focus: { x: number; y: number }) {
 // The stamp: its centre and the widest its label may be (px)
 const STAMP = { x: W - 120, y: 110, label: 84 };
 
-function drawStamp(c: SkCanvas, label: string, font: SkFont, ink: SkPaint) {
+function drawStamp(c: SkCanvas, label: string, font: SkFont, ink: SkPaint, gilded: boolean) {
   const cx = STAMP.x;
   const cy = STAMP.y;
   c.save();
   c.rotate(-12, cx, cy);
-  const ring = solid('rgba(166, 50, 50, 0.75)', PaintStyle.Stroke, 4);
+  if (gilded) c.drawCircle(cx, cy, 62, solid('rgba(250, 204, 21, 0.35)'));
+  const color = gilded ? 'rgba(161, 98, 7, 0.9)' : 'rgba(166, 50, 50, 0.75)';
+  const ring = solid(color, PaintStyle.Stroke, 4);
   ring.setPathEffect(Skia.PathEffect.MakeDash([10, 6], 0));
   c.drawCircle(cx, cy, 62, ring);
-  c.drawCircle(cx, cy, 50, solid('rgba(166, 50, 50, 0.6)', PaintStyle.Stroke, 2));
+  c.drawCircle(cx, cy, 50, solid(color, PaintStyle.Stroke, 2));
   const text = label.toUpperCase().normalize('NFC');
   // A long country name is set smaller, inside the inner ring
   const width = textWidth(font, text);
@@ -168,11 +172,11 @@ export async function drawPostcard(content: PostcardContent): Promise<string | n
     const stampFont = Skia.Font(loaded.title, 17);
     const ink = solid(colors.ink);
     const soft = solid(colors.inkSoft);
-    const red = solid(colors.crimson);
+    const red = solid(content.gilded ? '#a16207' : colors.crimson);
 
     // Paper, with a ruled edge
     c.drawColor(Skia.Color(colors.paperCard));
-    c.drawRect(Skia.XYWHRect(16, 16, W - 32, H - 32), solid(colors.hairline, PaintStyle.Stroke, 2));
+    c.drawRect(Skia.XYWHRect(16, 16, W - 32, H - 32), solid(content.gilded ? '#d4a017' : colors.hairline, PaintStyle.Stroke, content.gilded ? 6 : 2));
 
     // The photo: a corner of the painting, slightly askew, on a white mount
     const focus = content.focus ?? { x: 0.5, y: 0.5 };
@@ -193,7 +197,7 @@ export async function drawPostcard(content: PostcardContent): Promise<string | n
     );
     c.restore();
 
-    drawStamp(c, content.country, stampFont, red);
+    drawStamp(c, content.country, stampFont, red, !!content.gilded);
 
     // The column: title, stars, the lines
     let y = 250;

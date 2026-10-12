@@ -118,13 +118,13 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `home/HomeScreen.tsx` | **Trang chủ**, lớp phủ zIndex 180 (trên HUD, dưới mọi hộp thoại): Chơi Tiếp / Bắt Đầu Điều Tra, thẻ từng cuốn sổ (mở ở trang chưa xong đầu tiên), Mục Lục, Sổ Tay, âm thanh, tổng điểm. Ngang ≥ 600 px: 2 cột; hẹp hơn: 1 cột cuộn. Số liệu trong `home/summary.ts` (`bookSummary`, `albumProgress`). |
 | `ErrorBoundary.tsx` | Bọc `GameScreen` trong `App.tsx`. Lỗi lúc render thì hiện màn "Cuốn sổ gặp chút sự cố" thay vì màn trắng: "Mở lại cuốn sổ" mount lại game (về trang chủ), "Gửi báo lỗi" chia sẻ hoặc chép `crashLog.report()`. |
 | `BookThumb.tsx` | Ảnh thu nhỏ một trang (cắt đúng khung giấy, 16:9), dùng ở Mục Lục và trang chủ. |
-| `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`). |
+| `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`), sticker của Trang Bìa đặt theo tọa độ người chơi chọn (cuốn sổ che phần nằm sau nó; `GameScreen` đọc lại khi đóng Trang Bìa hoặc khôi phục bản sao lưu). |
 | `useDeviceBehaviour.ts` | Giữ màn hình sáng, ẩn thanh điều hướng Android, rời app thì tạm dừng, nút Back Android. |
 | `hud/HUD.tsx` | Thanh trên: điểm, đồng hồ, combo, chuyển trang, các nút (gợi ý, tạm dừng, âm thanh, Mục Lục, Sổ Tay), `ExploreStatus`. |
 | `hud/QuestPanel.tsx` | Thẻ manh mối: **hình bóng** của vật chính + nhãn kiểu ngụy trang. |
 | `hud/FloatingScores.tsx` | Điểm và thông báo bay lên từ chỗ chạm. |
 | `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen` (kèm so thời gian thử thách, bưu thiếp, mã thử thách), `TimeUpScreen`, `PageIndex` (Mục Lục; có tab nước khi `COUNTRIES.length > 1`; số mảnh manh mối và nút Suy Luận ở đầu chương), `CreatureAlbum` (Sổ Tay), `RotatePrompt` (web, điện thoại cầm dọc), `Deduction` (Bảng Suy Luận), `Passport` (Hộ Chiếu: lịch con dấu, tem vàng mỗi nước), `MyCover` (Trang Bìa: sticker kéo/xoay/đổi cỡ bằng cử chỉ trên UI thread, lưu khi thả), `ChallengeEntry` (nhập mã), `DailyDone` (xong trang của ngày), `Backup` (Sao Lưu: lưu ra tệp, khôi phục từ tệp hoặc nội dung dán; khôi phục xong thì `GameScreen` mount lại trang chủ để đọc lại tiến độ). |
-| `share/*` | `postcard.ts` (`drawPostcard`: vẽ bưu thiếp 1200 × 630 bằng Skia trên JS thread, font nạp một lần, xuất JPEG base64; đo chữ bằng glyph vì web không có `measureText`), `messages.ts` (lời nhắn thử thách, bưu thiếp thắng, bưu thiếp trang của ngày), `useShare.ts` (`busy`, `note`, `sharePostcard`, `shareMessage`), `ShareRow.tsx` (nút bưu thiếp/thách bạn; màn thấp thì thành icon hai bên hàng sao). |
+| `share/*` | `postcard.ts` (`drawPostcard`: vẽ bưu thiếp 1200 × 630 bằng Skia trên JS thread, viền và con dấu vàng khi nước đó có tem vàng hộ chiếu, font nạp một lần, xuất JPEG base64; đo chữ bằng glyph vì web không có `measureText`), `messages.ts` (lời nhắn thử thách, bưu thiếp thắng, bưu thiếp trang của ngày), `useShare.ts` (`busy`, `note`, `sharePostcard`, `shareMessage`), `ShareRow.tsx` (nút bưu thiếp/thách bạn; màn thấp thì thành icon hai bên hàng sao). |
 
 ### platform/
 | File | Vai trò |

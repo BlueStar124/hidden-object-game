@@ -1,4 +1,6 @@
 import { encodeChallenge } from '../../core/challenge';
+import { STAMPS_FOR_SEAL, stampsByCountry } from '../../core/daily';
+import { progress } from '../../core/progress';
 import { isCritter, type HiddenObject, type Page } from '../../core/model';
 import { challengeOf, placeOf } from '../../content';
 import { challengeLink } from '../../platform/launchLink';
@@ -27,6 +29,12 @@ function highlight(page: Page, foundIds: string[]): HiddenObject | undefined {
 
 const countryOf = (page: Page) => placeOf(page.id)?.ref.country.name ?? '';
 
+/** Postcards of a country whose gold seal is in the passport are gilded. */
+function gilded(page: Page): boolean {
+  const id = placeOf(page.id)?.ref.country.id;
+  return !!id && (stampsByCountry(progress.stamps()).get(id) ?? 0) >= STAMPS_FOR_SEAL;
+}
+
 /** A postcard of a page just solved. */
 export function victoryPostcard(page: Page, result: { foundIds: string[]; score: number; stars: number; time: number; code: string }): PostcardContent {
   const critters = page.objects.filter(isCritter);
@@ -43,6 +51,7 @@ export function victoryPostcard(page: Page, result: { foundIds: string[]; score:
       ...(critters.length ? [`Sinh vật ẩn nấp: ${spotted}/${critters.length}`] : []),
     ],
     footer: `${GAME} · mã thử thách ${result.code}`,
+    gilded: gilded(page),
   };
 }
 
@@ -61,6 +70,7 @@ export function dailyShare(page: Page, day: string, time: number): { postcard: P
       title: `Trang của ngày ${when}`,
       lines: [page.title, `Thời gian: ${formatDuration(time)}`],
       footer: `${GAME} · mỗi ngày một góc tranh mới`,
+      gilded: gilded(page),
     },
     text: `Trang của ngày ${when} trong ${GAME}: mình tìm xong trong ${formatDuration(time)}. Bạn thử xem nhanh hơn không?`,
   };

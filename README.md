@@ -147,7 +147,10 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Trang của ngày:** mỗi ngày một góc tranh với 3–5 vật, giống nhau cho mọi người chơi (không cần server). Xong thì
   được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
 - **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
-- **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian.
+- **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian. Nước nào
+  có tem vàng hộ chiếu thì bưu thiếp có viền vàng.
+- **Trang câu đố và trang theo dấu:** Merlion, Yaowarat và Hội An là trang câu đố (thẻ chỉ hiện câu đố, tìm ra mới biết
+  tên); Phú Quốc là trang theo dấu (ống nhòm → thuyền câu mực → rùa biển, đúng thứ tự).
 - **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
   án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
 - **Kính Tia Tím:** giải bí ẩn cuối của Singapore thì nhận kính; soi lại các trang Singapore sẽ thấy 9 lời nhắn mực
