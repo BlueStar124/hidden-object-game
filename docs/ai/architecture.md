@@ -59,7 +59,11 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `scoring.ts` | `foundScore`, `mistakePenalty`, `hintPenalty`, `completionBonus` | Số liệu ở mục 1. |
 | `hints.ts` | `nextHint(currentHintLevel, objects, foundIds, currentLoupePos)` → `HintResult` | |
 | `motion.ts` | `motionNow`, `shyPhase`, `isShyVisible`, `roamState`, `objectPosition` | **Worklet**, chạy cả JS thread (bắt vật) lẫn UI thread (vẽ) trên cùng một đồng hồ, nên vật chỉ bắt được đúng nơi, đúng lúc nó được vẽ. |
-| `progress.ts` | `SCHEMA_VERSION` (=2), `readProgress(raw)`, `progress.{recordVictory, pageResult, recordDiscovery, discovered, recordVisit, lastPage, totalScore}` | `lastPageId` (tùy chọn) là trang người chơi đang ở, cho nút "Chơi Tiếp". Lưu JSON trong localStorage (app: SQLite qua `expo-sqlite/localStorage/install` trong `index.ts`). Bản lưu được giữ trong bộ nhớ (`copy`), module này là nơi duy nhất ghi. `readProgress` đọc an toàn mọi phiên bản và **giữ lại trường lạ**. |
+| `random.ts` | `hashString`, `rng` (mulberry32), `pick`, `shuffle`, `localDay` | Bộ sinh số ngẫu nhiên có seed tái lập được và hàm ngày theo giờ địa phương. |
+| `resolvePage.ts` | `resolvePage(page, ctx)` | Dựng trang cho lượt chơi: hoán đổi vị trí theo `spots`, thêm sinh vật di cư, gắn cờ biến thể hiếm, ẩn vật cần dụng cụ chưa mở khóa. |
+| `tools.ts` | `toolsOwned`, `isCountryCleared` | Quản lý đồ nghề mở khóa (như `'uv-lens'` khi hoàn thành các nước). |
+| `migrants.ts` | `migrantsOn(pageId, day, migrants)` | Tính toán danh sách sinh vật di cư ghé trang theo ngày. |
+| `progress.ts` | `SCHEMA_VERSION` (=2), `readProgress(raw)`, `progress.{recordVictory, pageResult, recordDiscovery, discovered, recordVisit, lastPage, totalScore, exportSave, importSave, saveSoundEnabled, loadSoundEnabled, saveRevealEffect, loadRevealEffect}` | `lastPageId` (tùy chọn) là trang người chơi đang ở, cho nút "Chơi Tiếp". Lưu JSON trong localStorage. Lọc prototype pollution (`__proto__`, `constructor`). Hỗ trợ xuất/nhập save Base64. |
 
 ### content/ — chỉ dữ liệu
 | File | Export | Ghi chú |
@@ -67,7 +71,8 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `index.ts` | `COUNTRIES`, `FIRST_COUNTRY` (=`COUNTRIES[0]`), `countryById`, `pagesOf(country)` → `PageRef[]`, `pageRefOf(page)`, `artOf(page)` → asset `require`, `artIdOf(page)` → `"<country>/<art>"`, `allPages()` (mọi trang ngày rồi tới mọi trang đêm), `placeOf(pageId)` → `{ref, night}` hoặc `null` | Khi load sẽ **throw** nếu id trang bị trùng hoặc `art` không có trong bảng `art` của nước. |
 | `countries/<nước>/index.ts` | `const <nước>: Country` | Chương, prologue, `pages: [{ day }, { day, night }]`, bảng `art`. Ép kiểu JSON bằng `const page = (json: unknown) => json as Page`. |
 | `countries/<nước>/chapter-N/*.json` | — | Một trang mỗi file (định dạng: add-country.md). |
-| `bestiary.ts` | `BESTIARY: Record<Exclude<SpriteType,'seal'>, {name, kind, fact}>`, `isCreature(type)` | Sổ Tay Sinh Vật. TypeScript **bắt buộc** mỗi `SpriteType` có một mục. |
+| `bestiary.ts` | `BESTIARY: Record<Exclude<SpriteType,'seal'>, {name, kind, fact}>`, `isCreature(type)`, `reactionOf(type)` | Sổ Tay Sinh Vật và hoạt ảnh phản ứng (`ReactionType`). |
+| `migrants.ts` | `MIGRANTS: Migrant[]` | Danh sách các sinh vật di cư ghé thăm các trang theo ngày. |
 
 ### game/ — một lượt chơi (hooks)
 | File | Vai trò |
@@ -111,7 +116,8 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `hud/HUD.tsx` | Thanh trên: điểm, đồng hồ, combo, chuyển trang, các nút (gợi ý, tạm dừng, âm thanh, Mục Lục, Sổ Tay), `ExploreStatus`. |
 | `hud/QuestPanel.tsx` | Thẻ manh mối: **hình bóng** của vật chính + nhãn kiểu ngụy trang. |
 | `hud/FloatingScores.tsx` | Điểm và thông báo bay lên từ chỗ chạm. |
-| `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen`, `TimeUpScreen`, `PageIndex` (Mục Lục; có tab nước khi `COUNTRIES.length > 1`), `CreatureAlbum` (Sổ Tay), `RotatePrompt` (web, điện thoại cầm dọc). |
+| `ErrorBoundary.tsx` | Bọc toàn bộ app/GameScreen, hứng lỗi crash và cung cấp nút tải lại / sao chép chẩn đoán. |
+| `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen`, `TimeUpScreen`, `PageIndex` (Mục Lục; có tab nước khi `COUNTRIES.length > 1`), `CreatureAlbum` (Sổ Tay), `RotatePrompt` (web, điện thoại cầm dọc), `SaveBackupDialog` (xuất/nhập mã tiến độ Base64). |
 
 ### platform/
 | File | Vai trò |
