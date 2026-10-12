@@ -40,6 +40,8 @@ export function usePageTurn(
   library: SceneLibrary,
   camera: Camera,
   foundNow: () => Record<string, FoundInfo>,
+  /** The wash on the page being left (the page opened starts a fresh case: wash on, if wanted) */
+  reveal: SharedValue<number>,
   turning: MutableRefObject<boolean>,
   onComplete: (request: PageTurn) => void
 ): PageTurnState {
@@ -53,7 +55,7 @@ export function usePageTurn(
 
   // The frame as it is on screen, to record a page with (optionally with the camera elsewhere)
   const frameFor = useCallback(
-    (found: Record<string, FoundInfo>, at?: { tx: number; ty: number }): FrameState => ({
+    (found: Record<string, FoundInfo>, washed: number, at?: { tx: number; ty: number }): FrameState => ({
       now: motionNow(),
       width: dims.value.w,
       height: dims.value.h,
@@ -63,6 +65,7 @@ export function usePageTurn(
       lx: lx.value,
       ly: ly.value,
       found,
+      reveal: washed,
       radar: null,
       fogStart: 0,
       nudge: null,
@@ -80,12 +83,12 @@ export function usePageTurn(
       const settled = centre(scale);
       return {
         ...pending,
-        to: snapshotPage(next, frameFor({}, settled)),
+        to: snapshotPage(next, frameFor({}, reveal.value < 0 ? -1 : 0, settled)),
         S: next,
         camera: { fromX: tx.value, fromY: ty.value, toX: settled.tx, toY: settled.ty },
       };
     },
-    [centre, frameFor, s, tx, ty]
+    [centre, frameFor, reveal, s, tx, ty]
   );
 
   // 1. A turn begins
@@ -97,7 +100,7 @@ export function usePageTurn(
     turnSeen.current = turn;
     setLanded(false);
     const pending: Flip = {
-      from: snapshotPage(shown, frameFor(foundNow())),
+      from: snapshotPage(shown, frameFor(foundNow(), reveal.value)),
       to: null,
       dir: turn.direction,
       S: shown,
@@ -107,7 +110,7 @@ export function usePageTurn(
       source: shown,
     };
     setFlip(openTo(pending, next));
-  }, [turn, shown, frameFor, foundNow, preparedScene, version, openTo]);
+  }, [turn, shown, frameFor, foundNow, reveal, preparedScene, version, openTo]);
 
   // The clock of a turn starts when the page it opens is there. (Never reset it to 0 while a turn
   // is on screen: until React has dropped that turn, the frame would show its first page again —

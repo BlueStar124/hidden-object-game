@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { BookOpen, House, Play, RotateCcw, Volume2, VolumeX } from '../../ui/icons';
+import { BookOpen, House, Palette, Play, RotateCcw, Volume2, VolumeX } from '../../ui/icons';
 import type { Page } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { ModalShell } from '../../ui/ModalShell';
@@ -10,13 +10,25 @@ import { useShortLandscape } from '../../ui/layout';
 interface PauseMenuProps {
   page: Page;
   soundEnabled: boolean;
+  /** The watercolour wash over the pages */
+  washEnabled: boolean;
   onResume: () => void;
   onRestart: () => void;
   onToggleSound: () => void;
+  onToggleWash: () => void;
   onExit: () => void;
 }
 
-export const PauseMenu: React.FC<PauseMenuProps> = ({ page, soundEnabled, onResume, onRestart, onToggleSound, onExit }) => {
+export const PauseMenu: React.FC<PauseMenuProps> = ({
+  page,
+  soundEnabled,
+  washEnabled,
+  onResume,
+  onRestart,
+  onToggleSound,
+  onToggleWash,
+  onExit,
+}) => {
   const columns = useShortLandscape();
   return (
     <ModalShell maxWidth={columns ? 760 : 400} backdrop="rgba(35, 30, 24, 0.62)" onBackdropPress={onResume}>
@@ -47,12 +59,19 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({ page, soundEnabled, onResu
             onPress={onRestart}
             style={styles.full}
           />
-          <SecondaryButton
-            label={`Âm Thanh: ${soundEnabled ? 'BẬT' : 'TẮT'}`}
-            icon={soundEnabled ? <Volume2 size={17} color={colors.ink} /> : <VolumeX size={17} color={colors.ink} />}
-            onPress={onToggleSound}
-            style={styles.full}
-          />
+          <View style={styles.toggles}>
+            <SecondaryButton
+              label={`Âm Thanh: ${soundEnabled ? 'BẬT' : 'TẮT'}`}
+              icon={soundEnabled ? <Volume2 size={17} color={colors.ink} /> : <VolumeX size={17} color={colors.ink} />}
+              onPress={onToggleSound}
+            />
+            <SecondaryButton
+              label={`Tô Màu Dần: ${washEnabled ? 'BẬT' : 'TẮT'}`}
+              accessibilityLabel={`Tranh nhạt màu tới khi tìm thấy vật: ${washEnabled ? 'bật' : 'tắt'}`}
+              icon={<Palette size={17} color={colors.ink} />}
+              onPress={onToggleWash}
+            />
+          </View>
           <SecondaryButton
             label="Về Màn Hình Chính"
             icon={<House size={17} color={colors.crimson} />}
@@ -67,6 +86,11 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({ page, soundEnabled, onResu
 };
 
 const styles = StyleSheet.create({
+  toggles: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    gap: 8,
+  },
   stack: {
     alignSelf: 'stretch',
     alignItems: 'center',

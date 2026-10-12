@@ -30,6 +30,7 @@ thì tin code, rồi sửa file này.
 | Kính lúp | phóng `LOUPE_ZOOM 2.4`; đường kính `clamp(110, 0.42·min(w,h), 220)` | `constants.ts`, `useCamera.ts` |
 | Lật trang | `PAGE_TURN_MS = 900`; tờ giấy hạ xuống sau `PAGE_TURN_MS - 80` | `core/model.ts`, `usePageTurn.ts` |
 | Combo | `COMBO_WINDOW = 6` giây | `core/caseFile.ts` |
+| Nước rửa (tô màu dần) | phủ `WASH_ALPHA = 0.48`; mỗi vật tìm được rửa sạch một mảng `3.2 ×` bề ngang sprite (110–230 page units) trong `REVEAL_MS = 1100`; phá án thì tan trong `WASH_FADE_MS = 1500` | `board/render/types.ts` |
 | Kính mờ | 4 lần sai trong 3000 ms → mờ 3000 ms | `game/useCase.ts` (`FOG_*`) |
 | Thông báo bay | 1.2 s (điểm) / 1.8 s (thông tin) | `game/useNotices.ts` |
 | Sinh vật nhút nhát | bắt được khi pha nằm trong 0.035–0.455 của chu kỳ | `core/motion.ts` |
@@ -78,7 +79,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 ### game/ — một lượt chơi (hooks)
 | File | Vai trò |
 |---|---|
-| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Rời trang chủ thì ghi trang đang ở (`progress.recordVisit`). Kiểu trả về: `Game`. |
+| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + bật/tắt nước rửa (`washEnabled`, lưu trong `settings.wash`) + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Rời trang chủ thì ghi trang đang ở (`progress.recordVisit`). Kiểu trả về: `Game`. |
 | `useNavigation.ts` | `mode: PlayMode` (`book` · `daily` · `challenge`) và `seed`: trang được dựng qua `layOutPage` / `dailyPage` một lần mỗi lượt. Lần đầu chơi một trang là seed 0; trang đã giải (và có `spots`) thì mỗi lần chơi lại một seed mới, chọn sẵn khi bắt đầu lật để đích lật trùng trang sẽ chơi. `openDaily`, `openChallenge` (false nếu trang không có trong bản này), `leaveSpecial` (về chỗ đang ở trong sổ). Ngoài sổ thì `nextPage` là null. Mở sẵn ở trang người chơi đang dở (`progress.lastPage()` + `placeOf`); người chơi mới bắt đầu ở trang 1 với prologue, người chơi cũ thì không. Nước, chỉ số trang, ngày/đêm, `visit` (tăng mỗi lần mở trang, kể cả chơi lại), `turn`, `next/prev/goTo/replay`, `showPrologue`, `showNightIntro`. Từ trang đêm bấm "sau" sẽ sang trang ngày kế; bấm "trước" về trang ngày của chính nó. Prologue mở lại khi `next()` sang chương mới hoặc `goTo` sang nước khác. Ở trang cuối, `next()` quay về trang 1 (không lật). |
 | `useCase.ts` | Vụ án của trang: `inspect`, `requestHint`, `togglePause`, `explore`, `isFogged`, `screenShake`, `unlockedNight`. Chạm ngoài góc của trang của ngày bị bỏ qua; vật chưa tới lượt chỉ báo nhắc; mảnh manh mối cuối của chương báo mở Bảng Suy Luận. Phá trang của ngày thì `recordStamp` thay cho `recordVictory`. Khi `visit` đổi thì reset vụ án **ngay trong lần render đó** (không lộ trạng thái cũ). Đây là nơi gọi `sound`, `notify`, `progress`. |
 | `useNotices.ts` | `notify(text, at, 'score' \| 'info')`. |
@@ -91,7 +92,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `anim.ts` | Easing và đường cong hoạt ảnh (worklet): `track`, `loop`, `alternate`, `shyPeek`, `shyJump`, `foundBounce`, `bloom`, `blinkScale`… |
 | `useCamera.ts` | Shared value `s, tx, ty, lx, ly, dims`; `bounds`, `centre`, `placeLoupe`, `zoomTo`, `markZoomed`; `fittedScale`, `loupeDiameter`. Camera ôm khung giấy chứ không ôm cả ảnh; trang của ngày thì ôm góc đang chơi (`SceneData.focus`). |
 | `useBoardGestures.ts` | Cử chỉ native: kéo kính lúp (tròng hoặc cán), thả là soi; chạm để soi; kéo trang, chụm để zoom, lăn chuột (web); kéo sát mép thì trang tự cuộn. Chạm ra mặt bàn không tính là soi. |
-| `useCaseMarks.ts` | Đẩy trạng thái vụ án sang UI thread: `found` (thời điểm + vị trí, để vật "nở" màu), `radar`, `fogStart`, `nudge`. |
+| `useCaseMarks.ts` | Đẩy trạng thái vụ án sang UI thread: `found` (thời điểm + vị trí, để vật "nở" màu), `radar`, `fogStart`, `nudge`, `reveal` (nước rửa: -1 tắt / trang đêm, 0 đang phủ, lúc phá án thì tan dần). |
 | `usePageTurn.ts` | Vòng đời một lần lật trang (mục 4). |
 | `usePagesAround.ts` | Ưu tiên dựng đích chưa có cache trước khi hoạt ảnh bắt đầu; thử lại khi ảnh tới. Dựng trang lân cận mỗi lần một trang, 120 ms sau khi ổn định, **không trong hoạt ảnh lật**. Trả về ảnh để giữ "ấm" trên GPU. |
 | `useSceneLibrary.ts` | Cache cấp module: `images` (tranh đã giải mã theo `artIdOf`, tối đa `MAX_IMAGES = 5`), `analyses` (theo `layoutKey`, tối đa 40); cache `scenes` theo `layoutKey` và (loupe, compact, density). API: `prepare`, `keepArt`, `useKeepArt`… |
@@ -104,7 +105,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `scene/spriteParts.ts`, `spriteArt.ts` | Biến `SPRITE_ART` (sinh tự động) thành các phần vẽ được; cờ hoạt ảnh `ANIM_BLINK/WING/TAIL/WAVE/GLOW_SPOT`. |
 | `scene/spriteAtlas.ts` | Sprite đứng yên được vẽ sẵn vào một sheet (tối đa 2048 px); `atlasDensity`. |
 | `scene/loupeBody.ts` | Hình kính lúp đồng / đèn pin. |
-| `render/*.ts` | **Worklet, UI thread.** `frame.ts` (thứ tự lớp: ảnh warm → bóng → sách → radar/dấu mộc → kính lúp), `book.ts` (tranh, sprite ngụy trang, occluder, đêm, cắt bỏ thứ ngoài khung nhìn), `sprites.ts` (tư thế từng vật trong khung này), `marks.ts`, `pageTurn.ts`, `loupe.ts`, `types.ts` (`SceneData`, `FrameState`, `CAMO_*`, `FOUND_FADE_MS`). |
+| `render/*.ts` | **Worklet, UI thread.** `frame.ts` (thứ tự lớp: ảnh warm → bóng → sách → radar/dấu mộc → kính lúp), `book.ts` (tranh, sprite ngụy trang, occluder, nước rửa `drawWash` (một `saveLayer` giới hạn trong phần trang đang thấy, đục lỗ mềm `washHole` quanh vật đã tìm; không vẽ trong kính lúp: kính lúp luôn thấy màu thật), đêm, cắt bỏ thứ ngoài khung nhìn), `sprites.ts` (tư thế từng vật trong khung này), `marks.ts`, `pageTurn.ts`, `loupe.ts`, `types.ts` (`SceneData`, `FrameState`, `CAMO_*`, `FOUND_FADE_MS`). |
 
 ### screens/
 | File | Vai trò |

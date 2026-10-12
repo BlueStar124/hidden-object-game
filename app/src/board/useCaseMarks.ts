@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Easing, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
 import { layoutKey } from '../core/layout';
-import type { HiddenObject, Page } from '../core/model';
+import { isMainObject, type HiddenObject, type Page } from '../core/model';
 import { motionNow, objectPosition, roamState } from '../core/motion';
 import { PAGE_H, PAGE_W } from './constants';
 import type { FoundInfo } from './render';
@@ -15,6 +15,8 @@ export interface CaseMarks {
   found: SharedValue<Record<string, FoundInfo>>;
   radar: SharedValue<string | null>;
   fogStart: SharedValue<number>;
+  /** The watercolour wash (FrameState.reveal) */
+  reveal: SharedValue<number>;
   nudge: SharedValue<{ x: number; y: number; t: number } | null>;
   /** The found objects as they are now (to record the page for a turn) */
   foundNow: () => Record<string, FoundInfo>;
@@ -27,9 +29,12 @@ export function useCaseMarks(
   radarTargetId: string | null,
   nudgeTarget: HiddenObject | null,
   fogged: boolean,
-  camera: Camera
+  camera: Camera,
+  /** The watercolour wash is wanted (the player's setting) */
+  wash: boolean
 ): CaseMarks {
   const found = useSharedValue<Record<string, FoundInfo>>({});
+  const reveal = useSharedValue(wash && !page.isNight ? 0 : -1);
   const radar = useSharedValue<string | null>(null);
   const fogStart = useSharedValue(0);
   const nudge = useSharedValue<{ x: number; y: number; t: number } | null>(null);
@@ -90,11 +95,20 @@ export function useCaseMarks(
     fogStart.value = fogged ? motionNow() : 0;
   }, [fogged, fogStart]);
 
+  // The wash lies over a day page until every main object is found, then fades (a replay brings it back)
+  const closed = page.objects.filter(isMainObject).every((o) => foundIds.includes(o.id));
+  const washed = wash && !page.isNight;
+  useEffect(() => {
+    if (!washed) reveal.value = -1;
+    else if (!closed) reveal.value = 0;
+    else if (reveal.value <= 0) reveal.value = motionNow();
+  }, [washed, closed, reveal]);
+
   // Hint tier 2: the loupe tugs towards the target
   useEffect(() => {
     nudge.value = nudgeTarget ? { x: nudgeTarget.x * PAGE_W, y: nudgeTarget.y * PAGE_H, t: motionNow() } : null;
   }, [nudgeTarget, nudge]);
 
   const foundNow = useCallback(() => foundRef.current.map, []);
-  return { found, radar, fogStart, nudge, foundNow };
+  return { found, radar, fogStart, reveal, nudge, foundNow };
 }

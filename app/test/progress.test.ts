@@ -173,6 +173,15 @@ describe('the sound switch', () => {
     expect(progress.soundEnabled()).toBe(true);
   });
 
+  test('the watercolour wash is on until turned off, and kept apart from the sound', () => {
+    expect(progress.washEnabled()).toBe(true);
+    progress.setWashEnabled(false);
+    expect(saved().settings).toEqual({ soundEnabled: true, wash: false });
+    progress.setSoundEnabled(false);
+    expect(progress.washEnabled()).toBe(false);
+    expect(saved().settings).toEqual({ soundEnabled: false, wash: false });
+  });
+
   test('a damaged switch counts as on', () => {
     expect(readProgress({ settings: { soundEnabled: 'no' } }).settings).toEqual({ soundEnabled: true });
   });

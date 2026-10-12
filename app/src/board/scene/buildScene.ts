@@ -1,5 +1,6 @@
 import { BlendMode, Skia, TileMode, type SkImage, type SkRect } from '@shopify/react-native-skia';
-import type { HiddenObject, Page, SpriteType } from '../../core/model';
+import { SPRITE_BASE_WIDTH, type HiddenObject, type Page, type SpriteType } from '../../core/model';
+import { hashString, rng } from '../../core/random';
 import { isCreature } from '../../content/bestiary';
 import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
 import {
@@ -7,6 +8,7 @@ import {
   CAMO_INK,
   CAMO_INVISIBLE,
   type NightScene,
+  type RevealBlob,
   type SceneData,
   type SceneMark,
   type SceneSprite,
@@ -226,6 +228,24 @@ export interface SceneOptions {
   pixelRatio: number;
 }
 
+// The patch a find washes clear: this many times the sprite's width, within these bounds (page units)
+const REVEAL_SPAN = 3.2;
+const REVEAL_MIN = 110;
+const REVEAL_MAX = 230;
+
+/** An irregular patch, the same every time for an object: one round and two smaller ones beside it. */
+function revealBlobs(obj: HiddenObject): RevealBlob[] {
+  const radius = Math.min(REVEAL_MAX, Math.max(REVEAL_MIN, REVEAL_SPAN * SPRITE_BASE_WIDTH * (obj.scale ?? 1) * PAGE_W));
+  const random = rng(hashString(obj.id));
+  const blobs: RevealBlob[] = [{ dx: 0, dy: 0, r: radius }];
+  for (let i = 0; i < 2; i++) {
+    const angle = random() * Math.PI * 2;
+    const reach = radius * (0.45 + 0.2 * random());
+    blobs.push({ dx: Math.cos(angle) * reach, dy: Math.sin(angle) * reach, r: radius * (0.5 + 0.2 * random()) });
+  }
+  return blobs;
+}
+
 export function buildScene({ page, image, tints, book, loupe, compact, density, pixelRatio }: SceneOptions): SceneData {
   const night = !!page.isNight;
   const pageRect = Skia.XYWHRect(0, 0, PAGE_W, PAGE_H);
@@ -235,6 +255,7 @@ export function buildScene({ page, image, tints, book, loupe, compact, density, 
       x: o.x * PAGE_W,
       y: o.y * PAGE_H,
       roam: o.roam && o.roam.path.length >= 2 ? o.roam : null,
+      reveal: revealBlobs(o),
     };
   });
   const lensR = loupe.lensR;

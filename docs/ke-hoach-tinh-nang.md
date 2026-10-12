@@ -9,8 +9,9 @@
 | Mục | Trạng thái | Còn lại |
 |---|---|---|
 | 0.1–0.3 Nền tảng (seed, `layOutPage`, `spots`) | **Đã làm** | `spots` mới có ở 7 vật của chương 1 Singapore; thêm dần cho các trang khác |
-| 0.4 ErrorBoundary, lưu âm thanh | **Đã làm** | Xuất/nhập bản lưu, `storage.persist()`, chặn key `__proto__` |
-| 1 Tranh lên màu dần, phản ứng sinh vật | Chưa làm | Làm thử theo phương án lớp phủ (đã bàn), đo trước/sau |
+| 0.4 ErrorBoundary, lưu âm thanh, sao lưu | **Đã làm**: cả xuất/nhập bản lưu (gộp, không ghi đè), `storage.persist()`, chặn khóa `__proto__`, header bảo mật web | |
+| 1.1 Tranh lên màu dần | **Đã làm** theo phương án lớp phủ, đã đo trước/sau (không tụt fps); tắt được trong menu Tạm Dừng | |
+| 1.2 Phản ứng sinh vật | Chưa làm (vật đã có hiệu ứng nảy chung khi tìm thấy) | Phản ứng riêng theo loài |
 | 2 Đồ nghề, di cư, biến thể hiếm | Chưa làm | |
 | 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm** | Nội dung mới có 3 chương Singapore (9 mảnh). Thái Lan, Việt Nam chưa có. Lời mở đầu chương cuối Singapore và Thái Lan vẫn hứa "bí mật cuối cùng": nên sửa thành "dẫn sang nước tiếp theo" |
 | 4.1 Trang của ngày | **Đã làm** | Chọn từ mọi trang ngày, kể cả trang chưa mở (theo đề xuất) |

@@ -40,6 +40,8 @@ function warmFrames(S: SceneData, camera: Camera): FrameState[] {
     lx: target ? target.x * s + tx : w / 2,
     ly: target ? target.y * s + ty : h / 2,
     found,
+    // Day pages: the wash with every patch being washed clear (its layer and soft holes)
+    reveal: S.night ? -1 : 0,
     radar: S.marks[0]?.id ?? null,
     fogStart: now - 500,
     nudge: target ? { x: target.x + 200, y: target.y, t: now - 400 } : null,

@@ -46,7 +46,14 @@ export function useGame({ browsing }: { browsing: boolean }) {
     progress.setSoundEnabled(!soundEnabled);
   }, [soundEnabled]);
 
-  return { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome };
+  // The watercolour wash over the pages (a setting, saved like the sound)
+  const [washEnabled, setWashEnabled] = useState(() => progress.washEnabled());
+  const toggleWash = useCallback(() => {
+    setWashEnabled(!washEnabled);
+    progress.setWashEnabled(!washEnabled);
+  }, [washEnabled]);
+
+  return { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome };
 }
 
 export type Game = ReturnType<typeof useGame>;

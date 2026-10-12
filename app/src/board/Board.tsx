@@ -51,6 +51,8 @@ export interface BoardProps {
   preload: Page[];
   /** False while a dialog covers the board */
   active?: boolean;
+  /** The watercolour wash over a page until its case is closed (render/types WASH_ALPHA) */
+  wash?: boolean;
   children?: React.ReactNode; // overlays (explore banner…)
 }
 
@@ -76,6 +78,7 @@ export const Board = React.memo<BoardProps>(function Board({
   onInspect,
   preload,
   active = true,
+  wash = true,
   children,
 }) {
   const win = useWindowDimensions();
@@ -101,8 +104,8 @@ export const Board = React.memo<BoardProps>(function Board({
   const density = size ? atlasDensity(fittedScale(size.w, size.h), PixelRatio.get()) : 1;
   const library = useSceneLibrary(page, loupePaints, compact, density);
   const camera = useCamera(size, library.shown, layoutKey(page), diameter, turning);
-  const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera);
-  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning, onTurnComplete);
+  const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera, wash);
+  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, marks.reveal, turning, onTurnComplete);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);
   const warmUp = useWarmUp(library.scene, !active, camera, library.retirePictures);
 
@@ -121,7 +124,7 @@ export const Board = React.memo<BoardProps>(function Board({
   const { shown } = library;
   const { flip, flipStart } = pageTurn;
   const { s, tx, ty, lx, ly, dims } = camera;
-  const { found, radar, fogStart, nudge } = marks;
+  const { found, radar, fogStart, reveal, nudge } = marks;
   // Keep one owner across mapper rebuilds so a retired output cannot be deleted twice.
   const frameBuffer = useMemo(() => ({ picture: null as SkPicture | null }), []);
   const picture = useDerivedValue<SkPicture>(() => {
@@ -138,6 +141,7 @@ export const Board = React.memo<BoardProps>(function Board({
       lx: lx.value,
       ly: ly.value,
       found: found.value,
+      reveal: reveal.value,
       radar: radar.value,
       fogStart: fogStart.value,
       nudge: nudge.value,

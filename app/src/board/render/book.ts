@@ -1,10 +1,13 @@
-import { ClipOp, FilterMode, MipmapMode, type SkCanvas } from '@shopify/react-native-skia';
-import { bloom, clamp01, EASE_IN_OUT, loop, track } from '../anim';
+import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas } from '@shopify/react-native-skia';
+import { bloom, clamp01, ease, EASE_IN_OUT, EASE_OUT, loop, track } from '../anim';
 import { drawSprite } from './sprites';
 import {
   CAMO_CHAMELEON,
   CAMO_INVISIBLE,
   FOUND_FADE_MS,
+  REVEAL_MS,
+  WASH_ALPHA,
+  WASH_FADE_MS,
   type FrameState,
   type Pose,
   type SceneData,
@@ -87,6 +90,47 @@ function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
 }
 
 /**
+ * The watercolour wash (see WASH_ALPHA): one layer over what is seen of the page, with a soft patch
+ * cleared around every find. Day pages only, never in the loupe.
+ */
+function drawWash(c: SkCanvas, S: SceneData, F: FrameState, view: View | null) {
+  'worklet';
+  if (S.night || F.reveal < 0) return;
+  const fade = F.reveal > 0 ? 1 - clamp01((F.now - F.reveal) / WASH_FADE_MS) : 1;
+  if (fade <= 0) return;
+  const P = S.paints;
+  const page = S.pageRect;
+  // Only what is on screen: the layer costs in proportion to its area
+  const x0 = view ? Math.max(page.x, view.x0) : page.x;
+  const y0 = view ? Math.max(page.y, view.y0) : page.y;
+  const x1 = view ? Math.min(page.x + page.width, view.x1) : page.x + page.width;
+  const y1 = view ? Math.min(page.y + page.height, view.y1) : page.y + page.height;
+  if (x1 <= x0 || y1 <= y0) return;
+  const bounds = Skia.XYWHRect(x0, y0, x1 - x0, y1 - y0);
+  c.saveLayer(undefined, bounds);
+  P.wash.setAlphaf(WASH_ALPHA * fade);
+  c.drawRect(bounds, P.wash);
+  for (let i = 0; i < S.marks.length; i++) {
+    const m = S.marks[i];
+    const f = F.found[m.id];
+    if (!f) continue;
+    const grow = ease(EASE_OUT, clamp01((F.now - f.t) / REVEAL_MS));
+    if (grow <= 0) continue;
+    for (let j = 0; j < m.reveal.length; j++) {
+      const b = m.reveal[j];
+      const r = b.r * grow;
+      if (!inView(view, f.x + b.dx, f.y + b.dy, r)) continue;
+      c.save();
+      c.translate(f.x + b.dx, f.y + b.dy);
+      c.scale(r, r);
+      c.drawCircle(0, 0, 1, P.washHole);
+      c.restore();
+    }
+  }
+  c.restore();
+}
+
+/**
  * The spread itself: artwork, camouflaged sprites, occluders, night, found sprites, glowing eyes.
  * `view`: the part of the spread that is seen (null: all of it).
  */
@@ -133,6 +177,9 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     drawImage(c, S, inLoupe);
     c.restore();
   }
+
+  // The loupe shows the true colours: the wash is for the page seen by eye (z 16.5)
+  if (!inLoupe) drawWash(c, S, F, view);
 
   if (!inLoupe) drawNight(c, S, F);
 

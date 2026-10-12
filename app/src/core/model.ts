@@ -409,4 +409,5 @@ export interface CoverSticker {
 /** The player's preferences, saved with the progress (the first web version already wrote them here). */
 export interface GameSettings {
   soundEnabled: boolean; // false: the player muted the game
+  wash?: boolean; // false: no watercolour wash over the pages (on unless turned off)
 }

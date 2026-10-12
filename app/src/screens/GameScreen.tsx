@@ -53,7 +53,7 @@ export const GameScreen: React.FC = () => {
   const [sheet, setSheet] = useState<Sheet>(null);
   const [deduction, setDeduction] = useState<{ chapter: Chapter; number: number } | null>(null);
   const browsing = showIndex || showAlbum || sheet !== null || deduction !== null;
-  const { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome } = useGame({ browsing });
+  const { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome } = useGame({ browsing });
   const { country, pages, ref, page, isNight, turn, mode, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
   const isTurning = turn !== null;
@@ -269,6 +269,7 @@ export const GameScreen: React.FC = () => {
           onInspect={inspect}
           preload={preload}
           active={boardActive}
+          wash={washEnabled}
         />
       </View>
 
@@ -346,9 +347,11 @@ export const GameScreen: React.FC = () => {
         <PauseMenu
           page={page}
           soundEnabled={soundEnabled}
+          washEnabled={washEnabled}
           onResume={togglePause}
           onRestart={nav.replay}
           onToggleSound={toggleSound}
+          onToggleWash={toggleWash}
           onExit={() => {
             // Back to the home screen; the clock stays stopped while it is open, and "Chơi tiếp"
             // carries on with this case where it was

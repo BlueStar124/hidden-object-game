@@ -232,6 +232,14 @@ export function createBoardPaints() {
       )
     ),
 
+    // The watercolour wash over a page whose case is open, and the soft patches finds wash clear
+    // (unit radius, punched out of the wash layer)
+    wash: paint((p) => p.setColor(color('rgb(240, 235, 224)'))),
+    washHole: paint((p) => {
+      p.setShader(radial(['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0.9)', 'rgba(0, 0, 0, 0)'], [0, 0.55, 1]));
+      p.setBlendMode(BlendMode.DstOut);
+    }),
+
     // Daily page: the spread outside the corner in play, washed over with paper, and the corner's edge
     focusVeil: paint((p) => p.setColor(color('rgba(236, 231, 220, 0.82)'))),
     focusEdge: paint((p) => {

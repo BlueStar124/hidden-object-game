@@ -71,7 +71,18 @@ export const SCREENS: Record<string, () => ReactElement> = {
   // A friend's challenge: the comparison line on top of everything else
   'victory-challenge': () => victory(withNight.day, found(withNight.day, { secret: true, critters: 1 }), withNight.night!.title, 25),
   timeup: () => <TimeUpScreen page={pages[4].day} foundIds={pages[4].day.objects.slice(0, 3).map((o) => o.id)} onReplay={nothing} onOpenIndex={nothing} />,
-  pause: () => <PauseMenu page={pages[1].day} soundEnabled onResume={nothing} onRestart={nothing} onToggleSound={nothing} onExit={nothing} />,
+  pause: () => (
+    <PauseMenu
+      page={pages[1].day}
+      soundEnabled
+      washEnabled
+      onResume={nothing}
+      onRestart={nothing}
+      onToggleSound={nothing}
+      onToggleWash={nothing}
+      onExit={nothing}
+    />
+  ),
   prologue: () => <StoryPrologue chapter={pages[0].chapter} chapterNumber={1} onStartGame={nothing} />,
   'night-intro': () => <StoryPrologue chapter={withNight.chapter} chapterNumber={withNight.chapterNumber} nightPage={withNight.night} onStartGame={nothing} />,
   rotate: () => <RotatePrompt onKeepPortrait={nothing} />,

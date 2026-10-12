@@ -148,6 +148,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
   được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
 - **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
 - **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian.
+- **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
+  án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
 - **Sao lưu tiến độ:** nút 💾 ở trang chủ lưu tiến độ ra một tệp; khôi phục (từ tệp hoặc dán nội dung) sẽ gộp với tiến
   độ đang có, không mất gì. Bản web xin trình duyệt giữ dữ liệu lâu dài.
 - **Thử thách bạn bè:** mỗi lần thắng có một mã như `SG3-7K2P-142` (trang, cách đặt vật, thời gian). Bạn bè nhập mã ở

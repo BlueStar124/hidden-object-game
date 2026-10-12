@@ -49,7 +49,9 @@ mỗi giây, mở hộp thoại.
 7. Trên web, `BlendMode.Multiply` có thể khiến CanvasKit sao chép cả vùng đích **cho mỗi sprite**. Ô trong sheet vì vậy
    được vẽ trên nền trắng rồi dùng **Modulate**; Multiply và `saveLayer` cho từng sprite chỉ dùng khi sprite phải vẽ
    từ hình. `saveLayer` rất đắt. Hiện nó chỉ có ở: bóng tối ban đêm (`book.ts`), kính mờ (`loupe.ts`), đốm sáng và
-   sprite vẽ từ hình (`sprites.ts`). Đừng thêm layer cho thứ vẽ mỗi khung nếu không bắt buộc.
+   sprite vẽ từ hình (`sprites.ts`), nước rửa của trang ngày (`book.ts` `drawWash`, giới hạn trong phần trang đang thấy; đo
+   10/2026: +~1 lệnh vẽ mỗi khung, fps và p95 không đổi, lật trang ×4 chậm không tệ hơn). Đừng thêm layer cho thứ vẽ mỗi
+   khung nếu không bắt buộc.
 8. **Hiệu ứng mới xuất hiện "lần đầu"** (dấu mới, radar kiểu mới, hiệu ứng lật…) sẽ làm GPU biên dịch shader và khựng
    một khung. Hãy thêm trạng thái đó vào `warmFrames()` trong `useWarmUp.ts`, để nó được vẽ ẩn trước khi người chơi
    gặp.
