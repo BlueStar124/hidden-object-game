@@ -68,6 +68,14 @@ describe.each(allPages().map((page): [string, Page] => [page.id, page]))('%s', (
       expect(o.waterline).toBeGreaterThan(0);
       expect(o.waterline).toBeLessThan(1);
     }
+    if (o.spots) {
+      expect(o.roam).toBeUndefined();
+      expect(o.shy).toBeUndefined();
+      for (const sp of o.spots) {
+        expect(inSpread([sp.x, sp.y])).toBe(true);
+        expect(sp.clue).toBeTruthy();
+      }
+    }
   });
 });
 

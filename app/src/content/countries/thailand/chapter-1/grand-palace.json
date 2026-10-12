@@ -17,7 +17,14 @@
       "spriteType": "peacock",
       "scale": 0.85,
       "camo": "chameleon",
-      "foundText": "Công lục từng sống khắp rừng Thái Lan, nay chỉ còn ở vài khu bảo tồn phía Tây và phía Bắc."
+      "foundText": "Công lục từng sống khắp rừng Thái Lan, nay chỉ còn ở vài khu bảo tồn phía Tây và phía Bắc.",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.53,
+          "clue": "Chú công lục đậu trên gờ mái chùa phía bên trái."
+        }
+      ]
     },
     {
       "id": "palace-naga",
@@ -30,7 +37,14 @@
       "spriteType": "naga-head",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Rắn thần Naga canh giữ lối vào chùa, nối cõi người với cõi thiêng."
+      "foundText": "Rắn thần Naga canh giữ lối vào chùa, nối cõi người với cõi thiêng.",
+      "spots": [
+        {
+          "x": 0.68,
+          "y": 0.62,
+          "clue": "Đầu rắn thần Naga canh giữ chân lan can bậc thềm bên phải."
+        }
+      ]
     },
     {
       "id": "urn-garland",
@@ -43,7 +57,14 @@
       "spriteType": "jasmine-garland",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Hoa nhài thơm ngát là lễ vật quen thuộc dâng tại các ngôi chùa Thái."
+      "foundText": "Hoa nhài thơm ngát là lễ vật quen thuộc dâng tại các ngôi chùa Thái.",
+      "spots": [
+        {
+          "x": 0.32,
+          "y": 0.68,
+          "clue": "Vòng hoa nhài trắng đặt bên bệ đá trước sân chùa bên trái."
+        }
+      ]
     },
     {
       "id": "frangipani-parakeet",
@@ -56,7 +77,14 @@
       "spriteType": "parakeet",
       "scale": 0.78,
       "camo": "chameleon",
-      "foundText": "Vẹt ngực đỏ hay kéo đàn về những khu vườn nhiều cây lớn giữa lòng Bangkok."
+      "foundText": "Vẹt ngực đỏ hay kéo đàn về những khu vườn nhiều cây lớn giữa lòng Bangkok.",
+      "spots": [
+        {
+          "x": 0.52,
+          "y": 0.48,
+          "clue": "Chú vẹt ngực đỏ chuyền cành cây hoa sứ phía sau tháp vàng."
+        }
+      ]
     },
     {
       "id": "palace-lotus",

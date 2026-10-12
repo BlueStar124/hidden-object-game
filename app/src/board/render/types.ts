@@ -1,5 +1,5 @@
 import type { Skia, SkImage, SkPaint, SkPath, SkPicture, SkRect, SkRRect } from '@shopify/react-native-skia';
-import type { RoamBehavior, ShyBehavior } from '../../core/model';
+import type { RoamBehavior, ShyBehavior, ToolId } from '../../core/model';
 import type { BoardPaints, LoupePaints } from '../scene/paints';
 import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import type { Part } from '../scene/spriteParts';
@@ -46,6 +46,9 @@ export interface SceneSprite {
   pageCell: AtlasCell | null; // hidden, on the page
   foundCell: AtlasCell | null; // found (only sprites that stay still once found)
   blinks: boolean; // its eyes close now and then (drawn from its shapes meanwhile)
+  reaction: 'hop' | 'flutter' | 'scurry' | 'splash' | 'spin' | null;
+  rare: boolean;
+  requires: ToolId | null;
 }
 
 export interface SceneMark {
@@ -111,6 +114,7 @@ export interface FrameState {
   flipStart: number; // when the leaf started to turn (0: not yet)
   warm: SkImage[]; // artwork of the pages likely to come next, kept on the GPU
   warmUp?: FrameState[] | null; // frames drawn all but invisibly, to set the GPU up for them
+  reveal?: boolean; // watercolor bloom effect active on day pages
 }
 
 /** A page turning over. Both pages are recorded flat, in page units, when the turn begins. */

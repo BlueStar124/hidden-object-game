@@ -44,7 +44,15 @@
       "scale": 0.55,
       "rotation": 20,
       "camo": "chameleon",
-      "foundText": "Ống nhòm hải trình giúp thám tử nhìn thấy toàn cảnh vịnh từ trên cao."
+      "foundText": "Ống nhòm hải trình giúp thám tử nhìn thấy toàn cảnh vịnh từ trên cao.",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.48,
+          "rotation": -15,
+          "clue": "Ống nhòm đồng gác trên lan can cầu nối về phía tán cây bên phải."
+        }
+      ]
     },
     {
       "id": "quill-ink",
@@ -57,7 +65,29 @@
       "spriteType": "quill",
       "scale": 0.7,
       "camo": "ink",
-      "foundText": "Dụng cụ vẽ ký họa màu nước nguyên bản của vị kiến trúc sư bí ẩn."
+      "foundText": "Dụng cụ vẽ ký họa màu nước nguyên bản của vị kiến trúc sư bí ẩn.",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.68,
+          "clue": "Lọ mực và bút lông ngỗng để quên trên gờ đá lối đi bên phải."
+        }
+      ]
+    },
+    {
+      "id": "bonus-uv-butterfly",
+      "name": "Bướm Dạ Quang Siêu Cây",
+      "clue": "Dưới ánh kính tia tím, một cánh bướm dạ quang hiện lên giữa các nhánh phong lan...",
+      "x": 0.51,
+      "y": 0.44,
+      "radius": 0.032,
+      "score": 150,
+      "isBonus": true,
+      "spriteType": "butterfly",
+      "scale": 0.6,
+      "camo": "invisible",
+      "requires": "uv-lens",
+      "foundText": "Loài bướm dạ quang chỉ hé lộ sắc màu kỳ ảo dưới ánh sáng tia cực tím!"
     },
     {
       "id": "vine-chameleon",

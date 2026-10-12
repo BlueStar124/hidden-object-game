@@ -14,6 +14,7 @@ import { Lora_400Regular_Italic } from '@expo-google-fonts/lora/400Regular_Itali
 import { Lora_600SemiBold_Italic } from '@expo-google-fonts/lora/600SemiBold_Italic';
 import { Lora_700Bold } from '@expo-google-fonts/lora/700Bold';
 import { GameScreen } from './src/screens/GameScreen';
+import { ErrorBoundary } from './src/screens/ErrorBoundary';
 import { colors } from './src/ui/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -21,7 +22,9 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function App() {
   return (
     <AppShell>
-      <GameScreen />
+      <ErrorBoundary>
+        <GameScreen />
+      </ErrorBoundary>
     </AppShell>
   );
 }

@@ -48,7 +48,14 @@
       "spriteType": "teacup",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Hương vị trà ô long hoa cúc thơm ngát của văn hóa ẩm thực Nyonya."
+      "foundText": "Hương vị trà ô long hoa cúc thơm ngát của văn hóa ẩm thực Nyonya.",
+      "spots": [
+        {
+          "x": 0.61,
+          "y": 0.525,
+          "clue": "Tách trà sứ hoa văn đặt trên lan can bậu cửa sổ của ngôi nhà bên cạnh."
+        }
+      ]
     },
     {
       "id": "nyonya-tiffin",
@@ -61,7 +68,14 @@
       "spriteType": "tiffin",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Tầng trên cùng còn nguyên món bánh kueh lapis nhiều lớp của bà nội Peranakan!"
+      "foundText": "Tầng trên cùng còn nguyên món bánh kueh lapis nhiều lớp của bà nội Peranakan!",
+      "spots": [
+        {
+          "x": 0.32,
+          "y": 0.685,
+          "clue": "Chiếc cà mèn tingkat nhiều tầng đặt cạnh bậc thềm cửa nhà màu vàng bên trái."
+        }
+      ]
     },
     {
       "id": "brass-compass",
@@ -74,7 +88,14 @@
       "spriteType": "compass",
       "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "La bàn định hướng xây dựng các dãy nhà shophouse đón gió mùa đông nam."
+      "foundText": "La bàn định hướng xây dựng các dãy nhà shophouse đón gió mùa đông nam.",
+      "spots": [
+        {
+          "x": 0.55,
+          "y": 0.34,
+          "clue": "Chiếc la bàn đồng nhỏ gài trên viền mái ngói dốc giữa hai ngôi nhà."
+        }
+      ]
     },
     {
       "id": "wall-gecko",
@@ -88,7 +109,15 @@
       "scale": 0.55,
       "rotation": 4,
       "camo": "chameleon",
-      "foundText": "Cicak — người bạn tặc lưỡi \"chắc chắc\" quen thuộc của mọi ngôi nhà Singapore!"
+      "foundText": "Cicak — người bạn tặc lưỡi \"chắc chắc\" quen thuộc của mọi ngôi nhà Singapore!",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.61,
+          "rotation": -10,
+          "clue": "Chú thạch sùng khoác màu xanh ngọc, bò trên cột trụ hiên nhà bên phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",

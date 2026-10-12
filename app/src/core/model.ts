@@ -234,6 +234,18 @@ export interface RoamBehavior {
   bob?: boolean; // Gentle up-and-down flutter while moving (flying creatures)
 }
 
+export type ToolId = 'uv-lens' | 'prism' | 'brass-loupe';
+
+export interface ObjectSpot {
+  x: number;
+  y: number;
+  radius?: number; // defaults to the object's radius
+  rotation?: number;
+  scale?: number;
+  occluder?: [number, number][];
+  clue: string; // the clue describes WHERE the object is, so each spot needs its own
+}
+
 export interface HiddenObject {
   id: string;
   name: string;
@@ -260,6 +272,12 @@ export interface HiddenObject {
   waterline?: number;
   // Night pages: eyes (and firefly lights) glow in the dark unless this is false
   glow?: boolean;
+  /** Alternative hiding spots when replaying the page or in special modes */
+  spots?: ObjectSpot[];
+  /** Only accessible if the player owns this tool (must be isBonus or isSecret) */
+  requires?: ToolId;
+  /** Rare shiny variant of a bonus critter */
+  rare?: boolean;
 }
 
 /** Objects that must be found to close the case: not the secret, not the optional critters. */
@@ -292,6 +310,8 @@ export interface Page {
   // Night variant of a page: dark overlay, the loupe becomes a flashlight
   isNight?: boolean;
   nightLights?: NightLight[];
+  // Unique cache key when the page is resolved with alternative spots or seeds
+  variantKey?: string;
 }
 
 /** A page in the book: the day spread, and its night variant when it has one. */
@@ -405,4 +425,14 @@ export interface GameProgress {
   discovered: Record<string, string[]>;
   // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
   lastPageId?: string;
+  // Solved mystery IDs per chapter
+  solvedMysteries?: string[];
+  // Sprite types of rare shiny variants ever found
+  rareFound?: string[];
+  // Daily stamps: keyed by localDay (YYYY-MM-DD)
+  stamps?: Record<string, { pageId: string; time: number }>;
+  // Placed stickers on the player's inner cover
+  cover?: { s: string; x: number; y: number; r: number; k: number }[];
+  // Number of times each page has been played (used as seed for replays)
+  playCount?: Record<string, number>;
 }

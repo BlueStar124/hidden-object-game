@@ -1,9 +1,12 @@
 import type { SpriteType } from '../core/model';
 
+export type ReactionType = 'hop' | 'flutter' | 'scurry' | 'splash' | 'spin';
+
 export interface BestiaryEntry {
   name: string;
   kind: 'creature' | 'object';
   fact: string;
+  reaction?: ReactionType;
 }
 
 /** Field-guide entries for the "Sổ Tay Sinh Vật" album — one per sprite type. */
@@ -202,4 +205,12 @@ export const BESTIARY: Record<Exclude<SpriteType, 'seal'>, BestiaryEntry> = {
 
 export function isCreature(type?: SpriteType): boolean {
   return !!type && type !== 'seal' && BESTIARY[type].kind === 'creature';
+}
+
+export function reactionOf(type?: SpriteType): ReactionType | null {
+  if (!type || type === 'seal') return null;
+  const entry = BESTIARY[type as Exclude<SpriteType, 'seal'>];
+  if (entry?.reaction) return entry.reaction;
+  if (entry?.kind === 'creature') return 'hop';
+  return null;
 }

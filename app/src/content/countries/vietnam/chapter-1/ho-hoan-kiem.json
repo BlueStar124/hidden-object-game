@@ -17,7 +17,14 @@
       "spriteType": "hoan-kiem-sword",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!"
+      "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!",
+      "spots": [
+        {
+          "x": 0.78,
+          "y": 0.55,
+          "clue": "Thanh kiếm thần tỏa ánh hào quang linh thiêng nép cạnh gốc liễu ven hồ bên phải."
+        }
+      ]
     },
     {
       "id": "golden-turtle",
@@ -49,7 +56,14 @@
       "spriteType": "cyclo",
       "scale": 0.52,
       "camo": "ink",
-      "foundText": "Bác tài xích lô đã cất giữ một phong thư niêm sáp của kiến trúc sư."
+      "foundText": "Bác tài xích lô đã cất giữ một phong thư niêm sáp của kiến trúc sư.",
+      "spots": [
+        {
+          "x": 0.35,
+          "y": 0.52,
+          "clue": "Chiếc xích lô thong dong đón khách trên lối dạo ven hồ."
+        }
+      ]
     },
     {
       "id": "calligraphy-quill",
@@ -62,7 +76,14 @@
       "spriteType": "crane-statue",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Hương vị phở Thăng Long ngạt ngào quế hồi thảo quả làm ấm lòng người lữ khách."
+      "foundText": "Hương vị phở Thăng Long ngạt ngào quế hồi thảo quả làm ấm lòng người lữ khách.",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.65,
+          "clue": "Hình tượng hạc thanh cao chầu trên lưng rùa nơi bờ hồ hướng về Tháp Rùa."
+        }
+      ]
     },
     {
       "id": "peace-dove",
@@ -75,7 +96,14 @@
       "spriteType": "nghe",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Chú Tễu tươi cười rạng rỡ, nhân vật dẫn chuyện hóm hỉnh của nghệ thuật múa rối nước dân gian."
+      "foundText": "Chú Tễu tươi cười rạng rỡ, nhân vật dẫn chuyện hóm hỉnh của nghệ thuật múa rối nước dân gian.",
+      "spots": [
+        {
+          "x": 0.42,
+          "y": 0.45,
+          "clue": "Linh thú nghê đá uy nghi gác bên đầu cầu Thê Húc."
+        }
+      ]
     },
     {
       "id": "artist-seal",

@@ -17,6 +17,14 @@
       "spriteType": "cat",
       "scale": 0.8,
       "camo": "ink",
+      "spots": [
+        {
+          "x": 0.45,
+          "y": 0.63,
+          "radius": 0.04,
+          "clue": "Một chú mèo tam thể đang nằm cuộn tròn sưởi nắng trên bậc thềm ven hồ trung tâm."
+        }
+      ],
       "foundText": "Chú mèo tam thể vẫy đuôi làm quen, mang theo mảnh giấy cuộn tròn dưới vòng cổ!"
     },
     {
@@ -58,7 +66,30 @@
       "spriteType": "vintage-camera",
       "scale": 0.5,
       "camo": "chameleon",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.65,
+          "radius": 0.032,
+          "clue": "Chiếc máy ảnh cổ của du khách bỏ quên trên ghế đá phía bên phải bờ vịnh."
+        }
+      ],
       "foundText": "Tấm ảnh cuối cùng trong máy chụp hoàng hôn trên vịnh — và một bóng người đội mũ thám tử!"
+    },
+    {
+      "id": "uv-secret-sigil",
+      "name": "Ký Hiệu Huỳnh Quang",
+      "clue": "[BÍ MẬT] Ký hiệu cổ bằng mực huỳnh quang chỉ hiện lên dưới ánh kính tia tím.",
+      "x": 0.52,
+      "y": 0.61,
+      "radius": 0.035,
+      "score": 150,
+      "spriteType": "seal",
+      "scale": 0.6,
+      "camo": "invisible",
+      "requires": "uv-lens",
+      "isBonus": true,
+      "foundText": "Dấu triện huỳnh quang của kiến trúc sư phát sáng rực rỡ dưới tia cực tím!"
     },
     {
       "id": "shy-otter",

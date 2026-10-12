@@ -99,7 +99,14 @@
       "scale": 0.85,
       "camo": "chameleon",
       "waterline": 0.62,
-      "foundText": "Mắt cá sấu phản chiếu ánh đèn pin đỏ rực — mẹo của người đi tìm cá sấu ban đêm!"
+      "foundText": "Mắt cá sấu phản chiếu ánh đèn pin đỏ rực — mẹo của người đi tìm cá sấu ban đêm!",
+      "spots": [
+        {
+          "x": 0.45,
+          "y": 0.68,
+          "clue": "Đôi mắt cá sấu lấp lánh sát chân bờ kè cạnh mạn phà ở giữa dòng sông."
+        }
+      ]
     },
     {
       "id": "night-krathong",
@@ -139,7 +146,14 @@
       "spriteType": "siamese-cat",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Người Thái xưa tin mèo Xiêm mang lại may mắn cho ngôi nhà nuôi nó."
+      "foundText": "Người Thái xưa tin mèo Xiêm mang lại may mắn cho ngôi nhà nuôi nó.",
+      "spots": [
+        {
+          "x": 0.35,
+          "y": 0.62,
+          "clue": "Chú mèo Xiêm nằm rình chuột trên nóc mái đình bến tàu."
+        }
+      ]
     },
     {
       "id": "night-clay-lamp",
@@ -152,7 +166,14 @@
       "spriteType": "clay-lamp",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Ngọn đèn nhỏ soi lối cho người lái đò cập bến trong đêm."
+      "foundText": "Ngọn đèn nhỏ soi lối cho người lái đò cập bến trong đêm.",
+      "spots": [
+        {
+          "x": 0.72,
+          "y": 0.63,
+          "clue": "Ngọn đèn dầu đất nung leo lét trên gờ đá bờ kè bên phải."
+        }
+      ]
     },
     {
       "id": "night-lantern-bug",
@@ -165,7 +186,14 @@
       "spriteType": "lantern-bug",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Dù mang tên \"bọ đèn\", cái mõm đỏ của nó chẳng hề phát sáng!"
+      "foundText": "Dù mang tên \"bọ đèn\", cái mõm đỏ của nó chẳng hề phát sáng!",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.55,
+          "clue": "Chú bọ đèn mõm đỏ đậu trên thân cây râm mát phía bến đò bên trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

@@ -26,10 +26,11 @@ const retiredArt = new Set<LoadedScene>();
 // What a painting tells about a page (chameleon tints, where the paper is): read once per page
 const analyses = new Map<string, SceneAnalysis>();
 function analysisOf(page: Page, art: LoadedScene): SceneAnalysis {
-  let analysis = analyses.get(page.id);
+  const key = page.variantKey ?? page.id;
+  let analysis = analyses.get(key);
   if (!analysis) {
     analysis = analyzeScene(art.readPixels(SAMPLE_WIDTH), page.objects);
-    analyses.set(page.id, analysis);
+    analyses.set(key, analysis);
   }
   return analysis;
 }
@@ -77,13 +78,14 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   }, [scenes, retiredScenes]);
   const prepare = useCallback(
     (p: Page): SceneData | null => {
-      const cached = scenes.get(p.id);
+      const key = p.variantKey ?? p.id;
+      const cached = scenes.get(key);
       if (cached) return cached;
       const art = images.get(artIdOf(p));
       if (!art) return null;
       const { tints, book } = analysisOf(p, art);
       const prepared = buildScene({ page: p, image: art.image, tints, book, loupe, compact, density, pixelRatio: PixelRatio.get() });
-      scenes.set(p.id, prepared);
+      scenes.set(key, prepared);
       return prepared;
     },
     [scenes, loupe, compact, density]
