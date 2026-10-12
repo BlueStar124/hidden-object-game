@@ -18,6 +18,10 @@ export const SCHEMA_VERSION = 2;
 type Fields = Record<string, unknown>;
 
 const isRecord = (v: unknown): v is Fields => typeof v === 'object' && v !== null && !Array.isArray(v);
+// Keys a save written by hand (or an imported file) could use to reach Object.prototype
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+/** The entries of a record, without the keys that would tamper with prototypes. */
+const entries = (v: Fields) => Object.entries(v).filter(([key]) => !UNSAFE_KEYS.has(key));
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : []);
 const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, v) : 0);
 const between = (v: unknown, min: number, max: number, fallback: number): number =>
@@ -31,7 +35,7 @@ export const MAX_STICKERS = 60;
 function readStamps(v: unknown): Record<string, DailyStamp> | undefined {
   if (!isRecord(v)) return undefined;
   const stamps: Record<string, DailyStamp> = {};
-  for (const [day, s] of Object.entries(v)) {
+  for (const [day, s] of entries(v)) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !isRecord(s) || typeof s.pageId !== 'string') continue;
     stamps[day] = { pageId: s.pageId, countryId: typeof s.countryId === 'string' ? s.countryId : '', time: count(s.time) };
   }
@@ -61,7 +65,7 @@ export function readProgress(raw: unknown): GameProgress {
 
   const sceneResults: Record<string, PageResult> = {};
   if (isRecord(data.sceneResults)) {
-    for (const [pageId, r] of Object.entries(data.sceneResults)) {
+    for (const [pageId, r] of entries(data.sceneResults)) {
       if (!isRecord(r)) continue;
       sceneResults[pageId] = {
         ...r,
@@ -77,7 +81,7 @@ export function readProgress(raw: unknown): GameProgress {
 
   const discovered: Record<string, string[]> = {};
   if (isRecord(data.discovered)) {
-    for (const [pageId, seen] of Object.entries(data.discovered)) discovered[pageId] = strings(seen);
+    for (const [pageId, seen] of entries(data.discovered)) discovered[pageId] = strings(seen);
   }
   // (Damaged values are dropped rather than kept as unknown fields)
   const solvedMysteries = Array.isArray(data.solvedMysteries) ? strings(data.solvedMysteries) : undefined;
@@ -102,6 +106,81 @@ export function readProgress(raw: unknown): GameProgress {
     stamps,
     cover,
   };
+}
+
+/* ---- Two saves into one (a backup brought back) ---- */
+
+const union = (a: string[] = [], b: string[] = []) => Array.from(new Set([...a, ...b]));
+
+function mergeResult(a: PageResult | undefined, b: PageResult | undefined): PageResult {
+  if (!a || !b) return (a ?? b)!;
+  const times = [a.bestTime, b.bestTime].filter((t) => t > 0);
+  return {
+    ...b,
+    ...a,
+    stars: Math.max(a.stars, b.stars),
+    highScore: Math.max(a.highScore, b.highScore),
+    bestTime: times.length ? Math.min(...times) : 0,
+    completedAt: a.completedAt > b.completedAt ? a.completedAt : b.completedAt,
+    creaturesFound: union(a.creaturesFound, b.creaturesFound),
+  };
+}
+
+/**
+ * Two saves as one, losing nothing of either: every page keeps its best stars, score and time,
+ * every find and stamp is kept. Where only one can win (the cover, settings, the page the player is
+ * in), `current` does — unless it has none. Both are read with readProgress first.
+ */
+export function mergeProgress(current: GameProgress, other: GameProgress): GameProgress {
+  const sceneResults: Record<string, PageResult> = {};
+  for (const id of union(Object.keys(current.sceneResults), Object.keys(other.sceneResults))) {
+    sceneResults[id] = mergeResult(current.sceneResults[id], other.sceneResults[id]);
+  }
+  const discovered: Record<string, string[]> = {};
+  for (const id of union(Object.keys(current.discovered), Object.keys(other.discovered))) {
+    discovered[id] = union(current.discovered[id], other.discovered[id]);
+  }
+  const stamps: Record<string, DailyStamp> = { ...other.stamps };
+  for (const [day, stamp] of Object.entries(current.stamps ?? {})) {
+    if (!stamps[day] || stamp.time <= stamps[day].time) stamps[day] = stamp;
+  }
+  const solved = union(current.solvedMysteries, other.solvedMysteries);
+  return {
+    ...other,
+    ...current,
+    schemaVersion: SCHEMA_VERSION,
+    unlockedScenes: union(current.unlockedScenes, other.unlockedScenes),
+    sceneResults,
+    totalScore: Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0),
+    discovered,
+    lastPageId: current.lastPageId ?? other.lastPageId,
+    settings: current.settings ?? other.settings,
+    solvedMysteries: solved.length ? solved : undefined,
+    stamps: Object.keys(stamps).length ? stamps : undefined,
+    cover: current.cover?.length ? current.cover : other.cover,
+  };
+}
+
+/** What a backup file holds: the save, marked as this game's. */
+const BACKUP_GAME = 'the-lost-sketchbook';
+
+/** Whether something read from a backup looks like a save at all (not just any JSON). */
+const looksLikeSave = (v: unknown): v is Fields =>
+  isRecord(v) && (isRecord(v.sceneResults) || isRecord(v.discovered) || Array.isArray(v.unlockedScenes));
+
+/**
+ * The save of a backup (a file written by `progress.backup()`, or a save pasted as it is stored),
+ * or null if the text is not one.
+ */
+export function readBackup(text: string): GameProgress | null {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  const save = isRecord(data) && data.game === BACKUP_GAME ? data.save : data;
+  return looksLikeSave(save) ? readProgress(save) : null;
 }
 
 /**
@@ -138,6 +217,21 @@ function save(progress: GameProgress): void {
 }
 
 export const progress = {
+  /* ---- Backups ---- */
+
+  /** The whole save as the text of a backup file. */
+  backup(): string {
+    return JSON.stringify({ game: BACKUP_GAME, savedAt: new Date().toISOString(), save: load() });
+  },
+
+  /** Brings a backup back, merged into this device's save (nothing is lost); false if it is not one. */
+  restore(text: string): boolean {
+    const other = readBackup(text);
+    if (!other) return false;
+    save(mergeProgress(load(), other));
+    return true;
+  },
+
   /** A case closed: keeps the best stars, score and time, and unlocks the next page. */
   recordVictory(
     pageId: string,

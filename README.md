@@ -148,6 +148,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
   được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
 - **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
 - **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian.
+- **Sao lưu tiến độ:** nút 💾 ở trang chủ lưu tiến độ ra một tệp; khôi phục (từ tệp hoặc dán nội dung) sẽ gộp với tiến
+  độ đang có, không mất gì. Bản web xin trình duyệt giữ dữ liệu lâu dài.
 - **Thử thách bạn bè:** mỗi lần thắng có một mã như `SG3-7K2P-142` (trang, cách đặt vật, thời gian). Bạn bè nhập mã ở
   trang chủ (hoặc mở link `…/?c=SG3-7K2P-142` trên web) để chơi đúng ván đó và so thời gian.
 
@@ -236,6 +238,10 @@ File [`vercel.json`](vercel.json) ở thư mục gốc cho Vercel deploy **bản
 2. Mỗi nhánh được push lên có một bản **Preview** riêng để thử; push/merge vào `main` thì thay bản chính thức trên tên miền của project (xem ở mục *Domains* trên dashboard).
 3. Cùng tên miền nên người chơi **giữ nguyên tiến độ** (app đọc đúng khóa lưu của bản Vite).
 4. Cần quay về bản trước thì dùng **Instant Rollback** trên dashboard. (Bản Vite cũ nằm trong `archive/web-vite.zip`; muốn deploy lại nó phải giải nén và khôi phục `package.json` như hướng dẫn trong zip.)
+
+`vercel.json` cũng đặt header bảo mật cho bản web: Content-Security-Policy (chỉ tải mã từ chính trang, cho phép
+WebAssembly của CanvasKit), chặn nhúng vào iframe của trang khác, `nosniff`. Thêm tài nguyên từ tên miền khác (font,
+ảnh, API) thì phải mở thêm trong CSP, nếu không trình duyệt sẽ chặn.
 
 Bản app (iOS/Android) gửi link thử thách khi biết địa chỉ bản web: đặt biến môi trường `EXPO_PUBLIC_WEB_URL` (ví dụ
 `https://ten-du-an.vercel.app`) lúc build. Bản web tự dùng địa chỉ của chính nó.

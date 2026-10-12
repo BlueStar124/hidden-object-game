@@ -18,6 +18,7 @@ import {
   Moon,
   PawPrint,
   Play,
+  Save,
   Stamp,
   Star,
   Sticker,
@@ -50,6 +51,7 @@ interface HomeScreenProps {
   onOpenPassport: () => void;
   onOpenCover: () => void;
   onEnterChallenge: () => void;
+  onOpenBackup: () => void;
 }
 
 /**
@@ -73,6 +75,7 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     onOpenPassport,
     onOpenCover,
     onEnterChallenge,
+    onOpenBackup,
   }) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
@@ -120,6 +123,14 @@ export const HomeScreen = React.memo<HomeScreenProps>(
         <View style={[styles.row, tight && styles.rowTight]}>
           <SecondaryButton label="Mục Lục" icon={<BookOpen size={17} color={colors.ink} />} onPress={onOpenIndex} />
           <SecondaryButton label="Sổ Tay" icon={<BookHeart size={17} color={colors.emerald} />} onPress={onOpenAlbum} />
+          <Pressable
+            onPress={onOpenBackup}
+            accessibilityRole="button"
+            accessibilityLabel="Sao lưu tiến độ"
+            style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
+          >
+            <Save size={18} color={colors.emerald} />
+          </Pressable>
           <Pressable
             onPress={onToggleSound}
             accessibilityRole="button"

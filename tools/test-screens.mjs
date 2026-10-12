@@ -59,8 +59,9 @@ const DIALOGS = [
   'cover',
   'challenge',
   'daily-done',
+  'backup',
 ];
-const SCROLLING = new Set(['index', 'album', 'deduction', 'passport']);
+const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup']);
 
 // A dialog may shrink to fit, down to this: below it, its smallest text gets hard to read
 const MIN_SCALE = 0.75;

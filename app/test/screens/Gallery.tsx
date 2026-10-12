@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { AppShell } from '../../App';
 import { allPages, FIRST_COUNTRY, pagesOf } from '../../src/content';
 import { isMainObject, type Page } from '../../src/core/model';
+import { Backup } from '../../src/screens/dialogs/Backup';
 import { ChallengeEntry } from '../../src/screens/dialogs/ChallengeEntry';
 import { CreatureAlbum } from '../../src/screens/dialogs/CreatureAlbum';
 import { DailyDone } from '../../src/screens/dialogs/DailyDone';
@@ -80,6 +81,7 @@ export const SCREENS: Record<string, () => ReactElement> = {
   passport: () => <Passport today="2026-10-12" canPlayToday onPlayDaily={nothing} onClose={nothing} />,
   cover: () => <MyCover onClose={nothing} />,
   challenge: () => <ChallengeEntry onPlay={() => true} onClose={nothing} />,
+  backup: () => <Backup onRestored={nothing} onClose={nothing} />,
   'daily-done': () => (
     <DailyDone
       pageTitle={pages[0].day.title}

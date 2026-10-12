@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { MAX_STAMPS, MAX_STICKERS, readProgress, SCHEMA_VERSION } from '../src/core/progress';
+import { MAX_STAMPS, MAX_STICKERS, mergeProgress, readBackup, readProgress, SCHEMA_VERSION } from '../src/core/progress';
 
 const KEY = 'detective_sketchbook_progress_v1';
 
@@ -232,6 +232,79 @@ describe('the inside cover', () => {
     expect(read.cover).toEqual([{ type: 'cat', x: 1, y: 0.5, rotation: 10, scale: 3 }]);
     progress.saveCover(Array.from({ length: MAX_STICKERS + 10 }, () => ({ type: 'owl' as const, x: 0.5, y: 0.5, rotation: 0, scale: 1 })));
     expect(progress.cover()).toHaveLength(MAX_STICKERS);
+  });
+});
+
+describe('backups', () => {
+  const result = (stars: number, highScore: number, bestTime: number, completedAt = '2026-10-01T00:00:00.000Z') => ({
+    sceneId: '',
+    stars,
+    highScore,
+    bestTime,
+    completedAt,
+    creaturesFound: [] as string[],
+  });
+
+  test('two saves merge without losing anything of either', () => {
+    const phone = readProgress({
+      sceneResults: { a: result(3, 900, 80), b: result(1, 300, 200) },
+      discovered: { a: ['cat'], b: ['dog'] },
+      stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 70 } },
+      solvedMysteries: ['chapter-01'],
+      lastPageId: 'b',
+      settings: { soundEnabled: false },
+    });
+    const web = readProgress({
+      sceneResults: { a: result(2, 1200, 60, '2026-10-05T00:00:00.000Z'), c: result(2, 500, 120) },
+      discovered: { a: ['owl'], c: ['frog'] },
+      stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 50 }, '2026-10-12': { pageId: 'c', countryId: 'thailand', time: 90 } },
+      solvedMysteries: ['chapter-02'],
+      cover: [{ type: 'cat', x: 0.5, y: 0.5, rotation: 0, scale: 1 }],
+      lastPageId: 'c',
+    });
+    const merged = mergeProgress(phone, web);
+    expect(merged.sceneResults.a).toMatchObject({ stars: 3, highScore: 1200, bestTime: 60, completedAt: '2026-10-05T00:00:00.000Z' });
+    expect(Object.keys(merged.sceneResults).sort()).toEqual(['a', 'b', 'c']);
+    expect(merged.totalScore).toBe(1200 + 300 + 500);
+    expect(merged.discovered.a.sort()).toEqual(['cat', 'owl']);
+    expect(merged.stamps?.['2026-10-11'].time).toBe(50);
+    expect(Object.keys(merged.stamps ?? {})).toHaveLength(2);
+    expect(merged.solvedMysteries?.sort()).toEqual(['chapter-01', 'chapter-02']);
+    // Only one can win: this device, unless it has nothing
+    expect(merged.lastPageId).toBe('b');
+    expect(merged.settings).toEqual({ soundEnabled: false });
+    expect(merged.cover).toHaveLength(1);
+  });
+
+  test('a backup brought back on another device merges into its save', () => {
+    progress.recordVictory('merlion-park', null, 800, 2, 100);
+    const file = progress.backup();
+    expect(JSON.parse(file)).toMatchObject({ game: 'the-lost-sketchbook', save: { sceneResults: { 'merlion-park': { stars: 2 } } } });
+
+    storage.clear();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    progress.recordVictory('gardens-by-the-bay', null, 500, 1, 150);
+    expect(progress.restore(file)).toBe(true);
+    expect(progress.pageResult('merlion-park')?.stars).toBe(2);
+    expect(progress.pageResult('gardens-by-the-bay')?.stars).toBe(1);
+    expect(saved().totalScore).toBe(1300);
+  });
+
+  test('a save pasted as it is stored works too; anything else is refused and changes nothing', () => {
+    expect(readBackup(JSON.stringify(firstVersionSave))?.sceneResults['merlion-park'].highScore).toBe(800);
+    for (const text of ['', 'xin chào', '{}', '[1, 2]', JSON.stringify({ game: 'the-lost-sketchbook', save: 'bad' })]) {
+      expect(readBackup(text)).toBeNull();
+      expect(progress.restore(text)).toBe(false);
+    }
+    expect(storage.peek(KEY)).toBeNull();
+  });
+
+  test('keys that would reach the prototype are ignored', () => {
+    const read = readProgress(JSON.parse('{"sceneResults": {"__proto__": {"stars": 3}, "a": {"stars": 1}}, "discovered": {"constructor": ["x"]}}'));
+    expect(Object.keys(read.sceneResults)).toEqual(['a']);
+    expect(Object.getPrototypeOf(read.sceneResults)).toBe(Object.prototype);
+    expect(read.discovered).toEqual({});
   });
 });
 

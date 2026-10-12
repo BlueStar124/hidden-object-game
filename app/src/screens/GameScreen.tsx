@@ -18,6 +18,7 @@ import { sound } from '../platform/sound';
 import { useStableCallback } from '../ui/useStableCallback';
 import { colors } from '../ui/theme';
 import { Desk } from './Desk';
+import { Backup } from './dialogs/Backup';
 import { ChallengeEntry } from './dialogs/ChallengeEntry';
 import { CreatureAlbum } from './dialogs/CreatureAlbum';
 import { DailyDone } from './dialogs/DailyDone';
@@ -39,7 +40,7 @@ import { useShare } from './share/useShare';
 import { useDeviceBehaviour } from './useDeviceBehaviour';
 
 /** A sheet over the game from the home screen (the index and the album have their own flags). */
-type Sheet = 'passport' | 'cover' | 'challenge' | null;
+type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
 
 /**
  * The one screen of the game: the desk with the sketchbook (Board), the HUD above it, the clue
@@ -171,6 +172,10 @@ export const GameScreen: React.FC = () => {
   const openPassport = useCallback(() => setSheet('passport'), []);
   const openCover = useCallback(() => setSheet('cover'), []);
   const enterChallenge = useCallback(() => setSheet('challenge'), []);
+  const openBackup = useCallback(() => setSheet('backup'), []);
+  // A backup brought back: the home screen reads the progress again (it reads it once when it opens)
+  const [homeKey, setHomeKey] = useState(0);
+  const restored = useCallback(() => setHomeKey((k) => k + 1), []);
   const closeSheet = useCallback(() => setSheet(null), []);
   const openDeduction = useCallback((chapter: Chapter, number: number) => setDeduction({ chapter, number }), []);
 
@@ -281,6 +286,7 @@ export const GameScreen: React.FC = () => {
 
       {home && (
         <HomeScreen
+          key={homeKey}
           current={ref}
           isNight={isNight}
           returning={progress.lastPage() !== undefined}
@@ -295,6 +301,7 @@ export const GameScreen: React.FC = () => {
           onOpenPassport={openPassport}
           onOpenCover={openCover}
           onEnterChallenge={enterChallenge}
+          onOpenBackup={openBackup}
         />
       )}
 
@@ -318,6 +325,8 @@ export const GameScreen: React.FC = () => {
       {sheet === 'cover' && <MyCover onClose={closeSheet} />}
 
       {sheet === 'challenge' && <ChallengeEntry onPlay={playChallenge} onClose={closeSheet} />}
+
+      {sheet === 'backup' && <Backup onRestored={restored} onClose={closeSheet} />}
 
       {/* The case file and the night intro wait for the player to leave the home screen */}
       {!home && showPrologue && (
