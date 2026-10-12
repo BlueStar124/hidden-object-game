@@ -155,6 +155,29 @@ describe('the album', () => {
   });
 });
 
+describe('the sound switch', () => {
+  test('sound is on for a new player', () => {
+    expect(progress.soundEnabled()).toBe(true);
+    expect(readProgress({ settings: 'bad' }).settings).toBeUndefined();
+  });
+
+  test('a first-version player who muted the game stays muted', () => {
+    storage.setItem(KEY, JSON.stringify(firstVersionSave));
+    expect(progress.soundEnabled()).toBe(false);
+  });
+
+  test('the switch is saved, keeping the other settings', () => {
+    storage.setItem(KEY, JSON.stringify({ ...firstVersionSave, settings: { soundEnabled: false, music: 0.5 } }));
+    progress.setSoundEnabled(true);
+    expect(saved().settings).toEqual({ soundEnabled: true, music: 0.5 });
+    expect(progress.soundEnabled()).toBe(true);
+  });
+
+  test('a damaged switch counts as on', () => {
+    expect(readProgress({ settings: { soundEnabled: 'no' } }).settings).toEqual({ soundEnabled: true });
+  });
+});
+
 describe('where the player left off', () => {
   test('a new player has no page to go back to', () => {
     expect(progress.lastPage()).toBeUndefined();
