@@ -16,7 +16,6 @@ import { Lora_700Bold } from '@expo-google-fonts/lora/700Bold';
 import { installCrashLog } from './src/platform/crashLog';
 import { ErrorBoundary } from './src/screens/ErrorBoundary';
 import { GameScreen } from './src/screens/GameScreen';
-import { ErrorBoundary } from './src/screens/ErrorBoundary';
 import { colors } from './src/ui/theme';
 
 installCrashLog();
