@@ -8,6 +8,7 @@ import { ChallengeEntry } from '../../src/screens/dialogs/ChallengeEntry';
 import { CreatureAlbum } from '../../src/screens/dialogs/CreatureAlbum';
 import { DailyDone } from '../../src/screens/dialogs/DailyDone';
 import { Deduction } from '../../src/screens/dialogs/Deduction';
+import { Finale } from '../../src/screens/dialogs/Finale';
 import { MyCover } from '../../src/screens/dialogs/MyCover';
 import { PageIndex } from '../../src/screens/dialogs/PageIndex';
 import { Passport } from '../../src/screens/dialogs/Passport';
@@ -88,7 +89,8 @@ export const SCREENS: Record<string, () => ReactElement> = {
   rotate: () => <RotatePrompt onKeepPortrait={nothing} />,
   index: () => <PageIndex country={FIRST_COUNTRY} current={pages[0]} isNight={false} onSelect={nothing} onOpenDeduction={nothing} onClose={nothing} />,
   album: () => <CreatureAlbum pages={allPages()} onClose={nothing} />,
-  deduction: () => <Deduction chapter={mysteryChapter} chapterNumber={1} onClose={nothing} />,
+  deduction: () => <Deduction chapter={mysteryChapter} chapterNumber={1} onFinale={nothing} onClose={nothing} />,
+  finale: () => <Finale share={share} onClose={nothing} />,
   passport: () => <Passport today="2026-10-12" canPlayToday onPlayDaily={nothing} onClose={nothing} />,
   cover: () => <MyCover onClose={nothing} />,
   challenge: () => <ChallengeEntry onPlay={() => true} onClose={nothing} />,

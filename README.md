@@ -153,6 +153,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
   tên); Phú Quốc là trang theo dấu (ống nhòm → thuyền câu mực → rùa biển, đúng thứ tự).
 - **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
   án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
+- **Hồi kết:** giải bí ẩn cuối cùng ở Mũi Cà Mau thì nhận Chứng Nhận Người Giữ Sổ Thứ Tư, kèm thống kê cả hành trình
+  và bưu thiếp chứng nhận để gửi bạn bè.
 - **Kính Tia Tím:** giải bí ẩn cuối của Singapore thì nhận kính; soi lại các trang Singapore sẽ thấy 9 lời nhắn mực
   tàng hình, ghép lại thành bức thư của vị kiến trúc sư gửi người giữ sổ tiếp theo.
 - **Sinh vật ánh vàng:** thỉnh thoảng một sinh vật phụ trên trang là bản ánh vàng hiếm (thẻ của nó sáng lên, trên

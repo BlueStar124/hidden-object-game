@@ -11,7 +11,7 @@ import type { Chapter, Page } from '../core/model';
 import { progress } from '../core/progress';
 import { localDay } from '../core/random';
 import { completionBonus } from '../core/scoring';
-import { allPages } from '../content';
+import { allChapters, allPages } from '../content';
 import { useGame } from '../game/useGame';
 import { takeLaunchCode } from '../platform/launchLink';
 import { sound } from '../platform/sound';
@@ -23,6 +23,7 @@ import { ChallengeEntry } from './dialogs/ChallengeEntry';
 import { CreatureAlbum } from './dialogs/CreatureAlbum';
 import { DailyDone } from './dialogs/DailyDone';
 import { Deduction } from './dialogs/Deduction';
+import { Finale, journeyStats } from './dialogs/Finale';
 import { MyCover } from './dialogs/MyCover';
 import { PageIndex } from './dialogs/PageIndex';
 import { Passport } from './dialogs/Passport';
@@ -35,7 +36,7 @@ import { HomeScreen } from './home/HomeScreen';
 import { FloatingScores } from './hud/FloatingScores';
 import { HUD, type HudLayout } from './hud/HUD';
 import { QuestPanel } from './hud/QuestPanel';
-import { challengeMessage, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
+import { certificateShare, challengeMessage, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
 import { useShare } from './share/useShare';
 import { useDeviceBehaviour } from './useDeviceBehaviour';
 
@@ -52,7 +53,8 @@ export const GameScreen: React.FC = () => {
   const [showAlbum, setShowAlbum] = useState(false);
   const [sheet, setSheet] = useState<Sheet>(null);
   const [deduction, setDeduction] = useState<{ chapter: Chapter; number: number } | null>(null);
-  const browsing = showIndex || showAlbum || sheet !== null || deduction !== null;
+  const [finale, setFinale] = useState(false);
+  const browsing = showIndex || showAlbum || sheet !== null || deduction !== null || finale;
   const { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome } = useGame({ browsing });
   const { country, pages, ref, page, isNight, turn, mode, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
@@ -132,13 +134,14 @@ export const GameScreen: React.FC = () => {
   }, [page]);
 
   const closeTopSheet = useCallback(() => {
-    if (deduction) setDeduction(null);
+    if (finale) setFinale(false);
+    else if (deduction) setDeduction(null);
     else if (sheet) setSheet(null);
     else if (showAlbum) setShowAlbum(false);
     else if (showIndex) setShowIndex(false);
     else return false;
     return true;
-  }, [deduction, sheet, showAlbum, showIndex]);
+  }, [finale, deduction, sheet, showAlbum, showIndex]);
   useDeviceBehaviour({ playing, paused: c.isPaused, onPause: togglePause, closeTopSheet });
 
   // Screen shake on a wrong guess
@@ -330,7 +333,34 @@ export const GameScreen: React.FC = () => {
 
       {showAlbum && <CreatureAlbum pages={albumPages} onClose={() => setShowAlbum(false)} />}
 
-      {deduction && <Deduction chapter={deduction.chapter} chapterNumber={deduction.number} onClose={() => setDeduction(null)} />}
+      {deduction && (
+        <Deduction
+          chapter={deduction.chapter}
+          chapterNumber={deduction.number}
+          onFinale={() => {
+            setDeduction(null);
+            setFinale(true);
+          }}
+          onClose={() => setDeduction(null)}
+        />
+      )}
+
+      {finale && (
+        <Finale
+          share={{
+            busy: share.busy,
+            note: share.note,
+            onPostcard: () => {
+              // The painting of the meeting place: the last page of the story's last chapter
+              const last = allChapters().find((c) => c.mystery?.finale);
+              const meeting = last?.pages[last.pages.length - 1].day ?? page;
+              const shared = certificateShare(meeting, journeyStats());
+              share.sharePostcard(shared.postcard, shared.text);
+            },
+          }}
+          onClose={() => setFinale(false)}
+        />
+      )}
 
       {sheet === 'passport' && <Passport today={today} canPlayToday={daily === 'open'} onPlayDaily={openDaily} onClose={closeSheet} />}
 

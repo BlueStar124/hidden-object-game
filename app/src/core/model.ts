@@ -290,6 +290,7 @@ export interface Mystery {
   options: MysteryOption[]; // Exactly one is correct
   epilogue: string[]; // Paragraphs revealed once solved
   reward?: ToolId; // The tool solving it hands over
+  finale?: boolean; // The last mystery of the story: solving it opens the keeper's certificate
 }
 
 export interface MysteryOption {

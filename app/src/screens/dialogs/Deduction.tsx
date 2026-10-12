@@ -6,7 +6,7 @@ import { progress } from '../../core/progress';
 import { TOOLS } from '../../content/tools';
 import { PrimaryButton } from '../../ui/Buttons';
 import { DialogHeader } from '../../ui/DialogHeader';
-import { CircleCheckBig, Lightbulb, Lock, ScanEye } from '../../ui/icons';
+import { CircleCheckBig, Lightbulb, Lock, ScanEye, Sparkles } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
 import { SpriteIcon } from '../../ui/SpriteIcon';
 import { colors, fonts } from '../../ui/theme';
@@ -14,6 +14,8 @@ import { colors, fonts } from '../../ui/theme';
 interface DeductionProps {
   chapter: Chapter;
   chapterNumber: number;
+  /** The last mystery solved: the keeper's certificate */
+  onFinale: () => void;
   onClose: () => void;
 }
 
@@ -21,7 +23,7 @@ interface DeductionProps {
  * The deduction board of a chapter: its clue fragments pinned up, the question, the answers. A wrong
  * answer only shows a nudge back at the clues; the right one reveals the chapter's epilogue.
  */
-export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, onClose }) => {
+export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, onFinale, onClose }) => {
   const mystery = chapter.mystery!;
   const clues = useMemo(() => cluesOf(chapter), [chapter]);
   const [solved, setSolved] = useState(() => progress.isMysterySolved(chapter.id));
@@ -53,7 +55,15 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
           onClose={onClose}
         />
       }
-      footer={solved ? <PrimaryButton label="Gấp Hồ Sơ Lại" icon={<CircleCheckBig size={18} color="#fff" />} onPress={onClose} /> : undefined}
+      footer={
+        solved ? (
+          mystery.finale ? (
+            <PrimaryButton label="Nhận Chứng Nhận Người Giữ Sổ" icon={<Sparkles size={18} color="#fff" />} onPress={onFinale} />
+          ) : (
+            <PrimaryButton label="Gấp Hồ Sơ Lại" icon={<CircleCheckBig size={18} color="#fff" />} onPress={onClose} />
+          )
+        ) : undefined
+      }
     >
       {/* The fragments, pinned to the board */}
       <View style={styles.board}>

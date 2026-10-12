@@ -58,6 +58,25 @@ export function victoryPostcard(page: Page, result: { foundIds: string[]; score:
 /** The message going with a postcard. */
 export const postcardMessage = (page: Page, challengeText: string) => `Bưu thiếp từ ${countryOf(page)}: “${page.title}”. ${challengeText}`;
 
+/** The keeper's certificate as a postcard: the painting of the meeting place, and the journey. */
+export function certificateShare(page: Page, stats: { pages: number; pageCount: number; mysteries: number; golden: number }): { postcard: PostcardContent; text: string } {
+  return {
+    postcard: {
+      page,
+      country: 'Người giữ sổ',
+      title: 'Người Giữ Sổ Thứ Tư',
+      lines: [
+        `Đã giải ${stats.mysteries} bí ẩn qua ba đất nước`,
+        `Trang ký họa: ${stats.pages}/${stats.pageCount}`,
+        ...(stats.golden ? [`Sinh vật ánh vàng: ${stats.golden}`] : []),
+      ],
+      footer: `${GAME} · hành trình từ Singapore tới Mũi Cà Mau`,
+      gilded: true,
+    },
+    text: `Mình đã trở thành người giữ sổ thứ tư trong ${GAME}: giải ${stats.mysteries} bí ẩn từ Singapore, Bangkok tới Mũi Cà Mau. Bạn có theo kịp không?`,
+  };
+}
+
 /** The daily page done: its postcard and message ('2026-10-12'). */
 export function dailyShare(page: Page, day: string, time: number): { postcard: PostcardContent; text: string } {
   const [, month, date] = day.split('-');

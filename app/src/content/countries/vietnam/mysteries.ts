@@ -75,4 +75,5 @@ export const SOUTH: Mystery = {
     'Vị kiến trúc sư khắc tên bạn vào mặt sau chiếc đồng hồ, ngay dưới tên mình, rồi trao lại cuốn sổ. Phía sau trang cuối là rất nhiều trang giấy trắng.',
     '“Thầy của ta đã đi khắp Đông Dương. Ta đi qua ba đất nước. Còn con, những trang tiếp theo là của con.”',
   ],
+  finale: true,
 };
