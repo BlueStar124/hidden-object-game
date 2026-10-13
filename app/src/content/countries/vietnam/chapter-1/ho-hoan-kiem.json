@@ -17,7 +17,7 @@
       "spriteType": "hoan-kiem-sword",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!",
+      "foundText": "Thanh gươm thần Thuận Thiên tỏa sáng, biểu tượng cho hào khí bảo vệ non sông Đại Việt!",
       "spots": [
         {
           "x": 0.78,
@@ -76,7 +76,7 @@
       "spriteType": "crane-statue",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Hương vị phở Thăng Long ngạt ngào quế hồi thảo quả làm ấm lòng người lữ khách.",
+      "foundText": "Hình tượng hạc đứng trên lưng rùa biểu trưng cho sự thanh cao, trường thọ và hòa hợp âm dương.",
       "spots": [
         {
           "x": 0.62,
@@ -96,7 +96,7 @@
       "spriteType": "nghe",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Chú Tễu tươi cười rạng rỡ, nhân vật dẫn chuyện hóm hỉnh của nghệ thuật múa rối nước dân gian.",
+      "foundText": "Con nghê đá thuần Việt canh giữ chốn linh thiêng, xua tan tà khí bảo vệ chốn tôn nghiêm.",
       "spots": [
         {
           "x": 0.42,
@@ -147,9 +147,9 @@
     {
       "id": "bonus-gecko",
       "name": "Cá Chép Đen Hồ Tây",
-      "clue": "Cá chép đen bơi lượn dưới bóng cầu Thê Húc đón ánh ban mai.",
-      "x": 0.11,
-      "y": 0.36,
+      "clue": "Cá chép đen bơi lượn dưới làn nước biếc ven hồ đón ánh ban mai.",
+      "x": 0.28,
+      "y": 0.68,
       "radius": 0.036,
       "score": 100,
       "isBonus": true,
@@ -157,44 +157,23 @@
       "scale": 0.38,
       "rotation": -45,
       "camo": "ink",
-      "foundText": "Thạch sùng đang chăm chú rình bắt một chú muỗi nhỏ ven tường."
+      "foundText": "Cá chép đen vượt vũ môn hóa rồng, gắn liền với truyền thuyết ngàn năm của đất kinh kỳ.",
+      "waterline": 0.6
     },
     {
       "id": "bonus-butterfly",
       "name": "Bông Sen Hồng Tây Hồ",
       "clue": "Bông sen hồng thanh khiết thơm ngát nép bên mép nước hồ Gươm.",
       "x": 0.58,
-      "y": 0.39,
+      "y": 0.65,
       "radius": 0.034,
       "score": 100,
       "isBonus": true,
       "spriteType": "lotus-flower",
       "scale": 0.36,
       "camo": "tint",
-      "roam": {
-        "path": [
-          [
-            0.62,
-            0.58
-          ],
-          [
-            0.65,
-            0.55
-          ],
-          [
-            0.67,
-            0.59
-          ],
-          [
-            0.63,
-            0.61
-          ]
-        ],
-        "period": 14,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Cánh bướm mỏng manh dập dờn như chiếc lá thu rơi."
+      "foundText": "Hoa sen Tây Hồ ngát hương, quốc hoa thanh khiết vươn lên từ bùn lầy tỏa ngát hương thơm.",
+      "waterline": 0.6
     }
   ]
 }

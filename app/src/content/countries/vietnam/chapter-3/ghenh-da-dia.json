@@ -49,7 +49,7 @@
       "spriteType": "sea-shell-curtain",
       "scale": 0.46,
       "camo": "tint",
-      "foundText": "Thuyền thúng nan là phương tiện đánh bắt mộc mạc đặc trưng của ngư dân duyên hải miền Trung."
+      "foundText": "Rèm vỏ ốc biển thủ công khua lách cách trong gió biển mặn mòi xứ Nẫu Phú Yên."
     },
     {
       "id": "seabird-kingfisher",
@@ -75,7 +75,7 @@
       "spriteType": "dugong",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Nón lá cùng ngư dân vươn khơi bám biển qua bao thế hệ."
+      "foundText": "Nàng tiên cá dugong hiền lành lướt qua những khối đá bazan tổ ong triệu năm kỳ vĩ."
     },
     {
       "id": "artist-seal",
@@ -100,7 +100,7 @@
       "spriteType": "treasure-map",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Tiếng đàn bầu ngân vang hòa cùng bản hòa ca sóng vỗ ngàn năm Ghềnh Đá Đĩa!"
+      "foundText": "Tấm bản đồ hải trình cổ da thuộc ghi dấu hải trình của các thương thuyền xưa qua vùng biển bão dông miền Trung!"
     },
     {
       "id": "bonus-seahorse",

@@ -50,8 +50,8 @@
       "id": "squid-boat",
       "name": "Thuyền Thúng Đảo Ngọc",
       "clue": "Thuyền thúng tròn câu mực đêm neo đậu bình yên ven bờ cát trắng.",
-      "x": 0.36,
-      "y": 0.52,
+      "x": 0.74,
+      "y": 0.64,
       "radius": 0.047,
       "score": 150,
       "spriteType": "basket-boat",
@@ -96,7 +96,7 @@
       "spriteType": "pearl-oyster",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Rặng dừa nghiêng soi bóng bãi cát trắng mịn như kem tạo nên vẻ đẹp thiên đường Phú Quốc!"
+      "foundText": "Viên ngọc trai Phú Quốc sáng bóng ngời ngợi ánh xà cừ, báu vật lấp lánh kết tinh từ biển sâu đảo Ngọc!"
     },
     {
       "id": "bonus-jellyfish",

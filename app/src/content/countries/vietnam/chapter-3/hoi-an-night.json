@@ -192,7 +192,7 @@
       "spriteType": "star-lantern",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Thuyền rồng lộng lẫy tái hiện lễ hội hoa đăng tráng lệ của thương cảng xưa!"
+      "foundText": "Đèn ông sao năm cánh giấy kiếng rực rỡ mang không khí Tết Trung thu ấm áp về với phố cổ Hội An!"
     },
     {
       "id": "bonus-night-moth",
@@ -220,8 +220,7 @@
       "spriteType": "mouse",
       "scale": 0.4,
       "camo": "shadow",
-      "foundText": "Cá sông tụ lại quanh ánh nến bập bùng trên mặt nước.",
-      "waterline": 0.6
+      "foundText": "Chú chuột nhắt tinh nghịch lẩn trốn dưới chân trụ gỗ Chùa Cầu tìm mồi trong đêm thanh vắng."
     }
   ]
 }

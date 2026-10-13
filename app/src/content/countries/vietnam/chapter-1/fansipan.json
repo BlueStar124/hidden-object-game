@@ -30,7 +30,7 @@
       "spriteType": "h-mong-flute",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Tiếng khèn H'Mông dạt dào gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn."
+      "foundText": "Tiếng sáo Mèo véo von réo rắt gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn."
     },
     {
       "id": "altimeter-watch",
@@ -43,7 +43,7 @@
       "spriteType": "silver-pheasant",
       "scale": 0.44,
       "camo": "gouache",
-      "foundText": "Tấm thổ cẩm dệt tay chứa đựng sự khéo léo và tâm hồn người phụ nữ H'Mông Sa Pa."
+      "foundText": "Gà lôi trắng quý hiếm với bộ lông bạc kiêu hãnh ẩn hiện giữa rừng đỗ quyên Fansipan."
     },
     {
       "id": "wind-kite",
@@ -69,7 +69,7 @@
       "spriteType": "pho-bowl",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chiếc nón lá mộc mạc theo chân người Việt chinh phục đỉnh cao 3.143 mét."
+      "foundText": "Hương vị phở bò nóng hổi nghi ngút sưởi ấm lòng người lữ khách nơi đỉnh cao 3.143 mét."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "vintage-camera",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Hào khí Đông Sơn ngàn năm hội tụ nơi đỉnh núi cao nhất Tổ quốc!"
+      "foundText": "Ống kính máy ảnh cổ ghi lại khoảnh khắc chạm đỉnh Fansipan mây ngàn huyền ảo!"
     },
     {
       "id": "bonus-sunbird",

@@ -43,7 +43,7 @@
       "spriteType": "palm-leaf-fan",
       "scale": 0.46,
       "camo": "tint",
-      "foundText": "Thanh âm đàn T'rưng trong trẻo tựa tiếng suối ngàn reo ca khắp đại ngàn Tây Nguyên."
+      "foundText": "Chiếc quạt nan mộc mạc lưu dấu ký ức bình yên bên lò sưởi của những căn biệt thự cổ xưa xứ sở sương mù."
     },
     {
       "id": "pine-owl",
@@ -56,7 +56,7 @@
       "spriteType": "highland-crossbow",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Voi Bản Đôn là biểu tượng sức mạnh và người bạn gắn bó thân thiết của buôn làng Tây Nguyên."
+      "foundText": "Chiếc nỏ săn bằng gỗ cánh cung dẻo dai, biểu tượng cho tinh thần thượng võ và tài săn bắn của các chàng dũng sĩ cao nguyên."
     },
     {
       "id": "garden-butterfly",
@@ -108,7 +108,7 @@
       "spriteType": "horned-owl",
       "scale": 0.38,
       "camo": "ink",
-      "foundText": "Sương mù dày đặc nuôi dưỡng cây cỏ bốn mùa xanh tốt."
+      "foundText": "Chú cú vọ tròn xoe mắt lặng lẽ đứng canh giấc ngủ cho đại ngàn thông reo."
     },
     {
       "id": "bonus-ladybug",

@@ -161,7 +161,7 @@
       "spriteType": "civet",
       "scale": 0.44,
       "camo": "shadow",
-      "foundText": "Voọc Cát Bà cuộn tròn giữ ấm qua đêm sương lạnh trên vịnh."
+      "foundText": "Cầy gấm thoăn thoắt săn mồi đêm, bộ lông hoa văn ẩn mình khéo léo vào vách đá vôi."
     },
     {
       "id": "artist-seal",
@@ -186,7 +186,7 @@
       "spriteType": "spyglass",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "Thuyền rồng rẽ màn sương đêm vịnh Hạ Long, mở lối đến hành trình mới!"
+      "foundText": "Ống kính viễn vọng đồng thau hướng lên bầu trời sao lung linh huyền ảo của vịnh Hạ Long!"
     },
     {
       "id": "bonus-night-moth",
@@ -214,7 +214,7 @@
       "spriteType": "mangrove-clam",
       "scale": 0.45,
       "camo": "tint",
-      "foundText": "Cua biển đi đêm lùng sục tìm mồi trên phiến đá rêu phong."
+      "foundText": "Vỏ sò biển óng ánh ngọc trai nằm khép mình tĩnh lặng trên phiến đá rêu phong."
     }
   ]
 }
