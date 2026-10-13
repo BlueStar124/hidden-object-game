@@ -120,7 +120,7 @@ export const Board = React.memo<BoardProps>(function Board({
   const { shown } = library;
   const { flip, flipStart } = pageTurn;
   const { s, tx, ty, lx, ly, dims } = camera;
-  const { found, radar, fogStart, nudge } = marks;
+  const { found, radar, fogStart, nudge, reveal } = marks;
   // Keep one owner across mapper rebuilds so a retired output cannot be deleted twice.
   const frameBuffer = useMemo(() => ({ picture: null as SkPicture | null }), []);
   const picture = useDerivedValue<SkPicture>(() => {
@@ -140,6 +140,7 @@ export const Board = React.memo<BoardProps>(function Board({
       radar: radar.value,
       fogStart: fogStart.value,
       nudge: nudge.value,
+      reveal: reveal.value,
       flip,
       flipStart: flipStart.value,
       warm,

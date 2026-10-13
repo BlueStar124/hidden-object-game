@@ -29,7 +29,9 @@ interface QuestPanelProps {
   layout: HudLayout;
   objects: HiddenObject[];
   foundIds: string[];
+  revealedTextIds?: string[];
   activeHintId?: string;
+  onHintObject?: (id: string) => void;
   bottomInset: number;
   insetLeft: number;
   insetRight: number;
@@ -66,12 +68,13 @@ function camoTrait(obj: HiddenObject): CamoTrait | null {
 const QuestCard: React.FC<{
   obj: HiddenObject;
   found: boolean;
+  revealed: boolean;
   hinted: boolean;
   expanded: boolean;
   compact: boolean;
   width: number;
   onPress: () => void;
-}> = ({ obj, found, hinted, expanded, compact, width, onPress }) => {
+}> = ({ obj, found, revealed, hinted, expanded, compact, width, onPress }) => {
   const trait = camoTrait(obj);
   const bounce = useSharedValue(0);
   useEffect(() => {
@@ -88,8 +91,21 @@ const QuestCard: React.FC<{
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel={`${obj.name}. ${found ? (obj.foundText ?? 'Đã tìm thấy!') : obj.clue}`}
-        style={[styles.card, { width }, compact && styles.cardCompact, found && styles.cardFound, hinted && styles.cardHint]}
+        accessibilityLabel={
+          found
+            ? `${obj.name}. ${obj.foundText ?? 'Đã tìm thấy!'}`
+            : revealed
+            ? `${obj.name}. ${obj.clue}`
+            : 'Manh mối ẩn. Chạm để giải mã tên và manh mối.'
+        }
+        style={[
+          styles.card,
+          { width },
+          compact && styles.cardCompact,
+          !revealed && !found && styles.cardUnrevealed,
+          found && styles.cardFound,
+          hinted && styles.cardHint,
+        ]}
       >
         <View style={[styles.thumb, compact && styles.thumbCompact]}>
           {obj.spriteType && obj.spriteType !== 'seal' ? (
@@ -105,7 +121,7 @@ const QuestCard: React.FC<{
           )}
         </View>
         <View style={styles.cardInfo}>
-          {trait && !compact && (
+          {trait && !compact && revealed && (
             <View style={[styles.trait, found && { opacity: 0.6 }]}>
               <trait.icon size={10} color={TRAIT_COLOR[trait.key]} />
               <Text style={[styles.traitText, { color: TRAIT_COLOR[trait.key] }]} numberOfLines={1}>
@@ -113,12 +129,25 @@ const QuestCard: React.FC<{
               </Text>
             </View>
           )}
-          <Text style={[styles.name, compact && { fontSize: 13 }, found && styles.nameFound]} numberOfLines={1}>
-            {obj.name}
+          <Text
+            style={[
+              styles.name,
+              compact && { fontSize: 13 },
+              found && styles.nameFound,
+              !revealed && !found && styles.nameHidden,
+            ]}
+            numberOfLines={1}
+          >
+            {revealed ? obj.name : '???'}
           </Text>
           {(!compact || expanded) && (
-            <Text style={styles.clue} numberOfLines={expanded ? undefined : 2}>
-              {found ? obj.foundText || 'Đã tìm thấy!' : obj.clue}
+            <Text
+              style={[styles.clue, !revealed && !found && styles.clueHidden]}
+              numberOfLines={expanded ? undefined : 2}
+            >
+              {revealed
+                ? (found ? obj.foundText || 'Đã tìm thấy!' : obj.clue)
+                : 'Chạm thẻ hoặc bấm Gợi Ý để giải mã'}
             </Text>
           )}
         </View>
@@ -132,7 +161,9 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
   layout,
   objects,
   foundIds,
+  revealedTextIds = [],
   activeHintId,
+  onHintObject,
   bottomInset,
   insetLeft,
   insetRight,
@@ -209,37 +240,57 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
       contentContainerStyle={styles.cards}
       style={compact && { flex: 1 }}
     >
-      {normal.map((obj) => (
-        <QuestCard
-          key={obj.id}
-          obj={obj}
-          found={foundIds.includes(obj.id)}
-          hinted={activeHintId === obj.id}
-          expanded={grows && expanded === obj.id}
-          compact={compact}
-          width={grows && expanded === obj.id ? cardWidth + 90 : cardWidth}
-          onPress={() => toggle(obj.id)}
-        />
-      ))}
+      {normal.map((obj) => {
+        const isFound = foundIds.includes(obj.id);
+        const isRevealed = isFound || revealedTextIds.includes(obj.id);
+        return (
+          <QuestCard
+            key={obj.id}
+            obj={obj}
+            found={isFound}
+            revealed={isRevealed}
+            hinted={activeHintId === obj.id}
+            expanded={grows && expanded === obj.id}
+            compact={compact}
+            width={grows && expanded === obj.id ? cardWidth + 90 : cardWidth}
+            onPress={() => {
+              if (!isFound && onHintObject) {
+                onHintObject(obj.id);
+              }
+              toggle(obj.id);
+            }}
+          />
+        );
+      })}
       {secret && (
         <Pressable
-          onPress={() => toggle(secret.id)}
+          onPress={() => {
+            if (!secretFound && onHintObject) {
+              onHintObject(secret.id);
+            }
+            toggle(secret.id);
+          }}
           style={[
             styles.card,
             { width: grows && expanded === secret.id ? cardWidth + 90 : cardWidth },
             compact && styles.cardCompact,
             secretFound ? styles.secretCardFound : styles.secretCard,
+            activeHintId === secret.id && styles.cardHint,
           ]}
         >
           {secretFound ? <Sparkles size={18} color="#ca8a04" /> : <Lock size={16} color={colors.inkFaint} />}
           {secretFound && secret.spriteType && <SpriteIcon type={secret.spriteType} size={compact ? 22 : 28} glow />}
           <View style={styles.cardInfo}>
             <Text style={[styles.name, compact && { fontSize: 13 }]} numberOfLines={1}>
-              {secretFound ? secret.name : '??? Vật Phẩm Bí Mật'}
+              {secretFound || revealedTextIds.includes(secret.id) ? secret.name : '??? Vật Phẩm Bí Mật'}
             </Text>
             {grows && (
               <Text style={styles.clue} numberOfLines={expanded === secret.id ? undefined : 2}>
-                {secretFound ? secret.foundText : SECRET_CLUE}
+                {secretFound
+                  ? secret.foundText
+                  : revealedTextIds.includes(secret.id)
+                  ? secret.clue
+                  : SECRET_CLUE}
               </Text>
             )}
           </View>
@@ -276,9 +327,21 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
         {expandedObj && (
           // Read-only and touch-through: it floats over the sketchbook, whose taps must still land
           <View pointerEvents="none" style={[styles.bubble, { left: insetLeft + 10, right: insetRight + 10 }]}>
-            <Text style={styles.bubbleName}>{expandedObj.isSecret && !found ? '??? Vật Phẩm Bí Mật' : expandedObj.name}</Text>
+            <Text style={styles.bubbleName}>
+              {expandedObj.isSecret && !found
+                ? (revealedTextIds.includes(expandedObj.id) ? expandedObj.name : '??? Vật Phẩm Bí Mật')
+                : (!found && !revealedTextIds.includes(expandedObj.id))
+                ? '???'
+                : expandedObj.name}
+            </Text>
             <Text style={styles.bubbleText}>
-              {found ? expandedObj.foundText || 'Đã tìm thấy!' : expandedObj.isSecret ? SECRET_CLUE : expandedObj.clue}
+              {found
+                ? expandedObj.foundText || 'Đã tìm thấy!'
+                : expandedObj.isSecret
+                ? (revealedTextIds.includes(expandedObj.id) ? expandedObj.clue : SECRET_CLUE)
+                : (!revealedTextIds.includes(expandedObj.id))
+                ? 'Chạm thẻ hoặc bấm Gợi Ý để giải mã manh mối…'
+                : expandedObj.clue}
             </Text>
           </View>
         )}
@@ -540,5 +603,19 @@ const styles = StyleSheet.create({
   secretCardFound: {
     backgroundColor: '#fefce8',
     borderColor: '#fde047',
+  },
+  nameHidden: {
+    color: colors.inkSoft,
+    letterSpacing: 2,
+    fontWeight: '700',
+  },
+  clueHidden: {
+    color: colors.inkFaint,
+    fontStyle: 'italic',
+    fontSize: 9.5,
+  },
+  cardUnrevealed: {
+    backgroundColor: '#faf8f5',
+    borderColor: '#e7e0d5',
   },
 });

@@ -98,7 +98,14 @@
       "spriteType": "heron",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Diệc xám kiên nhẫn đứng rình cá hàng giờ, kể cả khi phố đã lên đèn."
+      "foundText": "Diệc xám kiên nhẫn đứng rình cá hàng giờ, kể cả khi phố đã lên đèn.",
+      "spots": [
+        {
+          "x": 0.38,
+          "y": 0.59,
+          "clue": "Chú diệc xám đứng kiên nhẫn bên bến bậc thềm cạnh chiếc thuyền bumboat bên trái."
+        }
+      ]
     },
     {
       "id": "night-firefly",
@@ -151,7 +158,14 @@
       "spriteType": "colugo",
       "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Chồn bay có thể lượn xa hàng chục mét từ cây này sang cây khác."
+      "foundText": "Chồn bay có thể lượn xa hàng chục mét từ cây này sang cây khác.",
+      "spots": [
+        {
+          "x": 0.84,
+          "y": 0.48,
+          "clue": "Chú chồn bay bám vào thân cành thấp hơn của hàng cây ven sông."
+        }
+      ]
     },
     {
       "id": "night-red-envelope",
@@ -191,7 +205,14 @@
       "spriteType": "vase",
       "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Hàng gốm sứ từng được chở bằng thuyền bumboat từ tàu lớn vào kho bến sông."
+      "foundText": "Hàng gốm sứ từng được chở bằng thuyền bumboat từ tàu lớn vào kho bến sông.",
+      "spots": [
+        {
+          "x": 0.42,
+          "y": 0.58,
+          "clue": "Chiếc bình gốm men lam nằm gần bệ neo thuyền bên bờ trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

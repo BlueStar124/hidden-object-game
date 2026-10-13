@@ -17,21 +17,31 @@ export const SCHEMA_VERSION = 2;
 
 type Fields = Record<string, unknown>;
 
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 const isRecord = (v: unknown): v is Fields => typeof v === 'object' && v !== null && !Array.isArray(v);
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : []);
 const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, v) : 0);
 
 /**
  * A save of any version, read back safely: missing or damaged fields become empty ones, fields
- * this version does not know are kept, and older saves are brought up to date.
+ * this version does not know are kept, dangerous prototype keys are removed, and older saves are brought up to date.
  */
 export function readProgress(raw: unknown): GameProgress {
   const data = isRecord(raw) ? raw : {};
 
+  // Strip dangerous prototype pollution keys
+  const cleanData: Fields = {};
+  for (const [k, v] of Object.entries(data)) {
+    if (!DANGEROUS_KEYS.has(k)) {
+      cleanData[k] = v;
+    }
+  }
+
   const sceneResults: Record<string, PageResult> = {};
-  if (isRecord(data.sceneResults)) {
-    for (const [pageId, r] of Object.entries(data.sceneResults)) {
-      if (!isRecord(r)) continue;
+  if (isRecord(cleanData.sceneResults)) {
+    for (const [pageId, r] of Object.entries(cleanData.sceneResults)) {
+      if (!isRecord(r) || DANGEROUS_KEYS.has(pageId)) continue;
       sceneResults[pageId] = {
         ...r,
         sceneId: pageId,
@@ -45,25 +55,54 @@ export function readProgress(raw: unknown): GameProgress {
   }
 
   const discovered: Record<string, string[]> = {};
-  if (isRecord(data.discovered)) {
-    for (const [pageId, seen] of Object.entries(data.discovered)) discovered[pageId] = strings(seen);
+  if (isRecord(cleanData.discovered)) {
+    for (const [pageId, seen] of Object.entries(cleanData.discovered)) {
+      if (!DANGEROUS_KEYS.has(pageId)) discovered[pageId] = strings(seen);
+    }
+  }
+
+  const playCount: Record<string, number> = {};
+  if (isRecord(cleanData.playCount)) {
+    for (const [pageId, n] of Object.entries(cleanData.playCount)) {
+      if (!DANGEROUS_KEYS.has(pageId)) playCount[pageId] = count(n);
+    }
   }
 
   // Sound stays on unless the player turned it off
-  const settings = isRecord(data.settings) ? { ...data.settings, soundEnabled: data.settings.soundEnabled !== false } : undefined;
+  const settings = isRecord(cleanData.settings) ? { ...cleanData.settings, soundEnabled: cleanData.settings.soundEnabled !== false } : undefined;
 
-  const upToDate = typeof data.schemaVersion === 'number' && data.schemaVersion >= SCHEMA_VERSION;
+  const upToDate = typeof cleanData.schemaVersion === 'number' && cleanData.schemaVersion >= SCHEMA_VERSION;
   const bestScores = Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0);
-  return {
-    ...data,
+  const result: GameProgress = {
+    ...cleanData,
     schemaVersion: SCHEMA_VERSION,
-    unlockedScenes: strings(data.unlockedScenes),
+    unlockedScenes: strings(cleanData.unlockedScenes),
     sceneResults,
-    totalScore: upToDate ? count(data.totalScore) : bestScores,
+    totalScore: upToDate ? count(cleanData.totalScore) : bestScores,
     discovered,
-    lastPageId: typeof data.lastPageId === 'string' ? data.lastPageId : undefined,
     settings, // (a damaged value is dropped rather than kept as an unknown field)
   };
+  if (typeof cleanData.lastPageId === 'string') {
+    result.lastPageId = cleanData.lastPageId;
+  } else {
+    delete result.lastPageId;
+  }
+  if (cleanData.playCount && isRecord(cleanData.playCount)) {
+    result.playCount = playCount;
+  } else {
+    delete result.playCount;
+  }
+  if (cleanData.rareFound) {
+    result.rareFound = strings(cleanData.rareFound);
+  } else {
+    delete result.rareFound;
+  }
+  if (cleanData.solvedMysteries) {
+    result.solvedMysteries = strings(cleanData.solvedMysteries);
+  } else {
+    delete result.solvedMysteries;
+  }
+  return result;
 }
 
 /**
@@ -100,6 +139,11 @@ function save(progress: GameProgress): void {
 }
 
 export const progress = {
+  /** Returns the current in-memory progress. */
+  current(): GameProgress {
+    return load();
+  },
+
   /** A case closed: keeps the best stars, score and time, and unlocks the next page. */
   recordVictory(
     pageId: string,
@@ -178,4 +222,113 @@ export const progress = {
       new Set([...(current.discovered[pageId] || []), ...(current.sceneResults[pageId]?.creaturesFound || [])])
     );
   },
+
+  /** Increment and return the play count for a page (used to seed replays). */
+  recordPlay(pageId: string): number {
+    const current = load();
+    const countNum = (current.playCount?.[pageId] ?? 0) + 1;
+    save({
+      ...current,
+      playCount: { ...(current.playCount || {}), [pageId]: countNum },
+    });
+    return countNum;
+  },
+
+  playCount(pageId: string): number {
+    return load().playCount?.[pageId] ?? 0;
+  },
+
+  /** Records finding a rare shiny variant of a sprite. */
+  recordRare(spriteType: string): void {
+    const current = load();
+    const rares = current.rareFound || [];
+    if (rares.includes(spriteType)) return;
+    save({
+      ...current,
+      rareFound: [...rares, spriteType],
+    });
+  },
+
+  isRareFound(spriteType: string): boolean {
+    return (load().rareFound || []).includes(spriteType);
+  },
+
+  /** Export the current save as a base64 encoded string. */
+  exportSave(): string {
+    const json = JSON.stringify(load());
+    if (typeof btoa === 'function') {
+      try {
+        return btoa(unescape(encodeURIComponent(json)));
+      } catch {
+        // Fallback
+      }
+    }
+    return json;
+  },
+
+  /** Import a save string (base64 or raw JSON) safely. */
+  importSave(dataStr: string): { success: boolean; error?: string } {
+    try {
+      let json = dataStr.trim();
+      if (typeof atob === 'function' && !json.startsWith('{')) {
+        try {
+          json = decodeURIComponent(escape(atob(json)));
+        } catch {
+          // If atob fails, might already be raw json
+        }
+      }
+      const parsed = JSON.parse(json);
+      if (!isRecord(parsed)) {
+        return { success: false, error: 'Dữ liệu không đúng định dạng' };
+      }
+      const loaded = readProgress(parsed);
+      save(loaded);
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Không thể giải mã bản lưu' };
+    }
+  },
 };
+
+const SOUND_STORAGE_KEY = 'detective_sketchbook_sound_enabled_v1';
+
+export function loadSoundEnabled(): boolean {
+  try {
+    const val = localStorage.getItem(SOUND_STORAGE_KEY);
+    return val !== null ? val === 'true' : true;
+  } catch {
+    return true;
+  }
+}
+
+export function saveSoundEnabled(enabled: boolean): void {
+  try {
+    localStorage.setItem(SOUND_STORAGE_KEY, String(enabled));
+  } catch {
+    // ignore
+  }
+}
+
+const REVEAL_EFFECT_STORAGE_KEY = 'detective_sketchbook_reveal_effect_v1';
+
+export function loadRevealEffect(): boolean {
+  try {
+    const val = localStorage.getItem(REVEAL_EFFECT_STORAGE_KEY);
+    return val !== null ? val === 'true' : true;
+  } catch {
+    return true;
+  }
+}
+
+export function saveRevealEffect(enabled: boolean): void {
+  try {
+    localStorage.setItem(REVEAL_EFFECT_STORAGE_KEY, String(enabled));
+  } catch {
+    // ignore
+  }
+}
+
+// Request persistent storage on Web where supported to prevent Safari/browsers from evicting saves
+if (typeof navigator !== 'undefined' && 'storage' in navigator && navigator.storage?.persist) {
+  navigator.storage.persist().catch(() => {});
+}

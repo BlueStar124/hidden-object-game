@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Easing, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
 import type { HiddenObject, Page } from '../core/model';
+import { loadRevealEffect } from '../core/progress';
 import { motionNow, objectPosition, roamState } from '../core/motion';
 import { PAGE_H, PAGE_W } from './constants';
 import type { FoundInfo } from './render';
@@ -15,6 +16,7 @@ export interface CaseMarks {
   radar: SharedValue<string | null>;
   fogStart: SharedValue<number>;
   nudge: SharedValue<{ x: number; y: number; t: number } | null>;
+  reveal: SharedValue<boolean>;
   /** The found objects as they are now (to record the page for a turn) */
   foundNow: () => Record<string, FoundInfo>;
 }
@@ -32,6 +34,11 @@ export function useCaseMarks(
   const radar = useSharedValue<string | null>(null);
   const fogStart = useSharedValue(0);
   const nudge = useSharedValue<{ x: number; y: number; t: number } | null>(null);
+  const reveal = useSharedValue(!page.isNight && loadRevealEffect());
+
+  useEffect(() => {
+    reveal.value = !page.isNight && loadRevealEffect();
+  }, [page.id, page.isNight, reveal]);
 
   const foundRef = useRef<{ page: string; map: Record<string, FoundInfo> }>({ page: page.id, map: {} });
   useEffect(() => {
@@ -94,5 +101,5 @@ export function useCaseMarks(
   }, [nudgeTarget, nudge]);
 
   const foundNow = useCallback(() => foundRef.current.map, []);
-  return { found, radar, fogStart, nudge, foundNow };
+  return { found, radar, fogStart, nudge, reveal, foundNow };
 }

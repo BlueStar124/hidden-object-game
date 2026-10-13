@@ -101,10 +101,26 @@ function compose(a: M20, b: M20): M20 {
 /** `filter: saturate(0.35) sepia(0.4) contrast(0.92) brightness(1.04)` — the "ink" camouflage. */
 const INK_FILTER = [sepia(0.4), contrast(0.92), brightness(1.04)].reduce((acc, m) => compose(m, acc), saturate(0.35));
 
+/** `filter: saturate(0.22) sepia(0.28) contrast(0.96) brightness(1.04)` — washed watercolour page */
+const WASHED_FILTER = [sepia(0.28), contrast(0.96), brightness(1.04)].reduce(
+  (acc, m) => compose(m, acc),
+  saturate(0.22)
+);
+
+/** Golden tint matrix for rare shiny variants */
+const GOLDEN_FILTER: M20 = [
+  1.2, 0.1, 0, 0, 0.1,
+  0.1, 1.1, 0, 0, 0.08,
+  0, 0, 0.45, 0, 0,
+  0, 0, 0, 1, 0,
+];
+
 /* ------------------------------------ Board ------------------------------------ */
 
 export function createBoardPaints() {
   const inkFilter = Skia.ColorFilter.MakeMatrix(INK_FILTER);
+  const washedFilter = Skia.ColorFilter.MakeMatrix(WASHED_FILTER);
+  const goldenFilter = Skia.ColorFilter.MakeMatrix(GOLDEN_FILTER);
   // Opaque, white-backed cells multiply all RGBA components. Fade RGB towards white,
   // leaving alpha at one, rather than making the painting itself transparent.
   const modulatePaints = (opacity: number) => Array.from({ length: 129 }, (_, i) => {
@@ -124,6 +140,12 @@ export function createBoardPaints() {
 
   return {
     image: paint(),
+    washed: paint((p) => {
+      p.setColorFilter(washedFilter);
+    }),
+    golden: paint((p) => {
+      p.setColorFilter(goldenFilter);
+    }),
     inkFilter,
     inkModulate: modulatePaints(0.8),
     chameleonModulate: modulatePaints(0.95),
@@ -142,6 +164,17 @@ export function createBoardPaints() {
           (7 * PX) / LOUPE_ZOOM,
           'rgba(56, 189, 248, 0.55)',
           dropShadow(0, (2 * PX) / LOUPE_ZOOM, 'rgba(56, 189, 248, 0.95)')
+        )
+      )
+    ),
+    // UV secret items glowing with purple luminescence
+    uv: paint((p) =>
+      p.setImageFilter(
+        dropShadow(
+          0,
+          (8 * PX) / LOUPE_ZOOM,
+          'rgba(168, 85, 247, 0.65)',
+          dropShadow(0, (3 * PX) / LOUPE_ZOOM, 'rgba(216, 180, 254, 0.95)')
         )
       )
     ),

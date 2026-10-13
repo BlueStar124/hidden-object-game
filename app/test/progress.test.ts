@@ -229,3 +229,42 @@ describe('the copy kept in memory', () => {
     warn.mockRestore();
   });
 });
+
+describe('security and new features', () => {
+  test('readProgress removes dangerous prototype keys', () => {
+    const malicious = JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"bad": true}, "sceneResults": {"__proto__": {}}}');
+    const read = readProgress(malicious);
+    expect((read as unknown as Record<string, unknown>).__proto__).toBe(Object.prototype);
+    expect((read.sceneResults as unknown as Record<string, unknown>).__proto__).toBe(Object.prototype);
+    expect(('polluted' in {})).toBe(false);
+  });
+
+  test('recordPlay and playCount track replays', () => {
+    expect(progress.playCount('page-1')).toBe(0);
+    expect(progress.recordPlay('page-1')).toBe(1);
+    expect(progress.recordPlay('page-1')).toBe(2);
+    expect(progress.playCount('page-1')).toBe(2);
+  });
+
+  test('recordRare and isRareFound track rare variants', () => {
+    expect(progress.isRareFound('cat')).toBe(false);
+    progress.recordRare('cat');
+    expect(progress.isRareFound('cat')).toBe(true);
+    // Duplicate does not duplicate
+    progress.recordRare('cat');
+    expect(progress.isRareFound('cat')).toBe(true);
+  });
+
+  test('exportSave and importSave roundtrip correctly', () => {
+    progress.recordVictory('marina-bay-sands', null, 999, 3, 30);
+    const exported = progress.exportSave();
+    expect(typeof exported).toBe('string');
+    expect(exported.length).toBeGreaterThan(0);
+
+    // Clear and restore
+    storage.clear();
+    const result = progress.importSave(exported);
+    expect(result.success).toBe(true);
+    expect(progress.pageResult('marina-bay-sands')?.highScore).toBe(999);
+  });
+});

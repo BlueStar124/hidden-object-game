@@ -36,59 +36,95 @@
       "y": 0.56,
       "r": 0.045,
       "color": "rgba(255, 240, 180, 0.5)"
+    },
+    {
+      "x": 0.35,
+      "y": 0.52,
+      "r": 0.04,
+      "color": "rgba(255, 215, 110, 0.6)"
+    },
+    {
+      "x": 0.72,
+      "y": 0.44,
+      "r": 0.045,
+      "color": "rgba(255, 190, 90, 0.55)"
+    },
+    {
+      "x": 0.28,
+      "y": 0.46,
+      "r": 0.015,
+      "color": "rgba(255, 245, 190, 0.9)"
+    },
+    {
+      "x": 0.58,
+      "y": 0.55,
+      "r": 0.014,
+      "color": "rgba(255, 230, 160, 0.9)"
+    },
+    {
+      "x": 0.44,
+      "y": 0.6,
+      "r": 0.015,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.76,
+      "y": 0.47,
+      "r": 0.015,
+      "color": "rgba(255, 230, 150, 0.85)"
     }
   ],
   "objects": [
     {
       "id": "night-villa-lantern",
-      "name": "Đèn Sưởi Biệt Thự",
-      "clue": "Ngọn đèn lồng ấm áp tỏa sáng bên nụ hoa atiso khổng lồ lung linh trong đêm.",
-      "x": 0.81,
-      "y": 0.48,
-      "radius": 0.034,
+      "name": "Đèn Bão Biệt Thự Cổ",
+      "clue": "Ngọn đèn dầu leo lét sau khung cửa kính mờ sương đêm phố núi.",
+      "x": 0.68,
+      "y": 0.42,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "luminous",
       "foundText": "Ánh đèn xua tan cái lạnh buốt của đêm đông phố núi."
     },
     {
       "id": "night-owl-pine",
-      "name": "Cú Mèo Đêm Sương",
-      "clue": "Chú cú mèo vùng cao đậu lặng im trên cành thông già sừng sững bên phải.",
-      "x": 0.74,
-      "y": 0.38,
-      "radius": 0.032,
+      "name": "Cú Rừng Đồi Thông",
+      "clue": "Đôi mắt tròn vạch lối sương mờ trên cành thông già tĩnh lặng.",
+      "x": 0.82,
+      "y": 0.28,
+      "radius": 0.042,
       "score": 150,
       "spriteType": "owl",
       "scale": 0.44,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Tiếng cú gọi đêm hòa cùng tiếng thông reo rì rào."
     },
     {
       "id": "night-civet-coffee",
-      "name": "Cầy Hương Đêm Rừng",
-      "clue": "Chú cầy hương đêm thoăn thoắt băng qua các bậc thang đá quảng trường.",
-      "x": 0.38,
-      "y": 0.56,
-      "radius": 0.03,
+      "name": "Cầy Hương Rừng Thông Đêm",
+      "clue": "Chú cầy hương thoăn thoắt chuyền cành trong đêm lạnh xứ hoa.",
+      "x": 0.52,
+      "y": 0.58,
+      "radius": 0.039,
       "score": 150,
       "spriteType": "civet",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Cầy hương mê mẩn những quả cà phê chín đỏ mọng vùng đồi."
+      "scale": 0.44,
+      "camo": "shadow",
+      "foundText": "Ly cà phê phin nóng hổi sưởi ấm tâm hồn giữa cái lạnh buốt của đêm cao nguyên."
     },
     {
       "id": "night-firefly-mist",
       "name": "Đom Đóm Sương Mù",
-      "clue": "Đom đóm lập lòe theo gợn sóng phản chiếu ánh đèn rực rỡ trên mặt hồ.",
-      "x": 0.42,
-      "y": 0.71,
-      "radius": 0.03,
+      "clue": "Đom đóm lập lòe quanh luống hoa đêm rực sắc thầm lặng.",
+      "x": 0.24,
+      "y": 0.72,
+      "radius": 0.039,
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "chameleon",
+      "camo": "luminous",
       "roam": {
         "path": [
           [
@@ -117,14 +153,14 @@
     {
       "id": "night-bat-roof",
       "name": "Dơi Đêm Mái Ngói",
-      "clue": "Chú dơi đêm bay lướt qua tán thông rậm rạp trên đồi dã quỳ.",
-      "x": 0.18,
-      "y": 0.38,
-      "radius": 0.032,
+      "clue": "Đôi cánh dơi lướt êm ru qua chóp tháp biệt thự Pháp cổ kính.",
+      "x": 0.35,
+      "y": 0.32,
+      "radius": 0.042,
       "score": 100,
       "spriteType": "bat",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "shadow",
       "foundText": "Dơi đêm chao lượn quanh những bóng đèn đường vàng vọt."
     },
     {
@@ -140,25 +176,25 @@
     },
     {
       "id": "secret-hourglass-frost",
-      "name": "Đồng Hồ Cát Đọng Băng",
-      "clue": "[BÍ MẬT] Đồng hồ cát ngưng đọng giọt sương giá lấp lánh trên vòm trời đêm phố núi.",
+      "name": "Đồng Hồ Cát Sương Lạnh",
+      "clue": "[BÍ MẬT] Đồng hồ cát phủ một lớp băng sương mỏng manh giữa đêm phố núi.",
       "x": 0.65,
       "y": 0.24,
-      "radius": 0.038,
+      "radius": 0.049,
       "score": 300,
       "isSecret": true,
       "spriteType": "hourglass",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật đọng sương lưu giữ ký ức lãng mạn xứ hoa đào!"
+      "foundText": "Âm vang cồng chiêng bên bếp lửa bập bùng truyền hơi ấm qua màn sương đêm Đà Lạt!"
     },
     {
       "id": "bonus-night-moth",
       "name": "Bướm Đêm Rừng Thông",
-      "clue": "Bướm đêm chập chờn quanh vòm kính hoa dã quỳ rực rỡ ánh vàng.",
-      "x": 0.22,
-      "y": 0.48,
-      "radius": 0.026,
+      "clue": "Cánh bướm đêm ngụy trang vào vỏ thân cây thông xù xì.",
+      "x": 0.14,
+      "y": 0.56,
+      "radius": 0.034,
       "score": 100,
       "isBonus": true,
       "spriteType": "moth",
@@ -169,15 +205,15 @@
     {
       "id": "bonus-night-cat",
       "name": "Mèo Trắng Sưởi Ấm",
-      "clue": "Chú mèo hoa nằm sưởi ấm dưới cột đèn chiếu sáng ven hồ.",
-      "x": 0.58,
-      "y": 0.57,
-      "radius": 0.028,
+      "clue": "Chú mèo trắng cuộn tròn ngủ say bên hiên gỗ ấm áp.",
+      "x": 0.44,
+      "y": 0.44,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "cat",
       "scale": 0.4,
-      "camo": "chameleon",
+      "camo": "shadow",
       "foundText": "Chú mèo tận hưởng hơi ấm ngọt ngào từ lò sưởi bên trong."
     }
   ]

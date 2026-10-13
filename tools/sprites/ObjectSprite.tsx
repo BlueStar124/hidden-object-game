@@ -1516,7 +1516,7 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
       case 'saola':
         return (
           <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
-            {/* Saola — the "Asian unicorn" of the Annamite range */}
+            {/* Saola — Asian Unicorn of the Annamite Range */}
             <path d="M 21 16 L 15 4 M 26 16 L 20 4" stroke="#1c1917" strokeWidth="2.2" strokeLinecap="round" />
             <path d="M 21 16 L 15 4 M 26 16 L 20 4" stroke="#d97706" strokeWidth="1" strokeLinecap="round" />
             <path d="M 12 30 C 12 24 18 20 28 22 C 36 24 40 28 38 36 C 36 40 28 42 18 40 C 14 38 12 34 12 30 Z" fill="#6c3f20" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
@@ -1541,7 +1541,7 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
       case 'water-buffalo':
         return (
           <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
-            {/* Water buffalo, sweeping horns */}
+            {/* Vietnamese Water Buffalo */}
             <path d="M 11 18 C 7 10 16 7 21 13" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
             <path d="M 37 18 C 41 10 32 7 27 13" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" />
             <path d="M 11 18 C 8 11 16 8 20 13" stroke="#64748b" strokeWidth="1.2" strokeLinecap="round" />
@@ -1566,10 +1566,10 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
             <ellipse cx="24" cy="24" rx="4.5" ry="3" fill="#64748b" stroke={INK} strokeWidth="1.2" />
             <circle cx="22" cy="24" r="0.8" fill="#1e293b" />
             <circle cx="26" cy="24" r="0.8" fill="#1e293b" />
-            <Limb d="M 16 38 L 16 45" color="#334155" />
-            <Limb d="M 21 39 L 21 45" color="#334155" />
-            <Limb d="M 27 39 L 27 45" color="#334155" />
-            <Limb d="M 32 38 L 32 45" color="#334155" />
+            <Limb d="M 16 38 L 16 45" color="#334155" w={3.4} />
+            <Limb d="M 21 39 L 21 45" color="#334155" w={3.4} />
+            <Limb d="M 27 39 L 27 45" color="#334155" w={3.4} />
+            <Limb d="M 32 38 L 32 45" color="#334155" w={3.4} />
           </svg>
         );
 
@@ -1589,7 +1589,7 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
       case 'lantern':
         return (
           <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
-            {/* Hội An silk lantern */}
+            {/* Hội An Silk Lantern */}
             <path d="M 24 5 L 24 9" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
             <rect x="20" y="9" width="8" height="2.5" rx="1" fill="#78350f" stroke={INK} strokeWidth="1.2" />
             <path d="M 20 11.5 C 13 14 11 20 11 25 C 11 30 14 35 20 37.5 L 28 37.5 C 34 35 37 30 37 25 C 37 20 35 14 28 11.5 Z" fill="#ef4444" stroke={INK} strokeWidth="1.8" strokeLinejoin="round" />
@@ -1605,7 +1605,7 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
       case 'cyclo':
         return (
           <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
-            {/* Xích lô — the passenger seat rides in front of the cyclist */}
+            {/* Vietnamese Cyclo (Xích Lô) */}
             <circle cx="39" cy="33" r="8" fill="none" stroke={INK} strokeWidth="1.8" />
             <circle cx="39" cy="33" r="2" fill="#475569" stroke={INK} strokeWidth="1.2" />
             <ellipse cx="14" cy="34" rx="7.5" ry="7.5" fill="none" stroke={INK} strokeWidth="1.8" />
@@ -1618,6 +1618,446 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
             <path d="M 8 16 C 14 13 22 13 25 17" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
             <path d="M 8 16 L 9 20 M 24 17 L 24 20" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
             <path d="M 8 28 L 6 33 L 11 33" stroke={INK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
+        );
+
+      case 'golden-turtle':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Rùa Vàng Kim Quy Hồ Gươm - Mai vàng đồng ngậm gươm thần */}
+            <path d="M 12 30 C 10 32 8 36 10 38 C 12 39 15 36 16 33" stroke={INK} strokeWidth="1.6" strokeLinecap="round" fill="#b45309" />
+            <path d="M 36 30 C 38 32 40 36 38 38 C 36 39 33 36 32 33" stroke={INK} strokeWidth="1.6" strokeLinecap="round" fill="#b45309" />
+            <ellipse cx="24" cy="27" rx="14" ry="11" fill="#d97706" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="27" rx="10" ry="7.5" fill="#f59e0b" stroke={INK} strokeWidth="1.2" />
+            <path d="M 24 19.5 L 29 23 L 29 29 L 24 32.5 L 19 29 L 19 23 Z" stroke={INK} strokeWidth="1.2" fill="#fbbf24" />
+            <path d="M 24 16 L 24 19.5 M 19 23 L 14 21 M 29 23 L 34 21 M 19 29 L 14 31 M 29 29 L 34 31 M 24 32.5 L 24 38" stroke={INK} strokeWidth="1" strokeLinecap="round" />
+            <path d="M 21 17 C 21 11 27 11 27 17 Z" fill="#b45309" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <g className="eye">
+              <circle cx="22" cy="13" r="1.3" fill="#1c1917" />
+              <circle className="pupil" cx="22" cy="13" r="0.9" fill="#1c1917" />
+              <circle cx="21.7" cy="12.7" r="0.4" fill="#ffffff" />
+            </g>
+            <g className="eye">
+              <circle cx="26" cy="13" r="1.3" fill="#1c1917" />
+              <circle className="pupil" cx="26" cy="13" r="0.9" fill="#1c1917" />
+              <circle cx="25.7" cy="12.7" r="0.4" fill="#ffffff" />
+            </g>
+            <path d="M 17 14 L 31 14" stroke="#eab308" strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="16.5" cy="14" r="1" fill="#ef4444" />
+            <path className="tail" d="M 24 38 L 24 43" stroke="#b45309" strokeWidth="2.2" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'water-puppet':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Chú Tễu rối nước - Búi tóc đào, yếm đỏ, tay vẫy tếu táo */}
+            <circle cx="17" cy="11" r="2.8" fill="#1c1917" stroke={INK} strokeWidth="1.2" />
+            <circle cx="31" cy="11" r="2.8" fill="#1c1917" stroke={INK} strokeWidth="1.2" />
+            <circle cx="24" cy="18" r="7.5" fill="#fed7aa" stroke={INK} strokeWidth="1.6" />
+            <path d="M 21 21 Q 24 24 27 21" stroke="#dc2626" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+            <g className="eye">
+              <circle cx="21" cy="16.5" r="1.3" fill="#1c1917" />
+              <circle className="pupil" cx="21" cy="16.5" r="0.9" fill="#1c1917" />
+              <circle cx="20.7" cy="16.2" r="0.4" fill="#ffffff" />
+            </g>
+            <g className="eye">
+              <circle cx="27" cy="16.5" r="1.3" fill="#1c1917" />
+              <circle className="pupil" cx="27" cy="16.5" r="0.9" fill="#1c1917" />
+              <circle cx="26.7" cy="16.2" r="0.4" fill="#ffffff" />
+            </g>
+            <path d="M 18 25 L 30 25 L 33 38 L 15 38 Z" fill="#ef4444" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 24 25 L 24 38" stroke="#b91c1c" strokeWidth="1.2" />
+            <circle cx="24" cy="27" r="1.2" fill="#fde047" />
+            <path className="wave" d="M 17 26 C 11 25 8 19 7 14" stroke="#fed7aa" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 17 26 C 11 25 8 19 7 14" stroke={INK} strokeWidth="1.2" strokeLinecap="round" fill="none" />
+            <path d="M 31 26 C 37 25 40 21 41 17" stroke="#fed7aa" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 31 26 C 37 25 40 21 41 17" stroke={INK} strokeWidth="1.2" strokeLinecap="round" fill="none" />
+            <path d="M 18 38 L 18 44 M 30 38 L 30 44" stroke="#fed7aa" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 12 43 C 18 45 30 45 36 43" stroke="#38bdf8" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'dong-tao-chicken':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Gà Đông Tảo - Mào đỏ, ức tía, chân vảy rồng to xù xì */}
+            <path className="tail" d="M 16 24 C 11 19 8 20 6 25 C 10 28 14 28 17 29" fill="#1e293b" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <ellipse cx="23" cy="27" rx="10" ry="8" fill="#7f1d1d" stroke={INK} strokeWidth="1.6" />
+            <path d="M 19 25 C 22 23 27 24 28 28 C 27 32 21 33 19 25 Z" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <path d="M 27 25 C 29 21 30 17 31 14 C 33 13 36 15 35 18 C 34 22 31 26 29 28 Z" fill="#991b1b" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" />
+            <path d="M 31 13 C 31 8 35 8 36 11 C 38 9 40 10 39 13 Z" fill="#ef4444" stroke={INK} strokeWidth="1.2" />
+            <path d="M 36 16 L 41 17 L 36 19 Z" fill="#f59e0b" stroke={INK} strokeWidth="1" strokeLinejoin="round" />
+            <g className="eye">
+              <circle cx="34" cy="15" r="1.4" fill="#1c1917" />
+              <circle className="pupil" cx="34" cy="15" r="0.9" fill="#1c1917" />
+              <circle cx="33.7" cy="14.7" r="0.4" fill="#ffffff" />
+            </g>
+            <Limb d="M 21 34 L 20 44" color="#dc2626" w={5} />
+            <path d="M 17 44 L 23 44" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+            <Limb d="M 28 34 L 29 44" color="#dc2626" w={5} />
+            <path d="M 26 44 L 32 44" stroke={INK} strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'hmong-dog':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Chó H'Mông cộc đuôi - Lông hung đỏ, tai vểnh, đuôi cộc tròn */}
+            <ellipse cx="23" cy="29" rx="11" ry="8" fill="#b45309" stroke={INK} strokeWidth="1.6" />
+            <circle className="tail" cx="12" cy="27" r="3" fill="#92400e" stroke={INK} strokeWidth="1.4" />
+            <path d="M 26 25 C 27 20 30 16 34 16 C 39 16 41 21 38 27 C 35 31 30 31 27 28 Z" fill="#d97706" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 31 16 L 31 10 L 35 15 Z" fill="#92400e" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M 36 16 L 38 10 L 40 15 Z" fill="#92400e" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <ellipse cx="38" cy="23" rx="3.5" ry="2.5" fill="#fef3c7" stroke={INK} strokeWidth="1.1" />
+            <circle cx="40" cy="22.5" r="1.1" fill="#1c1917" />
+            <g className="eye">
+              <circle cx="34.5" cy="19" r="1.5" fill="#1c1917" />
+              <circle className="pupil" cx="34.5" cy="19" r="1" fill="#1c1917" />
+              <circle cx="34.2" cy="18.7" r="0.4" fill="#ffffff" />
+            </g>
+            <Limb d="M 18 36 L 17 44" color="#92400e" w={3.4} />
+            <Limb d="M 23 37 L 23 45" color="#92400e" w={3.4} />
+            <Limb d="M 28 37 L 28 45" color="#b45309" w={3.4} />
+            <Limb d="M 33 36 L 34 44" color="#b45309" w={3.4} />
+          </svg>
+        );
+
+      case 'langur':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Voọc mông trắng - Thân đen tuyền, mông trắng, mào lông đầu */}
+            <path className="tail" d="M 14 33 C 8 33 6 23 9 17" stroke="#1e293b" strokeWidth="2.4" strokeLinecap="round" />
+            <ellipse cx="23" cy="27" rx="8.5" ry="10" fill="#1e293b" stroke={INK} strokeWidth="1.6" />
+            <path d="M 15 28 C 15 34 20 37 25 36 C 21 34 18 30 17 27 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.2" />
+            <circle cx="28" cy="16" r="6" fill="#1e293b" stroke={INK} strokeWidth="1.5" />
+            <path d="M 23 16 C 24 11 29 11 31 13 C 33 16 32 19 28 20 C 25 20 23 18 23 16 Z" fill="#f8fafc" stroke={INK} strokeWidth="1" />
+            <path d="M 28 10 L 29 6 L 31 10" stroke="#f8fafc" strokeWidth="1.8" strokeLinecap="round" />
+            <circle cx="29" cy="16.5" r="2.8" fill="#0f172a" />
+            <g className="eye">
+              <circle cx="30" cy="16" r="1.4" fill="#fbbf24" />
+              <circle className="pupil" cx="30" cy="16" r="0.9" fill="#1c1917" />
+              <circle cx="29.7" cy="15.7" r="0.4" fill="#ffffff" />
+            </g>
+            <Limb d="M 21 36 L 20 44" color="#1e293b" w={3} />
+            <Limb d="M 27 36 L 28 44" color="#1e293b" w={3} />
+          </svg>
+        );
+
+      case 'khen':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Khèn H'Mông - Bầu khèn gỗ, ống trúc và dải chỉ đỏ */}
+            <path d="M 14 31 C 11 27 13 22 18 22 C 22 22 24 26 23 31 Z" fill="#78350f" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M 16 38 L 36 10" stroke="#d97706" strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M 16 38 L 36 10" stroke={INK} strokeWidth="0.8" strokeLinecap="round" />
+            <path d="M 18 40 L 40 9" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+            <path d="M 18 40 L 40 9" stroke={INK} strokeWidth="0.8" strokeLinecap="round" />
+            <path d="M 15 35 L 32 12" stroke="#d97706" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M 15 35 L 32 12" stroke={INK} strokeWidth="0.7" strokeLinecap="round" />
+            <path d="M 13 33 L 28 13" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" />
+            <rect x="22" y="21" width="5" height="3" rx="1" fill="#fde047" stroke={INK} strokeWidth="1" transform="rotate(-40 22 21)" />
+            <path className="tail" d="M 16 33 C 12 37 10 43 8 45 M 17 34 C 15 39 14 43 12 46" stroke="#ef4444" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'cham-statue':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Tượng vũ nữ Apsara Champa - Vương miện sen, dáng múa sa thạch */}
+            <path d="M 21 11 L 24 5 L 27 11 Z" fill="#d97706" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M 18 13 C 21 11 27 11 30 13 L 29 15 L 19 15 Z" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="24" cy="18" rx="5" ry="5.5" fill="#d4d4d8" stroke={INK} strokeWidth="1.4" />
+            <path d="M 22 21 Q 24 22.5 26 21" stroke="#52525b" strokeWidth="1" strokeLinecap="round" />
+            <g className="eye">
+              <circle cx="22" cy="17.5" r="1.1" fill="#27272a" />
+              <circle className="pupil" cx="22" cy="17.5" r="0.8" fill="#27272a" />
+            </g>
+            <g className="eye">
+              <circle cx="26" cy="17.5" r="1.1" fill="#27272a" />
+              <circle className="pupil" cx="26" cy="17.5" r="0.8" fill="#27272a" />
+            </g>
+            <path d="M 21 23 C 22 25 26 25 27 23" stroke="#eab308" strokeWidth="1.4" fill="none" />
+            <path d="M 20 25 C 18 29 19 36 21 41 L 27 41 C 29 36 30 29 28 25 Z" fill="#a1a1aa" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" />
+            <path className="wave" d="M 20 25 C 14 26 10 23 8 18" stroke="#a1a1aa" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 20 25 C 14 26 10 23 8 18" stroke={INK} strokeWidth="1" strokeLinecap="round" fill="none" />
+            <path d="M 28 25 C 34 26 38 29 40 35" stroke="#a1a1aa" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 28 25 C 34 26 38 29 40 35" stroke={INK} strokeWidth="1" strokeLinecap="round" fill="none" />
+          </svg>
+        );
+
+      case 'highland-elephant':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Voi Bản Đôn Tây Nguyên - Ngà trắng, bành voi, vòi cong */}
+            <ellipse cx="23" cy="28" rx="12" ry="9" fill="#64748b" stroke={INK} strokeWidth="1.8" />
+            <rect x="18" y="16" width="10" height="4" rx="1" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <path d="M 19 18 L 27 18" stroke="#ef4444" strokeWidth="1" />
+            <circle cx="33" cy="24" r="7" fill="#475569" stroke={INK} strokeWidth="1.6" />
+            <path d="M 27 20 C 25 24 26 29 30 30 C 31 27 30 22 28 20 Z" fill="#64748b" stroke={INK} strokeWidth="1.2" />
+            <path d="M 37 25 C 41 27 43 33 40 37 C 39 37 38 35 39 33 C 40 30 38 28 36 28" fill="#475569" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <path d="M 36 29 C 40 30 42 27 43 25" stroke="#f8fafc" strokeWidth="2" strokeLinecap="round" />
+            <path d="M 36 29 C 40 30 42 27 43 25" stroke={INK} strokeWidth="0.8" strokeLinecap="round" fill="none" />
+            <g className="eye">
+              <circle cx="34" cy="22" r="1.4" fill="#0f172a" />
+              <circle className="pupil" cx="34" cy="22" r="0.9" fill="#0f172a" />
+              <circle cx="33.7" cy="21.7" r="0.4" fill="#ffffff" />
+            </g>
+            <Limb d="M 16 35 L 16 44" color="#475569" w={4} />
+            <Limb d="M 22 36 L 22 44" color="#475569" w={4} />
+            <Limb d="M 28 36 L 28 44" color="#475569" w={4} />
+            <path className="tail" d="M 12 28 L 10 36" stroke="#475569" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'gong':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cồng chiêng Tây Nguyên - Chiêng đồng có núm, hoa văn đúc nổi */}
+            <circle cx="24" cy="24" r="17" fill="#b45309" stroke={INK} strokeWidth="2" />
+            <circle cx="24" cy="24" r="14" fill="#d97706" stroke={INK} strokeWidth="1.2" />
+            <circle cx="24" cy="24" r="10" stroke="#f59e0b" strokeWidth="1.4" strokeDasharray="3 2" />
+            <circle cx="24" cy="24" r="5" fill="#f59e0b" stroke={INK} strokeWidth="1.6" />
+            <circle cx="22.5" cy="22.5" r="1.5" fill="#fef08a" opacity="0.8" />
+            <path d="M 20 7 C 22 4 26 4 28 7" stroke="#92400e" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 20 7 C 22 4 26 4 28 7" stroke={INK} strokeWidth="1" strokeLinecap="round" fill="none" />
+          </svg>
+        );
+
+      case 'dragon-boat':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Thuyền rồng hoàng cung Huế - Đầu rồng vàng, lầu son sông Hương */}
+            <path d="M 6 30 C 14 36 34 36 42 28 L 40 33 C 32 39 14 39 6 30 Z" fill="#92400e" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 40 29 C 43 25 43 19 40 16 C 39 18 38 18 38 16 C 36 18 36 21 38 24 Z" fill="#f59e0b" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <circle cx="41" cy="18" r="1" fill="#ef4444" />
+            <path d="M 18 24 L 28 24 L 29 20 L 17 20 Z" fill="#ef4444" stroke={INK} strokeWidth="1.2" />
+            <path d="M 15 20 C 19 18 27 18 31 20" stroke="#eab308" strokeWidth="1.6" strokeLinecap="round" />
+            <circle className="glow-spot" cx="23" cy="22" r="2" fill="#fef08a" opacity="0.9" />
+            <path d="M 4 36 C 10 39 16 34 22 37 C 28 34 34 39 44 35" stroke="#0ea5e9" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'dan-bau':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Đàn bầu - Cần sừng uốn cong, quả bầu tiện gỗ, một dây ngân */}
+            <path d="M 6 32 L 40 24 L 41 27 L 7 35 Z" fill="#78350f" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 12 31 L 38 25" stroke="#f59e0b" strokeWidth="1" />
+            <ellipse cx="10" cy="26" rx="3.5" ry="4.5" fill="#d97706" stroke={INK} strokeWidth="1.3" />
+            <path className="wave" d="M 10 26 C 9 19 13 13 15 9" stroke="#1c1917" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 10 26 C 9 19 13 13 15 9" stroke={INK} strokeWidth="1" strokeLinecap="round" fill="none" />
+            <path d="M 14 11 L 39 25" stroke="#e2e8f0" strokeWidth="1.2" strokeLinecap="round" />
+            <circle cx="39" cy="25" r="1.5" fill="#fde047" stroke={INK} strokeWidth="1" />
+          </svg>
+        );
+
+      case 'banh-mi':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Bánh mì Sài Gòn - Ổ vàng rụm, rạch giữa lộ chả lụa & dưa chuột */}
+            <ellipse cx="24" cy="24" rx="18" ry="10" fill="#f59e0b" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="24" rx="16" ry="8" fill="#fbbf24" stroke={INK} strokeWidth="1" />
+            <path d="M 9 24 Q 24 27 39 24" stroke="#d97706" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 14 23 L 20 22 M 24 23 L 30 22 M 33 23 L 37 22" stroke="#f43f5e" strokeWidth="2.8" strokeLinecap="round" />
+            <path d="M 17 25 L 23 25 M 27 25 L 34 25" stroke="#22c55e" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 21 21 L 23 18 M 27 21 L 29 18" stroke="#15803d" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'coffee-phin':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cà phê phin nhôm truyền thống & ly thủy tinh */}
+            <path d="M 18 10 L 30 10 L 29 7 L 19 7 Z" fill="#94a3b8" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <circle cx="24" cy="6" r="1.2" fill="#64748b" stroke={INK} strokeWidth="1" />
+            <rect x="17" y="10" width="14" height="12" rx="1" fill="#cbd5e1" stroke={INK} strokeWidth="1.5" />
+            <ellipse cx="24" cy="22" rx="10" ry="2.5" fill="#94a3b8" stroke={INK} strokeWidth="1.4" />
+            <path d="M 18 24 L 19 40 C 19 42 29 42 29 40 L 30 24 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" opacity="0.85" />
+            <path d="M 19 37 L 29 37 L 29 40 C 29 42 19 42 19 40 Z" fill="#fef3c7" />
+            <path d="M 18.5 30 L 29.5 30 L 29 37 L 19 37 Z" fill="#451a03" />
+            <circle cx="24" cy="26" r="1" fill="#451a03" />
+          </svg>
+        );
+
+      case 'sampan':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Xuồng ba lá miền Tây - Chở sọt hoa trái nhiệt đới */}
+            <path d="M 5 27 C 14 36 34 36 43 27 C 35 34 13 34 5 27 Z" fill="#78350f" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 6 27 C 15 32 33 32 42 27" stroke="#b45309" strokeWidth="1.8" fill="none" />
+            <circle cx="20" cy="23" r="3.5" fill="#facc15" stroke={INK} strokeWidth="1" />
+            <circle cx="25" cy="21" r="3" fill="#ef4444" stroke={INK} strokeWidth="1" />
+            <circle cx="28" cy="24" r="3.5" fill="#22c55e" stroke={INK} strokeWidth="1" />
+            <path d="M 14 36 L 35 15" stroke="#d97706" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M 33 17 L 37 13" stroke="#92400e" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 4 33 C 12 36 22 31 32 35 C 38 32 42 34 44 33" stroke="#38bdf8" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'ca-mau-crab':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cua Năm Căn Cà Mau - Mai dày, 2 càng to kềnh màu đỏ cam */}
+            <ellipse cx="24" cy="27" rx="10.5" ry="8.5" fill="#047857" stroke={INK} strokeWidth="1.8" />
+            <path d="M 18 24 C 21 22 27 22 30 24 M 20 28 C 22 30 26 30 28 28" stroke="#065f46" strokeWidth="1.2" strokeLinecap="round" />
+            <g className="eye">
+              <circle cx="21" cy="18" r="1.6" fill="#1c1917" />
+              <circle className="pupil" cx="21" cy="18" r="1.1" fill="#1c1917" />
+              <circle cx="20.7" cy="17.7" r="0.5" fill="#ffffff" />
+            </g>
+            <g className="eye">
+              <circle cx="27" cy="18" r="1.6" fill="#1c1917" />
+              <circle className="pupil" cx="27" cy="18" r="1.1" fill="#1c1917" />
+              <circle cx="26.7" cy="17.7" r="0.5" fill="#ffffff" />
+            </g>
+            <path className="wave" d="M 15 23 C 9 20 7 13 12 10 C 16 8 18 15 15 19" fill="#ea580c" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 33 23 C 39 20 41 13 36 10 C 32 8 30 15 33 19" fill="#ea580c" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <Limb d="M 15 28 L 8 31 L 6 36" color="#059669" w={2.6} />
+            <Limb d="M 16 32 L 10 36 L 9 41" color="#059669" w={2.6} />
+            <Limb d="M 33 28 L 40 31 L 42 36" color="#059669" w={2.6} />
+            <Limb d="M 32 32 L 38 36 L 39 41" color="#059669" w={2.6} />
+          </svg>
+        );
+
+      case 'phu-quoc-dog':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Chó xoáy Phú Quốc - Lông vàng lửa, dải xoáy kiếm trên lưng */}
+            <ellipse cx="23" cy="28" rx="11" ry="8" fill="#d97706" stroke={INK} strokeWidth="1.6" />
+            <path d="M 16 20 C 20 18 26 18 30 20 C 26 21 20 21 16 20 Z" fill="#92400e" stroke={INK} strokeWidth="0.8" />
+            <path className="tail" d="M 13 26 C 9 24 7 18 10 14" stroke="#d97706" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M 27 24 C 28 19 32 15 36 15 C 40 15 42 19 39 25 C 37 29 31 29 27 26 Z" fill="#f59e0b" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 32 15 L 34 8 L 36 14 Z" fill="#b45309" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M 37 15 L 39 8 L 41 14 Z" fill="#b45309" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <ellipse cx="40" cy="21" rx="3" ry="2" fill="#fed7aa" stroke={INK} strokeWidth="1" />
+            <circle cx="42" cy="20.5" r="1" fill="#1c1917" />
+            <g className="eye">
+              <circle cx="36" cy="18" r="1.5" fill="#1c1917" />
+              <circle className="pupil" cx="36" cy="18" r="1" fill="#1c1917" />
+              <circle cx="35.7" cy="17.7" r="0.4" fill="#ffffff" />
+            </g>
+            <Limb d="M 17 35 L 16 45" color="#b45309" w={3.2} />
+            <Limb d="M 22 36 L 22 45" color="#b45309" w={3.2} />
+            <Limb d="M 28 36 L 29 45" color="#d97706" w={3.2} />
+            <Limb d="M 33 35 L 34 45" color="#d97706" w={3.2} />
+          </svg>
+        );
+
+      case 'dugong':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Bò biển Dugong Phú Quốc - Thân tròn hiền lành, đuôi xòe cá voi */}
+            <path className="tail" d="M 12 25 C 8 21 5 18 5 24 C 5 30 8 27 12 25 Z" fill="#64748b" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" />
+            <ellipse cx="24" cy="25" rx="14" ry="9" fill="#94a3b8" stroke={INK} strokeWidth="1.8" />
+            <path d="M 15 28 C 19 32 29 32 33 28 C 29 30 19 30 15 28 Z" fill="#cbd5e1" />
+            <path d="M 34 22 C 38 21 42 24 41 28 C 40 31 35 30 33 28 Z" fill="#64748b" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" />
+            <circle cx="39" cy="27" r="0.8" fill="#1c1917" />
+            <path d="M 27 28 C 29 33 26 36 24 35 C 23 33 25 30 27 28 Z" fill="#64748b" stroke={INK} strokeWidth="1.2" />
+            <g className="eye">
+              <circle cx="34" cy="21" r="1.3" fill="#1c1917" />
+              <circle className="pupil" cx="34" cy="21" r="0.9" fill="#1c1917" />
+              <circle cx="33.7" cy="20.7" r="0.4" fill="#ffffff" />
+            </g>
+            <path d="M 39 28 C 41 33 43 35 44 38 M 38 29 C 40 32 39 35 40 37" stroke="#22c55e" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'dong-son-drum':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Trống đồng Đông Sơn - Mặt trống mặt trời và đàn chim Lạc */}
+            <circle cx="24" cy="24" r="20" fill="#b4833e" stroke={INK} strokeWidth="1.8" />
+            <circle cx="24" cy="24" r="16" stroke="#d4af37" strokeWidth="1.2" />
+            <circle cx="24" cy="24" r="11" stroke="#8a5a22" strokeWidth="1" />
+            <polygon points="24,19 25.5,22.5 29,24 25.5,25.5 24,29 22.5,25.5 19,24 22.5,22.5" fill="#fde047" stroke={INK} strokeWidth="0.8" />
+            <circle cx="24" cy="24" r="5" stroke="#fde047" strokeWidth="0.8" />
+            <path className="paint" d="M 24 5 C 31 5 37 9 40 15" stroke="#3b82f6" strokeWidth="0.8" strokeDasharray="1.5 2" />
+            <path className="paint" d="M 40 33 C 37 39 31 43 24 43" stroke="#3b82f6" strokeWidth="0.8" strokeDasharray="1.5 2" />
+            <path className="paint" d="M 8 33 C 5 27 5 21 8 15" stroke="#3b82f6" strokeWidth="0.8" strokeDasharray="1.5 2" />
+            <path d="M 28 9 L 34 11 L 32 15 Z" fill="#d4af37" stroke={INK} strokeWidth="0.8" />
+            <path d="M 39 26 L 41 32 L 37 30 Z" fill="#d4af37" stroke={INK} strokeWidth="0.8" />
+            <path d="M 20 39 L 14 37 L 16 33 Z" fill="#d4af37" stroke={INK} strokeWidth="0.8" />
+            <path d="M 9 22 L 7 16 L 11 18 Z" fill="#d4af37" stroke={INK} strokeWidth="0.8" />
+          </svg>
+        );
+
+      case 'pho-bowl':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Bát phở Thăng Long - Bát sứ trắng xanh, bánh phở, thịt bò, hành hoa */}
+            <ellipse cx="24" cy="40" rx="9" ry="2.5" fill="#cbd5e1" stroke={INK} strokeWidth="1.2" />
+            <path d="M 8 22 C 8 34 15 40 24 40 C 33 40 40 34 40 22 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.6" />
+            <ellipse cx="24" cy="22" rx="16" ry="6" fill="#fef08a" stroke={INK} strokeWidth="1.4" />
+            <path d="M 9 22 C 14 26 34 26 39 22" stroke="#2563eb" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 16 21 C 20 24 28 24 32 21" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+            <ellipse cx="21" cy="20" rx="4" ry="2.2" fill="#991b1b" stroke={INK} strokeWidth="0.8" />
+            <ellipse cx="28" cy="21" rx="3.5" ry="2" fill="#991b1b" stroke={INK} strokeWidth="0.8" />
+            <circle cx="16" cy="23" r="1.2" fill="#16a34a" />
+            <circle cx="24" cy="24" r="1.2" fill="#16a34a" />
+            <circle cx="31" cy="23" r="1.2" fill="#16a34a" />
+            <circle cx="25" cy="19" r="1" fill="#16a34a" />
+            <path className="wave" d="M 19 15 C 17 12 21 9 19 6" stroke="#94a3b8" strokeWidth="1.4" strokeLinecap="round" />
+            <path className="wave" d="M 28 14 C 26 11 30 8 28 5" stroke="#94a3b8" strokeWidth="1.4" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'brocade':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Thổ cẩm Tây Bắc - Họa tiết quả trám dệt truyền thống */}
+            <rect x="8" y="10" width="32" height="28" rx="2" fill="#1e293b" stroke={INK} strokeWidth="1.6" />
+            <polygon points="24,13 36,24 24,35 12,24" fill="#dc2626" stroke="#f59e0b" strokeWidth="1.2" />
+            <polygon points="24,17 31,24 24,31 17,24" fill="#0284c7" stroke="#f8fafc" strokeWidth="0.8" />
+            <polygon points="24,20 28,24 24,28 20,24" fill="#fde047" stroke={INK} strokeWidth="0.6" />
+            <path d="M 8 13 L 12 10 L 16 13 L 20 10 L 24 13 L 28 10 L 32 13 L 36 10 L 40 13" stroke="#eab308" strokeWidth="1" />
+            <path d="M 8 35 L 12 38 L 16 35 L 20 38 L 24 35 L 28 38 L 32 35 L 36 38 L 40 35" stroke="#eab308" strokeWidth="1" />
+            <path d="M 10 38 L 10 44 M 17 38 L 17 44 M 24 38 L 24 44 M 31 38 L 31 44 M 38 38 L 38 44" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'basket-boat':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Thuyền thúng nan làng chài - Thuyền tròn đan tre trét dầu rái */}
+            <ellipse cx="24" cy="27" rx="17" ry="14" fill="#d97706" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="27" rx="14" ry="11" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="24" cy="27" rx="10" ry="7" fill="#78350f" />
+            <ellipse cx="24" cy="27" rx="17" ry="14" stroke="#451a03" strokeWidth="1.2" strokeDasharray="3 2" />
+            <Limb d="M 8 10 L 34 38" color="#a16207" w={2.2} />
+            <path d="M 32 36 L 41 43 L 38 45 L 30 38 Z" fill="#ca8a04" stroke={INK} strokeWidth="1" strokeLinejoin="round" />
+          </svg>
+        );
+
+      case 'ao-dai':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Áo dài truyền thống duyên dáng - Cổ tàu, tà bay thướt tha */}
+            <path d="M 21 30 L 19 45 M 27 30 L 29 45" stroke="#ffffff" strokeWidth="3.2" strokeLinecap="round" />
+            <path d="M 21 8 L 27 8 L 28 16 L 20 16 Z" fill="#9333ea" stroke={INK} strokeWidth="1.2" />
+            <path d="M 21 8 C 21 6 27 6 27 8" stroke="#facc15" strokeWidth="1.4" />
+            <path d="M 20 12 L 12 18 L 14 20 L 21 16 Z" fill="#7e22ce" stroke={INK} strokeWidth="1" />
+            <path d="M 28 12 L 36 18 L 34 20 L 27 16 Z" fill="#7e22ce" stroke={INK} strokeWidth="1" />
+            <path className="wave" d="M 20 16 C 18 24 16 34 18 42 C 22 43 26 43 28 42 C 30 34 28 24 28 16 Z" fill="#9333ea" stroke={INK} strokeWidth="1.5" strokeLinejoin="round" />
+            <path d="M 24 9 C 26 11 27 13 28 16" stroke="#facc15" strokeWidth="1" />
+          </svg>
+        );
+
+      case 't-rung':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Đàn T'rưng Tây Nguyên - Các ống nứa xếp so le treo trên khung */}
+            <path d="M 8 10 C 14 36 18 40 22 42 M 40 14 C 34 36 30 40 26 42" stroke="#78350f" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M 10 14 L 38 18" stroke="#ca8a04" strokeWidth="0.8" />
+            <path d="M 14 36 L 32 38" stroke="#ca8a04" strokeWidth="0.8" />
+            <rect x="12" y="12" width="24" height="3" rx="1.5" fill="#eab308" stroke={INK} strokeWidth="0.9" />
+            <rect x="13.5" y="17" width="21" height="3" rx="1.5" fill="#eab308" stroke={INK} strokeWidth="0.9" />
+            <rect x="15" y="22" width="18" height="3" rx="1.5" fill="#facc15" stroke={INK} strokeWidth="0.9" />
+            <rect x="16.5" y="27" width="15" height="3" rx="1.5" fill="#facc15" stroke={INK} strokeWidth="0.9" />
+            <rect x="18" y="32" width="12" height="3" rx="1.5" fill="#fde047" stroke={INK} strokeWidth="0.9" />
+            <rect x="19.5" y="37" width="9" height="3" rx="1.5" fill="#fde047" stroke={INK} strokeWidth="0.9" />
+            <Limb d="M 28 6 L 35 15" color="#b45309" w={1.8} />
+            <circle cx="35" cy="15" r="2.2" fill="#dc2626" stroke={INK} strokeWidth="0.8" />
           </svg>
         );
 
@@ -3378,6 +3818,788 @@ export const ObjectSprite: React.FC<ObjectSpriteProps> = ({
             <circle cx="11" cy="14" r="2.8" stroke={INK} strokeWidth="0.7" />
             <polygon points="11,9.8 11.9,13.1 15.2,14 11.9,14.9 11,18.2 10.1,14.9 6.8,14 10.1,13.1" fill="#7a4a1e" stroke={INK} strokeWidth="0.5" strokeLinejoin="round" />
             <polygon points="11,9.8 11.9,13.1 10.1,13.1" fill="#d42a2a" />
+          </svg>
+        );
+
+      case 'nghe':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Con Nghe - Sacred Temple Lion-Dog */}
+            <path d="M 28 38 C 34 38 38 34 38 28 C 38 22 34 20 28 20 C 24 20 20 22 18 26 C 16 30 18 36 22 38 Z" fill="#d97736" stroke={INK} strokeWidth="1.8" />
+            <circle cx="20" cy="18" r="8" fill="#d97736" stroke={INK} strokeWidth="1.8" />
+            <path d="M 14 12 C 12 8 16 6 18 10 Z" fill="#b45309" stroke={INK} strokeWidth="1.4" />
+            <path d="M 24 12 C 26 8 22 6 20 10 Z" fill="#b45309" stroke={INK} strokeWidth="1.4" />
+            <path d="M 16 19 Q 20 22 24 19 Q 20 16 16 19" fill="#faf5eb" stroke={INK} strokeWidth="1.2" />
+            <g className="eye">
+              <circle className="pupil" cx="17.5" cy="16.5" r="1.5" fill="#1c1917" />
+              <circle cx="17.8" cy="16" r="0.5" fill="#fff" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="22.5" cy="16.5" r="1.5" fill="#1c1917" />
+              <circle cx="22.8" cy="16" r="0.5" fill="#fff" />
+            </g>
+            <ellipse cx="20" cy="18" rx="2" ry="1.4" fill="#991b1b" />
+            <g className="tail">
+              <path d="M 36 34 C 42 32 44 26 40 22 C 38 24 38 28 34 30" fill="#b45309" stroke={INK} strokeWidth="1.6" />
+            </g>
+            <ellipse cx="18" cy="39" rx="3" ry="2" fill="#faf5eb" stroke={INK} strokeWidth="1.4" />
+            <ellipse cx="28" cy="39" rx="3.5" ry="2.2" fill="#faf5eb" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'red-crowned-crane':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Seu Dau Do - Red-crowned Crane */}
+            <path d="M 20 30 C 26 28 34 32 36 38 C 30 40 22 38 18 34 Z" fill="#fafafa" stroke={INK} strokeWidth="1.6" />
+            <path d="M 32 35 C 36 35 42 38 42 41 C 36 41 32 38 30 36 Z" fill="#1c1917" />
+            <path d="M 18 32 C 16 26 18 16 16 10" stroke={INK} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 18 32 C 16 26 18 16 16 10" stroke="#fafafa" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="15" cy="9" r="3.5" fill="#fafafa" stroke={INK} strokeWidth="1.4" />
+            <circle cx="15" cy="7.5" r="1.8" fill="#dc2626" />
+            <path d="M 13 9 L 6 10 L 13 11 Z" fill="#ca8a04" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <g className="eye">
+              <circle className="pupil" cx="15.5" cy="9" r="0.8" fill="#1c1917" />
+            </g>
+            <Limb d="M 22 36 L 20 45" color="#57534e" w={2} />
+            <Limb d="M 27 36 L 27 45" color="#57534e" w={2} />
+          </svg>
+        );
+
+      case 'dong-ho-pig':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Lon Dong Ho - Folk Yin-Yang Pig */}
+            <ellipse cx="24" cy="28" rx="14" ry="10" fill="#fde047" stroke={INK} strokeWidth="1.8" />
+            <circle cx="24" cy="27" r="4.5" fill="#ca8a04" stroke={INK} strokeWidth="1" />
+            <path d="M 24 22.5 C 26.5 22.5 26.5 27 24 27 C 21.5 27 21.5 31.5 24 31.5" stroke={INK} strokeWidth="1" fill="none" />
+            <circle cx="12" cy="25" r="7" fill="#fde047" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="7.5" cy="26" rx="3" ry="4" fill="#facc15" stroke={INK} strokeWidth="1.4" />
+            <circle cx="7" cy="25" r="0.8" fill="#1c1917" />
+            <circle cx="7" cy="27" r="0.8" fill="#1c1917" />
+            <g className="eye">
+              <circle className="pupil" cx="12" cy="23" r="1.2" fill="#1c1917" />
+            </g>
+            <path d="M 12 19 C 10 14 14 14 15 18 Z" fill="#eab308" stroke={INK} strokeWidth="1.4" />
+            <g className="tail">
+              <path d="M 38 27 Q 43 24 41 21 Q 39 19 42 17" stroke={INK} strokeWidth="1.6" fill="none" strokeLinecap="round" />
+            </g>
+            <rect x="16" y="36" width="3.5" height="5" rx="1.5" fill="#eab308" stroke={INK} strokeWidth="1.4" />
+            <rect x="28" y="36" width="3.5" height="5" rx="1.5" fill="#eab308" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'bamboo-dragonfly':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Chuon Chuon Tre - Balancing Bamboo Dragonfly */}
+            <path d="M 24 8 C 23 8 23 38 24 42 C 25 38 25 8 24 8 Z" fill="#eab308" stroke={INK} strokeWidth="1.6" />
+            <path d="M 24 16 C 14 10 6 16 8 20 C 14 20 20 18 24 17 Z" fill="#ef4444" stroke={INK} strokeWidth="1.4" />
+            <path d="M 24 16 C 34 10 42 16 40 20 C 34 20 28 18 24 17 Z" fill="#ef4444" stroke={INK} strokeWidth="1.4" />
+            <path d="M 24 20 C 15 18 9 24 11 27 C 16 26 21 23 24 21 Z" fill="#3b82f6" stroke={INK} strokeWidth="1.2" />
+            <path d="M 24 20 C 33 18 39 24 37 27 C 32 26 27 23 24 21 Z" fill="#3b82f6" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="24" cy="8" rx="2.5" ry="3" fill="#ca8a04" stroke={INK} strokeWidth="1.4" />
+            <circle cx="24" cy="6" r="1" fill="#1c1917" />
+          </svg>
+        );
+
+      case 'black-carp':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ca Chep Den - Black Carp */}
+            <path d="M 8 24 C 14 14 28 14 36 20 C 40 24 38 28 34 30 C 26 34 14 32 8 24 Z" fill="#334155" stroke={INK} strokeWidth="1.8" />
+            <path d="M 36 22 Q 44 14 44 24 Q 44 34 36 28 Z" fill="#1e293b" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 18 16 Q 24 10 28 16" fill="#1e293b" stroke={INK} strokeWidth="1.4" />
+            <path d="M 18 28 Q 22 34 26 30" fill="#1e293b" stroke={INK} strokeWidth="1.4" />
+            <g className="eye">
+              <circle cx="12" cy="22" r="2.5" fill="#facc15" stroke={INK} strokeWidth="1" />
+              <circle className="pupil" cx="12" cy="22" r="1.4" fill="#0f172a" />
+            </g>
+            <path d="M 8 26 Q 5 28 4 30" stroke={INK} strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 20 20 Q 24 24 20 28 M 25 19 Q 29 23 25 27 M 30 20 Q 34 24 30 27" stroke="#64748b" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'giant-water-bug':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ca Cuong - Giant Water Bug */}
+            <ellipse cx="24" cy="26" rx="11" ry="15" fill="#4d7c0f" stroke={INK} strokeWidth="1.8" />
+            <path d="M 14 22 L 24 32 L 34 22" stroke={INK} strokeWidth="1.6" fill="none" />
+            <circle cx="24" cy="11" r="5" fill="#365314" stroke={INK} strokeWidth="1.6" />
+            <g className="eye">
+              <circle className="pupil" cx="21" cy="10" r="1.5" fill="#1c1917" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="27" cy="10" r="1.5" fill="#1c1917" />
+            </g>
+            <path d="M 20 12 C 16 6 12 10 14 14" stroke={INK} strokeWidth="2" strokeLinecap="round" fill="none" />
+            <path d="M 28 12 C 32 6 36 10 34 14" stroke={INK} strokeWidth="2" strokeLinecap="round" fill="none" />
+            <Limb d="M 14 26 L 6 30" color="#365314" w={2.4} />
+            <Limb d="M 34 26 L 42 30" color="#365314" w={2.4} />
+            <Limb d="M 16 34 L 8 40" color="#365314" w={2.4} />
+            <Limb d="M 32 34 L 40 40" color="#365314" w={2.4} />
+          </svg>
+        );
+
+      case 'green-peafowl':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cong Ma Vang - Green Peafowl */}
+            <path d="M 18 28 C 22 24 30 26 34 32 C 30 38 22 36 18 32 Z" fill="#059669" stroke={INK} strokeWidth="1.6" />
+            <path d="M 28 30 C 36 28 44 34 44 42 C 36 42 30 38 28 34 Z" fill="#0d9488" stroke={INK} strokeWidth="1.4" />
+            <path d="M 18 28 C 16 22 18 14 16 10" stroke={INK} strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M 18 28 C 16 22 18 14 16 10" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" />
+            <circle cx="15" cy="9" r="3.5" fill="#059669" stroke={INK} strokeWidth="1.4" />
+            <ellipse cx="16" cy="9.5" rx="1.5" ry="1" fill="#facc15" />
+            <path d="M 13 9 L 8 10 L 13 11 Z" fill="#ca8a04" stroke={INK} strokeWidth="1" />
+            <path d="M 15 6 L 14 3 M 16 6 L 16 2 M 17 6 L 18 3" stroke={INK} strokeWidth="1.2" strokeLinecap="round" />
+            <circle cx="14" cy="2.5" r="0.8" fill="#0d9488" />
+            <circle cx="16" cy="1.5" r="0.8" fill="#0d9488" />
+            <circle cx="18" cy="2.5" r="0.8" fill="#0d9488" />
+            <g className="eye">
+              <circle className="pupil" cx="15" cy="8.5" r="0.8" fill="#1c1917" />
+            </g>
+            <Limb d="M 22 35 L 20 44" color="#78716c" w={2} />
+            <Limb d="M 26 35 L 26 44" color="#78716c" w={2} />
+          </svg>
+        );
+
+      case 'pygmy-loris':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cu Li Lun - Pygmy Loris */}
+            <circle cx="24" cy="22" r="11" fill="#b45309" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="26" rx="6" ry="5" fill="#fef3c7" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="24" cy="24" rx="2" ry="1.4" fill="#78350f" />
+            <g className="eye">
+              <circle cx="18" cy="20" r="4.5" fill="#f59e0b" stroke={INK} strokeWidth="1.5" />
+              <circle className="pupil" cx="18" cy="20" r="2.6" fill="#1c1917" />
+              <circle cx="17.2" cy="19" r="0.8" fill="#fff" />
+            </g>
+            <g className="eye">
+              <circle cx="30" cy="20" r="4.5" fill="#f59e0b" stroke={INK} strokeWidth="1.5" />
+              <circle className="pupil" cx="30" cy="20" r="2.6" fill="#1c1917" />
+              <circle cx="29.2" cy="19" r="0.8" fill="#fff" />
+            </g>
+            <circle cx="13" cy="15" r="2.5" fill="#b45309" stroke={INK} strokeWidth="1.4" />
+            <circle cx="35" cy="15" r="2.5" fill="#b45309" stroke={INK} strokeWidth="1.4" />
+            <path d="M 14 36 C 18 32 30 32 34 36" stroke={INK} strokeWidth="2.4" strokeLinecap="round" />
+            <ellipse cx="18" cy="37" rx="3" ry="2" fill="#fef3c7" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="30" cy="37" rx="3" ry="2" fill="#fef3c7" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'gray-shanked-douc':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Vooc Cha Va Chan Xam - Gray-shanked Douc */}
+            <circle cx="24" cy="18" r="9" fill="#ea580c" stroke={INK} strokeWidth="1.8" />
+            <path d="M 15 18 C 12 24 16 28 24 28 C 32 28 36 24 33 18 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.4" />
+            <g className="eye">
+              <circle className="pupil" cx="20" cy="17" r="1.5" fill="#1c1917" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="28" cy="17" r="1.5" fill="#1c1917" />
+            </g>
+            <ellipse cx="24" cy="21" rx="2" ry="1.4" fill="#1c1917" />
+            <path d="M 18 28 C 14 32 14 42 24 42 C 34 42 34 32 30 28 Z" fill="#64748b" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="35" rx="5" ry="6" fill="#f8fafc" />
+            <g className="tail">
+              <path d="M 28 40 Q 42 42 40 26" stroke={INK} strokeWidth="2" fill="none" strokeLinecap="round" />
+              <path d="M 28 40 Q 42 42 40 26" stroke="#f8fafc" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+            </g>
+          </svg>
+        );
+
+      case 'binturong':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cay Muc - Binturong */}
+            <ellipse cx="22" cy="28" rx="13" ry="9" fill="#1e293b" stroke={INK} strokeWidth="1.8" />
+            <circle cx="14" cy="20" r="6.5" fill="#1e293b" stroke={INK} strokeWidth="1.8" />
+            <path d="M 9 16 L 7 13 M 19 16 L 21 13" stroke="#f8fafc" strokeWidth="1.5" strokeLinecap="round" />
+            <ellipse cx="11" cy="22" rx="2.5" ry="2" fill="#f8fafc" stroke={INK} strokeWidth="1" />
+            <circle cx="10" cy="21.5" r="1" fill="#0f172a" />
+            <g className="eye">
+              <circle className="pupil" cx="15" cy="19" r="1.2" fill="#f59e0b" />
+            </g>
+            <g className="tail">
+              <path d="M 34 26 C 44 26 46 38 38 40 C 34 41 32 36 36 34" stroke={INK} strokeWidth="4" strokeLinecap="round" fill="none" />
+              <path d="M 34 26 C 44 26 46 38 38 40 C 34 41 32 36 36 34" stroke="#1e293b" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+            </g>
+            <rect x="16" y="35" width="4" height="5" rx="2" fill="#0f172a" stroke={INK} strokeWidth="1.2" />
+            <rect x="26" y="35" width="4" height="5" rx="2" fill="#0f172a" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'indochinese-tiger':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ho Dong Duong - Indochinese Tiger */}
+            <ellipse cx="26" cy="28" rx="14" ry="10" fill="#ea580c" stroke={INK} strokeWidth="1.8" />
+            <circle cx="16" cy="20" r="8" fill="#ea580c" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="16" cy="23" rx="4.5" ry="3.5" fill="#fff7ed" stroke={INK} strokeWidth="1" />
+            <path d="M 14 22 L 18 22 L 16 24 Z" fill="#991b1b" />
+            <g className="eye">
+              <circle className="pupil" cx="13" cy="18" r="1.4" fill="#1c1917" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="19" cy="18" r="1.4" fill="#1c1917" />
+            </g>
+            <path d="M 16 13 L 16 16 M 13 14 L 14 16 M 19 14 L 18 16" stroke={INK} strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 24 20 L 23 26 M 28 19 L 27 25 M 33 21 L 32 27" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="10" cy="14" r="2" fill="#ea580c" stroke={INK} strokeWidth="1.4" />
+            <circle cx="22" cy="14" r="2" fill="#ea580c" stroke={INK} strokeWidth="1.4" />
+            <g className="tail">
+              <path d="M 38 27 Q 45 23 43 16" stroke={INK} strokeWidth="2.4" fill="none" strokeLinecap="round" />
+              <path d="M 38 27 Q 45 23 43 16" stroke="#ea580c" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+            </g>
+            <rect x="20" y="36" width="3.5" height="5" rx="1.5" fill="#fff7ed" stroke={INK} strokeWidth="1.4" />
+            <rect x="30" y="36" width="3.5" height="5" rx="1.5" fill="#fff7ed" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'white-cheeked-gibbon':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Vuon Den Ma Trang - White-cheeked Gibbon */}
+            <circle cx="24" cy="20" r="8" fill="#0f172a" stroke={INK} strokeWidth="1.8" />
+            <path d="M 16 20 C 14 25 18 26 21 24" stroke="#f8fafc" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+            <path d="M 32 20 C 34 25 30 26 27 24" stroke="#f8fafc" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+            <g className="eye">
+              <circle className="pupil" cx="21" cy="18" r="1.2" fill="#f59e0b" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="27" cy="18" r="1.2" fill="#f59e0b" />
+            </g>
+            <ellipse cx="24" cy="22" rx="2" ry="1.4" fill="#334155" />
+            <ellipse cx="24" cy="34" rx="8" ry="9" fill="#0f172a" stroke={INK} strokeWidth="1.8" />
+            <Limb d="M 17 28 C 10 32 8 20 6 12" color="#0f172a" w={3.2} />
+            <Limb d="M 31 28 C 38 32 40 20 42 12" color="#0f172a" w={3.2} />
+          </svg>
+        );
+
+      case 'flying-squirrel':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Soc Bay - Flying Squirrel */}
+            <path d="M 12 16 L 36 16 L 40 36 L 8 36 Z" fill="#fef3c7" stroke={INK} strokeWidth="1.6" />
+            <ellipse cx="24" cy="24" rx="7" ry="10" fill="#9a3412" stroke={INK} strokeWidth="1.6" />
+            <circle cx="24" cy="14" r="6" fill="#9a3412" stroke={INK} strokeWidth="1.6" />
+            <g className="eye">
+              <circle className="pupil" cx="21" cy="13" r="1.8" fill="#1c1917" />
+              <circle cx="20.5" cy="12.5" r="0.6" fill="#fff" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="27" cy="13" r="1.8" fill="#1c1917" />
+              <circle cx="26.5" cy="12.5" r="0.6" fill="#fff" />
+            </g>
+            <polygon points="19,8 21,12 18,12" fill="#9a3412" stroke={INK} strokeWidth="1" />
+            <polygon points="29,8 27,12 30,12" fill="#9a3412" stroke={INK} strokeWidth="1" />
+            <path d="M 24 34 C 28 38 28 44 24 45 C 20 44 20 38 24 34 Z" fill="#7c2d12" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'treeshrew':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Doi Chuot Rung - Treeshrew */}
+            <ellipse cx="24" cy="28" rx="11" ry="7" fill="#78350f" stroke={INK} strokeWidth="1.6" />
+            <path d="M 14 26 L 6 27 L 13 22 Z" fill="#78350f" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <circle cx="6" cy="27" r="0.8" fill="#1c1917" />
+            <g className="eye">
+              <circle className="pupil" cx="12" cy="24" r="1.5" fill="#1c1917" />
+              <circle cx="11.5" cy="23.5" r="0.5" fill="#fff" />
+            </g>
+            <circle cx="16" cy="21" r="2" fill="#9a3412" stroke={INK} strokeWidth="1" />
+            <g className="tail">
+              <path d="M 34 27 Q 44 26 42 32" stroke={INK} strokeWidth="3" fill="none" strokeLinecap="round" />
+              <path d="M 34 27 Q 44 26 42 32" stroke="#9a3412" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            </g>
+            <ellipse cx="18" cy="35" rx="2.5" ry="1.5" fill="#fed7aa" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="28" cy="35" rx="2.5" ry="1.5" fill="#fed7aa" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'water-rail':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Chim Trich Co - Water Rail */}
+            <ellipse cx="26" cy="26" rx="11" ry="8" fill="#1d4ed8" stroke={INK} strokeWidth="1.6" />
+            <circle cx="16" cy="18" r="6" fill="#1d4ed8" stroke={INK} strokeWidth="1.6" />
+            <path d="M 18 14 C 15 13 13 14 11 16 L 4 19 L 11 20" fill="#dc2626" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <g className="eye">
+              <circle className="pupil" cx="15" cy="17" r="1" fill="#fff" />
+              <circle cx="15" cy="17" r="0.6" fill="#1c1917" />
+            </g>
+            <path d="M 26 22 Q 36 22 36 28 Q 28 32 26 22" fill="#15803d" stroke={INK} strokeWidth="1.2" />
+            <Limb d="M 22 33 L 18 44" color="#dc2626" w={2} />
+            <Limb d="M 28 33 L 26 44" color="#dc2626" w={2} />
+          </svg>
+        );
+
+      case 'tiger-prawn':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Tom Su Nam Can - Tiger Prawn */}
+            <path d="M 14 18 C 22 10 34 14 36 24 C 38 32 30 38 20 38 C 14 38 12 34 16 32" stroke={INK} strokeWidth="2" fill="none" />
+            <path d="M 14 18 C 22 10 34 14 36 24 C 38 32 30 38 20 38 C 14 38 12 34 16 32" stroke="#fb923c" strokeWidth="8" fill="none" strokeLinecap="round" />
+            <path d="M 22 13 L 24 17 M 28 15 L 30 20 M 34 22 L 30 24 M 32 29 L 28 30 M 26 35 L 24 32" stroke="#1c1917" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="14" cy="18" r="1.5" fill="#1c1917" />
+            <path d="M 14 18 L 6 12 M 14 18 L 4 16" stroke="#ea580c" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M 16 32 L 10 38 L 8 32 Z" fill="#ea580c" stroke={INK} strokeWidth="1" />
+          </svg>
+        );
+
+      case 'climbing-perch':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ca Ro Dong - Climbing Perch */}
+            <path d="M 8 24 C 14 16 28 16 36 20 C 40 24 38 28 34 30 C 26 32 14 30 8 24 Z" fill="#4d7c0f" stroke={INK} strokeWidth="1.8" />
+            <path d="M 16 16 L 18 12 L 22 16 L 24 12 L 28 16 L 30 13 L 34 18" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" fill="#365314" />
+            <path d="M 34 22 Q 42 18 42 24 Q 42 30 34 26 Z" fill="#365314" stroke={INK} strokeWidth="1.4" />
+            <g className="eye">
+              <circle cx="13" cy="22" r="2.5" fill="#facc15" stroke={INK} strokeWidth="1" />
+              <circle className="pupil" cx="13" cy="22" r="1.4" fill="#0f172a" />
+            </g>
+            <path d="M 18 20 C 20 22 20 26 18 28" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'giant-featherback':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ca That Lat - Featherback */}
+            <path d="M 6 24 C 12 18 26 18 40 20 C 42 24 36 32 24 34 C 14 34 8 28 6 24 Z" fill="#94a3b8" stroke={INK} strokeWidth="1.6" />
+            <path d="M 22 18 Q 23 14 24 18" stroke={INK} strokeWidth="1.5" fill="none" />
+            <path d="M 14 33 Q 26 36 38 28" stroke={INK} strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            <circle cx="22" cy="28" r="1.2" fill="#0f172a" />
+            <circle cx="27" cy="27" r="1.2" fill="#0f172a" />
+            <circle cx="32" cy="25" r="1.2" fill="#0f172a" />
+            <g className="eye">
+              <circle cx="10" cy="22" r="1.8" fill="#facc15" stroke={INK} strokeWidth="0.8" />
+              <circle className="pupil" cx="10" cy="22" r="1" fill="#0f172a" />
+            </g>
+          </svg>
+        );
+
+      case 'mangrove-clam':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* So Huyet Ben Tre - Mangrove Clam */}
+            <path d="M 24 38 C 12 38 8 26 14 18 C 18 12 30 12 34 18 C 40 26 36 38 24 38 Z" fill="#f5f5f4" stroke={INK} strokeWidth="1.8" />
+            <path d="M 24 38 L 16 16 M 24 38 L 20 14 M 24 38 L 24 13 M 24 38 L 28 14 M 24 38 L 32 16" stroke="#78350f" strokeWidth="1.4" strokeLinecap="round" />
+            <ellipse cx="24" cy="37" rx="4" ry="2" fill="#991b1b" />
+          </svg>
+        );
+
+      case 'pearl-oyster':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Trai Ngoc Phu Quoc - Pearl Oyster */}
+            <path d="M 10 32 C 10 40 38 40 38 32 C 38 26 32 24 24 24 C 16 24 10 26 10 32 Z" fill="#e2e8f0" stroke={INK} strokeWidth="1.8" />
+            <path d="M 12 28 C 12 16 36 16 36 28 Z" fill="#cbd5e1" stroke={INK} strokeWidth="1.8" />
+            <circle className="glow-spot" cx="24" cy="30" r="5" fill="#fef08a" stroke={INK} strokeWidth="1.2" />
+            <circle cx="22.5" cy="28.5" r="1.5" fill="#ffffff" />
+          </svg>
+        );
+
+      case 'horned-owl':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Cu Vo Rung Thong - Horned Owl */}
+            <ellipse cx="24" cy="28" rx="12" ry="13" fill="#451a03" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="30" rx="7" ry="8" fill="#fed7aa" stroke={INK} strokeWidth="1.2" />
+            <path d="M 15 17 L 11 8 L 19 14 Z" fill="#451a03" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M 33 17 L 37 8 L 29 14 Z" fill="#451a03" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <g className="eye">
+              <circle cx="18" cy="20" r="4.5" fill="#eab308" stroke={INK} strokeWidth="1.6" />
+              <circle className="pupil" cx="18" cy="20" r="2.4" fill="#1c1917" />
+              <circle cx="17.2" cy="19" r="0.8" fill="#fff" />
+            </g>
+            <g className="eye">
+              <circle cx="30" cy="20" r="4.5" fill="#eab308" stroke={INK} strokeWidth="1.6" />
+              <circle className="pupil" cx="30" cy="20" r="2.4" fill="#1c1917" />
+              <circle cx="29.2" cy="19" r="0.8" fill="#fff" />
+            </g>
+            <polygon points="24,23 22,27 26,27" fill="#ea580c" />
+          </svg>
+        );
+
+      case 'centipede':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ret Khong Lo - Giant Cave Centipede */}
+            <path d="M 10 38 Q 24 16 38 10" stroke="#b91c1c" strokeWidth="5" strokeLinecap="round" fill="none" />
+            <path d="M 10 38 Q 24 16 38 10" stroke={INK} strokeWidth="1.6" strokeLinecap="round" fill="none" />
+            <circle cx="38" cy="10" r="3" fill="#7f1d1d" stroke={INK} strokeWidth="1.4" />
+            <path d="M 39 8 L 44 4 M 40 10 L 45 8" stroke="#eab308" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M 12 36 L 8 40 M 14 32 L 10 36 M 18 28 L 13 31 M 22 24 L 17 26 M 26 20 L 22 21 M 30 16 L 27 16" stroke="#eab308" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M 16 38 L 19 42 M 19 33 L 23 37 M 23 28 L 28 31 M 27 23 L 32 25 M 31 18 L 36 19 M 35 14 L 40 14" stroke="#eab308" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'silver-pheasant':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Ga Loi Trang - Silver Pheasant */}
+            <ellipse cx="20" cy="28" rx="9" ry="8" fill="#1e293b" stroke={INK} strokeWidth="1.6" />
+            <circle cx="14" cy="18" r="5.5" fill="#1e293b" stroke={INK} strokeWidth="1.6" />
+            <ellipse cx="13" cy="17" rx="3" ry="2.5" fill="#dc2626" />
+            <g className="eye">
+              <circle className="pupil" cx="13" cy="17" r="0.8" fill="#fff" />
+            </g>
+            <path d="M 10 18 L 5 19 L 10 20 Z" fill="#ca8a04" stroke={INK} strokeWidth="0.8" />
+            <path d="M 26 26 C 36 24 44 28 44 38 C 36 34 28 32 24 30 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.6" />
+            <path d="M 28 27 L 38 31 M 30 29 L 41 33 M 32 31 L 43 35" stroke="#334155" strokeWidth="1" strokeLinecap="round" />
+            <Limb d="M 18 35 L 16 44" color="#dc2626" w={2} />
+            <Limb d="M 23 35 L 22 44" color="#dc2626" w={2} />
+          </svg>
+        );
+
+      case 'bamboo-rat':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Dui Moc Rung Nua - Bamboo Rat */}
+            <ellipse cx="26" cy="28" rx="14" ry="10" fill="#71717a" stroke={INK} strokeWidth="1.8" />
+            <circle cx="15" cy="25" r="7" fill="#71717a" stroke={INK} strokeWidth="1.8" />
+            <circle cx="18" cy="19" r="2" fill="#e4e4e7" stroke={INK} strokeWidth="1" />
+            <g className="eye">
+              <circle className="pupil" cx="14" cy="23" r="1.2" fill="#1c1917" />
+            </g>
+            <circle cx="9" cy="26" r="1.2" fill="#1c1917" />
+            <rect x="8" y="27.5" width="1.6" height="2.5" fill="#ea580c" stroke={INK} strokeWidth="0.6" />
+            <rect x="10" y="27.5" width="1.6" height="2.5" fill="#ea580c" stroke={INK} strokeWidth="0.6" />
+            <ellipse cx="20" cy="37" rx="3.5" ry="2" fill="#e4e4e7" stroke={INK} strokeWidth="1.2" />
+            <ellipse cx="32" cy="37" rx="3.5" ry="2" fill="#e4e4e7" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'river-snail':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Oc Buou Dong - River Snail */}
+            <ellipse cx="24" cy="26" rx="13" ry="11" fill="#365314" stroke={INK} strokeWidth="1.8" />
+            <path d="M 24 15 C 32 15 35 24 31 31 C 27 37 18 36 15 31 C 12 26 16 20 22 20 C 27 20 28 25 25 28" stroke={INK} strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            <ellipse cx="31" cy="31" rx="4" ry="5" fill="#a16207" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'crane-statue':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Hac Ngu Lung Rua - Crane on Turtle */}
+            <ellipse cx="24" cy="40" rx="11" ry="4.5" fill="#b45309" stroke={INK} strokeWidth="1.6" />
+            <circle cx="14" cy="40" r="2" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <Limb d="M 22 36 L 22 26" color="#b45309" w={2.2} />
+            <Limb d="M 26 36 L 26 26" color="#b45309" w={2.2} />
+            <ellipse cx="24" cy="22" rx="6" ry="4.5" fill="#d97706" stroke={INK} strokeWidth="1.4" />
+            <path d="M 21 20 C 19 14 21 8 20 5" stroke={INK} strokeWidth="2" strokeLinecap="round" />
+            <circle cx="19.5" cy="4.5" r="2" fill="#d97706" stroke={INK} strokeWidth="1" />
+            <path d="M 18 4.5 L 12 5.5" stroke={INK} strokeWidth="1.4" strokeLinecap="round" />
+            <circle cx="11" cy="5.5" r="2" fill="#ec4899" stroke={INK} strokeWidth="0.8" />
+          </svg>
+        );
+
+      case 'ly-dragon':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Rong Thoi Ly - Ly Dynasty Dragon */}
+            <path d="M 8 36 Q 16 14 24 24 Q 32 34 40 12" stroke="#eab308" strokeWidth="5" fill="none" strokeLinecap="round" />
+            <path d="M 8 36 Q 16 14 24 24 Q 32 34 40 12" stroke={INK} strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            <circle cx="40" cy="12" r="5" fill="#ca8a04" stroke={INK} strokeWidth="1.6" />
+            <path d="M 42 9 C 46 6 46 14 42 15" stroke={INK} strokeWidth="1.4" fill="#ef4444" />
+            <circle cx="46" cy="15" r="1.8" fill="#fbbf24" stroke={INK} strokeWidth="1" />
+            <g className="eye">
+              <circle className="pupil" cx="39" cy="11" r="1" fill="#1c1917" />
+            </g>
+          </svg>
+        );
+
+      case 'hoan-kiem-sword':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Thuan Thien Kiem - Magic Sword */}
+            <path d="M 24 6 L 27 12 L 26 34 L 24 37 L 22 34 L 21 12 Z" fill="#38bdf8" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <line x1="24" y1="8" x2="24" y2="34" stroke="#ffffff" strokeWidth="1" />
+            <path d="M 17 34 C 20 32 28 32 31 34 L 29 37 L 19 37 Z" fill="#eab308" stroke={INK} strokeWidth="1.4" strokeLinejoin="round" />
+            <rect x="22.5" y="37" width="3" height="6" rx="1" fill="#b91c1c" stroke={INK} strokeWidth="1.2" />
+            <circle cx="24" cy="44" r="2.5" fill="#eab308" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'star-lantern':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Den Ong Sao - Star Lantern */}
+            <circle cx="24" cy="22" r="13" stroke="#ca8a04" strokeWidth="1.8" fill="none" />
+            <polygon points="24,9 28,18 38,18 30,24 33,34 24,28 15,34 18,24 10,18 20,18" fill="#ef4444" stroke={INK} strokeWidth="1.6" strokeLinejoin="round" />
+            <circle className="glow-spot" cx="24" cy="22" r="3.5" fill="#fef08a" stroke={INK} strokeWidth="1" />
+            <Limb d="M 24 35 L 24 45" color="#ca8a04" w={2.2} />
+          </svg>
+        );
+
+      case 'bamboo-flute':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Sao Truc - Bamboo Flute */}
+            <rect x="8" y="22" width="32" height="4" rx="2" fill="#fef3c7" stroke={INK} strokeWidth="1.6" transform="rotate(-25 24 24)" />
+            <circle cx="14" cy="29" r="1" fill="#1c1917" />
+            <circle cx="18" cy="27" r="1" fill="#1c1917" />
+            <circle cx="22" cy="25" r="1" fill="#1c1917" />
+            <circle cx="26" cy="23" r="1" fill="#1c1917" />
+            <circle cx="30" cy="21" r="1" fill="#1c1917" />
+            <path d="M 38 18 Q 44 20 42 26" stroke="#dc2626" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'to-he':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* To He - Folk Dough Figurine */}
+            <Limb d="M 24 26 L 24 45" color="#ca8a04" w={2} />
+            <circle cx="24" cy="15" r="7" fill="#ec4899" stroke={INK} strokeWidth="1.6" />
+            <ellipse cx="24" cy="22" rx="5" ry="4" fill="#22c55e" stroke={INK} strokeWidth="1.4" />
+            <circle cx="19" cy="11" r="2.5" fill="#eab308" stroke={INK} strokeWidth="1" />
+            <circle cx="29" cy="11" r="2.5" fill="#eab308" stroke={INK} strokeWidth="1" />
+            <circle cx="24" cy="16" r="2" fill="#38bdf8" />
+            <circle cx="22" cy="14" r="0.8" fill="#1c1917" />
+            <circle cx="26" cy="14" r="0.8" fill="#1c1917" />
+          </svg>
+        );
+
+      case 'non-quai-thao':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Non Quai Thao - Flat Palm Hat */}
+            <ellipse cx="24" cy="18" rx="16" ry="6" fill="#fef08a" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="18" rx="11" ry="4" fill="#ca8a04" stroke={INK} strokeWidth="1.2" />
+            <path d="M 14 20 C 14 30 18 42 19 44" stroke="#9333ea" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M 34 20 C 34 30 30 42 29 44" stroke="#9333ea" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <circle cx="24" cy="42" r="2" fill="#ec4899" />
+          </svg>
+        );
+
+      case 'lotus-flower':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Hoa Sen Hong - Lotus Flower */}
+            <path d="M 12 36 Q 24 40 36 36" stroke="#15803d" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <path d="M 24 10 C 18 18 18 28 24 34 C 30 28 30 18 24 10 Z" fill="#f472b6" stroke={INK} strokeWidth="1.6" />
+            <path d="M 14 20 C 12 26 16 32 22 34 C 18 28 16 22 14 20 Z" fill="#f472b6" stroke={INK} strokeWidth="1.4" />
+            <path d="M 34 20 C 36 26 32 32 26 34 C 30 28 32 22 34 20 Z" fill="#f472b6" stroke={INK} strokeWidth="1.4" />
+            <ellipse cx="24" cy="26" rx="2.5" ry="3.5" fill="#facc15" />
+          </svg>
+        );
+
+      case 'banh-chung':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Banh Chung Xanh - Square Sticky Rice Cake */}
+            <rect x="10" y="10" width="28" height="28" rx="2" fill="#15803d" stroke={INK} strokeWidth="2" />
+            <line x1="19" y1="10" x2="19" y2="38" stroke="#fde047" strokeWidth="1.8" />
+            <line x1="29" y1="10" x2="29" y2="38" stroke="#fde047" strokeWidth="1.8" />
+            <line x1="10" y1="19" x2="38" y2="19" stroke="#fde047" strokeWidth="1.8" />
+            <line x1="10" y1="29" x2="38" y2="29" stroke="#fde047" strokeWidth="1.8" />
+          </svg>
+        );
+
+      case 'bat-trang-pottery':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Gom Bat Trang - Porcelain Vase */}
+            <path d="M 18 10 L 30 10 L 28 16 C 36 22 36 34 30 40 L 18 40 C 12 34 12 22 20 16 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.8" />
+            <path d="M 16 28 Q 24 22 32 28" stroke="#1d4ed8" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <circle cx="24" cy="28" r="3" fill="#1d4ed8" />
+            <line x1="19" y1="13" x2="29" y2="13" stroke="#1d4ed8" strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'bamboo-basket':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Thung Tre Nan - Woven Bamboo Basket */}
+            <ellipse cx="24" cy="22" rx="16" ry="7" fill="#d97706" stroke={INK} strokeWidth="1.8" />
+            <path d="M 8 22 C 8 36 40 36 40 22" stroke={INK} strokeWidth="1.8" fill="#b45309" />
+            <ellipse cx="24" cy="22" rx="13" ry="5" fill="#fde68a" stroke={INK} strokeWidth="1.2" />
+            <path d="M 14 26 L 34 26 M 16 30 L 32 30" stroke={INK} strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'h-mong-flute':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Sao Meo Tay Bac - H'Mong Flute */}
+            <rect x="10" y="21" width="28" height="6" rx="3" fill="#78350f" stroke={INK} strokeWidth="1.8" />
+            <rect x="10" y="20" width="6" height="8" rx="2" fill="#ca8a04" stroke={INK} strokeWidth="1.2" />
+            <circle cx="22" cy="24" r="1.2" fill="#1c1917" />
+            <circle cx="27" cy="24" r="1.2" fill="#1c1917" />
+            <circle cx="32" cy="24" r="1.2" fill="#1c1917" />
+          </svg>
+        );
+
+      case 'terraced-sheaf':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Bo Lua Nep Nuong - Paddy Sheaf */}
+            <path d="M 18 42 L 22 26 C 16 20 12 12 18 8 C 22 14 22 22 24 26 C 26 22 26 14 30 8 C 36 12 32 20 26 26 L 30 42 Z" fill="#eab308" stroke={INK} strokeWidth="1.6" />
+            <rect x="20" y="28" width="8" height="3" rx="1" fill="#b45309" stroke={INK} strokeWidth="1" />
+          </svg>
+        );
+
+      case 'champa-relief':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Phu Dieu Champa - Terracotta Relief */}
+            <rect x="10" y="8" width="28" height="32" rx="3" fill="#c2410c" stroke={INK} strokeWidth="1.8" />
+            <path d="M 24 14 C 20 18 20 22 24 24 C 28 22 28 18 24 14 Z" fill="#fed7aa" stroke={INK} strokeWidth="1.2" />
+            <path d="M 16 24 C 20 26 28 26 32 24" stroke="#fed7aa" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M 20 24 L 20 34 L 28 34 L 28 24" stroke="#fed7aa" strokeWidth="2" fill="none" strokeLinejoin="round" />
+          </svg>
+        );
+
+      case 'hue-kite':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Dieu Rong Hue - Royal Dragon Kite */}
+            <circle cx="24" cy="14" r="7" fill="#ef4444" stroke={INK} strokeWidth="1.6" />
+            <circle cx="20" cy="24" r="4" fill="#eab308" stroke={INK} strokeWidth="1.4" />
+            <circle cx="28" cy="28" r="3.5" fill="#3b82f6" stroke={INK} strokeWidth="1.4" />
+            <circle cx="22" cy="35" r="3" fill="#10b981" stroke={INK} strokeWidth="1.4" />
+            <circle cx="26" cy="41" r="2.5" fill="#ec4899" stroke={INK} strokeWidth="1.2" />
+            <g className="eye">
+              <circle className="pupil" cx="22" cy="13" r="1.2" fill="#1c1917" />
+            </g>
+            <g className="eye">
+              <circle className="pupil" cx="26" cy="13" r="1.2" fill="#1c1917" />
+            </g>
+          </svg>
+        );
+
+      case 'incense-burner':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Lu Tram Cung Dinh - Incense Burner */}
+            <ellipse cx="24" cy="26" rx="11" ry="8" fill="#b45309" stroke={INK} strokeWidth="1.8" />
+            <path d="M 16 24 C 16 16 32 16 32 24 Z" fill="#d97706" stroke={INK} strokeWidth="1.6" />
+            <circle cx="24" cy="14" r="2" fill="#d97706" stroke={INK} strokeWidth="1.2" />
+            <Limb d="M 17 33 L 15 42" color="#b45309" w={2.5} />
+            <Limb d="M 31 33 L 33 42" color="#b45309" w={2.5} />
+            <Limb d="M 24 34 L 24 43" color="#b45309" w={2.5} />
+            <path d="M 24 12 Q 22 8 25 5" stroke="#e2e8f0" strokeWidth="1.4" fill="none" strokeLinecap="round" />
+          </svg>
+        );
+
+      case 'palm-leaf-fan':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Quat Nan La Co - Palm Leaf Fan */}
+            <path d="M 24 30 C 10 30 8 10 24 10 C 40 10 38 30 24 30 Z" fill="#fde68a" stroke={INK} strokeWidth="1.8" />
+            <line x1="24" y1="10" x2="24" y2="44" stroke="#b45309" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M 14 18 L 24 24 L 34 18" stroke="#ca8a04" strokeWidth="1.4" fill="none" strokeLinejoin="round" />
+            <path d="M 16 24 L 24 28 L 32 24" stroke="#ca8a04" strokeWidth="1.4" fill="none" strokeLinejoin="round" />
+          </svg>
+        );
+
+      case 'cham-lamp':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Den Dau Champa - Terracotta Oil Lamp */}
+            <path d="M 10 26 C 10 36 38 36 38 26 L 42 22 L 34 22 C 30 22 26 24 24 24 C 22 24 18 22 14 22 L 6 22 Z" fill="#ea580c" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="24" cy="36" rx="8" ry="2.5" fill="#c2410c" stroke={INK} strokeWidth="1.2" />
+            <path className="glow-spot" d="M 40 22 C 40 16 43 14 43 12 C 43 14 46 16 46 22 Z" fill="#fbbf24" stroke={INK} strokeWidth="1" />
+          </svg>
+        );
+
+      case 'royal-umbrella':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Long Vang Hoang Cung - Royal Umbrella */}
+            <path d="M 10 22 C 10 12 38 12 38 22 Z" fill="#eab308" stroke={INK} strokeWidth="1.8" />
+            <path d="M 10 22 Q 17 25 24 22 Q 31 25 38 22" stroke="#dc2626" strokeWidth="1.8" fill="none" />
+            <circle cx="24" cy="10" r="2" fill="#ca8a04" stroke={INK} strokeWidth="1.2" />
+            <Limb d="M 24 22 L 24 45" color="#78350f" w={2.4} />
+          </svg>
+        );
+
+      case 'sea-shell-curtain':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Rem Vo Oc Bien - Shell Windchime */}
+            <line x1="10" y1="8" x2="38" y2="8" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
+            <Limb d="M 16 9 L 16 40" color="#d6d3d1" w={1} />
+            <Limb d="M 24 9 L 24 44" color="#d6d3d1" w={1} />
+            <Limb d="M 32 9 L 32 40" color="#d6d3d1" w={1} />
+            <circle cx="16" cy="18" r="3" fill="#fef3c7" stroke={INK} strokeWidth="1" />
+            <circle cx="16" cy="30" r="2.5" fill="#fed7aa" stroke={INK} strokeWidth="1" />
+            <circle cx="24" cy="20" r="3.5" fill="#fed7aa" stroke={INK} strokeWidth="1" />
+            <circle cx="24" cy="34" r="3" fill="#fef3c7" stroke={INK} strokeWidth="1" />
+            <circle cx="32" cy="18" r="3" fill="#fef3c7" stroke={INK} strokeWidth="1" />
+            <circle cx="32" cy="30" r="2.5" fill="#fed7aa" stroke={INK} strokeWidth="1" />
+          </svg>
+        );
+
+      case 'highland-crossbow':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* No Go Tay Nguyen - Highland Crossbow */}
+            <path d="M 8 16 Q 24 22 40 16" stroke="#d97706" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <line x1="8" y1="16" x2="24" y2="32" stroke="#a8a29e" strokeWidth="1.2" />
+            <line x1="40" y1="16" x2="24" y2="32" stroke="#a8a29e" strokeWidth="1.2" />
+            <rect x="22.5" y="12" width="3" height="30" rx="1.5" fill="#7f1d1d" stroke={INK} strokeWidth="1.4" />
+          </svg>
+        );
+
+      case 'southern-scarf':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Khan Ran Nam Bo - Checkered Scarf */}
+            <path d="M 12 12 Q 24 24 36 12 Q 28 34 22 44 Q 18 34 12 12 Z" fill="#f8fafc" stroke={INK} strokeWidth="1.8" />
+            <path d="M 16 16 L 32 16 M 15 22 L 31 22 M 17 28 L 27 28 M 18 34 L 26 34" stroke="#1c1917" strokeWidth="1.4" strokeDasharray="2 2" />
+          </svg>
+        );
+
+      case 'dan-kim':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Dan Kim Nam Bo - Moon Lute */}
+            <circle cx="24" cy="30" r="11" fill="#b45309" stroke={INK} strokeWidth="1.8" />
+            <circle cx="24" cy="30" r="7" fill="#fde68a" stroke={INK} strokeWidth="1.2" />
+            <rect x="22.5" y="6" width="3" height="16" rx="1.5" fill="#78350f" stroke={INK} strokeWidth="1.4" />
+            <circle cx="24" cy="6" r="2.5" fill="#b45309" stroke={INK} strokeWidth="1.2" />
+            <line x1="23" y1="6" x2="23" y2="32" stroke="#1c1917" strokeWidth="0.8" />
+            <line x1="25" y1="6" x2="25" y2="32" stroke="#1c1917" strokeWidth="0.8" />
+          </svg>
+        );
+
+      case 'clay-piggy':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Heo Dat Lai Thieu - Terracotta Piggy Bank */}
+            <ellipse cx="24" cy="27" rx="13" ry="10" fill="#ef4444" stroke={INK} strokeWidth="1.8" />
+            <circle cx="14" cy="24" r="6.5" fill="#ef4444" stroke={INK} strokeWidth="1.8" />
+            <ellipse cx="9" cy="25" rx="2.5" ry="3" fill="#facc15" stroke={INK} strokeWidth="1.2" />
+            <circle cx="8.5" cy="24.5" r="0.8" fill="#1c1917" />
+            <circle cx="8.5" cy="26" r="0.8" fill="#1c1917" />
+            <g className="eye">
+              <circle className="pupil" cx="14" cy="22" r="1.2" fill="#1c1917" />
+            </g>
+            <rect x="22" y="16.5" width="6" height="1.6" rx="0.8" fill="#1c1917" />
+            <circle cx="26" cy="26" r="3" fill="#facc15" />
+            <rect x="17" y="35" width="3" height="5" rx="1.5" fill="#facc15" stroke={INK} strokeWidth="1.2" />
+            <rect x="28" y="35" width="3" height="5" rx="1.5" fill="#facc15" stroke={INK} strokeWidth="1.2" />
+          </svg>
+        );
+
+      case 'coconut-candy':
+        return (
+          <svg viewBox="0 0 48 48" className="sprite-svg" fill="none">
+            {/* Keo Dua Ben Tre - Coconut Candy */}
+            <rect x="14" y="18" width="20" height="12" rx="2" fill="#d97706" stroke={INK} strokeWidth="1.8" transform="rotate(10 24 24)" />
+            <path d="M 10 16 L 15 22 L 11 26 Z" fill="#fef3c7" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <path d="M 38 22 L 33 26 L 37 32 Z" fill="#fef3c7" stroke={INK} strokeWidth="1.2" strokeLinejoin="round" />
+            <rect x="18" y="21" width="12" height="6" rx="1" fill="#15803d" stroke={INK} strokeWidth="1" transform="rotate(10 24 24)" />
           </svg>
         );
 

@@ -33,7 +33,14 @@
       "spriteType": "civet",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Musang — vị khách đêm quen thuộc của các mái nhà cũ Singapore!"
+      "foundText": "Musang — vị khách đêm quen thuộc của các mái nhà cũ Singapore!",
+      "spots": [
+        {
+          "x": 0.38,
+          "y": 0.46,
+          "clue": "Chú cầy vòi hương bò sang mái hiên phía bên trái chợ."
+        }
+      ]
     },
     {
       "id": "night-fortune-cat",
@@ -46,7 +53,14 @@
       "spriteType": "fortune-cat",
       "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Mèo thần tài vẫn vẫy tay gọi khách dù chợ đã vãn người."
+      "foundText": "Mèo thần tài vẫn vẫy tay gọi khách dù chợ đã vãn người.",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.66,
+          "clue": "Chú mèo thần tài đứng trên quầy thức ăn bên trái."
+        }
+      ]
     },
     {
       "id": "night-teacup",
@@ -59,7 +73,14 @@
       "spriteType": "teacup",
       "scale": 0.36,
       "camo": "ink",
-      "foundText": "Teh tarik — trà sữa được \"kéo\" qua lại giữa hai ca để tạo bọt."
+      "foundText": "Teh tarik — trà sữa được \"kéo\" qua lại giữa hai ca để tạo bọt.",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.67,
+          "clue": "Ly teh tarik nguội để quên trên chiếc bàn tròn bên phải."
+        }
+      ]
     },
     {
       "id": "night-coin-pouch",
@@ -72,7 +93,14 @@
       "spriteType": "coin-pouch",
       "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Bên trong có một đồng xu cổ khắc hình… chiếc la bàn!"
+      "foundText": "Bên trong có một đồng xu cổ khắc hình… chiếc la bàn!",
+      "spots": [
+        {
+          "x": 0.42,
+          "y": 0.69,
+          "clue": "Túi tiền rơi cạnh mép quầy hàng ở giữa chợ."
+        }
+      ]
     },
     {
       "id": "night-letter",
@@ -85,7 +113,14 @@
       "spriteType": "letter",
       "scale": 0.45,
       "camo": "invisible",
-      "foundText": "\"Đêm nay tôi đi về phía dòng sông…\" — nét chữ của vị kiến trúc sư!"
+      "foundText": "\"Đêm nay tôi đi về phía dòng sông…\" — nét chữ của vị kiến trúc sư!",
+      "spots": [
+        {
+          "x": 0.64,
+          "y": 0.61,
+          "clue": "Lá thư mực tàng hình ghim trên thân cột gang phía bên phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",

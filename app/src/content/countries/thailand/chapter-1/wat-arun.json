@@ -18,7 +18,14 @@
       "scale": 0.85,
       "camo": "chameleon",
       "waterline": 0.72,
-      "foundText": "Thuyền ngự Suphannahong chỉ xuất hiện trong lễ rước thuyền hoàng gia trên sông Chao Phraya!"
+      "foundText": "Thuyền ngự Suphannahong chỉ xuất hiện trong lễ rước thuyền hoàng gia trên sông Chao Phraya!",
+      "spots": [
+        {
+          "x": 0.52,
+          "y": 0.68,
+          "clue": "Thuyền ngự Suphannahong rẽ sóng lướt qua khoảng sông trước tháp Wat Arun."
+        }
+      ]
     },
     {
       "id": "pier-mudskipper",
@@ -85,7 +92,14 @@
       "spriteType": "jasmine-garland",
       "scale": 0.6,
       "camo": "ink",
-      "foundText": "Người lái thuyền treo hoa ở mũi để tạ ơn nữ thần thuyền Mae Ya Nang, cầu chuyến đi bình an."
+      "foundText": "Người lái thuyền treo hoa ở mũi để tạ ơn nữ thần thuyền Mae Ya Nang, cầu chuyến đi bình an.",
+      "spots": [
+        {
+          "x": 0.68,
+          "y": 0.69,
+          "clue": "Vòng hoa nhài treo nơi mạn chiếc phà chở khách lớn bên phải."
+        }
+      ]
     },
     {
       "id": "roof-myna",
@@ -98,7 +112,14 @@
       "spriteType": "myna",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Sáo nâu ríu rít bắt chước đủ thứ âm thanh quanh bến, kể cả tiếng còi phà!"
+      "foundText": "Sáo nâu ríu rít bắt chước đủ thứ âm thanh quanh bến, kể cả tiếng còi phà!",
+      "spots": [
+        {
+          "x": 0.48,
+          "y": 0.55,
+          "clue": "Chú sáo nâu đậu trên cành cây ven tường hoa bên tháp chính."
+        }
+      ]
     },
     {
       "id": "artist-seal",

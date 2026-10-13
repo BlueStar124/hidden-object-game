@@ -54,59 +54,77 @@
       "y": 0.52,
       "r": 0.015,
       "color": "rgba(255, 240, 190, 0.9)"
+    },
+    {
+      "x": 0.28,
+      "y": 0.66,
+      "r": 0.015,
+      "color": "rgba(255, 220, 140, 0.85)"
+    },
+    {
+      "x": 0.64,
+      "y": 0.62,
+      "r": 0.015,
+      "color": "rgba(255, 240, 190, 0.85)"
+    },
+    {
+      "x": 0.82,
+      "y": 0.53,
+      "r": 0.018,
+      "color": "rgba(255, 200, 120, 0.8)"
     }
   ],
   "objects": [
     {
       "id": "night-lantern",
-      "name": "Đèn Hoa Tiêu Đêm",
-      "clue": "Ngọn đèn hoa tiêu treo trên mui du thuyền buông neo góc trái dưới.",
-      "x": 0.16,
-      "y": 0.68,
-      "radius": 0.034,
+      "name": "Đèn Ông Sao Đêm Biển",
+      "clue": "Chiếc đèn ông sao lung linh soi bóng mạn thuyền trong đêm hội trăng rằm.",
+      "x": 0.55,
+      "y": 0.5,
+      "radius": 0.044,
       "score": 150,
-      "spriteType": "lantern",
+      "spriteType": "star-lantern",
       "scale": 0.48,
-      "camo": "chameleon",
+      "camo": "luminous",
       "foundText": "Ngọn đèn soi sáng từng con sóng dập dềnh quanh mạn thuyền."
     },
     {
       "id": "night-bat",
       "name": "Dơi Hang Sửng Sốt",
-      "clue": "Chú dơi quả treo mình trên vòm hang đá vôi tối sẫm phía trên bên trái.",
-      "x": 0.21,
-      "y": 0.33,
-      "radius": 0.034,
+      "clue": "Đôi cánh dơi chao liệng quanh vòm hang vắng lặng.",
+      "x": 0.22,
+      "y": 0.32,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "bat",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "shadow",
       "foundText": "Dơi hang vỗ cánh bay lướt qua ngọn núi đá vôi im lìm."
     },
     {
       "id": "night-owl",
       "name": "Cú Vách Đảo Titov",
-      "clue": "Đôi mắt vàng lấp lánh của chú cú mèo nhìn ra từ tán cây rậm rạp bên vách núi phải.",
-      "x": 0.74,
-      "y": 0.63,
-      "radius": 0.034,
+      "clue": "Đôi mắt tròn xoe chăm chú nhìn mặt nước từ vách đá cao.",
+      "x": 0.85,
+      "y": 0.3,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "owl",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Người gác đêm thầm lặng của vùng vịnh non nước."
     },
     {
       "id": "night-firefly",
       "name": "Đom Đóm Hang Luồn",
-      "clue": "Đốm sáng đom đóm dập dờn nơi bụi lá nhiệt đới góc dưới.",
-      "x": 0.48,
-      "y": 0.73,
-      "radius": 0.03,
+      "clue": "Ánh sáng lập lòe trôi theo dòng nước đêm.",
+      "x": 0.52,
+      "y": 0.74,
+      "radius": 0.039,
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.42,
-      "camo": "chameleon",
+      "camo": "luminous",
       "roam": {
         "path": [
           [
@@ -134,22 +152,16 @@
     },
     {
       "id": "night-otter",
-      "name": "Rái Cá Bơi Đêm",
-      "clue": "Chú rái cá bơi thong thả men theo doi cát ngầm chân đảo.",
-      "x": 0.25,
-      "y": 0.61,
-      "radius": 0.032,
+      "name": "Cầy Gấm Leo Vách Đá Đêm",
+      "clue": "Bộ lông đốm hoa leo thoăn thoắt trên vách đá tai mèo tĩnh mịch.",
+      "x": 0.38,
+      "y": 0.35,
+      "radius": 0.042,
       "score": 120,
-      "spriteType": "otter",
+      "spriteType": "civet",
       "scale": 0.44,
-      "camo": "chameleon",
-      "waterline": 0.6,
-      "shy": {
-        "period": 7,
-        "offset": 2,
-        "from": "below"
-      },
-      "foundText": "Rái cá lặn ngụp bắt cá đêm, miệng ngậm chiếc vòng hạt cườm."
+      "camo": "shadow",
+      "foundText": "Voọc Cát Bà cuộn tròn giữ ấm qua đêm sương lạnh trên vịnh."
     },
     {
       "id": "artist-seal",
@@ -164,25 +176,25 @@
     },
     {
       "id": "secret-night-compass",
-      "name": "La Bàn Sao Bắc Đẩu",
-      "clue": "[BÍ MẬT] Kim la bàn sao phát sáng giữa dải sương mù đêm trên nền trời vịnh.",
-      "x": 0.55,
-      "y": 0.32,
-      "radius": 0.036,
+      "name": "Kính Viễn Vọng Ngắm Trăng Sao",
+      "clue": "[BÍ MẬT] Ống nhòm đồng thau ngắm trăng sao huyền ảo trên vịnh đêm.",
+      "x": 0.6,
+      "y": 0.26,
+      "radius": 0.047,
       "score": 300,
       "isSecret": true,
-      "spriteType": "compass",
+      "spriteType": "spyglass",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "La bàn thiên văn chỉ đúng phương hướng đến trang sách tiếp theo!"
+      "foundText": "Thuyền rồng rẽ màn sương đêm vịnh Hạ Long, mở lối đến hành trình mới!"
     },
     {
       "id": "bonus-night-moth",
       "name": "Bướm Đêm Đậu Cánh Buồm",
-      "clue": "Chú bướm đêm nâu ngụy trang khéo léo trên thớ vải của cánh buồm du thuyền.",
-      "x": 0.36,
-      "y": 0.48,
-      "radius": 0.028,
+      "clue": "Cánh bướm đêm ngụy trang như mảnh vỏ cây trên cánh buồm nâu.",
+      "x": 0.12,
+      "y": 0.45,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "moth",
@@ -192,17 +204,17 @@
     },
     {
       "id": "bonus-night-crab",
-      "name": "Cua Biển Đi Đêm",
-      "clue": "Chú cua nhỏ dạo bước trên mỏm đá ướt sương đêm dưới ánh trăng.",
-      "x": 0.74,
-      "y": 0.69,
-      "radius": 0.028,
+      "name": "Sò Biển Đi Đêm",
+      "clue": "Vỏ sò hé mở rạng ngời ngọc sáng ven bờ cát khuya.",
+      "x": 0.72,
+      "y": 0.45,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
-      "spriteType": "crab",
+      "spriteType": "mangrove-clam",
       "scale": 0.45,
-      "camo": "ink",
-      "foundText": "Cua đêm bò ngang tìm mồi trên phiến đá rêu."
+      "camo": "tint",
+      "foundText": "Cua biển đi đêm lùng sục tìm mồi trên phiến đá rêu phong."
     }
   ]
 }

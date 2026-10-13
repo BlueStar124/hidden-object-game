@@ -129,6 +129,9 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `waterline` | phần chiều cao sprite nằm dưới mặt nước (0–1) | 0.55–0.8, cho vật bơi/thuyền |
 | `glow` | trang đêm: `false` để tắt mắt phát sáng | mặc định là phát sáng |
 | `isSecret`, `isBonus` | xem ở trên | |
+| `spots` | danh sách vị trí ẩn thay thế (`ObjectSpot[]`) khi chơi lại trang | Mỗi spot cần có `clue` riêng; vật có `roam` hoặc `shy` không dùng `spots` |
+| `requires` | dụng cụ yêu cầu để nhìn thấy/thu thập (vd: `'uv-lens'`) | Mở khóa khi hoàn thành các chặng đặc biệt |
+| `rare` | đánh dấu biến thể hiếm (hiệu ứng ánh kim, ghi nhận Sổ Tay) | Suy ra khi resolve trang theo seed |
 
 Mẫu một vật có đủ trường:
 

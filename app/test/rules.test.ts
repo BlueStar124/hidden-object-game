@@ -4,7 +4,11 @@ import { detectObject } from '../src/core/detection';
 import { nextHint } from '../src/core/hints';
 import { isShyVisible, objectPosition, roamState, shyPhase } from '../src/core/motion';
 import type { HiddenObject, Page, RoamBehavior, ShyBehavior } from '../src/core/model';
+import { hashString, localDay, pick, rng, shuffle } from '../src/core/random';
+import { resolvePage } from '../src/core/resolvePage';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
+import { isCountryCleared, toolsOwned } from '../src/core/tools';
+import { migrantsOn, type Migrant } from '../src/core/migrants';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
   id,
@@ -147,10 +151,28 @@ describe('hints', () => {
     expect(nextHint(5, objects, [], loupe)?.level).toBe(3);
   });
 
-  test('main objects first, then the secret; optional critters are never hinted', () => {
-    expect(nextHint(0, objects, ['first'], loupe)?.targetObject.id).toBe('second');
-    expect(nextHint(0, objects, ['first', 'second'], loupe)?.targetObject.id).toBe('secret');
-    expect(nextHint(0, objects, ['first', 'second', 'secret'], loupe)).toBeNull();
+  test('progressive 2-step hints per object: step 1 reveals text, step 2 reveals position', () => {
+    // Initially, no text revealed
+    const step1 = nextHint(null, [], objects, [], loupe);
+    expect(step1).toMatchObject({ level: 1, targetObject: objects[0], clueText: 'clue of first', radarPoint: undefined });
+
+    // With active hint at level 1 on 'first', asking again yields level 2 (position) on 'first'
+    const step2 = nextHint({ level: 1, objectId: 'first' }, ['first'], objects, [], loupe);
+    expect(step2).toMatchObject({ level: 2, targetObject: objects[0], radarPoint: { x: 0.6, y: 0.5 } });
+
+    // When 'first' is found, next hint targets 'second' at level 1
+    const nextObjStep1 = nextHint(null, ['first'], objects, ['first'], loupe);
+    expect(nextObjStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+  });
+
+  test('targeted hint directly on a specific object card', () => {
+    // Tapping 'second' card directly while 'first' is unrevealed
+    const targetedStep1 = nextHint(null, [], objects, [], loupe, 'second');
+    expect(targetedStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+
+    // Tapping 'second' card again when its text is revealed yields position
+    const targetedStep2 = nextHint({ level: 1, objectId: 'second' }, ['second'], objects, [], loupe, 'second');
+    expect(targetedStep2).toMatchObject({ level: 2, targetObject: objects[1], radarPoint: { x: 0.5, y: 0.5 } });
   });
 });
 
@@ -215,11 +237,190 @@ describe('case file', () => {
     expect(recordFind(hinted, page, first, undefined).changes.activeHint).toBeNull();
   });
 
+  test('hint reveals text id and records it into revealedTextIds', () => {
+    const opened = openCase(page);
+    expect(opened.revealedTextIds).toEqual([]);
+    const step1 = nextHint(null, opened.revealedTextIds, page.objects, [], { nx: 0, ny: 0 });
+    const afterHint = recordHint(opened, step1!);
+    expect(afterHint.revealedTextIds).toContain('first');
+    expect(afterHint.activeHint?.level).toBe(1);
+  });
+
   test('after the case is closed, leftovers can still be found for the album', () => {
     const closed = { ...openCase(page), foundItems: ['first', 'second'], isCompleted: true, score: 900 };
     expect(leftovers(closed, page)).toEqual([secret, critter]);
     const explored = recordExploreFind(closed, critter, { x: 0.3, y: 0.3 });
     expect(explored.score).toBe(900);
     expect(leftovers(explored, page)).toEqual([secret]);
+  });
+});
+
+describe('random utilities', () => {
+  test('hashString produces deterministic 32-bit hashes', () => {
+    expect(hashString('singapore')).toBe(hashString('singapore'));
+    expect(hashString('singapore')).not.toBe(hashString('thailand'));
+    expect(hashString('')).toBe(2166136261);
+  });
+
+  test('rng produces reproducible pseudo-random sequences for same seed', () => {
+    const r1 = rng(42);
+    const r2 = rng(42);
+    const seq1 = [r1(), r1(), r1(), r1()];
+    const seq2 = [r2(), r2(), r2(), r2()];
+    expect(seq1).toEqual(seq2);
+    expect(seq1.every((v) => v >= 0 && v < 1)).toBe(true);
+
+    const r3 = rng(43);
+    expect(r3()).not.toBe(seq1[0]);
+  });
+
+  test('pick and shuffle work deterministically', () => {
+    const items = ['a', 'b', 'c', 'd', 'e'];
+    const p1 = pick(rng(100), items);
+    const p2 = pick(rng(100), items);
+    expect(p1).toBe(p2);
+
+    const s1 = shuffle(rng(200), items);
+    const s2 = shuffle(rng(200), items);
+    expect(s1).toEqual(s2);
+    expect(s1).toHaveLength(items.length);
+    expect(new Set(s1)).toEqual(new Set(items));
+  });
+
+  test('localDay formats local date without UTC day shift', () => {
+    const d = new Date(2026, 9, 12, 1, 30); // October 12, 2026 at 01:30 local time
+    expect(localDay(d)).toBe('2026-10-12');
+  });
+});
+
+describe('resolvePage', () => {
+  const basePage: Page = {
+    id: 'test-page',
+    title: 'Test Page',
+    subtitle: 'Subtitle',
+    art: 'test-art',
+    timeLimit: 120,
+    storyClue: 'Story',
+    objects: [
+      object('cat', {
+        x: 0.1,
+        y: 0.2,
+        clue: 'cat original clue',
+        spots: [
+          { x: 0.5, y: 0.6, clue: 'cat spot 1 clue' },
+          { x: 0.7, y: 0.8, clue: 'cat spot 2 clue' },
+        ],
+      }),
+      object('uv-secret', {
+        x: 0.3,
+        y: 0.3,
+        requires: 'uv-lens',
+        isBonus: true,
+      }),
+      object('bonus-critter', {
+        x: 0.4,
+        y: 0.4,
+        isBonus: true,
+      }),
+    ],
+  };
+
+  test('without context or with seed 0, page is unmodified', () => {
+    expect(resolvePage(basePage)).toEqual(basePage);
+    const r0 = resolvePage(basePage, { seed: 0, tools: ['uv-lens'] });
+    expect(r0.objects[0].x).toBe(0.1);
+    expect(r0.objects[0].clue).toBe('cat original clue');
+  });
+
+  test('tool-gated objects are hidden if player does not own tool', () => {
+    const withoutTool = resolvePage(basePage, { tools: [] });
+    expect(withoutTool.objects.find((o) => o.id === 'uv-secret')).toBeUndefined();
+
+    const withTool = resolvePage(basePage, { tools: ['uv-lens'] });
+    expect(withTool.objects.find((o) => o.id === 'uv-secret')).toBeDefined();
+  });
+
+  test('replaying with seed swaps spots deterministically while keeping object id', () => {
+    const played1 = resolvePage(basePage, { seed: 12345, tools: ['uv-lens'] });
+    const played2 = resolvePage(basePage, { seed: 12345, tools: ['uv-lens'] });
+    expect(played1.objects[0].id).toBe('cat');
+    expect(played1.objects[0].x).toBe(played2.objects[0].x);
+    expect(played1.objects[0].clue).toBe(played2.objects[0].clue);
+  });
+
+  test('rareChance marks bonus critters with rare flag', () => {
+    const withRare = resolvePage(basePage, { seed: 999, tools: ['uv-lens'], rareChance: 1.0 });
+    const critter = withRare.objects.find((o) => o.id === 'bonus-critter');
+    expect(critter?.rare).toBe(true);
+  });
+});
+
+describe('tools & progression', () => {
+  const dummyCountry = {
+    id: 'singapore',
+    name: 'Singapore',
+    chapters: [
+      {
+        id: 'c1',
+        title: 'C1',
+        subtitle: 'S1',
+        prologue: [],
+        pages: [
+          { day: { id: 'p1' } as Page },
+          { day: { id: 'p2' } as Page },
+        ],
+      },
+    ],
+    art: {},
+  };
+
+  test('singapore cleared unlocks uv-lens', () => {
+    const progressIncomplete = {
+      schemaVersion: 2,
+      unlockedScenes: ['p1'],
+      sceneResults: {
+        p1: { sceneId: 'p1', stars: 2, highScore: 100, bestTime: 50, completedAt: '' },
+      },
+      totalScore: 100,
+      discovered: {},
+    };
+    expect(isCountryCleared(progressIncomplete, dummyCountry)).toBe(false);
+    expect(toolsOwned(progressIncomplete, [dummyCountry])).toEqual([]);
+
+    const progressComplete = {
+      ...progressIncomplete,
+      sceneResults: {
+        p1: { sceneId: 'p1', stars: 2, highScore: 100, bestTime: 50, completedAt: '' },
+        p2: { sceneId: 'p2', stars: 1, highScore: 100, bestTime: 50, completedAt: '' },
+      },
+    };
+    expect(isCountryCleared(progressComplete, dummyCountry)).toBe(true);
+    expect(toolsOwned(progressComplete, [dummyCountry])).toEqual(['uv-lens']);
+  });
+});
+
+describe('migrants', () => {
+  const mockMigrant: Migrant = {
+    id: 'wandering-cat',
+    name: 'Mèo Du Lịch',
+    spriteType: 'cat',
+    story: 'Mèo thích đi chơi',
+    spots: [
+      { pageId: 'page-a', spotId: 'spot-1', x: 0.2, y: 0.3, radius: 0.03, clue: 'clue a' },
+      { pageId: 'page-b', spotId: 'spot-2', x: 0.4, y: 0.5, radius: 0.03, clue: 'clue b' },
+    ],
+  };
+
+  test('migrants deterministically visit a page on a given day', () => {
+    const listDay1A = migrantsOn('page-a', '2026-10-12', [mockMigrant]);
+    const listDay1B = migrantsOn('page-b', '2026-10-12', [mockMigrant]);
+    // The migrant must be on exactly one of the pages on this day
+    const totalFound = listDay1A.length + listDay1B.length;
+    expect(totalFound).toBe(1);
+
+    if (listDay1A.length > 0) {
+      expect(listDay1A[0].id).toBe('wandering-cat@spot-1');
+      expect(listDay1A[0].isBonus).toBe(true);
+    }
   });
 });

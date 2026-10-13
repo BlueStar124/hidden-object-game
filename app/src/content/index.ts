@@ -90,3 +90,5 @@ export function allPages(): Page[] {
   }
   return [...days, ...nights];
 }
+
+export { MIGRANTS } from './migrants';

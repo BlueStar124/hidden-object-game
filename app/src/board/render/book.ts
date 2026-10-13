@@ -30,10 +30,11 @@ function inView(view: View | null, x: number, y: number, reach: number): boolean
 // Sheet cells are drawn up to this much larger than they were drawn at before shapes take over
 const SHEET_STRETCH = 1.15;
 
-function drawImage(c: SkCanvas, S: SceneData, magnified: boolean) {
+function drawImage(c: SkCanvas, S: SceneData, magnified: boolean, washed = false) {
   'worklet';
-  if (magnified) c.drawImageRectCubic(S.image, S.imageRect, S.pageRect, 1 / 3, 1 / 3, S.paints.image);
-  else c.drawImageRectOptions(S.image, S.imageRect, S.pageRect, FilterMode.Linear, MipmapMode.Linear, S.paints.image);
+  const p = washed ? S.paints.washed : S.paints.image;
+  if (magnified) c.drawImageRectCubic(S.image, S.imageRect, S.pageRect, 1 / 3, 1 / 3, p);
+  else c.drawImageRectOptions(S.image, S.imageRect, S.pageRect, FilterMode.Linear, MipmapMode.Linear, p);
 }
 
 function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
@@ -94,7 +95,16 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
   'worklet';
   const P = S.paints;
   const now = F.now;
-  drawImage(c, S, inLoupe);
+
+  // Watercolor bloom effect: enabled on day pages when reveal is active and not inside loupe
+  let countFound = 0;
+  for (let i = 0; i < poses.length; i++) {
+    if (poses[i].found) countFound++;
+  }
+  const allFound = poses.length > 0 && countFound >= S.sprites.length;
+  const washed = !inLoupe && !S.night && !!F.reveal && !allFound;
+
+  drawImage(c, S, inLoupe, washed);
 
   // Sprites at rest come from the sheet while it is sharp enough at this zoom (never in the loupe)
   const atlas = S.atlas;
@@ -117,7 +127,8 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, atlas, cell, P.chameleonModulate, 0.95);
     } else if (sp.camo === CAMO_INVISIBLE) {
       const glow = track([0, 0.5, 1], [0.7, 1, 0.7], EASE_IN_OUT, loop(now, 2400));
-      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, atlas, cell);
+      const invisPaint = sp.requires === 'uv-lens' ? P.uv : P.invisible;
+      drawSprite(c, sp, pose, parts, invisPaint, glow * fade, false, P.glowSpot, atlas, cell);
     } else {
       drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, atlas, cell, P.inkModulate, 0.8);
     }
@@ -130,7 +141,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (!occ || (ob && !inView(view, ob.x + ob.width / 2, ob.y + ob.height / 2, Math.max(ob.width, ob.height) / 2))) continue;
     c.save();
     c.clipPath(occ, ClipOp.Intersect, true);
-    drawImage(c, S, inLoupe);
+    drawImage(c, S, inLoupe, washed);
     c.restore();
   }
 
@@ -144,7 +155,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (!inView(view, pose.x, pose.y, 2.2 * sp.w * Math.max(1, pose.bs))) continue;
     if (pose.age < 1100) {
       const b = bloom(pose.age / 1100);
-      const reach = 1.9 * sp.w * Math.SQRT1_2 * b.scale;
+      const reach = 2.4 * sp.w * Math.SQRT1_2 * b.scale;
       P.bloom.setAlphaf(b.opacity);
       c.save();
       c.translate(pose.x, pose.y);
@@ -152,12 +163,17 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       c.drawCircle(0, 0, Math.SQRT1_2, P.bloom);
       c.restore();
     }
+    const foundPaint = sp.rare
+      ? P.golden
+      : inLoupe
+      ? P.foundLoupe
+      : P.foundPage;
     drawSprite(
       c,
       sp,
       pose,
       sp.found,
-      inLoupe ? P.foundLoupe : P.foundPage,
+      foundPaint,
       0.9 * clamp01(pose.age / FOUND_FADE_MS + 0.15),
       false,
       P.glowSpot,

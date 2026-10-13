@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Country, Page, PageRef, PageTurn } from '../core/model';
 import { progress } from '../core/progress';
-import { countryById, FIRST_COUNTRY, pagesOf, placeOf } from '../content';
+import { hashString, localDay } from '../core/random';
+import { resolvePage } from '../core/resolvePage';
+import { toolsOwned } from '../core/tools';
+import { migrantsOn } from '../core/migrants';
+import { countryById, COUNTRIES, FIRST_COUNTRY, MIGRANTS, pagesOf, placeOf } from '../content';
 import { sound } from '../platform/sound';
 
 /**
@@ -49,6 +53,22 @@ function pageAt(country: Country, index: number, night: boolean): Page {
   return (night && ref.night) || ref.day;
 }
 
+function buildResolvedPage(raw: Page, visit = 0): Page {
+  const playNum = progress.playCount?.(raw.id) ?? 0;
+  const day = localDay();
+  const seed = playNum > 1 ? hashString(`${raw.id}:${playNum}:${visit}`) : 0;
+  const currentProg = progress.current?.() ?? {
+    schemaVersion: 2,
+    unlockedScenes: [],
+    sceneResults: {},
+    totalScore: 0,
+    discovered: {},
+  };
+  const tools = toolsOwned(currentProg, COUNTRIES);
+  const migrants = migrantsOn(raw.id, day, MIGRANTS);
+  return resolvePage(raw, { seed, day, tools, migrants });
+}
+
 interface PendingTurn {
   request: PageTurn;
   countryId: string;
@@ -78,7 +98,8 @@ export function useNavigation(): Navigation {
   const country = countryById(place.countryId);
   const pages = pagesOf(country);
   const ref = pages[place.index];
-  const page = pageAt(country, place.index, place.night);
+  const rawPage = pageAt(country, place.index, place.night);
+  const page = useMemo(() => buildResolvedPage(rawPage, place.visit), [rawPage, place.visit]);
   const isTurning = turn !== null;
 
   // Opens a page (night: the page's night variant, if it has one)
@@ -88,6 +109,8 @@ export function useNavigation(): Navigation {
     const book = pagesOf(target);
     const valid = Math.max(0, Math.min(index, book.length - 1));
     const nightOn = night && !!book[valid].night;
+    const targetPage = (nightOn && book[valid].night) || book[valid].day;
+    progress.recordPlay?.(targetPage.id);
     setPlace((prev) => ({ countryId: target.id, index: valid, night: nightOn, visit: prev.visit + 1 }));
     setTurn(null);
     setShowNightIntro(nightOn);
@@ -99,7 +122,8 @@ export function useNavigation(): Navigation {
       if (pending.current) return;
       const target = countryById(countryId);
       const valid = Math.max(0, Math.min(index, pagesOf(target).length - 1));
-      const request = { to: pageAt(target, valid, night), direction };
+      const targetRaw = pageAt(target, valid, night);
+      const request = { to: buildResolvedPage(targetRaw), direction };
       pending.current = { request, countryId: target.id, index: valid, night, then };
       setTurn(request);
       sound.playPageTurn();

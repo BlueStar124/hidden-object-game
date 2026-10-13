@@ -18,7 +18,15 @@
       "scale": 0.55,
       "rotation": 80,
       "camo": "chameleon",
-      "foundText": "Kỳ đà nước bơi rất giỏi và có thể lặn dưới nước khá lâu."
+      "foundText": "Kỳ đà nước bơi rất giỏi và có thể lặn dưới nước khá lâu.",
+      "spots": [
+        {
+          "x": 0.29,
+          "y": 0.67,
+          "rotation": 45,
+          "clue": "Chú kỳ đà nước bơi ven mép bờ sông phía dãy nhà bên trái."
+        }
+      ]
     },
     {
       "id": "bridge-kite",
@@ -32,7 +40,15 @@
       "scale": 0.5,
       "rotation": 15,
       "camo": "chameleon",
-      "foundText": "Diều wau bulan — chiếc diều trăng khuyết truyền thống — đã bay lạc tới tận bến sông."
+      "foundText": "Diều wau bulan — chiếc diều trăng khuyết truyền thống — đã bay lạc tới tận bến sông.",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.46,
+          "rotation": -20,
+          "clue": "Chiếc diều wau bulan mắc trên nhịp dầm giữa cây cầu sắt."
+        }
+      ]
     },
     {
       "id": "coin-pouch",
@@ -45,7 +61,14 @@
       "spriteType": "coin-pouch",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Kho báu tiền xu từ các thương thuyền buôn bán gia vị ngày xưa cập bến."
+      "foundText": "Kho báu tiền xu từ các thương thuyền buôn bán gia vị ngày xưa cập bến.",
+      "spots": [
+        {
+          "x": 0.74,
+          "y": 0.61,
+          "clue": "Túi tiền xu thủy thủ nằm trên thềm bến sông phía bên phải cầu."
+        }
+      ]
     },
     {
       "id": "boat-deerstalker",
@@ -58,7 +81,14 @@
       "spriteType": "deerstalker",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Chiếc mũ vẫn còn ấm — vị kiến trúc sư vừa mới rời đi thôi!"
+      "foundText": "Chiếc mũ vẫn còn ấm — vị kiến trúc sư vừa mới rời đi thôi!",
+      "spots": [
+        {
+          "x": 0.78,
+          "y": 0.58,
+          "clue": "Chiếc mũ thám tử bị bỏ quên trên mũi chiếc bumboat phía đông."
+        }
+      ]
     },
     {
       "id": "bridge-kingfisher",
@@ -71,7 +101,14 @@
       "spriteType": "kingfisher",
       "scale": 0.45,
       "camo": "chameleon",
-      "foundText": "Chim bói cá — sứ giả xanh biếc báo hiệu dòng sông đã sạch trong trở lại!"
+      "foundText": "Chim bói cá — sứ giả xanh biếc báo hiệu dòng sông đã sạch trong trở lại!",
+      "spots": [
+        {
+          "x": 0.72,
+          "y": 0.49,
+          "clue": "Chú chim bói cá đổi chỗ đậu sang lan can đầu cầu bên phải."
+        }
+      ]
     },
     {
       "id": "paper-boat",

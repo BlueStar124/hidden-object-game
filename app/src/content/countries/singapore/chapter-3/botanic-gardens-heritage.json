@@ -17,7 +17,14 @@
       "spriteType": "squirrel",
       "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Cư dân thân quen của khu rừng mưa nhiệt đới di sản thế giới UNESCO."
+      "foundText": "Cư dân thân quen của khu rừng mưa nhiệt đới di sản thế giới UNESCO.",
+      "spots": [
+        {
+          "x": 0.48,
+          "y": 0.47,
+          "clue": "Chú sóc lông xù nhảy sang nhánh cây trung tâm vươn bóng mát."
+        }
+      ]
     },
     {
       "id": "detective-owl",
@@ -30,7 +37,14 @@
       "spriteType": "owl",
       "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Người gác đêm của khu vườn bách thảo chứng kiến bao thế hệ đổi thay."
+      "foundText": "Người gác đêm của khu vườn bách thảo chứng kiến bao thế hệ đổi thay.",
+      "spots": [
+        {
+          "x": 0.31,
+          "y": 0.41,
+          "clue": "Chú cú mèo ẩn mình trong hốc cành cao phía trên."
+        }
+      ]
     },
     {
       "id": "quill-ink",
@@ -43,7 +57,14 @@
       "spriteType": "quill",
       "scale": 0.55,
       "camo": "ink",
-      "foundText": "Cây bút mà vị kiến trúc sư đã dùng để phác họa toàn bộ cuốn sổ tay này!"
+      "foundText": "Cây bút mà vị kiến trúc sư đã dùng để phác họa toàn bộ cuốn sổ tay này!",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.66,
+          "clue": "Bình mực và bút lông ngỗng đặt bên mép trang sổ phía dưới gốc cây."
+        }
+      ]
     },
     {
       "id": "magnifying-glass",
@@ -57,7 +78,14 @@
       "scale": 0.6,
       "rotation": -20,
       "camo": "invisible",
-      "foundText": "Chính là chiếc kính lúp thám tử huyền thoại đã giúp bạn giải mã mọi bí ẩn!"
+      "foundText": "Chính là chiếc kính lúp thám tử huyền thoại đã giúp bạn giải mã mọi bí ẩn!",
+      "spots": [
+        {
+          "x": 0.22,
+          "y": 0.66,
+          "clue": "Chiếc kính lúp thám tử vẽ bằng mực tàng hình trên thảm cỏ bên trái."
+        }
+      ]
     },
     {
       "id": "leaf-moth",
@@ -71,7 +99,15 @@
       "scale": 0.6,
       "rotation": 35,
       "camo": "chameleon",
-      "foundText": "Bậc thầy ngụy trang số một: loài bướm đêm có đôi cánh giống hệt lá khô, kể cả những đường gân lá!"
+      "foundText": "Bậc thầy ngụy trang số một: loài bướm đêm có đôi cánh giống hệt lá khô, kể cả những đường gân lá!",
+      "spots": [
+        {
+          "x": 0.68,
+          "y": 0.52,
+          "rotation": -25,
+          "clue": "Bướm đêm giả lá bám trên cành nhánh ngả về phía cuốn sổ."
+        }
+      ]
     },
     {
       "id": "artist-seal",

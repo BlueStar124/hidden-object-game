@@ -28,7 +28,7 @@ export interface Case {
   unlockedNight: string | null;
   screenShake: boolean;
   inspect: (nx: number, ny: number, at: { x: number; y: number }) => void;
-  requestHint: () => void;
+  requestHint: (targetObjectId?: string) => void;
   togglePause: () => void;
   /** After the case is closed: keep hunting the critters & secret left (no clock, no score) */
   explore: (exploring: boolean) => void;
@@ -201,13 +201,23 @@ export function useCase(
     [c, page, isTurning, fogUntil, nextPage, night, notify, inspectWhileExploring]
   );
 
-  const requestHint = useCallback(() => {
-    if (c.isCompleted || c.isPaused || c.isGameOver) return;
-    const hint = nextHint(c.activeHint?.level || 0, page.objects, c.foundItems, lastLoupePos.current);
-    if (!hint) return;
-    sound.playHint();
-    update((s) => recordHint(s, hint));
-  }, [c, page, update]);
+  const requestHint = useCallback(
+    (targetObjectId?: string) => {
+      if (c.isCompleted || c.isPaused || c.isGameOver) return;
+      const hint = nextHint(
+        c.activeHint,
+        c.revealedTextIds ?? [],
+        page.objects,
+        c.foundItems,
+        lastLoupePos.current,
+        targetObjectId
+      );
+      if (!hint) return;
+      sound.playHint();
+      update((s) => recordHint(s, hint));
+    },
+    [c, page, update]
+  );
 
   const togglePause = useCallback(() => update((s) => ({ ...s, isPaused: !s.isPaused })), [update]);
 

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { BookOpen, House, Play, RotateCcw, Volume2, VolumeX } from '../../ui/icons';
+import { BookOpen, House, Layers, Palette, Play, RotateCcw, Volume2, VolumeX } from '../../ui/icons';
 import type { Page } from '../../core/model';
+import { loadRevealEffect, saveRevealEffect } from '../../core/progress';
 import { colors, fonts } from '../../ui/theme';
 import { ModalShell } from '../../ui/ModalShell';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { useShortLandscape } from '../../ui/layout';
+import { SaveBackupDialog } from './SaveBackupDialog';
 
 interface PauseMenuProps {
   page: Page;
@@ -18,8 +20,21 @@ interface PauseMenuProps {
 
 export const PauseMenu: React.FC<PauseMenuProps> = ({ page, soundEnabled, onResume, onRestart, onToggleSound, onExit }) => {
   const columns = useShortLandscape();
+  const [showBackup, setShowBackup] = useState(false);
+  const [revealEnabled, setRevealEnabled] = useState(loadRevealEffect);
+
+  const toggleReveal = () => {
+    const next = !revealEnabled;
+    setRevealEnabled(next);
+    saveRevealEffect(next);
+  };
+
+  if (showBackup) {
+    return <SaveBackupDialog onClose={() => setShowBackup(false)} />;
+  }
+
   return (
-    <ModalShell maxWidth={columns ? 760 : 400} backdrop="rgba(35, 30, 24, 0.62)" onBackdropPress={onResume}>
+    <ModalShell maxWidth={columns ? 760 : 440} backdrop="rgba(35, 30, 24, 0.62)" onBackdropPress={onResume}>
       <View style={columns ? styles.columns : styles.stack}>
         <View style={columns ? styles.column : styles.stack}>
           <Text style={styles.tag}>HỒ SƠ TẠM DỪNG</Text>
@@ -51,6 +66,18 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({ page, soundEnabled, onResu
             label={`Âm Thanh: ${soundEnabled ? 'BẬT' : 'TẮT'}`}
             icon={soundEnabled ? <Volume2 size={17} color={colors.ink} /> : <VolumeX size={17} color={colors.ink} />}
             onPress={onToggleSound}
+            style={styles.full}
+          />
+          <SecondaryButton
+            label={`Màu Nước Loang: ${revealEnabled ? 'BẬT' : 'TẮT'}`}
+            icon={<Palette size={17} color={colors.ink} />}
+            onPress={toggleReveal}
+            style={styles.full}
+          />
+          <SecondaryButton
+            label="Sao Lưu & Khôi Phục"
+            icon={<Layers size={17} color={colors.ink} />}
+            onPress={() => setShowBackup(true)}
             style={styles.full}
           />
           <SecondaryButton

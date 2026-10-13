@@ -56,9 +56,39 @@ function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined, pose
   const age = f ? now - f.t : 0;
   if (f) {
     if (age < 600) {
-      const b = foundBounce(age / 600);
-      bs = b.scale;
-      br = b.rotate;
+      const p = age / 600;
+      if (sp.reaction === 'hop') {
+        // Hops upward in an arc and lands back
+        const hopY = -Math.sin(p * Math.PI) * 0.45 * sp.w;
+        dy += hopY;
+        const b = foundBounce(p);
+        bs = b.scale;
+        br = b.rotate;
+      } else if (sp.reaction === 'flutter') {
+        // Quick rapid flutter and bob
+        dy += Math.sin(p * Math.PI * 4) * 0.15 * sp.w;
+        rot += Math.sin(p * Math.PI * 3) * 8;
+        bs = 1 + Math.sin(p * Math.PI * 2) * 0.15;
+      } else if (sp.reaction === 'scurry') {
+        // Quick sideways scurry step and return
+        dx += Math.sin(p * Math.PI * 2) * 0.25 * sp.w * sp.flip;
+        bs = 1 + Math.sin(p * Math.PI) * 0.1;
+      } else if (sp.reaction === 'splash') {
+        // Splash wobble and squash
+        dy += -Math.sin(p * Math.PI) * 0.25 * sp.w;
+        rot += Math.sin(p * Math.PI * 2) * 10;
+        bs = 1 + Math.sin(p * Math.PI * 2) * 0.2;
+      } else if (sp.reaction === 'spin') {
+        rot += p * 360;
+        bs = 1 + Math.sin(p * Math.PI) * 0.2;
+      } else {
+        // Inanimate objects: gentle bounce (~250ms squash & stretch)
+        if (age < 250) {
+          const q = age / 250;
+          bs = 1 + Math.sin(q * Math.PI) * 0.15;
+          br = Math.sin(q * Math.PI) * 4;
+        }
+      }
     }
     wing = lerp(1, 0.72, alternate(age, 900, EASE_IN_OUT));
     tail = lerp(-4, 5, alternate(age, 1600, EASE_IN_OUT));

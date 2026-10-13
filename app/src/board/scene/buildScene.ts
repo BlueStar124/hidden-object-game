@@ -1,6 +1,6 @@
 import { BlendMode, Skia, TileMode, type SkImage } from '@shopify/react-native-skia';
 import type { HiddenObject, Page, SpriteType } from '../../core/model';
-import { isCreature } from '../../content/bestiary';
+import { isCreature, reactionOf } from '../../content/bestiary';
 import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
 import {
   CAMO_CHAMELEON,
@@ -132,6 +132,9 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     pageCell: null,
     foundCell: null,
     blinks: partsAnimate(found, [ANIM_BLINK]),
+    reaction: reactionOf(type),
+    rare: !!obj.rare,
+    requires: obj.requires ?? null,
   };
 }
 
