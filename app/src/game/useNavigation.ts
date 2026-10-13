@@ -65,7 +65,7 @@ export interface Navigation {
   openChallenge: (challenge: Challenge) => boolean;
   /** Back from a daily page or a challenge to the page the player was at in the book */
   leaveSpecial: () => void;
-  /** A page as it will be opened, short of this visit's chance (the board prepares neighbours with it) */
+  /** A page exactly as turning to it will open it — layout and chance decided ahead (the board prepares neighbours with it) */
   preparedPage: (page: Page) => Page;
 }
 
@@ -90,14 +90,16 @@ function pageAt(country: Country, index: number, night: boolean): Page {
 }
 
 /** A page as it opens on a day, before this visit's layout and chance: tools, travelling visitors. */
-const openingPage = (page: Page, tools: ToolId[], day: string) => withVisitors(withTools(page, tools), day, MIGRANTS);
+const openingPage = (page: Page, tools: readonly ToolId[], day: string) => withVisitors(withTools(page, tools), day, MIGRANTS);
+
+/** A page of the book as a visit plays it: laid out for its seed, maybe with a golden critter. */
+const visitOf = (page: Page, tools: readonly ToolId[], day: string, fate: Fate) =>
+  withRareCritter(layOutPage(openingPage(page, tools, day), fate.seed), fate.roll);
 
 /** The page as a visit plays it (a daily corner has only main objects: no visitor, no golden critter). */
 function pageFor(country: Country, index: number, night: boolean, seed: number, mode: PlayMode, roll: number, tools: ToolId[], day: string): Page {
   const page = pageAt(country, index, night);
-  return mode.kind === 'daily'
-    ? dailyPage(withTools(page, tools), mode.puzzle)
-    : withRareCritter(layOutPage(openingPage(page, tools, day), seed), roll);
+  return mode.kind === 'daily' ? dailyPage(withTools(page, tools), mode.puzzle) : visitOf(page, tools, day, { seed, roll });
 }
 
 /** A first visit plays the page as written; once solved, its objects may hide elsewhere. */
@@ -106,10 +108,14 @@ function seedFor(page: Page): number {
   return solved && hasSpots(page) ? 1 + Math.floor(Math.random() * (SEED_COUNT - 1)) : 0;
 }
 
-interface PendingTurn extends Spot {
-  request: PageTurn;
+/** What a visit to a page will be, decided before it opens: its layout and its chance. */
+interface Fate {
   seed: number;
   roll: number;
+}
+
+interface PendingTurn extends Spot, Fate {
+  request: PageTurn;
   then?: () => void;
 }
 
@@ -147,6 +153,14 @@ export function useNavigation(): Navigation {
   const [showNightIntro, setShowNightIntro] = useState(false);
   // Where the player is in the book while a daily page or a challenge is played
   const bookSpot = useRef<Spot>(place);
+  // The next visit of the pages around, by page id: decided when the board prepares them, kept until
+  // one opens, so the page a turn opens is the very one laid out ahead (core/layout.layoutKey)
+  const fates = useRef(new Map<string, Fate>());
+  const fateOf = useCallback((p: Page): Fate => {
+    let fate = fates.current.get(p.id);
+    if (!fate) fates.current.set(p.id, (fate = { seed: seedFor(p), roll: Math.random() }));
+    return fate;
+  }, []);
 
   const country = countryById(place.countryId);
   const pages = pagesOf(country);
@@ -167,6 +181,7 @@ export function useNavigation(): Navigation {
     const book = pagesOf(target);
     const valid = Math.max(0, Math.min(index, book.length - 1));
     const nightOn = night && !!book[valid].night;
+    fates.current.delete(pageAt(target, valid, nightOn).id); // this visit is decided: the next one is new
     if (mode.kind === 'book') bookSpot.current = { countryId: target.id, index: valid, night: nightOn };
     setPlace((prev) => ({
       countryId: target.id,
@@ -189,16 +204,15 @@ export function useNavigation(): Navigation {
       if (pending.current) return;
       const target = countryById(countryId);
       const valid = Math.max(0, Math.min(index, pagesOf(target).length - 1));
-      const page = openingPage(pageAt(target, valid, night), ownedTools(), localDay(new Date()));
+      const page = pageAt(target, valid, night);
       // The leaf turns onto the page as it will be played, laid out already
-      const seed = seedFor(page);
-      const roll = Math.random();
-      const request = { to: withRareCritter(layOutPage(page, seed), roll), direction };
-      pending.current = { request, countryId: target.id, index: valid, night, seed, roll, then };
+      const fate = fateOf(page);
+      const request = { to: visitOf(page, ownedTools(), localDay(new Date()), fate), direction };
+      pending.current = { request, countryId: target.id, index: valid, night, ...fate, then };
       setTurn(request);
       sound.playPageTurn();
     },
-    []
+    [fateOf]
   );
 
   const completeTurn = useCallback((request: PageTurn) => {
@@ -285,6 +299,15 @@ export function useNavigation(): Navigation {
     open(spot.countryId, spot.index, spot.night, seedFor(pageAt(countryById(spot.countryId), spot.index, spot.night)));
   }, [inBook, open]);
 
+  // How pages open now, read on every render (the game's clock ticks each second): once a mystery
+  // gives a tool or the day turns, the neighbours are prepared again as they would open
+  const toolsNow = ownedTools().join('+');
+  const today = localDay(new Date());
+  const preparedPage = useCallback(
+    (p: Page) => visitOf(p, toolsNow ? (toolsNow.split('+') as ToolId[]) : [], today, fateOf(p)),
+    [toolsNow, today, fateOf]
+  );
+
   return {
     country,
     pages,
@@ -311,6 +334,3 @@ export function useNavigation(): Navigation {
     preparedPage,
   };
 }
-
-/** A page as it opens for the player now, before this visit's layout and chance. */
-const preparedPage = (page: Page) => openingPage(page, ownedTools(), localDay(new Date()));

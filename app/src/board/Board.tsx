@@ -105,7 +105,7 @@ export const Board = React.memo<BoardProps>(function Board({
   const library = useSceneLibrary(page, loupePaints, compact, density);
   const camera = useCamera(size, library.shown, layoutKey(page), diameter, turning);
   const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera, wash);
-  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, marks.reveal, turning, onTurnComplete);
+  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, marks.reveal, wash, turning, onTurnComplete);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);
   const warmUp = useWarmUp(library.scene, !active, camera, library.retirePictures);
 

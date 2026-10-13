@@ -236,6 +236,23 @@ describe('the passport', () => {
     const read = readProgress({ stamps: { '2026-10-12': stamp(30), yesterday: stamp(10), '2026-10-11': { time: 5 } } });
     expect(read.stamps).toEqual({ '2026-10-12': stamp(30) });
   });
+
+  test('a save read back, or two merged, keep only the latest days too', () => {
+    const daysFrom = (year: number) =>
+      Object.fromEntries(
+        Array.from({ length: MAX_STAMPS }, (_, i) => {
+          const day = new Date(year, 0, 1 + i);
+          return [`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`, stamp(40)];
+        })
+      );
+    const old = readProgress({ stamps: { '2001-01-01': stamp(10), ...daysFrom(2024) } });
+    expect(Object.keys(old.stamps ?? {})).toHaveLength(MAX_STAMPS);
+    expect(old.stamps?.['2001-01-01']).toBeUndefined();
+    const merged = mergeProgress(readProgress({ stamps: daysFrom(2026) }), old);
+    const days = Object.keys(merged.stamps ?? {}).sort();
+    expect(days).toHaveLength(MAX_STAMPS);
+    expect(days[0].startsWith('2026')).toBe(true);
+  });
 });
 
 describe('the inside cover', () => {

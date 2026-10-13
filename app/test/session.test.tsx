@@ -3,6 +3,7 @@ import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { FIRST_COUNTRY, pagesOf } from '../src/content';
 import { dailyPuzzle } from '../src/core/daily';
+import { hasSpots, layoutKey } from '../src/core/layout';
 import { useNavigation, type Navigation } from '../src/game/useNavigation';
 import { usePagesAround } from '../src/board/usePagesAround';
 import type { SceneLibrary } from '../src/board/useSceneLibrary';
@@ -94,6 +95,26 @@ describe('Page-turn ownership', () => {
     expect(prepare).toHaveBeenCalledWith(pages[4].day);
     expect(bump).toHaveBeenCalledTimes(1);
   });
+
+  test('a neighbour prepared ahead is the very page the turn opens, new layout and golden critter included', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    const neighbour = pagesOf(FIRST_COUNTRY)[1].day;
+    expect(hasSpots(neighbour)).toBe(true);
+    mockSolved.add(neighbour.id);
+    // A lucky roll while the board prepares it, an ordinary one by the time the player turns
+    const random = jest.spyOn(Math, 'random').mockReturnValue(0.01);
+    const ahead = navigation.preparedPage(neighbour);
+    expect(ahead.objects.some((o) => o.rare)).toBe(true);
+    expect(ahead.layout).toMatch(/s\d+r/);
+    random.mockReturnValue(0.5);
+    expect(layoutKey(navigation.preparedPage(neighbour))).toBe(layoutKey(ahead));
+    act(() => navigation.next());
+    expect(layoutKey(navigation.turn!.to)).toBe(layoutKey(ahead));
+    act(() => navigation.completeTurn(navigation.turn!));
+    expect(layoutKey(navigation.page)).toBe(layoutKey(ahead));
+    // Opened: its next visit is decided anew
+    expect(layoutKey(navigation.preparedPage(neighbour))).not.toBe(layoutKey(ahead));
+  });
 });
 
 describe('Ways of playing a page', () => {
@@ -101,7 +122,8 @@ describe('Ways of playing a page', () => {
     act(() => { renderer = create(<NavigationProbe />); });
     // A first visit is never laid out anew (the page may only lack what the player's tools reveal)
     expect(navigation.seed).toBe(0);
-    expect(navigation.page.layout ?? '').not.toContain('s');
+    // (its layout may carry other marks: tools lacking, the day's travelling visitors)
+    expect(navigation.page.layout ?? '').not.toMatch(/s\d+$/);
     mockSolved.add(navigation.page.id);
     jest.spyOn(Math, 'random').mockReturnValue(0.5);
     act(() => navigation.replay());

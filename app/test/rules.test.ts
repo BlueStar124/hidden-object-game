@@ -467,6 +467,16 @@ describe('golden critters', () => {
     const gold = withRareCritter(page, 0).objects.find((o) => o.rare)!;
     expect(isMainObject(gold)).toBe(false);
   });
+
+  test('a note in invisible ink is never the golden one (its glints would show where it hides)', () => {
+    const note = object('note', { isBonus: true, spriteType: 'letter', requires: 'uv-lens', camo: 'invisible' });
+    const inked = pageOf('inked', [object('main'), note, ...critters]);
+    for (let roll = 0; roll < RARE_CHANCE; roll += RARE_CHANCE / 50) {
+      expect(withRareCritter(inked, roll).objects.find((o) => o.rare)?.id).not.toBe('note');
+    }
+    const onlyInk = pageOf('only-ink', [object('main'), note]);
+    expect(withRareCritter(onlyInk, 0)).toBe(onlyInk);
+  });
 });
 
 describe('the detective tools', () => {

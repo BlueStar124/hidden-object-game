@@ -40,8 +40,10 @@ export function usePageTurn(
   library: SceneLibrary,
   camera: Camera,
   foundNow: () => Record<string, FoundInfo>,
-  /** The wash on the page being left (the page opened starts a fresh case: wash on, if wanted) */
+  /** The wash on the page being left */
   reveal: SharedValue<number>,
+  /** The wash is wanted: the page opened starts a fresh case, washed unless it is a night page */
+  wash: boolean,
   turning: MutableRefObject<boolean>,
   onComplete: (request: PageTurn) => void
 ): PageTurnState {
@@ -83,12 +85,12 @@ export function usePageTurn(
       const settled = centre(scale);
       return {
         ...pending,
-        to: snapshotPage(next, frameFor({}, reveal.value < 0 ? -1 : 0, settled)),
+        to: snapshotPage(next, frameFor({}, wash && !pending.page.isNight ? 0 : -1, settled)),
         S: next,
         camera: { fromX: tx.value, fromY: ty.value, toX: settled.tx, toY: settled.ty },
       };
     },
-    [centre, frameFor, reveal, s, tx, ty]
+    [centre, frameFor, wash, s, tx, ty]
   );
 
   // 1. A turn begins

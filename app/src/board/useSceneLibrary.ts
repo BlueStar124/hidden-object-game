@@ -54,7 +54,7 @@ export interface SceneLibrary {
   /** Changes whenever artwork arrives or a page is prepared in the background */
   version: number;
   bump: () => void;
-  /** Loads the artwork of these pages; beyond a few, the rest is let go */
+  /** Loads the artwork of these pages; beyond a few, the rest is let go — and scenes of other layouts */
   keepArt: (pages: Page[]) => void;
   imageOf: (page: Page) => SkImage | undefined;
   /** Called after the frame mapper was updated, keeping anything it still draws alive. */
@@ -126,11 +126,14 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
           images.delete(id);
         }
       }
+      // Scenes are kept only for the layouts wanted now: every replay, golden visit or day's visitors
+      // lays a page out anew, and each scene holds its own sprite sheet on the GPU
       const alive = new Set([...images.values()].map((art) => art.image));
-      for (const [id, prepared] of scenes) {
-        if (alive.has(prepared.image)) continue;
+      const layouts = new Set(pages.map(layoutKey));
+      for (const [key, prepared] of scenes) {
+        if (alive.has(prepared.image) && layouts.has(key)) continue;
         retiredScenes.add(prepared);
-        scenes.delete(id);
+        scenes.delete(key);
       }
     },
     [scenes, bump, retiredScenes]
@@ -179,10 +182,10 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   };
 }
 
-/** Loads the artwork of `pages` whenever that list (or the library's content) changes. */
+/** Loads the artwork of `pages` whenever that list — or a layout in it — or the library's content changes. */
 export function useKeepArt(library: SceneLibrary, pages: Page[]) {
   const { keepArt, version } = library;
-  const key = pages.map((p) => p.id).join('|');
+  const key = pages.map(layoutKey).join('|');
   const latest = useRef(pages);
   latest.current = pages;
   useEffect(() => {

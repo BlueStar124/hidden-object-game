@@ -32,6 +32,13 @@ export const MAX_STAMPS = 400;
 /** Stickers on the inside cover, at most. */
 export const MAX_STICKERS = 60;
 
+/** The latest stamps only (days sort as text, '2026-10-12'): a save — or two merged — stays small. */
+function latestStamps(stamps: Record<string, DailyStamp>): Record<string, DailyStamp> {
+  const days = Object.keys(stamps).sort();
+  for (const old of days.slice(0, Math.max(0, days.length - MAX_STAMPS))) delete stamps[old];
+  return stamps;
+}
+
 function readStamps(v: unknown): Record<string, DailyStamp> | undefined {
   if (!isRecord(v)) return undefined;
   const stamps: Record<string, DailyStamp> = {};
@@ -39,7 +46,7 @@ function readStamps(v: unknown): Record<string, DailyStamp> | undefined {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !isRecord(s) || typeof s.pageId !== 'string') continue;
     stamps[day] = { pageId: s.pageId, countryId: typeof s.countryId === 'string' ? s.countryId : '', time: count(s.time) };
   }
-  return stamps;
+  return latestStamps(stamps);
 }
 
 function readCover(v: unknown): CoverSticker[] | undefined {
@@ -160,7 +167,7 @@ export function mergeProgress(current: GameProgress, other: GameProgress): GameP
     settings: current.settings ?? other.settings,
     solvedMysteries: solved.length ? solved : undefined,
     rareFound: rare.length ? rare : undefined,
-    stamps: Object.keys(stamps).length ? stamps : undefined,
+    stamps: Object.keys(stamps).length ? latestStamps(stamps) : undefined,
     cover: current.cover?.length ? current.cover : other.cover,
   };
 }
@@ -333,10 +340,7 @@ export const progress = {
     const existing = stamps[day];
     if (existing && existing.time <= stamp.time) return;
     stamps[day] = stamp;
-    // Days sort as text ('2026-10-12'): drop the oldest beyond the limit
-    const days = Object.keys(stamps).sort();
-    for (const old of days.slice(0, Math.max(0, days.length - MAX_STAMPS))) delete stamps[old];
-    save({ ...current, stamps });
+    save({ ...current, stamps: latestStamps(stamps) });
   },
 
   /* ---- Inside cover ---- */

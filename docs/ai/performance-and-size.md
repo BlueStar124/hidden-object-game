@@ -66,11 +66,12 @@ mỗi giây, mở hộp thoại.
 2. Cache có sẵn, hãy dùng, đừng tạo cache song song:
    - tranh đã giải mã: `images` (module-level, khóa `artIdOf`, tối đa `MAX_IMAGES = 5`);
    - phân tích tranh: `analyses` (khóa `layoutKey`, đọc pixel một lần mỗi cách sắp đặt);
-   - trang đã dựng: `scenes` (khóa `layoutKey`: cùng trang, vật ở chỗ khác là một scene khác), chỉ dựng lại khi `loupe`,
+   - trang đã dựng: `scenes` (khóa `layoutKey`: cùng trang, vật ở chỗ khác là một scene khác; chỉ giữ các `layoutKey` đang
+     cần: trang này, đích lật, `preload`), chỉ dựng lại khi `loupe`,
      `compact` hoặc `density` đổi. `atlasDensity` làm tròn theo bước
      0.25 để thay đổi layout nhỏ không dựng lại sheet. **Đừng thêm dependency hay đổi liên tục vào các memo này.**
-3. Trang sắp tới được **preload** (`GameScreen.preload`). Mở đường điều hướng mới (nhảy trang, đổi nước…) thì thêm đích
-   vào `preload` để lật không bị khựng.
+3. Trang sắp tới được **preload** (`GameScreen.preload`, qua `nav.preparedPage`: đúng trang lượt lật sẽ mở, seed và sinh
+   vật vàng định trước). Mở đường điều hướng mới (nhảy trang, đổi nước…) thì thêm đích vào `preload` để lật không bị khựng.
 4. Ảnh của trang lân cận được vẽ thành 1 pixel vô hình mỗi khung (`F.warm`) để luôn nằm trên GPU. Danh sách này phải
    giữ **cùng một mảng** khi nội dung không đổi (xem `warmRef` trong `usePagesAround`), nếu không worklet khung hình sẽ
    bị dựng lại.

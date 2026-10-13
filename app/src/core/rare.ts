@@ -1,4 +1,4 @@
-import type { Page } from './model';
+import { isCritter, type Page } from './model';
 
 /**
  * Golden critters: now and then, one of a page's optional critters is a rare golden one — a little
@@ -12,7 +12,8 @@ export const RARE_CHANCE = 1 / 25;
 /** The page with one of its critters golden — or the page as it is, most visits. */
 export function withRareCritter(page: Page, roll: number): Page {
   if (!(roll >= 0 && roll < RARE_CHANCE)) return page;
-  const critters = page.objects.filter((o) => o.isBonus && o.spriteType && o.spriteType !== 'seal');
+  // (Not a note in invisible ink: its glints would give it away outside the lens)
+  const critters = page.objects.filter((o) => isCritter(o) && o.spriteType && o.spriteType !== 'seal');
   if (!critters.length) return page;
   // The same roll picks which one: spread over the critters
   const pick = critters[Math.min(critters.length - 1, Math.floor((roll / RARE_CHANCE) * critters.length))];
