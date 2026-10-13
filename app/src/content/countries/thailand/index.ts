@@ -23,7 +23,7 @@ export const thailand: Country = {
   code: 'TH',
   chapters: [
     {
-      id: 'chapter-01',
+      id: 'thailand-01',
       title: 'Bình Minh Chao Phraya',
       subtitle: 'Temple of Dawn & Kênh Rạch Hoàng Gia',
       prologue: [
@@ -40,7 +40,7 @@ export const thailand: Country = {
       mystery: CHAO_PHRAYA,
     },
     {
-      id: 'chapter-02',
+      id: 'thailand-02',
       title: 'Phố Cổ & Di Tích Ngàn Năm',
       subtitle: 'Heritage & Ancient Ruins — Dấu Tích Xiêm La',
       prologue: [
@@ -56,7 +56,7 @@ export const thailand: Country = {
       mystery: HERITAGE_RUINS,
     },
     {
-      id: 'chapter-03',
+      id: 'thailand-03',
       title: 'Phương Bắc & Ánh Sáng Ước Nguyện',
       subtitle: 'The Lanna Rose & Floating Lanterns — Đường Về Phương Đông',
       prologue: [

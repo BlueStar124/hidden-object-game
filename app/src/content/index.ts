@@ -17,10 +17,14 @@ export const FIRST_COUNTRY = COUNTRIES[0];
 
 const pagesByCountry = new Map<string, PageRef[]>();
 const refByPageId = new Map<string, PageRef>();
+const chapterIds = new Set<string>();
 
 for (const country of COUNTRIES) {
   const refs: PageRef[] = [];
   country.chapters.forEach((chapter, c) => {
+    // Solved mysteries are saved by chapter id, whichever country the chapter is in
+    if (chapterIds.has(chapter.id)) throw new Error(`Duplicate chapter id "${chapter.id}": solved mysteries are saved by chapter id`);
+    chapterIds.add(chapter.id);
     for (const slot of chapter.pages) {
       const ref: PageRef = {
         country,

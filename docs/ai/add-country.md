@@ -62,7 +62,7 @@ export const vietnam: Country = {
   code: 'VN',                 // 2 chữ in hoa cho mã thử thách, khác mọi nước khác, không đổi sau khi phát hành
   chapters: [
     {
-      id: 'chapter-01',       // 'chapter-0N'
+      id: 'vietnam-01',       // '<nước>-0N': duy nhất trên mọi nước (bí ẩn đã giải lưu theo nó), không đổi sau khi phát hành
       title: 'Phố Cổ Hội An',
       subtitle: 'Lantern Town — Vụ Án Phố Đèn Lồng',   // "English — Tiếng Việt"
       prologue: ['Đoạn 1…', 'Đoạn 2…', 'Đoạn 3…'],     // 3–4 đoạn, hiện ở hồ sơ mở chương

@@ -39,7 +39,7 @@ export const vietnam: Country = {
   code: 'VN',
   chapters: [
     {
-      id: 'chapter-01',
+      id: 'vietnam-01',
       title: 'Bắc Bộ — Đất Thăng Long & Non Nước Ngàn Năm',
       subtitle: 'The Northern Heritage — Cố Đô & Kỳ Quan Đá Vôi',
       prologue: [
@@ -57,7 +57,7 @@ export const vietnam: Country = {
       mystery: NORTH,
     },
     {
-      id: 'chapter-02',
+      id: 'vietnam-02',
       title: 'Miền Cao Tây Bắc & Đông Bắc — Kỳ Vĩ Mây Ngàn',
       subtitle: 'Highlands & Deep Canyons — Sóng Lúa & Hẻm Vực Tu Sản',
       prologue: [
@@ -73,7 +73,7 @@ export const vietnam: Country = {
       mystery: HIGHLANDS,
     },
     {
-      id: 'chapter-03',
+      id: 'vietnam-03',
       title: 'Miền Trung — Di Sản Cố Đô & Phố Cổ Hoa Đăng',
       subtitle: 'Imperial Citadel & Ancient Lanterns — Dấu Tích Ngàn Năm',
       prologue: [
@@ -90,7 +90,7 @@ export const vietnam: Country = {
       mystery: KEEPERS,
     },
     {
-      id: 'chapter-04',
+      id: 'vietnam-04',
       title: 'Duyên Hải & Cao Nguyên — Sương Mù & Tháp Cổ',
       subtitle: 'Cham Towers & Pine Mist — Biển Xanh & Phố Núi',
       prologue: [
@@ -106,7 +106,7 @@ export const vietnam: Country = {
       mystery: COAST,
     },
     {
-      id: 'chapter-05',
+      id: 'vietnam-05',
       title: 'Nam Bộ — Sài Gòn Hoa Lệ & Đất Rừng Phương Nam',
       subtitle: 'The Pearl of the Far East & Mekong Delta — Hồi Kết Hành Trình',
       prologue: [

@@ -25,6 +25,11 @@ const placesOf = (o: Page['objects'][number]) => [{ x: o.x, y: o.y, r: o.radius 
 // Every camouflage the board draws (`satisfies` keeps the list complete)
 const CAMO_STYLES: string[] = Object.keys({ ink: 1, chameleon: 1, invisible: 1 } satisfies Record<CamoStyle, 1>);
 
+test('chapter ids are unique across countries (solved mysteries are saved by them)', () => {
+  const ids = COUNTRIES.flatMap((c) => c.chapters.map((ch) => ch.id));
+  expect(ids.filter((id, i) => ids.indexOf(id) !== i)).toEqual([]);
+});
+
 test('there is a sketchbook to open', () => {
   expect(COUNTRIES.length).toBeGreaterThan(0);
   for (const country of COUNTRIES) expect(pagesOf(country).length).toBeGreaterThan(0);

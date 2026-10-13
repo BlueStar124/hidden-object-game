@@ -189,15 +189,15 @@ describe('the sound switch', () => {
 
 describe('chapter mysteries', () => {
   test('a solved mystery is remembered once', () => {
-    expect(progress.isMysterySolved('chapter-01')).toBe(false);
-    progress.recordMysterySolved('chapter-01');
-    progress.recordMysterySolved('chapter-01');
-    expect(saved().solvedMysteries).toEqual(['chapter-01']);
-    expect(progress.isMysterySolved('chapter-01')).toBe(true);
+    expect(progress.isMysterySolved('singapore-01')).toBe(false);
+    progress.recordMysterySolved('singapore-01');
+    progress.recordMysterySolved('singapore-01');
+    expect(saved().solvedMysteries).toEqual(['singapore-01']);
+    expect(progress.isMysterySolved('singapore-01')).toBe(true);
   });
 
   test('a damaged list is dropped', () => {
-    expect(readProgress({ solvedMysteries: 'chapter-01' }).solvedMysteries).toBeUndefined();
+    expect(readProgress({ solvedMysteries: 'singapore-01' }).solvedMysteries).toBeUndefined();
     expect(readProgress({ solvedMysteries: ['a', 3] }).solvedMysteries).toEqual(['a']);
   });
 });
@@ -285,7 +285,7 @@ describe('backups', () => {
       sceneResults: { a: result(3, 900, 80), b: result(1, 300, 200) },
       discovered: { a: ['cat'], b: ['dog'] },
       stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 70 } },
-      solvedMysteries: ['chapter-01'],
+      solvedMysteries: ['singapore-01'],
       lastPageId: 'b',
       settings: { soundEnabled: false },
     });
@@ -293,7 +293,7 @@ describe('backups', () => {
       sceneResults: { a: result(2, 1200, 60, '2026-10-05T00:00:00.000Z'), c: result(2, 500, 120) },
       discovered: { a: ['owl'], c: ['frog'] },
       stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 50 }, '2026-10-12': { pageId: 'c', countryId: 'thailand', time: 90 } },
-      solvedMysteries: ['chapter-02'],
+      solvedMysteries: ['singapore-02'],
       cover: [{ type: 'cat', x: 0.5, y: 0.5, rotation: 0, scale: 1 }],
       lastPageId: 'c',
     });
@@ -304,7 +304,7 @@ describe('backups', () => {
     expect(merged.discovered.a.sort()).toEqual(['cat', 'owl']);
     expect(merged.stamps?.['2026-10-11'].time).toBe(50);
     expect(Object.keys(merged.stamps ?? {})).toHaveLength(2);
-    expect(merged.solvedMysteries?.sort()).toEqual(['chapter-01', 'chapter-02']);
+    expect(merged.solvedMysteries?.sort()).toEqual(['singapore-01', 'singapore-02']);
     // Only one can win: this device, unless it has nothing
     expect(merged.lastPageId).toBe('b');
     expect(merged.settings).toEqual({ soundEnabled: false });

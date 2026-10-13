@@ -23,7 +23,7 @@ export const singapore: Country = {
   code: 'SG',
   chapters: [
     {
-      id: 'chapter-01',
+      id: 'singapore-01',
       title: 'Kỳ Quan Vịnh Marina',
       subtitle: 'The Bayfront Marvels — Vụ Án Đảo Quốc Sư Tử',
       prologue: [
@@ -40,7 +40,7 @@ export const singapore: Country = {
       mystery: BAYFRONT,
     },
     {
-      id: 'chapter-02',
+      id: 'singapore-02',
       title: 'Phố Cổ & Di Sản Văn Hóa',
       subtitle: 'Heritage & Shophouses — Dấu Tích Thời Gian',
       prologue: [
@@ -56,7 +56,7 @@ export const singapore: Country = {
       mystery: HERITAGE,
     },
     {
-      id: 'chapter-03',
+      id: 'singapore-03',
       title: 'Trái Tim Sông Nước & Rừng Bách Thảo',
       subtitle: 'Riverside & Botanic Flora — Dấu Vết Rời Đảo Quốc',
       prologue: [
