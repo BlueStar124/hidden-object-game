@@ -17,7 +17,7 @@
       "spriteType": "green-peafowl",
       "scale": 0.48,
       "camo": "gouache",
-      "foundText": "Voọc chà vá chân nâu là biểu tượng đa dạng sinh học quý báu của bán đảo Sơn Trà và Đà Nẵng."
+      "foundText": "Chim công má vàng với bộ lông lộng lẫy kiêu hãnh sải bước bên lan can Cầu Vàng bồng bềnh mây trắng."
     },
     {
       "id": "sunbird-clouds",
@@ -30,7 +30,7 @@
       "spriteType": "gray-shanked-douc",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Loài chim rực rỡ đặc trưng của khu bảo tồn thiên nhiên Bà Nà."
+      "foundText": "Voọc chà vá chân xám — nữ hoàng linh trưởng quý hiếm đặc hữu của dải rừng nguyên sinh Núi Chúa."
     },
     {
       "id": "vintage-hourglass",
@@ -43,7 +43,7 @@
       "spriteType": "hourglass",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Thanh âm đàn bầu một dây ngân vang giữa không gian bao la mây trắng đỉnh núi Chúa."
+      "foundText": "Chiếc đồng hồ cát thủy tinh lưu giữ từng hạt bụi thời gian của ngôi làng Pháp cổ kính trên đỉnh mây."
     },
     {
       "id": "sky-dove",
@@ -56,7 +56,7 @@
       "spriteType": "parakeet",
       "scale": 0.44,
       "camo": "gouache",
-      "foundText": "Hình ảnh tà áo dài Việt Nam nổi bật kiêu hãnh trên cây cầu vươn giữa mây trời."
+      "foundText": "Chú vẹt núi rực rỡ sắc màu líu lo chuyền cành trong làn sương mây bồng bềnh đỉnh núi Chúa."
     },
     {
       "id": "tourist-spyglass",
@@ -69,7 +69,7 @@
       "spriteType": "peacock",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Chiếc nón lá che nắng che sương cho du khách dạo bước giữa mây ngàn."
+      "foundText": "Bộ lông đuôi công xòe rộng như quạt gấm ngàn mắt, tôn thêm nét lộng lẫy cho kiệt tác Cầu Vàng."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "to-he",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Bảo vật điêu khắc Chăm Pa cổ phản chiếu trầm tích văn hóa ngàn năm xứ Quảng!"
+      "foundText": "Tò he nặn bột dân gian hình Tề Thiên tinh nghịch, nét đẹp tuổi thơ hồn nhiên giữa đỉnh mây Bà Nà!"
     },
     {
       "id": "bonus-squirrel",

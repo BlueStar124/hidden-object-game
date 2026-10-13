@@ -30,7 +30,7 @@
       "spriteType": "cham-lamp",
       "scale": 0.46,
       "camo": "tint",
-      "foundText": "Thuyền thúng nan theo ngư dân miền biển Khánh Hòa vượt sóng ra khơi."
+      "foundText": "Ngọn đèn dầu đất nung Champa thắp sáng không gian huyền bí trong các đêm hội Ka-tê truyền thống."
     },
     {
       "id": "sanskrit-scroll",
@@ -48,7 +48,7 @@
     {
       "id": "sacred-dove",
       "name": "Voi Đá Tháp Bà",
-      "clue": "Tượng voi đá cổ uy nghiêm canh giữ bậc thềm tháp Chăm trầm mặc.",
+      "clue": "Tượng voi đá cổ chạm khắc uy nghiêm nơi hốc vòm tháp Chăm trầm mặc.",
       "x": 0.48,
       "y": 0.36,
       "radius": 0.042,
@@ -56,7 +56,7 @@
       "spriteType": "highland-elephant",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Tà áo dài duyên dáng trong không gian văn hóa lễ hội Tháp Bà truyền thống."
+      "foundText": "Tượng voi đá biểu trưng cho thần lực và sự chở che, kiệt tác điêu khắc đá cổ kính của nền văn minh Champa."
     },
     {
       "id": "ceremony-teacup",
@@ -69,7 +69,7 @@
       "spriteType": "t-rung",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Thanh âm đàn bầu độc huyền cầm ngân nga trầm bổng giữa nắng gió tháp Chàm."
+      "foundText": "Thanh âm đàn T'rưng trong trẻo vang vọng giữa những tháp gạch nung rực rỡ nắng gió miền duyên hải."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "key",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Nhạc cụ cổ truyền giao hòa âm hưởng giữa núi rừng và biển cả miền Trung!"
+      "foundText": "Chiếc chìa khóa đồng cổ mở ra cánh cửa dẫn vào kho tàng huyền tích ngàn năm của vương triều Champa!"
     },
     {
       "id": "bonus-gecko",

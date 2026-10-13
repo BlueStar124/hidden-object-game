@@ -104,7 +104,7 @@
     {
       "id": "night-market-cat",
       "name": "Mèo Mướp Chợ Đêm Sài Gòn",
-      "clue": "Chú mèo mướp nằm cuộn tròn ngủ say dưới chân sạp vải đóng cửa.",
+      "clue": "Chú mèo mướp nằm cuộn tròn ngủ say trên mái hiên sạp chợ Bến Thành.",
       "x": 0.38,
       "y": 0.28,
       "radius": 0.039,
@@ -112,7 +112,7 @@
       "spriteType": "cat",
       "scale": 0.44,
       "camo": "shadow",
-      "foundText": "Bánh mì đêm Sài Gòn giòn rụm ấm lòng những người lao động muộn."
+      "foundText": "Chú mèo mướp lười biếng sưởi ấm bên mái hiên, ngắm nhìn dòng người tấp nập của phố đêm Sài Gòn."
     },
     {
       "id": "night-owl-spire",
@@ -138,7 +138,7 @@
       "spriteType": "gecko",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Quốc khuyển đảo ngọc lanh lợi, dũng cảm và cực kỳ thông minh."
+      "foundText": "Thạch sùng thoăn thoắt săn muỗi dưới ánh đèn cao áp cửa Nam chợ Bến Thành rực sáng."
     },
     {
       "id": "artist-seal",
@@ -163,7 +163,7 @@
       "spriteType": "pocket-watch",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Cà phê vợt thâu đêm — nét văn hóa độc đáo không ngủ của đất Sài thành!"
+      "foundText": "Chiếc đồng hồ quả quýt cổ kính điểm từng nhịp thời gian trên nóc tháp cửa Nam chợ Bến Thành lịch sử!"
     },
     {
       "id": "bonus-night-moth",

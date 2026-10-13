@@ -43,7 +43,7 @@
       "spriteType": "star-lantern",
       "scale": 0.46,
       "camo": "luminous",
-      "foundText": "Hàng cột rồng sơn màu rực rỡ là nét kiến trúc độc đáo hiếm có."
+      "foundText": "Ngọn đèn hoa đăng tỏa ánh sáng ấm áp, biểu trưng cho ngọn đèn trí tuệ soi đường dẫn lối."
     },
     {
       "id": "holy-scroll",
@@ -56,7 +56,7 @@
       "spriteType": "lotus-bud",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Thanh âm đàn bầu hòa cùng dàn nhạc dân tộc trang nghiêm trong các giờ cúng tế."
+      "foundText": "Búp sen hồng dâng lên trước bệ thờ Thiên Nhãn, tượng trưng cho tâm hồn thanh khiết và lòng thành kính."
     },
     {
       "id": "temple-teacup",
@@ -69,7 +69,7 @@
       "spriteType": "teacup",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chiếc nón lá theo chân người hành hương về chiêm bái đất thánh linh thiêng."
+      "foundText": "Tách trà ấm tiếp đãi khách đạo hữu, thể hiện nét văn hóa hiếu khách và hòa ái chốn Thánh địa."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "incense-burner",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Âm vang chiêng trống đánh dấu khoảnh khắc giao hòa thiêng liêng giữa trời và đất!"
+      "foundText": "Khói trầm thơm ngát tỏa ra từ lư đồng cổ, đưa lời nguyện cầu hòa bình và bác ái bay lên cõi thiêng!"
     },
     {
       "id": "bonus-sunbird",

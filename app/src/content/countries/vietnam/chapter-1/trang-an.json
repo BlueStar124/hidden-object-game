@@ -43,7 +43,7 @@
       "spriteType": "bamboo-dragonfly",
       "scale": 0.46,
       "camo": "gouache",
-      "foundText": "Cánh cò trắng phau nổi bật trên nền vách núi biếc xanh."
+      "foundText": "Chuồn chuồn tre mộc mạc giữ thăng bằng diệu kỳ, món quà quê thanh bình chốn kinh đô xưa."
     },
     {
       "id": "ancient-scroll",
@@ -56,7 +56,7 @@
       "spriteType": "ly-dragon",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Nghệ thuật múa rối nước tái hiện huyền sử thời Đinh - Tiền Lê ngàn năm."
+      "foundText": "Hình tượng rồng thời Lý uốn lượn hình sin mềm mại, biểu trưng cho vương quyền và nền văn minh sông Hồng."
     },
     {
       "id": "pond-frog",
@@ -69,7 +69,7 @@
       "spriteType": "river-snail",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Khu bảo tồn đất ngập nước Vân Long - Tràng An là thánh địa của loài voọc mông trắng."
+      "foundText": "Ốc núi Tràng An bám mình trên vách đá vôi ẩm ướt, sản vật trứ danh chỉ xuất hiện sau những cơn mưa."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "banh-chung",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Thuyền rồng ngự du của vua Đinh Tiên Hoàng trên dòng sông Sào Khê lịch sử!"
+      "foundText": "Chiếc bánh chưng vuông vức gói trọn đất trời, tấm lòng thơm thảo của con cháu dâng cúng tổ tiên!"
     },
     {
       "id": "bonus-dragonfly",

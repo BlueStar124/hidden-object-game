@@ -17,7 +17,7 @@
       "spriteType": "teacup",
       "scale": 0.48,
       "camo": "tint",
-      "foundText": "Đèn lồng truyền thống Hội An làm từ tre già ngâm muối và lụa Hà Đông."
+      "foundText": "Ly nước mót thảo mộc thơm lừng hương sả, chanh và cánh sen, thức uống nức tiếng làm say lòng khách du lịch phố Hội."
     },
     {
       "id": "street-hat",
@@ -57,7 +57,7 @@
       "spriteType": "dong-ho-pig",
       "scale": 0.44,
       "camo": "gouache",
-      "foundText": "Áo dài lụa phố Hội tôn thêm nét trầm mặc cổ kính của di sản văn hóa thế giới."
+      "foundText": "Bức tranh lợn Đông Hồ ngộ nghĩnh mang ý nghĩa ấm no, phúc lộc treo trang trọng trong gian nhà cổ trăm năm."
     },
     {
       "id": "hoian-cyclo",
@@ -70,7 +70,7 @@
       "spriteType": "paper-umbrella",
       "scale": 0.52,
       "camo": "gouache",
-      "foundText": "Tiếng chuông xích lô leng keng thong thả trên những con phố đi bộ."
+      "foundText": "Chiếc ô giấy dầu che nắng mưa cho lữ khách dạo bước thảnh thơi trên những con ngõ nhỏ ngập tràn hoa giấy."
     },
     {
       "id": "artist-seal",
@@ -129,7 +129,7 @@
     {
       "id": "bonus-dragonfly",
       "name": "Chuồn Chuồn Tre Phố Cổ",
-      "clue": "Chuồn chuồn tre giữ thăng bằng trên mái ngói âm dương rêu phong.",
+      "clue": "Chuồn chuồn tre giữ thăng bằng trên mâm tre quầy lưu niệm bên góc phố.",
       "x": 0.82,
       "y": 0.68,
       "radius": 0.034,

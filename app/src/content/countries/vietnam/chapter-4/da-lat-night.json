@@ -112,7 +112,7 @@
       "spriteType": "civet",
       "scale": 0.44,
       "camo": "shadow",
-      "foundText": "Ly cà phê phin nóng hổi sưởi ấm tâm hồn giữa cái lạnh buốt của đêm cao nguyên."
+      "foundText": "Chú cầy hương hoang dã thoăn thoắt săn quả chín trong màn sương đêm lạnh giá của rừng thông Đà Lạt."
     },
     {
       "id": "night-firefly-mist",
@@ -186,7 +186,7 @@
       "spriteType": "hourglass",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Âm vang cồng chiêng bên bếp lửa bập bùng truyền hơi ấm qua màn sương đêm Đà Lạt!"
+      "foundText": "Đồng hồ cát phủ sương đông buốt giá, từng hạt cát rơi chậm rãi như thời gian lắng đọng giữa đêm phố núi."
     },
     {
       "id": "bonus-night-moth",

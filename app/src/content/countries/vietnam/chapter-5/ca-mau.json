@@ -30,7 +30,7 @@
       "spriteType": "red-crowned-crane",
       "scale": 0.46,
       "camo": "gouache",
-      "foundText": "Rừng đước Cà Mau là rừng ngập mặn lớn thứ hai trên thế giới."
+      "foundText": "Sếu đầu đỏ sải cánh kiêu hãnh trên bầu trời rừng tràm, loài chim quý báu biểu tượng cho sự thanh cao và trường thọ."
     },
     {
       "id": "mangrove-crab",
@@ -101,15 +101,15 @@
       "id": "bonus-mudskipper",
       "name": "Sò Huyết Bãi Bồi",
       "clue": "Sò huyết bãi bồi Năm Căn vỏ dày vùi mình trong lớp phù sa mịn.",
-      "x": 0.48,
-      "y": 0.62,
+      "x": 0.18,
+      "y": 0.72,
       "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "mangrove-clam",
       "scale": 0.38,
       "camo": "tint",
-      "foundText": "Loài cá biết chạy nhảy và thở được trên cạn — kỳ quan sinh học vùng đất mũi."
+      "foundText": "Sò huyết bãi bồi Năm Căn béo tròn, ngập tràn vị ngọt phù sa sông nước Cà Mau."
     },
     {
       "id": "bonus-kingfisher",

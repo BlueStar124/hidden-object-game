@@ -30,7 +30,7 @@
       "spriteType": "tiffin",
       "scale": 0.46,
       "camo": "tint",
-      "foundText": "Chợ hoa sớm mai ngạt ngào sắc hương của muôn loài hoa miền nhiệt đới."
+      "foundText": "Chiếc cà mèn ba tầng quen thuộc chứa đầy tình cảm và bữa cơm ấm nóng của các cô chú tiểu thương chợ Bến Thành."
     },
     {
       "id": "street-camera",
@@ -69,7 +69,7 @@
       "spriteType": "clay-piggy",
       "scale": 0.44,
       "camo": "gouache",
-      "foundText": "Tô phở đậm đà phong vị phương Nam với nhiều loại rau thơm tươi mát."
+      "foundText": "Chú heo đất Lái Thiêu vẽ màu thủ công sặc sỡ, món đồ chơi tuổi thơ gắn liền với bao thế hệ."
     },
     {
       "id": "artist-seal",
@@ -122,7 +122,7 @@
       "spriteType": "southern-scarf",
       "scale": 0.38,
       "camo": "tint",
-      "foundText": "Đàn bồ câu hàng trăm con quen thuộc với người dân Sài Gòn."
+      "foundText": "Chiếc khăn rằn mộc mạc vắt vai áo bà ba, biểu tượng dịu dàng và chịu thương chịu khó của phụ nữ phương Nam."
     },
     {
       "id": "bonus-sunbird",

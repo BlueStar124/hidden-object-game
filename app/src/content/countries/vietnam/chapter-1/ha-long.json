@@ -44,7 +44,7 @@
       "spriteType": "basket-boat",
       "scale": 0.42,
       "camo": "gouache",
-      "foundText": "Chiếc nón lá nghiêng che sóng gió cho ngư dân các làng chài cổ trên vịnh."
+      "foundText": "Thuyền thúng tre nan mộc mạc gắn liền với nếp sống ngàn đời của ngư dân làng chài Cửa Vạn."
     },
     {
       "id": "brass-compass",
@@ -63,7 +63,7 @@
         "offset": 1.5,
         "from": "below"
       },
-      "foundText": "Rùa Vàng bơi lượn quanh vách đá vịnh, canh giữ những hang động kỳ bí."
+      "foundText": "Viên ngọc trai sáng lấp lánh kết tinh từ tinh hoa biển trời vịnh Hạ Long kỳ vĩ."
     },
     {
       "id": "marine-spyglass",
@@ -101,7 +101,7 @@
       "spriteType": "dugong",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Trống đồng cổ ngàn năm lưu giữ hào khí non nước rồng thiêng nơi vịnh ngọc!"
+      "foundText": "Nàng tiên cá bò biển dugong hiền hòa rẽ nước vịnh ngọc, bảo vật sinh học quý báu của đại dương!"
     },
     {
       "id": "bonus-heron",

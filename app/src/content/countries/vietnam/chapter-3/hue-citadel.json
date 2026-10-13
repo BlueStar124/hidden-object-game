@@ -69,7 +69,7 @@
       "spriteType": "royal-umbrella",
       "scale": 0.44,
       "camo": "tint",
-      "foundText": "Thuyền rồng hoàng cung triều Nguyễn từng đưa vua ngự du nghe ca Huế trên dòng Hương giang."
+      "foundText": "Chiếc lọng vàng thêu rồng phượng kim tuyến tôn nghiêm, vật phẩm nghi trượng cao quý chốn hoàng cung triều Nguyễn."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "incense-burner",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Bảo vật ngàn năm biểu trưng cho sự trường tồn của non sông gấm vóc!"
+      "foundText": "Chiếc lư đồng chạm kỳ lân tỏa làn khói trầm thơm ngát, biểu trưng cho sự trường tồn và tôn nghiêm của vương triều!"
     },
     {
       "id": "bonus-koi",
@@ -123,7 +123,7 @@
       "spriteType": "hue-kite",
       "scale": 0.4,
       "camo": "gouache",
-      "foundText": "Bồ câu sống hiền hòa trong không gian thanh tịnh của đại nội."
+      "foundText": "Cánh diều rồng ngũ sắc lộng lẫy chao lượn trên nền trời Kỳ Đài, biểu tượng nghệ thuật thủ công tinh xảo của đất Cố đô."
     },
     {
       "id": "bonus-butterfly",

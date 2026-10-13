@@ -43,7 +43,7 @@
       "spriteType": "bamboo-rat",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Kỳ lân lặng lẽ ngắm nhìn thung lũng mùa vàng trù phú."
+      "foundText": "Chú dúi mốc tròn vo lủi trong bụi nứa, gặm những nhánh măng rừng ngọt ngào."
     },
     {
       "id": "field-frog",
@@ -56,7 +56,7 @@
       "spriteType": "bamboo-flute",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Điệu khèn rộn rã đón mừng mùa vàng no ấm của bà con vùng cao Mù Cang Chải."
+      "foundText": "Tiếng sáo trúc trong trẻo véo von vang xa trên những triền sóng lúa Mù Cang Chải."
     },
     {
       "id": "hill-camera",
@@ -94,7 +94,7 @@
       "spriteType": "kite",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Quốc khuyển bản địa kiên trung, người bạn tri kỷ bảo vệ nương rẫy của đồng bào Mông!"
+      "foundText": "Cánh diều giấy sặc sỡ bay vút lên bầu trời thu trong xanh, chở theo ước mơ no ấm của bản làng!"
     },
     {
       "id": "bonus-dragonfly",
@@ -108,7 +108,7 @@
       "spriteType": "giant-water-bug",
       "scale": 0.45,
       "camo": "ink",
-      "foundText": "Đôi cánh chuồn chuồn mỏng manh óng ánh dưới nắng vàng."
+      "foundText": "Cà cuống mùa gặt thơm lừng hương quế, tinh dầu cay nồng đặc trưng của đồng ruộng miền cao."
     },
     {
       "id": "bonus-mouse",

@@ -69,7 +69,7 @@
       "spriteType": "dove",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chiếc nón lá nghiêng che cái nắng phương Nam chan hòa rực rỡ."
+      "foundText": "Đàn bồ câu hiền hòa nhặt thóc quanh tượng Đức Mẹ, biểu tượng hòa bình quen thuộc giữa lòng Sài Gòn."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "pocket-watch",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Hào khí Đông Sơn ngàn năm hòa quyện vào nhịp đập phồn hoa của Sài Gòn hoa lệ!"
+      "foundText": "Chiếc đồng hồ quả quýt mạ vàng của người đưa thư thời xưa lưu giữ nhịp đập lịch sử chốn đô thành hoa lệ!"
     },
     {
       "id": "bonus-squirrel",
@@ -136,7 +136,7 @@
       "spriteType": "southern-scarf",
       "scale": 0.42,
       "camo": "tint",
-      "foundText": "Hàng me xanh ngát gắn liền với ký ức bao thế hệ học trò Sài Gòn."
+      "foundText": "Chiếc khăn rằn Nam Bộ kẻ ca-rô mộc mạc theo chân các bạn trẻ dạo bước dưới bóng cây xanh mát."
     }
   ]
 }
