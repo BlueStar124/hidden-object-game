@@ -20,9 +20,9 @@
       "foundText": "Công lục từng sống khắp rừng Thái Lan, nay chỉ còn ở vài khu bảo tồn phía Tây và phía Bắc.",
       "spots": [
         {
-          "x": 0.28,
-          "y": 0.53,
-          "clue": "Chú công lục đậu trên gờ mái chùa phía bên trái."
+          "x": 0.43,
+          "y": 0.505,
+          "clue": "Chú công lục đậu trên mái ngói cam của ngôi điện giữa sân, bên trái ngọn tháp nhọn."
         }
       ]
     },
@@ -40,9 +40,9 @@
       "foundText": "Rắn thần Naga canh giữ lối vào chùa, nối cõi người với cõi thiêng.",
       "spots": [
         {
-          "x": 0.68,
-          "y": 0.62,
-          "clue": "Đầu rắn thần Naga canh giữ chân lan can bậc thềm bên phải."
+          "x": 0.529,
+          "y": 0.652,
+          "clue": "Đầu rắn thần Naga canh bên bậc thềm trắng dưới chân bảo tháp vàng."
         }
       ]
     },
@@ -60,9 +60,9 @@
       "foundText": "Hoa nhài thơm ngát là lễ vật quen thuộc dâng tại các ngôi chùa Thái.",
       "spots": [
         {
-          "x": 0.32,
-          "y": 0.68,
-          "clue": "Vòng hoa nhài trắng đặt bên bệ đá trước sân chùa bên trái."
+          "x": 0.255,
+          "y": 0.71,
+          "clue": "Vòng hoa nhài trắng vắt bên chiếc chum sứ lớn trước dãy hành lang bên trái."
         }
       ]
     },
@@ -82,7 +82,7 @@
         {
           "x": 0.52,
           "y": 0.48,
-          "clue": "Chú vẹt ngực đỏ chuyền cành cây hoa sứ phía sau tháp vàng."
+          "clue": "Chú vẹt ngực đỏ đậu trên ngọn tháp nhọn nhiều tầng cạnh bảo tháp vàng."
         }
       ]
     },

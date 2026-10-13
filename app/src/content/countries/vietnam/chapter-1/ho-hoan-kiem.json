@@ -20,9 +20,9 @@
       "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!",
       "spots": [
         {
-          "x": 0.78,
-          "y": 0.55,
-          "clue": "Thanh kiếm thần tỏa ánh hào quang linh thiêng nép cạnh gốc liễu ven hồ bên phải."
+          "x": 0.791,
+          "y": 0.568,
+          "clue": "Thanh kiếm thần tỏa ánh hào quang nép bên tường Tháp Rùa giữa hồ."
         }
       ]
     },
@@ -59,9 +59,9 @@
       "foundText": "Bác tài xích lô đã cất giữ một phong thư niêm sáp của kiến trúc sư.",
       "spots": [
         {
-          "x": 0.35,
-          "y": 0.52,
-          "clue": "Chiếc xích lô thong dong đón khách trên lối dạo ven hồ."
+          "x": 0.88,
+          "y": 0.45,
+          "clue": "Chiếc xích lô thong dong đón khách trên lối dạo ven hồ bên phải."
         }
       ]
     },
@@ -79,9 +79,9 @@
       "foundText": "Hương vị phở Thăng Long ngạt ngào quế hồi thảo quả làm ấm lòng người lữ khách.",
       "spots": [
         {
-          "x": 0.62,
+          "x": 0.575,
           "y": 0.65,
-          "clue": "Hình tượng hạc thanh cao chầu trên lưng rùa nơi bờ hồ hướng về Tháp Rùa."
+          "clue": "Hình tượng hạc chầu trên lưng rùa đứng nơi mỏm cỏ đầu đảo Tháp Rùa."
         }
       ]
     },
@@ -99,9 +99,9 @@
       "foundText": "Chú Tễu tươi cười rạng rỡ, nhân vật dẫn chuyện hóm hỉnh của nghệ thuật múa rối nước dân gian.",
       "spots": [
         {
-          "x": 0.42,
-          "y": 0.45,
-          "clue": "Linh thú nghê đá uy nghi gác bên đầu cầu Thê Húc."
+          "x": 0.47,
+          "y": 0.43,
+          "clue": "Linh thú nghê đá ngồi gác dưới hàng cây ven hồ, sát gáy sổ bên trái."
         }
       ]
     },

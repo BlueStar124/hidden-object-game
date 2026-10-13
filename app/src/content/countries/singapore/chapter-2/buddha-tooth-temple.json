@@ -20,9 +20,9 @@
       "foundText": "Chim bồ câu trắng biểu tượng cho sự an lạc tại chốn thiền môn thanh tịnh.",
       "spots": [
         {
-          "x": 0.35,
-          "y": 0.36,
-          "clue": "Chú bồ câu trắng đậu trên góc mái cong của gian tiền điện."
+          "x": 0.287,
+          "y": 0.482,
+          "clue": "Chú bồ câu trắng đậu trên đầu mái cong bên trái của gian tiền điện, sát dây lồng đèn."
         }
       ]
     },
@@ -53,8 +53,8 @@
       "foundText": "Cổ vật gốm sứ tinh xảo lưu giữ tro trầm hương thanh khiết hàng trăm năm.",
       "spots": [
         {
-          "x": 0.22,
-          "y": 0.68,
+          "x": 0.214,
+          "y": 0.681,
           "clue": "Chiếc bình gốm men lam đặt cạnh chân cột thềm đá bên trái."
         }
       ]

@@ -20,9 +20,9 @@
       "foundText": "Bóc măng cụt đúng cách: ấn nhẹ hai tay lên vỏ cho quả tự nứt ra!",
       "spots": [
         {
-          "x": 0.25,
-          "y": 0.65,
-          "clue": "Quả măng cụt tím nằm trong rổ trái cây trên chiếc thuyền bên trái."
+          "x": 0.216,
+          "y": 0.567,
+          "clue": "Quả măng cụt tím lăn bên chiếc rổ mây của bà bán hàng ngồi trên bến gỗ bên trái."
         }
       ]
     },
@@ -40,8 +40,8 @@
       "foundText": "Mì thuyền múc ngay trên ghe, mỗi bát chỉ vài gắp nên khách thường ăn liền mấy bát!",
       "spots": [
         {
-          "x": 0.62,
-          "y": 0.64,
+          "x": 0.625,
+          "y": 0.597,
           "clue": "Bát mì thuyền nóng hổi đặt trên mạn ghe chở hoa quả bên phải."
         }
       ]
@@ -102,9 +102,9 @@
       "foundText": "Tỉnh Ratchaburi quanh chợ nổi có rất nhiều vườn dừa, nổi tiếng với dừa xiêm thơm ngọt.",
       "spots": [
         {
-          "x": 0.42,
-          "y": 0.62,
-          "clue": "Trái dừa xiêm cắm ống hút để trên mũi chiếc thuyền mộc giữa kênh."
+          "x": 0.35,
+          "y": 0.52,
+          "clue": "Trái dừa xiêm cắm ống hút để trên lan can ban công ngôi nhà sàn bên trái."
         }
       ]
     },

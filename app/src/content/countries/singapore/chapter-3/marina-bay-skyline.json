@@ -21,8 +21,8 @@
       "foundText": "Tầm nhìn bao quát cảng biển trung tâm của nhà hàng hải kỳ cựu.",
       "spots": [
         {
-          "x": 0.81,
-          "y": 0.54,
+          "x": 0.824,
+          "y": 0.565,
           "rotation": -15,
           "clue": "Ống nhòm đồng đặt trên lan can lối đi ven vịnh phía bên phải."
         }
@@ -85,7 +85,7 @@
         {
           "x": 0.66,
           "y": 0.56,
-          "clue": "Chú diệc xám đậu trên cầu đi bộ Helix nối ra vịnh."
+          "clue": "Chú diệc xám đậu trên mái vòm dãy nhà ven vịnh, dưới chân khách sạn ba tòa tháp."
         }
       ]
     },
@@ -104,10 +104,10 @@
       "foundText": "Khỉ đuôi dài vốn sống ở khu bảo tồn Bukit Timah — chú khỉ này đi \"du lịch\" lên tận trung tâm tài chính!",
       "spots": [
         {
-          "x": 0.16,
-          "y": 0.44,
+          "x": 0.161,
+          "y": 0.443,
           "rotation": 12,
-          "clue": "Chú khỉ đuôi dài vắt vẻo trên giàn nóc cao ốc phía ngoài cùng bên trái."
+          "clue": "Chú khỉ đuôi dài bám trên tòa cao ốc kính ngoài cùng bên trái."
         }
       ]
     },

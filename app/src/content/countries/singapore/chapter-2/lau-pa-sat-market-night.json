@@ -76,8 +76,8 @@
       "foundText": "Teh tarik — trà sữa được \"kéo\" qua lại giữa hai ca để tạo bọt.",
       "spots": [
         {
-          "x": 0.62,
-          "y": 0.67,
+          "x": 0.622,
+          "y": 0.686,
           "clue": "Ly teh tarik nguội để quên trên chiếc bàn tròn bên phải."
         }
       ]
@@ -96,8 +96,8 @@
       "foundText": "Bên trong có một đồng xu cổ khắc hình… chiếc la bàn!",
       "spots": [
         {
-          "x": 0.42,
-          "y": 0.69,
+          "x": 0.415,
+          "y": 0.709,
           "clue": "Túi tiền rơi cạnh mép quầy hàng ở giữa chợ."
         }
       ]

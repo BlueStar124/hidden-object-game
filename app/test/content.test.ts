@@ -16,6 +16,12 @@ import { SPRITE_ART } from '../src/generated/spriteArt';
  */
 
 const inSpread = ([x, y]: [number, number]) => x >= 0 && x <= 1 && y >= 0 && y <= 1;
+const ASPECT = 1760 / 1240;
+type Place = { x: number; y: number };
+/** Two hit circles (radii are fractions of the spread width) clear of each other, give or take 10 %. */
+const apart = (a: Place, ra: number, b: Place, rb: number) => Math.hypot((a.x - b.x) * ASPECT, a.y - b.y) > (ra + rb) * ASPECT * 0.9;
+/** Everywhere an object of the page may be on some visit: where the JSON puts it, and its spots. */
+const placesOf = (o: Page['objects'][number]) => [{ x: o.x, y: o.y, r: o.radius }, ...(o.spots ?? []).map((s) => ({ x: s.x, y: s.y, r: s.radius ?? o.radius }))];
 // Every camouflage the board draws (`satisfies` keeps the list complete)
 const CAMO_STYLES: string[] = Object.keys({ ink: 1, chameleon: 1, invisible: 1 } satisfies Record<CamoStyle, 1>);
 
@@ -162,6 +168,18 @@ describe.each(allPages().map((page): [string, Page] => [page.id, page]))('%s, ot
     }
   });
 
+  test('another hiding place lands on no other object, nor where another may move to', () => {
+    for (const o of page.objects) {
+      for (const s of o.spots ?? []) {
+        const r = s.radius ?? o.radius;
+        const crowded = page.objects
+          .filter((other) => other !== o && placesOf(other).some((p) => !apart(s, r, p, p.r)))
+          .map((other) => other.id);
+        expect({ spot: [o.id, s.x, s.y], crowded }).toEqual({ spot: [o.id, s.x, s.y], crowded: [] });
+      }
+    }
+  });
+
   test('golden critters are a visit thing, never written in a page', () => {
     for (const o of page.objects) expect(o.rare).toBeUndefined();
   });
@@ -192,9 +210,7 @@ test('every tool a page needs is handed over by some chapter; its objects are op
 });
 
 describe('travelling creatures', () => {
-  const ASPECT = 1760 / 1240;
-
-  test.each(MIGRANTS.map((m): [string, (typeof MIGRANTS)[number]] => [m.id, m]))('%s visits day pages, on the paper, clear of every object', (_id, m) => {
+  test.each(MIGRANTS.map((m): [string, (typeof MIGRANTS)[number]] => [m.id, m]))('%s visits day pages, on the paper, clear of every object and its spots', (_id, m) => {
     expect(BESTIARY[m.spriteType as keyof typeof BESTIARY]).toBeDefined();
     expect(new Set(m.spots.map((s) => s.pageId)).size).toBe(m.spots.length);
     for (const spot of m.spots) {
@@ -203,10 +219,8 @@ describe('travelling creatures', () => {
       expect(at!.night).toBe(false);
       expect(onPaper(spot.x, spot.y)).toBe(true);
       const r = spot.radius ?? 0.03;
-      for (const o of at!.ref.day.objects) {
-        const d = Math.hypot((o.x - spot.x) * ASPECT, o.y - spot.y);
-        expect(d).toBeGreaterThan((o.radius + r) * ASPECT * 0.9);
-      }
+      // Wherever the page's objects are on that visit (a replay may move them to their spots)
+      for (const o of at!.ref.day.objects) for (const p of placesOf(o)) expect(apart(spot, r, p, p.r)).toBe(true);
     }
   });
 

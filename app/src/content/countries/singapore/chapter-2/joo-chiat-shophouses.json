@@ -51,8 +51,8 @@
       "foundText": "Hương vị trà ô long hoa cúc thơm ngát của văn hóa ẩm thực Nyonya.",
       "spots": [
         {
-          "x": 0.61,
-          "y": 0.525,
+          "x": 0.625,
+          "y": 0.537,
           "clue": "Tách trà sứ hoa văn đặt trên lan can bậu cửa sổ của ngôi nhà bên cạnh."
         }
       ]
@@ -93,7 +93,7 @@
         {
           "x": 0.55,
           "y": 0.34,
-          "clue": "Chiếc la bàn đồng nhỏ gài trên viền mái ngói dốc giữa hai ngôi nhà."
+          "clue": "Chiếc la bàn đồng nhỏ gài trên ô cửa thông gió thứ hai nhô lên khỏi mái, ngay bên phải gáy sổ."
         }
       ]
     },
@@ -112,10 +112,10 @@
       "foundText": "Cicak — người bạn tặc lưỡi \"chắc chắc\" quen thuộc của mọi ngôi nhà Singapore!",
       "spots": [
         {
-          "x": 0.76,
-          "y": 0.61,
+          "x": 0.741,
+          "y": 0.6,
           "rotation": -10,
-          "clue": "Chú thạch sùng khoác màu xanh ngọc, bò trên cột trụ hiên nhà bên phải."
+          "clue": "Chú thạch sùng khoác màu xanh ngọc, bò trên tường hiên của ngôi nhà xanh bên phải."
         }
       ]
     },
