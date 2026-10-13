@@ -156,6 +156,21 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Người canh biển nhắn lại: “Người giữ sổ đang chờ bạn ở mũi đất cuối cùng.”"
+    },
+    {
+      "id": "tiny-sketch-10",
+      "name": "Nét Vẽ Tí Hon 10/10",
+      "clue": "Nét vẽ tí hon bám trên thân hàng dừa ven bãi biển giữa trang.",
+      "x": 0.54,
+      "y": 0.57,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "cicada",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Người giữ sổ thứ tư ơi, những trang còn trống đang chờ nét vẽ của con.” (10/10)"
     }
   ]
 }

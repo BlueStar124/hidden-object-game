@@ -11,4 +11,4 @@
 export { renderFrame } from './frame';
 export { recordPage } from './pageTurn';
 export type { FoundInfo, FrameState, PageFlip, SceneData, SceneMark, SceneSprite, NightScene } from './types';
-export { CAMO_CHAMELEON, CAMO_INK, CAMO_INVISIBLE } from './types';
+export { CAMO_CHAMELEON, CAMO_INK, CAMO_INVISIBLE, LENS_PLAIN, LENS_PRISM, LENS_TINY } from './types';

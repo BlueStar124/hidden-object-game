@@ -157,6 +157,21 @@
       "scale": 0.42,
       "camo": "ink",
       "foundText": "Mặt sau đồng hồ khắc ba cái tên, mỗi tên một nét chữ. Tên cuối cùng là của vị kiến trúc sư."
+    },
+    {
+      "id": "prism-sketch-5",
+      "name": "Nét Vẽ Cầu Vồng 5/9",
+      "clue": "Nét vẽ cầu vồng ẩn trên tấm biển hiệu chữ Hoa lớn giữa phố, phía trên chiếc tuk-tuk.",
+      "x": 0.58,
+      "y": 0.49,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "paper-umbrella",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Thầy vẽ những nét này bằng ánh sáng, để chỉ người kiên nhẫn mới nhìn thấy.” (5/9)"
     }
   ]
 }

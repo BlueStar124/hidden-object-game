@@ -152,6 +152,21 @@
       "rotation": 6,
       "camo": "chameleon",
       "foundText": "Trong cánh hạc có dòng chữ: “Ta chưa đi xa đâu. Hãy đi tiếp về phía Nam.”"
+    },
+    {
+      "id": "tiny-sketch-2",
+      "name": "Nét Vẽ Tí Hon 2/10",
+      "clue": "Nét vẽ tí hon ẩn giữa đám cây bụi mọc trên mỏm đá, bên trái cầu thang gỗ.",
+      "x": 0.34,
+      "y": 0.61,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "bee",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Ta vẽ những sinh vật bé nhất, vì trong cung chẳng ai để ý tới chúng.” (2/10)"
     }
   ]
 }

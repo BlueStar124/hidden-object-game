@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScanEye, ScrollText, Star, X } from '../../ui/icons';
+import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScrollText, Star, X } from '../../ui/icons';
 import { isCritter, type Chapter, type Country, type Page, type PageRef } from '../../core/model';
 import { withTools } from '../../core/tools';
 import { ownedTools } from '../../game/ownedTools';
 import { canDeduce, hasMystery, mysteryProgress } from '../../core/mystery';
 import { progress } from '../../core/progress';
 import { COUNTRIES, pagesOf } from '../../content';
+import { TOOLS } from '../../content/tools';
+import { byTool, TOOL_MARKS } from '../../ui/toolMarks';
 import { BookThumb } from '../BookThumb';
 import { colors, fonts } from '../../ui/theme';
 import { formatNumber } from '../../ui/format';
@@ -61,11 +63,14 @@ function critterProgress(page: Page) {
   return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
 }
 
-/** The invisible-ink messages of a page the player's tools reveal: found and how many. */
-function inkProgress(page: Page, tools: ReturnType<typeof ownedTools>) {
+/** What the player's tools reveal on a page (invisible ink, the prism's drawings…): found and how many. */
+function toolProgress(page: Page, tools: ReturnType<typeof ownedTools>) {
   const seen = new Set(progress.discovered(page.id));
-  const ids = withTools(page, tools).objects.filter((o) => o.requires).map((o) => o.id);
-  return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
+  return byTool(withTools(page, tools).objects).map(([tool, finds]) => ({
+    tool,
+    total: finds.length,
+    spotted: finds.filter((o) => seen.has(o.id)).length,
+  }));
 }
 
 /**
@@ -139,7 +144,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                 const result = progress.pageResult(scene.id);
                 const passed = !!result && result.stars > 0;
                 const critters = critterProgress(scene);
-                const ink = inkProgress(scene, tools);
+                const toolFinds = toolProgress(scene, tools);
                 const night = ref.night;
                 const nightResult = night ? progress.pageResult(night.id) : undefined;
                 const nightCritters = night ? critterProgress(night) : null;
@@ -190,14 +195,18 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                             </Text>
                           </View>
                         )}
-                        {ink.total > 0 && (
-                          <View style={styles.row} accessibilityLabel={`Lời nhắn mực tàng hình: ${ink.spotted} trên ${ink.total}`}>
-                            <ScanEye size={11} color={ink.spotted === ink.total ? colors.emerald : '#0284c7'} />
-                            <Text style={[styles.critters, { color: ink.spotted === ink.total ? colors.emerald : '#0284c7' }]}>
-                              {ink.spotted}/{ink.total}
-                            </Text>
-                          </View>
-                        )}
+                        {toolFinds.map(({ tool, spotted, total }) => {
+                          const { icon: Icon, color } = TOOL_MARKS[tool];
+                          const done = spotted === total;
+                          return (
+                            <View key={tool} style={styles.row} accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${total}`}>
+                              <Icon size={11} color={done ? colors.emerald : color} />
+                              <Text style={[styles.critters, { color: done ? colors.emerald : color }]}>
+                                {spotted}/{total}
+                              </Text>
+                            </View>
+                          );
+                        })}
                       </View>
                       {night && (
                         <Pressable

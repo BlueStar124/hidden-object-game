@@ -151,6 +151,21 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Trên đèn vẽ một mũi đất nhọn nhô ra biển, nơi mặt trời mọc và lặn trên cùng một vùng nước."
+    },
+    {
+      "id": "tiny-sketch-7",
+      "name": "Nét Vẽ Tí Hon 7/10",
+      "clue": "Nét vẽ tí hon đậu trên những đường chạm khắc của ngọn tháp Chăm lớn.",
+      "x": 0.42,
+      "y": 0.49,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "dragonfly",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Đừng vẽ để được khen. Hãy vẽ để nhớ.” (7/10)"
     }
   ]
 }

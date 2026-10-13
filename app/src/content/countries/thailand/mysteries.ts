@@ -20,7 +20,7 @@ export const CHAO_PHRAYA: Mystery = {
   ],
 };
 
-/** Chapter 2: the worn quill, the watch with three names and the yellowed sketch. */
+/** Chapter 2: the worn quill, the watch with three names and the yellowed sketch; the teacher's prism. */
 export const HERITAGE_RUINS: Mystery = {
   question: 'Cuốn sổ ký họa này đã bao nhiêu tuổi?',
   options: [
@@ -31,7 +31,9 @@ export const HERITAGE_RUINS: Mystery = {
   epilogue: [
     'Ngòi bút mòn vẹt, ba cái tên trên chiếc đồng hồ, trang ký họa gần trăm năm tuổi: cuốn sổ đã đi qua nhiều đời người giữ.',
     'Tên cuối cùng trên đồng hồ là của vị kiến trúc sư. Phía dưới còn một khoảng trống, như đang chờ một cái tên mới.',
+    'Trong nắp đồng hồ còn kẹp một lăng kính pha lê của người thầy. Đặt nó trước nắng, một dải cầu vồng rơi lên trang giấy, và trong dải sáng ấy hiện ra những nét vẽ mà mắt thường chưa từng thấy…',
   ],
+  reward: 'prism',
 };
 
 /** Chapter 3: the conical hat, the compass pointing east and the toy cyclo lead home to Hà Nội. */

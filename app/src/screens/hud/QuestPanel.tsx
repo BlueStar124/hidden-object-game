@@ -25,6 +25,8 @@ import type { HiddenObject } from '../../core/model';
 import { isCritter, isMainObject } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
 import { SpriteIcon } from '../../ui/SpriteIcon';
+import { byTool, TOOL_MARKS } from '../../ui/toolMarks';
+import { TOOLS } from '../../content/tools';
 import type { HudLayout } from './HUD';
 
 interface QuestPanelProps {
@@ -189,8 +191,7 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
   const secret = objects.find((o) => o.isSecret);
   const critters = objects.filter(isCritter);
   const clues = objects.filter((o) => o.isClue);
-  const inkNotes = objects.filter((o) => o.requires);
-  const inkFound = inkNotes.filter((o) => foundIds.includes(o.id)).length;
+  const toolFinds = byTool(objects);
   const normalFound = normal.filter((o) => foundIds.includes(o.id)).length;
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
   const cluesFound = clues.filter((o) => foundIds.includes(o.id)).length;
@@ -240,18 +241,24 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           </Text>
         </View>
       )}
-      {inkNotes.length > 0 && (
-        <View
-          style={[styles.secret, inkFound === inkNotes.length ? styles.secretOpen : styles.secretLocked]}
-          accessibilityLabel={`Lời nhắn mực tàng hình: ${inkFound} trên ${inkNotes.length}`}
-        >
-          <ScanEye size={13} color="#0284c7" />
-          {wide && <Text style={[styles.secretText, { color: '#0284c7' }]}>MỰC TÀNG HÌNH</Text>}
-          <Text style={[styles.secretText, { color: '#0284c7' }]}>
-            {inkFound}/{inkNotes.length}
-          </Text>
-        </View>
-      )}
+      {toolFinds.map(([tool, finds]) => {
+        // What the player's tools reveal here (invisible ink, the prism's drawings…)
+        const { icon: Icon, color } = TOOL_MARKS[tool];
+        const spotted = finds.filter((o) => foundIds.includes(o.id)).length;
+        return (
+          <View
+            key={tool}
+            style={[styles.secret, spotted === finds.length ? styles.secretOpen : styles.secretLocked]}
+            accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${finds.length}`}
+          >
+            <Icon size={13} color={color} />
+            {wide && <Text style={[styles.secretText, { color }]}>{TOOLS[tool].badge.toUpperCase()}</Text>}
+            <Text style={[styles.secretText, { color }]}>
+              {spotted}/{finds.length}
+            </Text>
+          </View>
+        );
+      })}
       {clues.length > 0 && (
         <View
           style={[styles.secret, cluesFound === clues.length ? styles.secretOpen : styles.secretLocked]}

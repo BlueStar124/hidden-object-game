@@ -104,6 +104,16 @@ const GOLD_FILTER = [saturate(2.6), brightness(1.12)].reduce((acc, m) => compose
 /** `filter: saturate(0.35) sepia(0.4) contrast(0.92) brightness(1.04)` — the "ink" camouflage. */
 const INK_FILTER = [sepia(0.4), contrast(0.92), brightness(1.04)].reduce((acc, m) => compose(m, acc), saturate(0.35));
 
+/** The rainbow the prism casts, in order (the band's stripes and its drawings' glow). */
+const PRISM_COLOURS = [
+  'rgba(239, 68, 68, 1)',
+  'rgba(249, 115, 22, 1)',
+  'rgba(234, 179, 8, 1)',
+  'rgba(34, 197, 94, 1)',
+  'rgba(59, 130, 246, 1)',
+  'rgba(139, 92, 246, 1)',
+];
+
 /* ------------------------------------ Board ------------------------------------ */
 
 export function createBoardPaints() {
@@ -148,6 +158,13 @@ export function createBoardPaints() {
         )
       )
     ),
+    // The prism's drawings in light, through the loupe: their glow runs through the rainbow (one
+    // paint per colour, picked by time — never a new filter per frame)
+    prism: PRISM_COLOURS.map((c) =>
+      paint((p) => p.setImageFilter(dropShadow(0, (7 * PX) / LOUPE_ZOOM, c.replace('1)', '0.6)'), dropShadow(0, (2 * PX) / LOUPE_ZOOM, c))))
+    ),
+    // The twin lens' tiny drawings, through the loupe: in their colours, lifted by a thin warm halo
+    tiny: paint((p) => p.setImageFilter(dropShadow(0, (3 * PX) / LOUPE_ZOOM, 'rgba(180, 120, 40, 0.75)'))),
     plain: paint(),
     sheet: paint(), // a sprite's cell of the sprite sheet, inside its layer
     // Found sprites: `drop-shadow(0 2px 3px rgba(44, 36, 27, 0.32))`
@@ -355,6 +372,16 @@ export function createLoupePaints(d: number, pixelRatio: number) {
     ),
     ferruleShadow: blurred('rgba(0, 0, 0, 0.3)', 2),
     lensBg: paint((p) => p.setColor(color('#ded7c8'))),
+    prismRect: Skia.XYWHRect(-1.5, -1, 3, 2), // the band, in units of its half-width (long enough to cross the lens)
+    // The prism's rainbow band across the lens, in unit coordinates (scaled to the band): a light
+    // wash of colour over the magnified page, soft at its edges
+    prismBand: paint((p) => {
+      const stripes = PRISM_COLOURS.map((c) => c.replace('1)', '0.24)'));
+      const clear = (c: string) => c.replace('1)', '0)');
+      p.setShader(
+        grad([0, -1], [0, 1], [clear(PRISM_COLOURS[0]), ...stripes, clear(PRISM_COLOURS[5])], [0, 0.1, 0.28, 0.44, 0.56, 0.72, 0.9, 1])
+      );
+    }),
     // radial-gradient(circle at 32% 28%, …) with mix-blend-mode: overlay
     specular: paint((p) => {
       const cx = -lensR + 0.64 * lensR;

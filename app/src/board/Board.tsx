@@ -130,12 +130,13 @@ export const Board = React.memo<BoardProps>(function Board({
   const picture = useDerivedValue<SkPicture>(() => {
     const base = shown ?? flip?.S;
     if (!base) return emptyPicture;
-    const { w, h } = dims.value;
+    const { w, h, fit } = dims.value;
     const next = renderFrame(base, {
       now: clock.value,
       width: w,
       height: h,
       s: s.value,
+      zoom: s.value / fit,
       tx: tx.value,
       ty: ty.value,
       lx: lx.value,

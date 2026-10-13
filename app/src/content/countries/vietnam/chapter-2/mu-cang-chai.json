@@ -156,6 +156,21 @@
       "scale": 0.45,
       "camo": "ink",
       "foundText": "Cặp lồng cơm còn ấm: người vẽ đã ngồi đây rất lâu để vẽ cho bằng hết những bậc ruộng."
+    },
+    {
+      "id": "tiny-sketch-3",
+      "name": "Nét Vẽ Tí Hon 3/10",
+      "clue": "Nét vẽ tí hon nằm trên bờ ruộng bậc thang, cạnh túp lều nhỏ phía trên bên phải.",
+      "x": 0.74,
+      "y": 0.49,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "mantis",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Một nét vẽ tí hon là một lời hứa: rồi sẽ có người nhìn đủ kỹ để thấy nó.” (3/10)"
     }
   ]
 }

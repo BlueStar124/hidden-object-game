@@ -200,6 +200,21 @@
       "rotation": -6,
       "camo": "chameleon",
       "foundText": "“Thầy trao cuốn sổ này cho con ở Bangkok. Khi tóc con bạc, hãy trao nó cho người xứng đáng.”"
+    },
+    {
+      "id": "prism-sketch-3",
+      "name": "Nét Vẽ Cầu Vồng 3/9",
+      "clue": "Nét vẽ cầu vồng ẩn trên đầu hồi chạm khắc của ngôi điện mái xanh cam bên phải.",
+      "x": 0.7,
+      "y": 0.53,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "scroll",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Năm hai mươi tuổi, thầy theo thuyền buôn sang Bangkok, mang theo cuốn sổ của người họa sĩ cung đình.” (3/9)"
     }
   ]
 }

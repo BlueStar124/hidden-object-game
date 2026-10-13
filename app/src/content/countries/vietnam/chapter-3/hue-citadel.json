@@ -152,6 +152,21 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Nụ sen kẹp trong lá thư: “Người giữ sổ đầu tiên là một họa sĩ cung đình Huế.”"
+    },
+    {
+      "id": "tiny-sketch-5",
+      "name": "Nét Vẽ Tí Hon 5/10",
+      "clue": "Nét vẽ tí hon bên chiếc đỉnh đồng phía bên phải sân chầu.",
+      "x": 0.58,
+      "y": 0.57,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "snail",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Ta vẽ chậm như con ốc sên này, nhưng chưa ngày nào dừng bút.” (5/10)"
     }
   ]
 }

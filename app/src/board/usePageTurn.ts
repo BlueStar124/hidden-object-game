@@ -62,6 +62,7 @@ export function usePageTurn(
       width: dims.value.w,
       height: dims.value.h,
       s: s.value,
+      zoom: s.value / dims.value.fit,
       tx: at ? at.tx : tx.value,
       ty: at ? at.ty : ty.value,
       lx: lx.value,

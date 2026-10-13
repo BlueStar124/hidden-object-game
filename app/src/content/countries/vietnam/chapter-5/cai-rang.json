@@ -152,6 +152,21 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Khắc trên vỏ dừa: “Xuôi dòng Hậu Giang, ra tới biển là gặp.”"
+    },
+    {
+      "id": "tiny-sketch-9",
+      "name": "Nét Vẽ Tí Hon 9/10",
+      "clue": "Nét vẽ tí hon bám trên mạn một chiếc ghe nhỏ giữa sông, phía trên chợ nổi.",
+      "x": 0.42,
+      "y": 0.45,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "river-snail",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Điều của ta là: hãy nhìn thật gần, rồi nhìn gần thêm chút nữa.” (9/10)"
     }
   ]
 }

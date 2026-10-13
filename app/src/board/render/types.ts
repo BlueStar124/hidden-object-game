@@ -15,6 +15,22 @@ export const CAMO_INK = 0;
 export const CAMO_CHAMELEON = 1;
 export const CAMO_INVISIBLE = 2;
 
+/*
+ * How the loupe shows a sprite in invisible ink: by the tool its object needs (core/model ToolId).
+ * Never on the page itself.
+ */
+export const LENS_PLAIN = 0; // all through the loupe, glowing blue (and the UV lens' messages)
+export const LENS_PRISM = 1; // only inside the rainbow band the prism casts across the lens, shimmering
+export const LENS_TINY = 2; // only once the page is zoomed in (the twin lens' tiny drawings)
+
+/** The prism's band across the lens: its tilt (degrees) and half its width (fraction of the lens radius). */
+export const PRISM_ANGLE = -24;
+export const PRISM_BAND = 0.34;
+/** The twin lens' drawings appear as the page is zoomed in from this (× the fitted view)… */
+export const TINY_ZOOM_FROM = 1.6;
+/** …and are all there from this (the tool's description tells players "×2"). */
+export const TINY_ZOOM_FULL = 2;
+
 /** Colours bloom back over this long once something is found (web: 0.6–0.9s transitions). */
 export const FOUND_FADE_MS = 900;
 
@@ -39,6 +55,7 @@ export interface SceneSprite {
   rot: number; // degrees
   flip: number; // 1 | -1
   camo: number; // CAMO_*
+  lens: number; // LENS_*: how the loupe shows it, when it is in invisible ink
   shy: ShyBehavior | null;
   shyDx: number; // hiding direction (fraction of the sprite box)
   shyDy: number;
@@ -111,6 +128,7 @@ export interface SceneData {
   stampSize: number;
   atlas: SpriteAtlas | null;
   pixelRatio: number; // device pixels per screen unit
+  prism: boolean; // something on the page shows in the prism's band: the loupe casts it
 }
 
 export interface FoundInfo {
@@ -125,6 +143,7 @@ export interface FrameState {
   width: number;
   height: number;
   s: number; // page → screen scale
+  zoom: number; // the camera's zoom over the fitted view (1: the whole spread)
   tx: number;
   ty: number;
   lx: number; // loupe centre on screen

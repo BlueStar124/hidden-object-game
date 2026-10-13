@@ -217,8 +217,14 @@ export type SpriteType =
  */
 export type CamoStyle = 'ink' | 'chameleon' | 'invisible';
 
-/** The detective's tools, handed over by chapter mysteries (Mystery.reward, core/tools). */
-export type ToolId = 'uv-lens'; // ultraviolet lens: invisible-ink messages left by earlier keepers
+/**
+ * The detective's tools, handed over by chapter mysteries (Mystery.reward, core/tools). Each shows
+ * its own objects (`requires`) in the loupe only, in its own way (board/render/book.ts):
+ * - 'uv-lens': invisible-ink messages left by earlier keepers, glowing blue
+ * - 'prism': drawings in light, only inside the rainbow band the prism casts across the lens
+ * - 'twin-lens': tiny drawings, seen only once the page is zoomed in (TINY_ZOOM_FROM)
+ */
+export type ToolId = 'uv-lens' | 'prism' | 'twin-lens';
 
 /** A shy creature hides most of the time and only peeks out for a moment every cycle. */
 export interface ShyBehavior {

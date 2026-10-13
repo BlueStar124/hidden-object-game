@@ -210,6 +210,10 @@ test('every tool a page needs is handed over by some chapter; its objects are op
       if (!o.requires) continue;
       expect(o.isBonus).toBe(true);
       expect(chapterGiving(chapters, o.requires)).not.toBeNull();
+      // What a tool reveals shows through the loupe only (each tool its own way, board/render/book.ts)
+      expect(o.camo).toBe('invisible');
+      // The twin lens' drawings are tiny: they need the page zoomed in
+      if (o.requires === 'twin-lens') expect(o.scale ?? 1).toBeLessThanOrEqual(0.3);
     }
   }
 });

@@ -8,6 +8,9 @@ import {
   CAMO_CHAMELEON,
   CAMO_INK,
   CAMO_INVISIBLE,
+  LENS_PLAIN,
+  LENS_PRISM,
+  LENS_TINY,
   type NightScene,
   type RevealBlob,
   type SceneData,
@@ -94,6 +97,7 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
   const type = obj.spriteType!;
   const w = spriteSize(obj.scale);
   const camo = obj.camo === 'chameleon' ? CAMO_CHAMELEON : obj.camo === 'invisible' ? CAMO_INVISIBLE : CAMO_INK;
+  const lens = obj.requires === 'prism' ? LENS_PRISM : obj.requires === 'twin-lens' ? LENS_TINY : LENS_PLAIN;
   const hiddenVariant = camo === CAMO_CHAMELEON ? 'chameleon' : 'base';
   const shyFrom = obj.shy?.from ?? 'below';
   const roam = obj.roam && obj.roam.path.length >= 2 ? obj.roam : null;
@@ -116,6 +120,7 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     rot: obj.rotation ?? 0,
     flip: obj.flip ? -1 : 1,
     camo,
+    lens,
     shy: obj.shy ?? null,
     shyDx: SHY_OFFSET[shyFrom]?.[0] ?? 0,
     shyDy: SHY_OFFSET[shyFrom]?.[1] ?? 0,
@@ -124,7 +129,8 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     bob: !!roam?.bob,
     blinkDelay: blinkDelay(obj.id),
     page,
-    loupe: spriteParts(type, camo === CAMO_INVISIBLE ? 'invisible' : hiddenVariant, tint),
+    // Invisible ink looks like ink through the loupe; what the prism or the twin lens shows keeps its colours
+    loupe: spriteParts(type, camo === CAMO_INVISIBLE ? (lens === LENS_PLAIN ? 'invisible' : 'base') : hiddenVariant, tint),
     found,
     glow: glows ? spriteParts(type, camo === CAMO_CHAMELEON ? 'glowChameleon' : 'glow', tint) : null,
     bounds: Skia.XYWHRect(-1.4 * w, -1.4 * w, 2.8 * w, 2.8 * w),
@@ -292,5 +298,6 @@ export function buildScene({ page, image, tints, book, loupe, compact, density, 
     stampSize: compact ? 32 : 44,
     atlas: layOutAtlas(sprites, painted, density),
     pixelRatio,
+    prism: sprites.some((sp) => sp.camo === CAMO_INVISIBLE && sp.lens === LENS_PRISM),
   };
 }

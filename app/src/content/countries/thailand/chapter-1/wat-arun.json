@@ -210,6 +210,21 @@
       "rotation": -8,
       "camo": "chameleon",
       "foundText": "Bên trong mũ thêu dòng chữ: “Tặng trò nhỏ của thầy. Bangkok, mùa mưa năm ấy.”"
+    },
+    {
+      "id": "prism-sketch-1",
+      "name": "Nét Vẽ Cầu Vồng 1/9",
+      "clue": "Nét vẽ cầu vồng ẩn trên tầng tháp bên trái của ngọn tháp chính Wat Arun.",
+      "x": 0.54,
+      "y": 0.45,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "khon-mask",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Trò nhỏ của thầy, nếu con thấy được dải cầu vồng này, con đã tìm ra lăng kính của thầy.” (1/9)"
     }
   ]
 }

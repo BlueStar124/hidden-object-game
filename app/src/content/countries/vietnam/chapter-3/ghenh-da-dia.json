@@ -159,6 +159,21 @@
       "rotation": -6,
       "camo": "chameleon",
       "foundText": "“Ba người đã giữ cuốn sổ. Người thứ tư đang đọc những dòng này.”"
+    },
+    {
+      "id": "tiny-sketch-6",
+      "name": "Nét Vẽ Tí Hon 6/10",
+      "clue": "Nét vẽ tí hon giăng giữa những cột đá lục giác ở chính giữa trang.",
+      "x": 0.525,
+      "y": 0.57,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "spider",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Ta trao cuốn sổ cho một thương nhân phố Hội, người kiên nhẫn nhất ta từng gặp.” (6/10)"
     }
   ]
 }

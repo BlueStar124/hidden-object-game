@@ -151,6 +151,21 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Chuông khắc một dòng số: 8°37′ Bắc, 104°43′ Đông."
+    },
+    {
+      "id": "tiny-sketch-8",
+      "name": "Nét Vẽ Tí Hon 8/10",
+      "clue": "Nét vẽ tí hon nằm giữa những luống hoa của khu vườn bên phải.",
+      "x": 0.78,
+      "y": 0.45,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "moth",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Mỗi người giữ sổ thêm vào đó một điều mình học được.” (8/10)"
     }
   ]
 }

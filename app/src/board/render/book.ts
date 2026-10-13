@@ -5,7 +5,13 @@ import {
   CAMO_CHAMELEON,
   CAMO_INVISIBLE,
   FOUND_FADE_MS,
+  LENS_PRISM,
+  LENS_TINY,
+  PRISM_ANGLE,
+  PRISM_BAND,
   REVEAL_MS,
+  TINY_ZOOM_FROM,
+  TINY_ZOOM_FULL,
   WASH_ALPHA,
   WASH_FADE_MS,
   type FrameState,
@@ -14,6 +20,7 @@ import {
   type SceneSprite,
 } from './types';
 import type { AtlasCell } from '../scene/spriteAtlas';
+import type { Part } from '../scene/spriteParts';
 
 /** The painted spread: artwork, camouflaged sprites, the scraps of painting over them, night. */
 
@@ -113,6 +120,34 @@ function drawGlints(c: SkCanvas, S: SceneData, sp: SceneSprite, pose: Pose, now:
   }
 }
 
+// The prism's drawings change colour this often (ms), each a step behind the one before
+const PRISM_STEP_MS = 220;
+
+/**
+ * A drawing in light (LENS_PRISM), seen through the loupe: only inside the rainbow band the prism
+ * casts across the lens (loupe.ts draws the band), its glow running through the rainbow.
+ */
+function drawInPrism(c: SkCanvas, S: SceneData, sp: SceneSprite, pose: Pose, parts: Part[], index: number, alpha: number, now: number, view: View) {
+  'worklet';
+  // The loupe is centred on the middle of what it shows (page units)
+  const cx = (view.x0 + view.x1) / 2;
+  const cy = (view.y0 + view.y1) / 2;
+  const seen = (view.x1 - view.x0) / 2;
+  const half = PRISM_BAND * seen;
+  const colours = S.paints.prism;
+  c.save();
+  // The band's own rectangle (loupe paints), as loupe.ts lays it over the lens
+  c.translate(cx, cy);
+  c.rotate(PRISM_ANGLE, 0, 0);
+  c.scale(seen, half);
+  c.clipRect(S.loupe.prismRect, ClipOp.Intersect, true);
+  c.scale(1 / seen, 1 / half);
+  c.rotate(-PRISM_ANGLE, 0, 0);
+  c.translate(-cx, -cy);
+  drawSprite(c, sp, pose, parts, colours[(Math.floor(now / PRISM_STEP_MS) + index) % colours.length], alpha, false, S.paints.glowSpot);
+  c.restore();
+}
+
 /**
  * The watercolour wash (see WASH_ALPHA): one layer over what is seen of the page, with a soft patch
  * cleared around every find. Day pages only, never in the loupe.
@@ -184,8 +219,16 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (sp.camo === CAMO_CHAMELEON) {
       drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, atlas, cell, P.chameleonModulate, 0.95);
     } else if (sp.camo === CAMO_INVISIBLE) {
+      // (Invisible ink has no page drawing: this is always the loupe)
       const glow = track([0, 0.5, 1], [0.7, 1, 0.7], EASE_IN_OUT, loop(now, 2400));
-      drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, atlas, cell);
+      if (sp.lens === LENS_PRISM) {
+        if (view) drawInPrism(c, S, sp, pose, parts, i, glow * fade, now, view);
+      } else if (sp.lens === LENS_TINY) {
+        const seen = clamp01((F.zoom - TINY_ZOOM_FROM) / (TINY_ZOOM_FULL - TINY_ZOOM_FROM));
+        if (seen > 0) drawSprite(c, sp, pose, parts, P.tiny, seen * fade, false, P.glowSpot, atlas, cell);
+      } else {
+        drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, atlas, cell);
+      }
     } else {
       drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, atlas, cell, P.inkModulate, 0.8);
     }

@@ -20,7 +20,7 @@ export const NORTH: Mystery = {
   ],
 };
 
-/** Chapter 2: the lunch tiffin, the oil lamp and the quill in the cave. */
+/** Chapter 2: the lunch tiffin, the oil lamp and the quill in the cave; the court painter's second lens. */
 export const HIGHLANDS: Mystery = {
   question: 'Vị kiến trúc sư muốn người giữ sổ tiếp theo học được điều gì?',
   options: [
@@ -31,7 +31,9 @@ export const HIGHLANDS: Mystery = {
   epilogue: [
     '“Vẽ cả khi trời tối, vì vẻ đẹp không chờ ai.” “Mỗi nét vẽ là một lần nhìn kỹ hơn.”',
     'Đó cũng là điều bạn đã làm suốt hành trình: soi kính lúp thật chậm, không bỏ sót một góc tranh nào.',
+    'Dưới đáy cặp lồng cơm là một tròng kính nhỏ của người họa sĩ cung đình. Lồng nó vào kính lúp của bạn rồi phóng thật gần: giữa các trang Việt Nam lấp ló những nét vẽ tí hon bấy lâu không ai nhìn thấy.',
   ],
+  reward: 'twin-lens',
 };
 
 /** Chapter 3: the dried lotus, the older deerstalker, the abacus and the keeper's notes. */

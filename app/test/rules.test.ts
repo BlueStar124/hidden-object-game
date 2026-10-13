@@ -545,6 +545,19 @@ describe('the detective tools', () => {
     expect(withTools(plain, [])).toBe(plain);
   });
 
+  test('each tool shows only its own objects', () => {
+    const sketch = object('sketch', { isBonus: true, requires: 'prism', camo: 'invisible' });
+    const tiny = object('tiny', { isBonus: true, requires: 'twin-lens', camo: 'invisible' });
+    const many = pageOf('many', [object('main'), note, sketch, tiny]);
+    expect(withTools(many, ['prism']).objects.map((o) => o.id)).toEqual(['main', 'sketch']);
+    expect(withTools(many, ['twin-lens', 'uv-lens']).objects.map((o) => o.id)).toEqual(['main', 'note', 'tiny']);
+    // The same tools in any order: the same page
+    expect(withTools(many, ['uv-lens', 'twin-lens'])).toBe(withTools(many, ['twin-lens', 'uv-lens']));
+    expect(withTools(many, ['uv-lens', 'prism', 'twin-lens'])).toBe(many);
+    const prismChapter: Chapter = { ...giving, id: 'prism-giving', mystery: { ...giving.mystery!, reward: 'prism' } };
+    expect(toolsOwned([giving, prismChapter], (id) => id === 'prism-giving')).toEqual(['prism']);
+  });
+
   test('a page laid out after the tools keeps both marks apart in its layout', () => {
     const moving = pageOf('both', [object('m', { spots: [{ x: 0.2, y: 0.3, clue: 'there' }] }), note]);
     const laid = layOutPage(withTools(moving, []), 7);

@@ -153,6 +153,21 @@
       "rotation": -14,
       "camo": "chameleon",
       "foundText": "Khắc trên ngòi bút: “Mỗi nét vẽ là một lần nhìn kỹ hơn.”"
+    },
+    {
+      "id": "tiny-sketch-4",
+      "name": "Nét Vẽ Tí Hon 4/10",
+      "clue": "Nét vẽ tí hon đậu trên lan can lối đi gỗ, cạnh cột đèn giữa trang.",
+      "x": 0.46,
+      "y": 0.65,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "firefly",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Trong hang tối, ta vẽ dưới ánh đom đóm, và chưa bao giờ thấy sợ.” (4/10)"
     }
   ]
 }

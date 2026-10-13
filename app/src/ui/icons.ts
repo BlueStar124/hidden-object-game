@@ -38,6 +38,7 @@ export { default as Palette } from 'lucide-react-native/icons/palette';
 export { default as Pause } from 'lucide-react-native/icons/pause';
 export { default as PawPrint } from 'lucide-react-native/icons/paw-print';
 export { default as Play } from 'lucide-react-native/icons/play';
+export { default as Rainbow } from 'lucide-react-native/icons/rainbow';
 export { default as RotateCcw } from 'lucide-react-native/icons/rotate-ccw';
 export { default as RotateCw } from 'lucide-react-native/icons/rotate-cw';
 export { default as Save } from 'lucide-react-native/icons/save';

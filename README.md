@@ -156,8 +156,13 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
   và bưu thiếp chứng nhận để gửi bạn bè.
 - **Bạn đồng hành lữ hành:** chim én, chú mèo của vị kiến trúc sư và một cánh bướm đường xa mỗi ngày ghé một trang khác
   nhau qua ba nước. Hộ Chiếu cho biết hôm nay chúng ở đâu; gặp đủ mọi nơi thì đọc được câu chuyện của chúng.
-- **Kính Tia Tím:** giải bí ẩn cuối của Singapore thì nhận kính; soi lại các trang Singapore sẽ thấy 9 lời nhắn mực
-  tàng hình, ghép lại thành bức thư của vị kiến trúc sư gửi người giữ sổ tiếp theo.
+- **Đồ nghề thám tử:** giải bí ẩn chương thì nhận dụng cụ, và các trang đã chơi có thêm thứ để tìm, chỉ hiện trong kính lúp.
+  - *Kính Tia Tím* (chương 3 Singapore): 9 lời nhắn mực tàng hình trên các trang Singapore, ghép lại thành bức thư của
+    vị kiến trúc sư gửi người giữ sổ tiếp theo.
+  - *Lăng Kính Pha Lê* (chương 2 Thái Lan): một dải cầu vồng chéo ngang tròng kính; 9 nét vẽ bằng ánh sáng của người
+    thầy chỉ hiện trong dải sáng ấy, mỗi trang Thái Lan một nét.
+  - *Kính Lúp Hai Tròng* (chương 2 Việt Nam): 10 nét vẽ tí hon của người họa sĩ cung đình, chỉ thấy khi phóng to trang
+    từ ×2.
 - **Sinh vật ánh vàng:** thỉnh thoảng một sinh vật phụ trên trang là bản ánh vàng hiếm (thẻ của nó sáng lên, trên
   tranh có ánh lấp lánh). Bắt được thì Sổ Tay viền vàng loài đó.
 - **Sinh vật giật mình:** bị bắt, mèo nhảy lên, cua bò ngang, cá quẫy đuôi, chim vỗ cánh bay lên rồi đậu lại.
