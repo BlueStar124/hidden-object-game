@@ -16,6 +16,7 @@ import { Lora_700Bold } from '@expo-google-fonts/lora/700Bold';
 import { installCrashLog } from './src/platform/crashLog';
 import { askToKeepStorage } from './src/platform/keepStorage';
 import { ErrorBoundary } from './src/screens/ErrorBoundary';
+import { AuthGate } from './src/screens/auth/AuthGate';
 import { GameScreen } from './src/screens/GameScreen';
 import { colors } from './src/ui/theme';
 
@@ -27,7 +28,9 @@ export default function App() {
   return (
     <AppShell>
       <ErrorBoundary>
-        <GameScreen />
+        <AuthGate>
+          <GameScreen />
+        </AuthGate>
       </ErrorBoundary>
     </AppShell>
   );

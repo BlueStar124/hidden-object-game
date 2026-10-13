@@ -52,6 +52,8 @@ interface HomeScreenProps {
   onOpenCover: () => void;
   onEnterChallenge: () => void;
   onOpenBackup: () => void;
+  accountEmail: string;
+  onSignOut: () => void;
 }
 
 /**
@@ -76,6 +78,8 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     onOpenCover,
     onEnterChallenge,
     onOpenBackup,
+    accountEmail,
+    onSignOut,
   }) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
@@ -159,6 +163,12 @@ export const HomeScreen = React.memo<HomeScreenProps>(
           <Stat icon={<Trophy size={13} color={colors.gold} />} text={`${formatNumber(score)} điểm`} />
           <Stat icon={<CircleCheckBig size={13} color={colors.emerald} />} text={`${cleared}/${pageCount} trang`} />
           <Stat icon={<PawPrint size={13} color={colors.earth} />} text={`${album.found}/${album.total} loài`} />
+        </View>
+        <View style={[styles.account, !columns && styles.centredRow]}>
+          <Text style={styles.accountEmail} numberOfLines={1}>{accountEmail}</Text>
+          <Pressable onPress={onSignOut} accessibilityRole="button" accessibilityLabel="Đăng xuất khỏi tài khoản">
+            <Text style={styles.signOut}>Đăng xuất</Text>
+          </Pressable>
         </View>
       </View>
     );
@@ -471,6 +481,25 @@ const styles = StyleSheet.create({
   },
   statsTight: {
     marginTop: 7,
+  },
+  account: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginTop: 2,
+  },
+  accountEmail: {
+    maxWidth: 220,
+    color: colors.inkFaint,
+    fontSize: 10,
+  },
+  signOut: {
+    color: colors.crimson,
+    fontSize: 10,
+    fontWeight: '700',
+    paddingVertical: 4,
+    paddingHorizontal: 3,
   },
   stat: {
     flexDirection: 'row',

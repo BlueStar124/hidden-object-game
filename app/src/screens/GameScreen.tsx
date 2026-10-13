@@ -39,6 +39,7 @@ import { QuestPanel } from './hud/QuestPanel';
 import { certificateShare, challengeMessage, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
 import { useShare } from './share/useShare';
 import { useDeviceBehaviour } from './useDeviceBehaviour';
+import { useAuth } from './auth/AuthContext';
 
 /** A sheet over the game from the home screen (the index and the album have their own flags). */
 type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
@@ -49,6 +50,7 @@ type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
  * victory, index, album) over everything.
  */
 export const GameScreen: React.FC = () => {
+  const { email: accountEmail, signOut } = useAuth();
   const [showIndex, setShowIndex] = useState(false);
   const [showAlbum, setShowAlbum] = useState(false);
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -56,6 +58,9 @@ export const GameScreen: React.FC = () => {
   const [finale, setFinale] = useState(false);
   const browsing = showIndex || showAlbum || sheet !== null || deduction !== null || finale;
   const { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome } = useGame({ browsing });
+  const onSignOut = useCallback(() => {
+    void signOut().catch(() => {});
+  }, [signOut]);
   const { country, pages, ref, page, isNight, turn, mode, showPrologue, setShowPrologue, showNightIntro, setShowNightIntro } = nav;
   const c = kase.state;
   const isTurning = turn !== null;
@@ -321,6 +326,8 @@ export const GameScreen: React.FC = () => {
           onOpenCover={openCover}
           onEnterChallenge={enterChallenge}
           onOpenBackup={openBackup}
+          accountEmail={accountEmail}
+          onSignOut={onSignOut}
         />
       )}
 
