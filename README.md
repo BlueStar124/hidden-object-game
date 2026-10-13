@@ -149,7 +149,9 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian. Nước nào
   có tem vàng hộ chiếu thì bưu thiếp có viền vàng.
 - **Trang câu đố và trang theo dấu:** Merlion, Yaowarat và Hội An là trang câu đố (thẻ chỉ hiện câu đố, tìm ra mới biết
-  tên); Phú Quốc là trang theo dấu (ống nhòm → thuyền câu mực → rùa biển, đúng thứ tự).
+  tên); Phú Quốc là trang theo dấu (chó xoáy → thuyền thúng → bò biển, đúng thứ tự).
+- **Ngày và đêm:** ở trang đêm Lau Pa Sat, Yaowarat và Hội An, ba món đồ ban ngày đã rời chỗ. Thẻ của chúng kể ban ngày
+  chúng ở đâu; tìm ra thì cuốn sổ vẽ đường chúng đã đi.
 - **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
   án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
 - **Hồi kết:** giải bí ẩn cuối cùng ở Mũi Cà Mau thì nhận Chứng Nhận Người Giữ Sổ Thứ Tư, kèm thống kê cả hành trình
@@ -180,7 +182,8 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
     { "x": 0.585, "y": 0.625, "clue": "Ngồi giữa hàng cây, dưới chân tòa tháp thứ ba." }
   ],
   "riddle": "Thứ gì kêu tích tắc mà không có tim?", // câu đố thay cho tên trên thẻ
-  "order": 1                           // trang theo dấu: tìm theo thứ tự 1, 2, 3…
+  "order": 1,                          // trang theo dấu: tìm theo thứ tự 1, 2, 3…
+  "dayTwin": "street-hat"              // trang đêm: món đồ này ở trang ngày (id), nay đã đổi chỗ
 }
 ```
 

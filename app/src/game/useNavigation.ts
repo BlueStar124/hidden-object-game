@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Challenge } from '../core/challenge';
 import { dailyPage, type DailyPuzzle } from '../core/daily';
+import { withDayTwins } from '../core/dayNight';
 import { hasSpots, layOutPage } from '../core/layout';
 import { withVisitors } from '../core/migrants';
 import type { Country, Page, PageRef, PageTurn, ToolId } from '../core/model';
@@ -89,8 +90,15 @@ function pageAt(country: Country, index: number, night: boolean): Page {
   return (night && ref.night) || ref.day;
 }
 
-/** A page as it opens on a day, before this visit's layout and chance: tools, travelling visitors. */
-const openingPage = (page: Page, tools: readonly ToolId[], day: string) => withVisitors(withTools(page, tools), day, MIGRANTS);
+/** The day page of a page (itself for a day page). */
+const dayOf = (page: Page) => placeOf(page.id)?.ref.day ?? page;
+
+/**
+ * A page as it opens on a day, before this visit's layout and chance: where its moved things were by
+ * day (night pages), tools, travelling visitors.
+ */
+const openingPage = (page: Page, tools: readonly ToolId[], day: string) =>
+  withVisitors(withTools(withDayTwins(page, dayOf(page)), tools), day, MIGRANTS);
 
 /** A page of the book as a visit plays it: laid out for its seed, maybe with a golden critter. */
 const visitOf = (page: Page, tools: readonly ToolId[], day: string, fate: Fate) =>

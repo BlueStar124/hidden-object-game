@@ -71,20 +71,22 @@ function camoTrait(obj: HiddenObject): CamoTrait | null {
 
 /**
  * What a card is called. Until a hint reads it (`read`) or it is found, only its silhouette tells
- * what to look for; a riddle stands in for the name.
+ * what to look for; a riddle stands in for the name, and so does a thing that moved since the day.
  */
 function cardName(obj: HiddenObject, found: boolean, read: boolean): string {
   if (found || read) return obj.name;
   if (obj.isSecret) return '??? Vật Phẩm Bí Mật';
-  return obj.riddle ? 'Câu đố' : '???';
+  if (obj.riddle) return 'Câu đố';
+  return obj.dayAt ? 'Đổi chỗ lúc đêm' : '???';
 }
 
-/** What a card says: the found text, the clue once read, else the riddle or how to read it. */
+/** What a card says: the found text, the clue once read, else the riddle, where it was by day, or how to read it. */
 function cardText(obj: HiddenObject, found: boolean, read: boolean): string {
   if (found) return obj.foundText || 'Đã tìm thấy!';
   if (read) return obj.clue;
   if (obj.isSecret) return SECRET_CLUE;
-  return obj.riddle ?? 'Chạm thẻ hoặc bấm Gợi Ý để đọc tên và manh mối';
+  if (obj.riddle) return obj.riddle;
+  return obj.dayAt ? `Ban ngày: ${obj.dayAt.clue}` : 'Chạm thẻ hoặc bấm Gợi Ý để đọc tên và manh mối';
 }
 
 const QuestCard: React.FC<{
@@ -98,8 +100,8 @@ const QuestCard: React.FC<{
   onPress: () => void;
 }> = ({ obj, found, read, hinted, expanded, compact, width, onPress }) => {
   const trait = camoTrait(obj);
-  // A card not read yet (a riddle is read from the start: the riddle is the clue)
-  const sealed = !found && !read && !obj.riddle;
+  // A card not read yet (a riddle, or where a thing was by day, is read from the start: it is the clue)
+  const sealed = !found && !read && !obj.riddle && !obj.dayAt;
   const bounce = useSharedValue(0);
   useEffect(() => {
     if (hinted) bounce.value = withRepeat(withTiming(-4, { duration: 1000 }), -1, true);

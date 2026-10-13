@@ -297,6 +297,12 @@ export interface HiddenObject {
   rare?: boolean;
   // Only there for a player who has this tool (core/tools); always optional (isBonus)
   requires?: ToolId;
+  // Night page, day-and-night hunt (core/dayNight): the id of the same thing on the day page, which has
+  // moved since night fell. Its card tells where it was by day. Main objects only; never roaming, shy or
+  // with other spots (the way it went is drawn to where the JSON puts it)
+  dayTwin?: string;
+  // Set by core/dayNight for a visit, never in the JSON: where the dayTwin was on the day page
+  dayAt?: { x: number; y: number; clue: string };
 }
 
 /** Objects that must be found to close the case: not the secret, the critters or the mystery clues. */

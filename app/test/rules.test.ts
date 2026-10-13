@@ -2,6 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import { clockTick, COMBO_WINDOW, leftovers, openCase, recordExploreFind, recordFind, recordHint, recordMiss } from '../src/core/caseFile';
 import { encodeChallenge, parseChallenge } from '../src/core/challenge';
 import { DAILY_MAX_FINDS, DAILY_MIN_FINDS, DAILY_TIME_LIMIT, dailyPage, dailyPuzzle, inFocus } from '../src/core/daily';
+import { withDayTwins } from '../src/core/dayNight';
 import { detectObject, nextInSequence } from '../src/core/detection';
 import { nextHint } from '../src/core/hints';
 import { hasSpots, layOutPage, layoutKey } from '../src/core/layout';
@@ -514,6 +515,24 @@ describe('golden critters', () => {
     }
     const onlyInk = pageOf('only-ink', [object('main'), note]);
     expect(withRareCritter(onlyInk, 0)).toBe(onlyInk);
+  });
+});
+
+describe('day and night', () => {
+  const day = pageOf('day', [object('hat', { x: 0.2, y: 0.4, clue: 'by the door' }), object('cup')]);
+  const night = pageOf('day-night', [object('moved-hat', { x: 0.7, y: 0.6, dayTwin: 'hat' }), object('owl')], { isNight: true });
+
+  test('a thing that moved knows where it was by day', () => {
+    const twinned = withDayTwins(night, day);
+    expect(twinned.objects[0].dayAt).toEqual({ x: 0.2, y: 0.4, clue: 'by the door' });
+    expect(twinned.objects[1]).toBe(night.objects[1]);
+    // The same page every time, told apart from the page as written by the board's caches
+    expect(withDayTwins(night, day)).toBe(twinned);
+    expect(layoutKey(twinned)).not.toBe(layoutKey(night));
+  });
+
+  test('a page where nothing moved is left as it is', () => {
+    expect(withDayTwins(day, day)).toBe(day);
   });
 });
 

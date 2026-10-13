@@ -138,6 +138,7 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy hoặc đọc bằng gợi ý (ẩn cả hình bóng) | tùy chọn; viết cho đúng vật (đổi `spriteType` thì sửa câu đố) |
 | `requires` | chỉ hiện khi người chơi có dụng cụ: `'uv-lens'` (lời nhắn mực tàng hình, đặt trên vùng giấy sáng), `'prism'` (nét vẽ cầu vồng), `'twin-lens'` (nét vẽ tí hon: `scale` ≤ 0.3, `radius` ~0.016). Luôn kèm `isBonus` và `camo: invisible`; phải có chương trao dụng cụ đó (`Mystery.reward`). Test soát cả ba điều | id `uv-note-<n>`, `prism-sketch-<n>`, `tiny-sketch-<n>` |
 | `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
+| `dayTwin` | trang đêm, kiểu "ngày và đêm": id của **cùng món đồ** trên trang ngày, nay đã đổi chỗ. Thẻ ghi "Ban ngày: <clue ở trang ngày>"; tìm được thì bàn vẽ đường nó đã đi | chỉ vật chính, cùng `spriteType` với vật ngày, cách chỗ ban ngày > 0.1; không `roam`/`shy`/`spots` (test). Nên 3 vật mỗi trang và thêm một câu vào `storyClue` |
 
 Mẫu một vật có đủ trường:
 

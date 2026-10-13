@@ -142,8 +142,24 @@ function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boole
     foundCell: null,
     blinks: partsAnimate(found, [ANIM_BLINK]),
     gold: !!obj.rare,
+    dayTrail: obj.dayAt ? dayTrail(obj.dayAt, obj) : null,
+    dayX: (obj.dayAt?.x ?? 0) * PAGE_W,
+    dayY: (obj.dayAt?.y ?? 0) * PAGE_H,
     startle: STARTLE_KIND[STARTLE[type] ?? 'none'],
   };
+}
+
+/** The way a thing went between the day and the night: a gentle arc from where it was to where it is. */
+function dayTrail(from: { x: number; y: number }, to: { x: number; y: number }) {
+  const ax = from.x * PAGE_W;
+  const ay = from.y * PAGE_H;
+  const bx = to.x * PAGE_W;
+  const by = to.y * PAGE_H;
+  // Bowed sideways by a fifth of its length, as if it took the long way round
+  const bow = 0.2;
+  const cx = (ax + bx) / 2 - (by - ay) * bow;
+  const cy = (ay + by) / 2 + (bx - ax) * bow;
+  return Skia.PathBuilder.Make().moveTo(ax, ay).quadTo(cx, cy, bx, by).build();
 }
 
 // The startles of the bestiary, as the renderer's numbers

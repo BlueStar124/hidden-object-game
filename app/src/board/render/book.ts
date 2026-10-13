@@ -4,6 +4,7 @@ import { drawSprite } from './sprites';
 import {
   CAMO_CHAMELEON,
   CAMO_INVISIBLE,
+  DAY_TRAIL_MS,
   FOUND_FADE_MS,
   LENS_PRISM,
   LENS_TINY,
@@ -250,6 +251,17 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
   if (!inLoupe) drawWash(c, S, F, view);
 
   if (!inLoupe) drawNight(c, S, F);
+
+  // Day and night: the ways found things went since the day, under them (z 18.5)
+  for (let i = 0; i < S.sprites.length; i++) {
+    const sp = S.sprites[i];
+    if (!sp.dayTrail || !poses[i].found) continue;
+    const a = 0.85 * clamp01(poses[i].age / DAY_TRAIL_MS);
+    P.dayTrail.setAlphaf(a);
+    c.drawPath(sp.dayTrail, P.dayTrail);
+    P.dayRing.setAlphaf(a);
+    c.drawCircle(sp.dayX, sp.dayY, 0.45 * sp.w, P.dayRing);
+  }
 
   // Found: blooming back into colour (z 19)
   for (let i = 0; i < S.sprites.length; i++) {

@@ -31,6 +31,9 @@ export const TINY_ZOOM_FROM = 1.6;
 /** …and are all there from this (the tool's description tells players "×2"). */
 export const TINY_ZOOM_FULL = 2;
 
+/** A thing that moved since the day: once found, the way it went draws itself in over this long (ms). */
+export const DAY_TRAIL_MS = 900;
+
 /** Colours bloom back over this long once something is found (web: 0.6–0.9s transitions). */
 export const FOUND_FADE_MS = 900;
 
@@ -77,6 +80,11 @@ export interface SceneSprite {
   foundCell: AtlasCell | null; // found (only sprites that stay still once found)
   blinks: boolean; // its eyes close now and then (drawn from its shapes meanwhile)
   gold: boolean; // a rare golden critter on this visit (core/rare): glints while hidden, gold once found
+  // Day-and-night hunt (core/dayNight): once found, the way it went since the day (page units) and
+  // where it was by day
+  dayTrail: SkPath | null;
+  dayX: number;
+  dayY: number;
   startle: number; // STARTLE_* (board/anim): how it reacts when caught
 }
 

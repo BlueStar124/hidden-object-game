@@ -105,6 +105,23 @@ describe('night pages', () => {
   test('a night page reuses the painting of its day page', () => {
     for (const ref of pairs) if (ref.night) expect(ref.night.art).toBe(ref.day.art);
   });
+
+  test('what moved since the day is the same thing as on the day page, somewhere else, found as it is', () => {
+    for (const ref of pairs) {
+      expect(ref.day.objects.filter((o) => o.dayTwin)).toEqual([]);
+      for (const o of ref.night?.objects ?? []) {
+        if (!o.dayTwin) continue;
+        const twin = ref.day.objects.find((d) => d.id === o.dayTwin);
+        expect(twin).toBeDefined();
+        expect(isMainObject(twin!)).toBe(true);
+        expect(o.spriteType).toBe(twin!.spriteType);
+        expect(isMainObject(o)).toBe(true);
+        expect(o.roam || o.shy || o.spots).toBeFalsy();
+        // Moved for real: the way it went is drawn once it is found
+        expect(Math.hypot((o.x - twin!.x) * ASPECT, o.y - twin!.y)).toBeGreaterThan(0.1);
+      }
+    }
+  });
 });
 
 // The paper of the template, where everything is hidden (normalized: x 88–1672, y 270–969 of 1760 × 1240)

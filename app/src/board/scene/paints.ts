@@ -274,6 +274,20 @@ export function createBoardPaints() {
       p.setBlendMode(BlendMode.DstOut);
     }),
 
+    // A thing that moved since the day: the way it went, and a ring where it was (moonlit, over the night)
+    dayTrail: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(3 * PX);
+      p.setColor(color('rgb(244, 214, 140)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([10 * PX, 7 * PX], 0));
+    }),
+    dayRing: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(2 * PX);
+      p.setColor(color('rgb(244, 214, 140)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([6 * PX, 5 * PX], 0));
+    }),
+
     // Daily page: the spread outside the corner in play, washed over with paper, and the corner's edge
     focusVeil: paint((p) => p.setColor(color('rgba(236, 231, 220, 0.82)'))),
     focusEdge: paint((p) => {
