@@ -157,6 +157,8 @@ export const GameScreen: React.FC = () => {
   const openIndex = useCallback(() => setShowIndex(true), []);
   const openAlbum = useCallback(() => setShowAlbum(true), []);
   const requestHint = useStableCallback(kase.requestHint);
+  // The hint button takes the next step; a card asks for itself (a press event is no card id)
+  const hintButton = useCallback(() => requestHint(), [requestHint]);
   const inspect = useStableCallback(kase.inspect);
 
   // Home screen: carry on with the page the book is open at, or turn to another page (a country's
@@ -265,7 +267,7 @@ export const GameScreen: React.FC = () => {
         onPrevPage={nav.prev}
         onNextPage={nav.next}
         onToggleSound={toggleSound}
-        onUseHint={requestHint}
+        onUseHint={hintButton}
         onPause={togglePause}
       />
 
@@ -291,7 +293,9 @@ export const GameScreen: React.FC = () => {
         layout={layout}
         objects={page.objects}
         foundIds={c.foundItems}
+        revealedTextIds={c.revealedTextIds}
         activeHintId={hint?.objectId}
+        onHintObject={requestHint}
         bottomInset={insets.bottom}
         insetLeft={insets.left}
         insetRight={insets.right}

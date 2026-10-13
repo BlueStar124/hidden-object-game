@@ -1,47 +1,73 @@
 import { nextInSequence, waitsInSequence } from './detection';
-import type { HiddenObject } from './model';
+import type { ActiveHint, HiddenObject } from './model';
 
 /**
- * Three tiers of help, each costing more (see scoring.hintPenalty):
- * 1. the clue text again · 2. the loupe tugs towards the target · 3. a radar pulse on it.
+ * Two steps of help per object, the second costing more (see scoring.hintPenalty). Clue cards start
+ * with only the silhouette:
+ * 1. the card shows the object's name and clue · 2. the loupe tugs towards it and a radar pulses on it.
  */
 export interface HintResult {
-  level: 1 | 2 | 3;
+  level: 1 | 2;
   targetObject: HiddenObject;
   clueText: string;
   nudgeDirection?: { x: number; y: number }; // Unit vector pointing toward target
   radarPoint?: { x: number; y: number };
 }
 
+/**
+ * The next hint: for the object whose card was tapped (`targetId`), or — from the hint button —
+ * the step after the active hint, else the first card still unread.
+ */
 export function nextHint(
-  currentHintLevel: number,
+  activeHint: ActiveHint | null,
+  revealedIds: readonly string[],
   objects: HiddenObject[],
   foundIds: string[],
-  currentLoupePos: { nx: number; ny: number }
+  currentLoupePos: { nx: number; ny: number },
+  targetId?: string
 ): HintResult | null {
-  // Pick the first unfound non-secret object (or secret if all normal found).
-  // Optional hidden critters and mystery clues are for the sharp-eyed only — never hinted; in a
-  // sequence hunt, only the object whose turn it is.
+  // Main objects first, then the secret. Optional critters and mystery clues are for the
+  // sharp-eyed only — never hinted; in a sequence hunt, only the object whose turn it is.
   const next = nextInSequence(objects, foundIds);
   const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus && !o.isClue && !waitsInSequence(o, next));
   if (unfound.length === 0) return null;
+  const normal = unfound.filter((o) => !o.isSecret);
+  const pool = normal.length > 0 ? normal : unfound;
+  const unread = pool.find((o) => !revealedIds.includes(o.id));
 
-  const normalUnfound = unfound.filter((o) => !o.isSecret);
-  const target = normalUnfound.length > 0 ? normalUnfound[0] : unfound[0];
+  let target: HiddenObject | undefined;
+  let level: 1 | 2;
+  if (targetId) {
+    // A card tapped: read it first, then point at it
+    target = pool.find((o) => o.id === targetId);
+    if (!target) return null;
+    level = revealedIds.includes(target.id) ? 2 : 1;
+  } else {
+    const active = activeHint ? pool.find((o) => o.id === activeHint.objectId) : undefined;
+    if (active && activeHint?.level === 1) {
+      // The card was just read: now show where it is
+      target = active;
+      level = 2;
+    } else if (unread) {
+      target = unread;
+      level = 1;
+    } else {
+      // Every card read: point at the one already pointed at, or the first left
+      target = active ?? pool[0];
+      level = 2;
+    }
+  }
 
-  const nextLevel = Math.min(3, Math.max(1, currentHintLevel + 1)) as 1 | 2 | 3;
-
-  // Direction vector from loupe center to target
   const dx = target.x - currentLoupePos.nx;
   const dy = target.y - currentLoupePos.ny;
   const dist = Math.sqrt(dx * dx + dy * dy);
   const nudgeDirection = dist > 0.001 ? { x: dx / dist, y: dy / dist } : { x: 0, y: 0 };
 
   return {
-    level: nextLevel,
+    level,
     targetObject: target,
     clueText: target.clue,
-    nudgeDirection: nextLevel >= 2 ? nudgeDirection : undefined,
-    radarPoint: nextLevel >= 3 ? { x: target.x, y: target.y } : undefined,
+    nudgeDirection: level === 2 ? nudgeDirection : undefined,
+    radarPoint: level === 2 ? { x: target.x, y: target.y } : undefined,
   };
 }

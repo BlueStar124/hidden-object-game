@@ -24,7 +24,7 @@ thì tin code, rồi sửa file này.
 | `radius` của vật | phần của **bề ngang** trang; khoảng cách đo theo tỉ lệ `ASPECT = 1760/1240` | `core/detection.ts` |
 | Page units | pixel của tranh 1760 × 1240: `PAGE_W`, `PAGE_H` | `board/constants.ts` |
 | Màn hình | `screen = page * s + t` (`s`, `tx`, `ty` là shared value) | `board/useCamera.ts` |
-| Kích thước sprite | `SPRITE_BASE_WIDTH (0.044) * scale * PAGE_W`; view box của sprite 48 × 48 | `core/model.ts`, `board/constants.ts` |
+| Kích thước sprite | `SPRITE_BASE_WIDTH (0.058) * scale * PAGE_W`; view box của sprite 48 × 48 | `core/model.ts`, `board/constants.ts` |
 | Khung giấy mẫu | `TEMPLATE_PAPER = 1584 × 700` page units (giấy ở x 88–1672, y 270–969) | `board/useCamera.ts` |
 | Zoom | `MIN_ZOOM 1` → `MAX_ZOOM 4`, nút bấm mỗi lần 0.1× | `board/constants.ts`, `Board.tsx` |
 | Kính lúp | phóng `LOUPE_ZOOM 2.4`; đường kính `clamp(110, 0.42·min(w,h), 220)` | `constants.ts`, `useCamera.ts` |
@@ -36,13 +36,17 @@ thì tin code, rồi sửa file này.
 | Sinh vật nhút nhát | bắt được khi pha nằm trong 0.035–0.455 của chu kỳ | `core/motion.ts` |
 
 **Luật điểm** (`core/scoring.ts`): tìm thấy = `score × combo + (combo − 1) × 50`; combo bắt đầu ×1, tăng sau mỗi lần
-tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 / −100 / −150 (cấp 1/2/3). Điểm không xuống dưới 0.
+tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 (bước 1: đọc thẻ) / −100 (bước 2: chỉ chỗ). Điểm không xuống dưới 0.
 Phá án: thưởng `floor(giây còn lại × 4)`. **3 sao** khi sai ≤ 2, gợi ý ≤ 1 và còn > 60 s; **2 sao** khi sai ≤ 5 và gợi
 ý ≤ 2; còn lại 1 sao.
 
-**Gợi ý** (`core/hints.ts`): nhắm vào vật chính đầu tiên chưa tìm **theo thứ tự trong mảng `objects`**, hết vật chính
-thì tới bí mật. **Không bao giờ gợi ý vật bonus hay mảnh manh mối**; trang theo dấu (`order`) chỉ gợi ý vật tới lượt. Cấp 1: nhắc lại `clue`; cấp 2: kính lúp nhích về phía vật; cấp 3:
-radar, camera tự lướt tới nếu vật đang khuất màn hình.
+**Gợi ý** (`core/hints.ts`): thẻ của vật chưa tìm ban đầu chỉ có **hình bóng**, tên và `clue` hiện `???` (trừ thẻ
+câu đố: hiện `riddle`). Mỗi vật có 2 bước, ghi trong `CaseState.revealedTextIds` và `activeHint`:
+**bước 1** (50 điểm) mở tên và `clue` trên thẻ; **bước 2** (100 điểm) kính lúp nhích về phía vật, radar phát xung, camera
+tự lướt tới nếu vật đang khuất màn hình. Nút Gợi Ý: bước 2 cho vật vừa đọc, nếu không thì đọc thẻ kế tiếp chưa đọc (theo
+thứ tự trong mảng `objects`, hết vật chính thì tới bí mật), đọc hết rồi thì chỉ chỗ. Chạm thẻ chưa đọc = bước 1 của
+đúng vật đó; chạm thẻ đã đọc chỉ mở/thu thẻ, không tốn gì. **Không bao giờ gợi ý vật bonus hay mảnh manh mối**; trang
+theo dấu (`order`) chỉ gợi ý vật tới lượt.
 
 **Phá án** khi mọi vật chính (`isMainObject`: không `isSecret`, `isBonus`, `isClue`) đã được tìm. Phá án xong có thể bấm
 "Soi Tiếp" (`isExploring`) để tìm nốt vật tùy chọn (`isOptionalObject`: bonus, mảnh manh mối, bí mật): không điểm, không
@@ -58,7 +62,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `caseFile.ts` | `COMBO_WINDOW`, `openCase`, `clockTick`, `recordFind` → `FindResult {changes, earned, combo, solved}`, `recordExploreFind`, `recordMiss`, `recordHint`, `leftovers` | Hàm thuần `CaseState → CaseState`. `recordFind` trả về `changes` để **merge** (đồng hồ vẫn chạy song song). |
 | `detection.ts` | `detectObject(nx, ny, objects, foundIds, now?)` → `{hit, object, distance, position, hidingObject, outOfTurn}`, `nextInSequence`, `waitsInSequence` | Vùng chạm chồng nhau thì vật gần nhất thắng; vật nhút nhát đang trốn trả về `hidingObject`, vật chưa tới lượt trong trang theo dấu trả về `outOfTurn` (cả hai không tính là sai). |
 | `scoring.ts` | `foundScore`, `mistakePenalty`, `hintPenalty`, `completionBonus` | Số liệu ở mục 1. |
-| `hints.ts` | `nextHint(currentHintLevel, objects, foundIds, currentLoupePos)` → `HintResult` | |
+| `hints.ts` | `nextHint(activeHint, revealedIds, objects, foundIds, loupePos, targetId?)` → `HintResult` | `targetId`: thẻ được chạm. |
 | `motion.ts` | `motionNow`, `shyPhase`, `isShyVisible`, `roamState`, `objectPosition` | **Worklet**, chạy cả JS thread (bắt vật) lẫn UI thread (vẽ) trên cùng một đồng hồ, nên vật chỉ bắt được đúng nơi, đúng lúc nó được vẽ. |
 | `random.ts` | `SEED_BITS` (20), `SEED_COUNT`, `hashString` (FNV-1a), `rng(seed)` (mulberry32), `draw`, `shuffled`, `localDay(date)` | Ngẫu nhiên tái lập được: cùng seed ra cùng kết quả trên mọi máy. `localDay` theo giờ máy, không theo UTC. |
 | `layout.ts` | `layOutPage(page, seed)`, `hasSpots`, `layoutKey(page)` | Seed 0 là trang đúng như JSON. Vật có `spots` có thể sang chỗ khác (kèm `clue` của chỗ đó); id trang và id vật giữ nguyên. Trang đã sắp đặt có `layout` (`s<seed>`); mọi cache theo trang dùng `layoutKey`. |
@@ -123,7 +127,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`), sticker của Trang Bìa đặt theo tọa độ người chơi chọn (cuốn sổ che phần nằm sau nó; `GameScreen` đọc lại khi đóng Trang Bìa hoặc khôi phục bản sao lưu). |
 | `useDeviceBehaviour.ts` | Giữ màn hình sáng, ẩn thanh điều hướng Android, rời app thì tạm dừng, nút Back Android. |
 | `hud/HUD.tsx` | Thanh trên: điểm, đồng hồ, combo, chuyển trang, các nút (gợi ý, tạm dừng, âm thanh, Mục Lục, Sổ Tay), `ExploreStatus`. |
-| `hud/QuestPanel.tsx` | Thẻ manh mối: **hình bóng** của vật chính + nhãn kiểu ngụy trang. |
+| `hud/QuestPanel.tsx` | Thẻ manh mối: **hình bóng** của vật chính; tên, `clue` và nhãn kiểu ngụy trang hiện khi thẻ đã đọc (gợi ý bước 1) hoặc vật đã tìm. |
 | `hud/FloatingScores.tsx` | Điểm và thông báo bay lên từ chỗ chạm. |
 | `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen` (kèm so thời gian thử thách, bưu thiếp, mã thử thách), `TimeUpScreen`, `PageIndex` (Mục Lục; có tab nước khi `COUNTRIES.length > 1`; số mảnh manh mối và nút Suy Luận ở đầu chương), `CreatureAlbum` (Sổ Tay), `RotatePrompt` (web, điện thoại cầm dọc), `Deduction` (Bảng Suy Luận), `Passport` (Hộ Chiếu: lịch con dấu, tem vàng mỗi nước, bạn đồng hành lữ hành: hôm nay ghé đâu, đã gặp mấy nơi, câu chuyện khi gặp đủ), `MyCover` (Trang Bìa: sticker kéo/xoay/đổi cỡ bằng cử chỉ trên UI thread, lưu khi thả), `ChallengeEntry` (nhập mã), `DailyDone` (xong trang của ngày), `Finale` (Chứng Nhận Người Giữ Sổ Thứ Tư: mở từ Bảng Suy Luận khi bí ẩn có `finale: true` đã giải; thống kê cả hành trình `journeyStats`, bưu thiếp chứng nhận viền vàng vẽ từ trang cuối của chương cuối), `Backup` (Sao Lưu: lưu ra tệp, khôi phục từ tệp hoặc nội dung dán; khôi phục xong thì `GameScreen` mount lại trang chủ để đọc lại tiến độ). |
 | `share/*` | `postcard.ts` (`drawPostcard`: vẽ bưu thiếp 1200 × 630 bằng Skia trên JS thread, viền và con dấu vàng khi nước đó có tem vàng hộ chiếu, font nạp một lần, xuất JPEG base64; đo chữ bằng glyph vì web không có `measureText`), `messages.ts` (lời nhắn thử thách, bưu thiếp thắng, bưu thiếp trang của ngày), `useShare.ts` (`busy`, `note`, `sharePostcard`, `shareMessage`), `ShareRow.tsx` (nút bưu thiếp/thách bạn; màn thấp thì thành icon hai bên hàng sao). |

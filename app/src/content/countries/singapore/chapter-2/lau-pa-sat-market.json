@@ -17,7 +17,14 @@
       "spriteType": "pocket-watch",
       "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Đồng hồ điểm chuông lịch sử kết nối nhịp sống của người dân Singapore."
+      "foundText": "Đồng hồ điểm chuông lịch sử kết nối nhịp sống của người dân Singapore.",
+      "spots": [
+        {
+          "x": 0.35,
+          "y": 0.52,
+          "clue": "Chiếc đồng hồ quả quýt mắc trên thanh dầm sắt phía bên trái gian chợ."
+        }
+      ]
     },
     {
       "id": "playful-puppy",
@@ -30,7 +37,14 @@
       "spriteType": "dog",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Chú cún được thực khách chia cho một miếng thịt xiên satay thơm nức!"
+      "foundText": "Chú cún được thực khách chia cho một miếng thịt xiên satay thơm nức!",
+      "spots": [
+        {
+          "x": 0.72,
+          "y": 0.69,
+          "clue": "Chú cún nhỏ chạy sang ngóng đồ ăn dưới chân cột gang bên phải."
+        }
+      ]
     },
     {
       "id": "iron-durian",
@@ -43,7 +57,14 @@
       "spriteType": "durian",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Vua của các loại trái cây — nhưng tuyệt đối đừng mang nó lên tàu điện MRT!"
+      "foundText": "Vua của các loại trái cây — nhưng tuyệt đối đừng mang nó lên tàu điện MRT!",
+      "spots": [
+        {
+          "x": 0.65,
+          "y": 0.52,
+          "clue": "Quả sầu riêng xám nâu ẩn mình giữa các mối nối sắt đúc bên phải gian chợ."
+        }
+      ]
     },
     {
       "id": "smoky-satay",
@@ -56,7 +77,14 @@
       "spriteType": "satay",
       "scale": 0.55,
       "camo": "chameleon",
-      "foundText": "Satay chấm sốt đậu phộng — món ăn đêm nổi tiếng nhất Lau Pa Sat!"
+      "foundText": "Satay chấm sốt đậu phộng — món ăn đêm nổi tiếng nhất Lau Pa Sat!",
+      "spots": [
+        {
+          "x": 0.54,
+          "y": 0.62,
+          "clue": "Đĩa xiên satay đặt trên chiếc bàn phụ ở lối đi trung tâm."
+        }
+      ]
     },
     {
       "id": "shy-mouse",

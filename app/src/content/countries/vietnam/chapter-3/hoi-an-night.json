@@ -36,72 +36,114 @@
       "y": 0.38,
       "r": 0.04,
       "color": "rgba(255, 150, 120, 0.5)"
+    },
+    {
+      "x": 0.28,
+      "y": 0.46,
+      "r": 0.035,
+      "color": "rgba(255, 80, 80, 0.55)"
+    },
+    {
+      "x": 0.52,
+      "y": 0.68,
+      "r": 0.05,
+      "color": "rgba(255, 210, 100, 0.6)"
+    },
+    {
+      "x": 0.64,
+      "y": 0.73,
+      "r": 0.04,
+      "color": "rgba(255, 140, 80, 0.55)"
+    },
+    {
+      "x": 0.23,
+      "y": 0.49,
+      "r": 0.015,
+      "color": "rgba(255, 230, 150, 0.9)"
+    },
+    {
+      "x": 0.3,
+      "y": 0.48,
+      "r": 0.015,
+      "color": "rgba(255, 200, 120, 0.9)"
+    },
+    {
+      "x": 0.45,
+      "y": 0.7,
+      "r": 0.018,
+      "color": "rgba(255, 245, 180, 0.95)"
+    },
+    {
+      "x": 0.83,
+      "y": 0.65,
+      "r": 0.016,
+      "color": "rgba(255, 220, 130, 0.85)"
     }
   ],
   "objects": [
     {
       "id": "night-silk-lantern",
       "name": "Đèn Lồng Đêm Rằm",
-      "clue": "Chiếc đèn lồng lụa đỏ tỏa ánh sáng lung linh dưới hiên nhà cổ bên trái.",
-      "x": 0.21,
+      "clue": "Đèn lồng lục giác thắp nến lung linh rực sáng phố đêm rằm.",
+      "x": 0.62,
       "y": 0.44,
-      "radius": 0.034,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Lễ hội hoa đăng đêm rằm Hội An là di sản văn hóa phi vật thể quý báu."
     },
     {
       "id": "night-cat-eyes",
       "name": "Mèo Đêm Mắt Ngọc",
-      "clue": "Đôi mắt mèo phát sáng trong bóng đêm dưới quầng sáng ấm áp của đèn lồng.",
-      "x": 0.18,
-      "y": 0.51,
-      "radius": 0.03,
+      "clue": "Đôi mắt mèo phát sáng trong bóng tối bên mái ngói âm dương.",
+      "x": 0.14,
+      "y": 0.32,
+      "radius": 0.039,
       "score": 150,
       "spriteType": "cat",
       "scale": 0.42,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Đôi mắt mèo phát sáng như ngọc bích trong ánh nến lung linh."
     },
     {
       "id": "night-boat-candle",
-      "name": "Thuyền Hoa Đăng Tỏa Sáng",
-      "clue": "Cụm đèn lồng rực rỡ thắp sáng trên chiếc thuyền hoa đăng bên phải.",
-      "x": 0.78,
-      "y": 0.71,
-      "radius": 0.036,
+      "name": "Thuyền Giấy Hoa Đăng Thả Sông Hoài",
+      "clue": "Thuyền giấy gấp chở ngọn nến nhỏ bềnh bồng trên dòng nước êm trôi.",
+      "x": 0.58,
+      "y": 0.74,
+      "radius": 0.047,
       "score": 150,
       "spriteType": "paper-boat",
       "scale": 0.48,
-      "camo": "chameleon",
-      "foundText": "Từng ngọn nến thả trôi mang theo lời chúc bình an và hạnh phúc."
+      "camo": "ink",
+      "foundText": "Từng ngọn nến hoa đăng thả trôi mang theo lời chúc bình an và hạnh phúc."
     },
     {
       "id": "night-owl-roof",
       "name": "Cú Đêm Chùa Cầu",
-      "clue": "Chú cú mèo đêm đậu lặng lẽ trên mái ngói âm dương rêu phong phố cổ.",
-      "x": 0.32,
-      "y": 0.33,
-      "radius": 0.032,
+      "clue": "Chú cú lặng lẽ đậu trên đỉnh bờ mái ngói Chùa Cầu cổ kính.",
+      "x": 0.85,
+      "y": 0.28,
+      "radius": 0.042,
       "score": 120,
       "spriteType": "owl",
       "scale": 0.44,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Chùa Cầu nối liền hai khu phố Nhật - Hoa từ hàng trăm năm trước."
     },
     {
       "id": "night-firefly-river",
       "name": "Đom Đóm Bờ Sông",
-      "clue": "Đom đóm chập chờn hòa cùng muôn ngàn đóa hoa đăng trôi trên sông Hoài.",
-      "x": 0.42,
-      "y": 0.73,
-      "radius": 0.03,
+      "clue": "Đom đóm lập lòe sát mặt nước sông Hoài huyền ảo.",
+      "x": 0.14,
+      "y": 0.7,
+      "radius": 0.039,
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "chameleon",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -140,25 +182,25 @@
     },
     {
       "id": "secret-night-lantern",
-      "name": "Hoa Đăng Thất Truyền",
-      "clue": "[BÍ MẬT] Chiếc đèn lồng thần kỳ phát sáng huyền ảo giữa bầu trời đêm sông Hoài.",
-      "x": 0.58,
+      "name": "Đèn Ông Sao Đêm Phố Hội",
+      "clue": "[BÍ MẬT] Đèn ông sao giấy kiếng rực rỡ giấu trên gác mái cổ đêm Trung Thu.",
+      "x": 0.48,
       "y": 0.25,
-      "radius": 0.038,
+      "radius": 0.049,
       "score": 300,
       "isSecret": true,
-      "spriteType": "lantern",
+      "spriteType": "star-lantern",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật hoa đăng của nghệ nhân gia truyền xứ Quảng!"
+      "foundText": "Thuyền rồng lộng lẫy tái hiện lễ hội hoa đăng tráng lệ của thương cảng xưa!"
     },
     {
       "id": "bonus-night-moth",
       "name": "Bướm Đêm Quanh Đèn",
-      "clue": "Chú bướm đêm vờn quanh lồng đèn lụa đỏ bên mái hiên.",
-      "x": 0.28,
-      "y": 0.46,
-      "radius": 0.028,
+      "clue": "Bướm đêm chao lượn quanh vầng sáng ấm áp của ngọn đèn lồng.",
+      "x": 0.48,
+      "y": 0.54,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "moth",
@@ -168,16 +210,16 @@
     },
     {
       "id": "bonus-night-koi",
-      "name": "Cá Chép Dưới Ánh Đèn",
-      "clue": "Chú cá chép quẫy đuôi nhẹ nhàng dưới ánh sáng hoa đăng dập dềnh.",
-      "x": 0.34,
-      "y": 0.73,
-      "radius": 0.028,
+      "name": "Chuột Nhắt Chân Cầu Chùa",
+      "clue": "Chú chuột nhỏ len lỏi tìm vụn bánh dưới chân cầu vắng.",
+      "x": 0.72,
+      "y": 0.58,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
-      "spriteType": "koi",
+      "spriteType": "mouse",
       "scale": 0.4,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Cá sông tụ lại quanh ánh nến bập bùng trên mặt nước.",
       "waterline": 0.6
     }

@@ -127,7 +127,7 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `spriteType` | hình vẽ (`SpriteType`) | Mỗi loại xuất hiện **tối đa 3 lần trong một nước** (seal không tính). Đổi đa dạng. |
 | `scale` | 1 = 4.4% bề ngang trang | chính 0.36–0.85 · bonus 0.33–0.6 |
 | `rotation`, `flip` | độ; lật ngang | xoay tự do −80…180 cho hợp chỗ nấp |
-| `camo` | `"ink"` (mặc định) · `"chameleon"` (lấy màu tranh quanh vật) · `"invisible"` (chỉ thấy qua kính lúp) | chính: chủ yếu chameleon/ink, rất ít invisible · bí mật: hay dùng invisible/chameleon · bonus: chủ yếu chameleon |
+| `camo` | `"ink"` (mặc định) · `"chameleon"` (lấy màu tranh quanh vật) · `"invisible"` (chỉ thấy qua kính lúp). Không có giá trị nào khác: JSON không được TypeScript kiểm tra, nên test bắt lỗi chính tả | chính: chủ yếu chameleon/ink, rất ít invisible · bí mật: hay dùng invisible/chameleon · bonus: chủ yếu chameleon |
 | `shy` | `{period, offset?, from?}`: ló ra mỗi `period` giây; `from` là `below`/`above`/`left`/`right`/`jump` | period 6–8, mỗi vật một `offset` khác nhau để không cùng nhịp. **0–2 vật mỗi trang.** |
 | `roam` | `{path:[[x,y],…], period, offset?, loop?, facing?, bob?}` | ≥ 2 điểm (test), period 13–22, `bob` cho vật bay. **0–2 vật mỗi trang.** `x/y` đặt bằng điểm đầu của `path`. |
 | `occluder` | đa giác (≥ 3 điểm) phần tranh vẽ đè lên vật, để vật như nấp sau cột/thân cây | Thường 0–1 vật mỗi trang, và chỉ khi trong tranh có vật che thật |
@@ -135,7 +135,7 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `glow` | trang đêm: `false` để tắt mắt phát sáng | mặc định là phát sáng |
 | `isSecret`, `isBonus`, `isClue` | xem ở trên | |
 | `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`** (test). Vẽ thử trên tranh trước khi ghi |
-| `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy (ẩn cả hình bóng) | tùy chọn |
+| `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy hoặc đọc bằng gợi ý (ẩn cả hình bóng) | tùy chọn; viết cho đúng vật (đổi `spriteType` thì sửa câu đố) |
 | `requires` | chỉ hiện khi người chơi có dụng cụ (`'uv-lens'`): luôn kèm `isBonus`, thường `camo: invisible`, đặt trên vùng giấy sáng. Phải có chương trao dụng cụ đó (`Mystery.reward`, test) | id `uv-note-<n>` |
 | `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
 

@@ -17,7 +17,14 @@
       "spriteType": "mangosteen",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Bóc măng cụt đúng cách: ấn nhẹ hai tay lên vỏ cho quả tự nứt ra!"
+      "foundText": "Bóc măng cụt đúng cách: ấn nhẹ hai tay lên vỏ cho quả tự nứt ra!",
+      "spots": [
+        {
+          "x": 0.25,
+          "y": 0.65,
+          "clue": "Quả măng cụt tím nằm trong rổ trái cây trên chiếc thuyền bên trái."
+        }
+      ]
     },
     {
       "id": "boat-noodles",
@@ -30,7 +37,14 @@
       "spriteType": "noodle-bowl",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Mì thuyền múc ngay trên ghe, mỗi bát chỉ vài gắp nên khách thường ăn liền mấy bát!"
+      "foundText": "Mì thuyền múc ngay trên ghe, mỗi bát chỉ vài gắp nên khách thường ăn liền mấy bát!",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.64,
+          "clue": "Bát mì thuyền nóng hổi đặt trên mạn ghe chở hoa quả bên phải."
+        }
+      ]
     },
     {
       "id": "canal-duck",
@@ -85,7 +99,14 @@
       "spriteType": "coconut",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Tỉnh Ratchaburi quanh chợ nổi có rất nhiều vườn dừa, nổi tiếng với dừa xiêm thơm ngọt."
+      "foundText": "Tỉnh Ratchaburi quanh chợ nổi có rất nhiều vườn dừa, nổi tiếng với dừa xiêm thơm ngọt.",
+      "spots": [
+        {
+          "x": 0.42,
+          "y": 0.62,
+          "clue": "Trái dừa xiêm cắm ống hút để trên mũi chiếc thuyền mộc giữa kênh."
+        }
+      ]
     },
     {
       "id": "artist-seal",

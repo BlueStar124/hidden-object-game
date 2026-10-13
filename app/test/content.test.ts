@@ -3,7 +3,7 @@ import { allPages, artOf, challengeOf, codeOf, COUNTRIES, pageOfChallenge, pages
 import { BESTIARY, STARTLE } from '../src/content/bestiary';
 import { encodeChallenge, parseChallenge } from '../src/core/challenge';
 import { dailyPuzzle } from '../src/core/daily';
-import { isMainObject, type Chapter, type Page } from '../src/core/model';
+import { isMainObject, type CamoStyle, type Chapter, type Page } from '../src/core/model';
 import { cluesOf } from '../src/core/mystery';
 import { chapterGiving } from '../src/core/tools';
 import { MIGRANTS } from '../src/content/migrants';
@@ -16,6 +16,8 @@ import { SPRITE_ART } from '../src/generated/spriteArt';
  */
 
 const inSpread = ([x, y]: [number, number]) => x >= 0 && x <= 1 && y >= 0 && y <= 1;
+// Every camouflage the board draws (`satisfies` keeps the list complete)
+const CAMO_STYLES: string[] = Object.keys({ ink: 1, chameleon: 1, invisible: 1 } satisfies Record<CamoStyle, 1>);
 
 test('there is a sketchbook to open', () => {
   expect(COUNTRIES.length).toBeGreaterThan(0);
@@ -74,6 +76,8 @@ describe.each(allPages().map((page): [string, Page] => [page.id, page]))('%s', (
       expect(o.waterline).toBeGreaterThan(0);
       expect(o.waterline).toBeLessThan(1);
     }
+    // JSON is not type-checked: a misspelt camouflage would quietly be drawn as ink
+    if (o.camo !== undefined) expect(CAMO_STYLES).toContain(o.camo);
   });
 });
 

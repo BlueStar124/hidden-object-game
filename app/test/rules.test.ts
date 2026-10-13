@@ -45,8 +45,8 @@ describe('scoring', () => {
   test('penalties never take the score below zero', () => {
     expect(mistakePenalty(50)).toBe(30);
     expect(mistakePenalty(10)).toBe(0);
-    expect([1, 2, 3].map((level) => hintPenalty(200, level))).toEqual([150, 100, 50]);
-    expect(hintPenalty(30, 3)).toBe(0);
+    expect([1, 2].map((level) => hintPenalty(200, level))).toEqual([150, 100]);
+    expect(hintPenalty(30, 2)).toBe(0);
   });
 
   test('closing a case: 4 points per second left, stars for a clean investigation', () => {
@@ -149,17 +149,45 @@ describe('hints', () => {
   ];
   const loupe = { nx: 0.1, ny: 0.5 };
 
-  test('three tiers: the clue, a nudge of the loupe, then a radar pulse', () => {
-    expect(nextHint(0, objects, [], loupe)).toMatchObject({ level: 1, clueText: 'clue of first', nudgeDirection: undefined, radarPoint: undefined });
-    expect(nextHint(1, objects, [], loupe)).toMatchObject({ level: 2, nudgeDirection: { x: 1, y: 0 }, radarPoint: undefined });
-    expect(nextHint(2, objects, [], loupe)).toMatchObject({ level: 3, radarPoint: { x: 0.6, y: 0.5 } });
-    expect(nextHint(5, objects, [], loupe)?.level).toBe(3);
+  test('main objects first, then the secret; optional critters are never hinted', () => {
+    expect(nextHint(null, [], objects, ['first'], loupe)?.targetObject.id).toBe('second');
+    expect(nextHint(null, [], objects, ['first', 'second'], loupe)?.targetObject.id).toBe('secret');
+    expect(nextHint(null, [], objects, ['first', 'second', 'secret'], loupe)).toBeNull();
+    expect(nextHint(null, [], objects, [], loupe, 'critter')).toBeNull();
   });
 
-  test('main objects first, then the secret; optional critters are never hinted', () => {
-    expect(nextHint(0, objects, ['first'], loupe)?.targetObject.id).toBe('second');
-    expect(nextHint(0, objects, ['first', 'second'], loupe)?.targetObject.id).toBe('secret');
-    expect(nextHint(0, objects, ['first', 'second', 'secret'], loupe)).toBeNull();
+  test('progressive 2-step hints per object: step 1 reveals text, step 2 reveals position', () => {
+    // Initially, no text revealed
+    const step1 = nextHint(null, [], objects, [], loupe);
+    expect(step1).toMatchObject({ level: 1, targetObject: objects[0], clueText: 'clue of first', radarPoint: undefined });
+
+    // With active hint at level 1 on 'first', asking again yields level 2 (position) on 'first'
+    const step2 = nextHint({ level: 1, objectId: 'first' }, ['first'], objects, [], loupe);
+    expect(step2).toMatchObject({ level: 2, targetObject: objects[0], radarPoint: { x: 0.6, y: 0.5 } });
+
+    // When 'first' is found, next hint targets 'second' at level 1
+    const nextObjStep1 = nextHint(null, ['first'], objects, ['first'], loupe);
+    expect(nextObjStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+  });
+
+  test('after showing where it is, the button reads the next card; once all are read, it points again', () => {
+    const shown = { level: 2 as const, objectId: 'first' };
+    expect(nextHint(shown, ['first'], objects, [], loupe)).toMatchObject({ level: 1, targetObject: objects[1] });
+    expect(nextHint(shown, ['first', 'second'], objects, [], loupe)).toMatchObject({
+      level: 2,
+      targetObject: objects[0],
+      nudgeDirection: { x: 1, y: 0 },
+    });
+  });
+
+  test('targeted hint directly on a specific object card', () => {
+    // Tapping 'second' card directly while 'first' is unrevealed
+    const targetedStep1 = nextHint(null, [], objects, [], loupe, 'second');
+    expect(targetedStep1).toMatchObject({ level: 1, targetObject: objects[1], radarPoint: undefined });
+
+    // Tapping 'second' card again when its text is revealed yields position
+    const targetedStep2 = nextHint({ level: 1, objectId: 'second' }, ['second'], objects, [], loupe, 'second');
+    expect(targetedStep2).toMatchObject({ level: 2, targetObject: objects[1], radarPoint: { x: 0.5, y: 0.5 } });
   });
 });
 
@@ -219,9 +247,18 @@ describe('case file', () => {
 
   test('a hint costs points and is shown until the next find', () => {
     const c = { ...openCase(page), score: 300 };
-    const hinted = recordHint(c, nextHint(1, page.objects, [], { nx: 0, ny: 0 })!);
+    const hinted = recordHint(c, nextHint({ level: 1, objectId: 'first' }, ['first'], page.objects, [], { nx: 0, ny: 0 })!);
     expect(hinted).toMatchObject({ hintsUsed: 1, score: 200, activeHint: { level: 2, objectId: 'first' } });
     expect(recordFind(hinted, page, first, undefined).changes.activeHint).toBeNull();
+  });
+
+  test('hint reveals text id and records it into revealedTextIds', () => {
+    const opened = openCase(page);
+    expect(opened.revealedTextIds).toEqual([]);
+    const step1 = nextHint(null, opened.revealedTextIds, page.objects, [], { nx: 0, ny: 0 });
+    const afterHint = recordHint(opened, step1!);
+    expect(afterHint.revealedTextIds).toContain('first');
+    expect(afterHint.activeHint?.level).toBe(1);
   });
 
   test('after the case is closed, leftovers can still be found for the album', () => {
@@ -323,10 +360,11 @@ describe('sequence hunts', () => {
   });
 
   test('hints follow the trail and never point at mystery clues', () => {
-    expect(nextHint(0, steps, [], { nx: 0, ny: 0 })?.targetObject.id).toBe('one');
-    expect(nextHint(0, steps, ['one'], { nx: 0, ny: 0 })?.targetObject.id).toBe('two');
+    expect(nextHint(null, [], steps, [], { nx: 0, ny: 0 })?.targetObject.id).toBe('one');
+    expect(nextHint(null, [], steps, ['one'], { nx: 0, ny: 0 })?.targetObject.id).toBe('two');
+    expect(nextHint(null, [], steps, [], { nx: 0, ny: 0 }, 'two')).toBeNull();
     const clue = object('clue', { isClue: true });
-    expect(nextHint(0, [clue, object('main')], [], { nx: 0, ny: 0 })?.targetObject.id).toBe('main');
+    expect(nextHint(null, [], [clue, object('main')], [], { nx: 0, ny: 0 })?.targetObject.id).toBe('main');
   });
 });
 

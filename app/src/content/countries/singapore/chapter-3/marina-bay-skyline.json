@@ -18,7 +18,15 @@
       "scale": 0.5,
       "rotation": 20,
       "camo": "ink",
-      "foundText": "Tầm nhìn bao quát cảng biển trung tâm của nhà hàng hải kỳ cựu."
+      "foundText": "Tầm nhìn bao quát cảng biển trung tâm của nhà hàng hải kỳ cựu.",
+      "spots": [
+        {
+          "x": 0.81,
+          "y": 0.54,
+          "rotation": -15,
+          "clue": "Ống nhòm đồng đặt trên lan can lối đi ven vịnh phía bên phải."
+        }
+      ]
     },
     {
       "id": "bay-jellyfish",
@@ -31,7 +39,14 @@
       "spriteType": "jellyfish",
       "scale": 0.5,
       "camo": "chameleon",
-      "foundText": "Sứa có mặt trên Trái Đất từ hơn 500 triệu năm trước — lâu đời hơn cả khủng long!"
+      "foundText": "Sứa có mặt trên Trái Đất từ hơn 500 triệu năm trước — lâu đời hơn cả khủng long!",
+      "spots": [
+        {
+          "x": 0.51,
+          "y": 0.67,
+          "clue": "Chú sứa trong suốt lập lờ dưới làn nước ngay trước bảo tàng ArtScience."
+        }
+      ]
     },
     {
       "id": "bay-paper-boat",
@@ -45,7 +60,14 @@
       "scale": 0.5,
       "camo": "chameleon",
       "waterline": 0.78,
-      "foundText": "Trên cánh buồm có dòng chữ: \"Đi tiếp về phía dòng sông\"."
+      "foundText": "Trên cánh buồm có dòng chữ: \"Đi tiếp về phía dòng sông\".",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.64,
+          "clue": "Chiếc thuyền giấy dạt về phía mép nước bên bờ CBD."
+        }
+      ]
     },
     {
       "id": "lotus-heron",
@@ -58,7 +80,14 @@
       "spriteType": "heron",
       "scale": 0.45,
       "camo": "ink",
-      "foundText": "Diệc hay đứng một chân để đôi chân đỡ mất nhiệt."
+      "foundText": "Diệc hay đứng một chân để đôi chân đỡ mất nhiệt.",
+      "spots": [
+        {
+          "x": 0.66,
+          "y": 0.56,
+          "clue": "Chú diệc xám đậu trên cầu đi bộ Helix nối ra vịnh."
+        }
+      ]
     },
     {
       "id": "tower-monkey",
@@ -72,7 +101,15 @@
       "scale": 0.6,
       "rotation": -8,
       "camo": "chameleon",
-      "foundText": "Khỉ đuôi dài vốn sống ở khu bảo tồn Bukit Timah — chú khỉ này đi \"du lịch\" lên tận trung tâm tài chính!"
+      "foundText": "Khỉ đuôi dài vốn sống ở khu bảo tồn Bukit Timah — chú khỉ này đi \"du lịch\" lên tận trung tâm tài chính!",
+      "spots": [
+        {
+          "x": 0.16,
+          "y": 0.44,
+          "rotation": 12,
+          "clue": "Chú khỉ đuôi dài vắt vẻo trên giàn nóc cao ốc phía ngoài cùng bên trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

@@ -15,10 +15,9 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 - **Hệ Thống Điểm & Combo:**
   - Nhân đôi, nhân ba điểm khi tìm liên tiếp trong vòng 6 giây ($\times 2, \times 3$).
   - Trừ điểm nhẹ khi click sai kèm hiệu ứng rung màn hình (Screen shake).
-- **Hệ Thống Gợi Ý 3 Cấp Độ (Hint System):**
-  - Cấp 1: Gợi ý văn bản mở rộng.
-  - Cấp 2: Kính lúp rung nhẹ định hướng về phía vật thể.
-  - Cấp 3: Vòng sóng radar phát sáng trực tiếp trên bản đồ.
+- **Hệ Thống Gợi Ý 2 Bước (Hint System):** thẻ manh mối ban đầu chỉ có hình bóng, tên và lời gợi ý còn ẩn.
+  - Bước 1: đọc thẻ (chạm thẻ hoặc bấm Gợi Ý): hiện tên và lời gợi ý vị trí.
+  - Bước 2: kính lúp nhích về phía vật và vòng sóng radar phát sáng ngay trên vật.
 - **Âm Thanh Tự Nhiên (Web Audio API):**
   - Tiếng chuông tìm trúng vật phẩm (TING!), âm click sai, âm thanh sột soạt lật trang giấy, và nhạc chiến thắng.
 - **Lưu Tiến Độ Tự Động (localStorage):**

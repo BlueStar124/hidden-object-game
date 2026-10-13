@@ -36,42 +36,78 @@
       "y": 0.63,
       "r": 0.015,
       "color": "rgba(255, 240, 190, 0.9)"
+    },
+    {
+      "x": 0.48,
+      "y": 0.58,
+      "r": 0.04,
+      "color": "rgba(255, 205, 120, 0.55)"
+    },
+    {
+      "x": 0.62,
+      "y": 0.66,
+      "r": 0.035,
+      "color": "rgba(255, 180, 90, 0.5)"
+    },
+    {
+      "x": 0.42,
+      "y": 0.68,
+      "r": 0.015,
+      "color": "rgba(255, 235, 160, 0.85)"
+    },
+    {
+      "x": 0.5,
+      "y": 0.64,
+      "r": 0.012,
+      "color": "rgba(255, 240, 180, 0.9)"
+    },
+    {
+      "x": 0.68,
+      "y": 0.52,
+      "r": 0.015,
+      "color": "rgba(255, 210, 130, 0.8)"
+    },
+    {
+      "x": 0.28,
+      "y": 0.61,
+      "r": 0.015,
+      "color": "rgba(255, 220, 140, 0.85)"
     }
   ],
   "objects": [
     {
       "id": "night-lantern-boat",
       "name": "Đèn Bão Thuyền Gỗ",
-      "clue": "Ngọn đèn bão treo đầu thuyền nan độc mộc soi bóng xuống dòng sông đêm.",
-      "x": 0.56,
-      "y": 0.62,
-      "radius": 0.034,
+      "clue": "Ngọn đèn bão treo mạn thuyền hắt ánh vàng ấm áp lên mặt sông đêm.",
+      "x": 0.4,
+      "y": 0.65,
+      "radius": 0.044,
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Ngọn đèn giữ ấm cho người lái đò giữa đêm sương lạnh giá."
     },
     {
       "id": "night-owl-cliff",
-      "name": "Cú Rừng Mã Pí Lèng",
-      "clue": "Chú cú mèo vùng cao đậu trên mỏm đá nhô ra giữa lòng hẻm Tu Sản.",
-      "x": 0.78,
-      "y": 0.44,
-      "radius": 0.034,
+      "name": "Cú Vọ Rừng Đêm Mã Pí Lèng",
+      "clue": "Cú vọ mắt sáng quắc chăm chú dõi theo màn sương dày hẻm vực.",
+      "x": 0.85,
+      "y": 0.28,
+      "radius": 0.044,
       "score": 150,
-      "spriteType": "owl",
+      "spriteType": "horned-owl",
       "scale": 0.46,
-      "camo": "chameleon",
+      "camo": "ink",
       "foundText": "Tiếng cú gọi đêm hòa cùng tiếng gió rít qua hẻm sâu."
     },
     {
       "id": "night-bat-cave",
       "name": "Dơi Đêm Vòm Hẻm",
-      "clue": "Đàn dơi đêm bay vụt ra từ vòm hang đá hiểm trở bên vách núi.",
-      "x": 0.46,
-      "y": 0.38,
-      "radius": 0.032,
+      "clue": "Cánh dơi liệng êm ru qua khe đá tai mèo Mã Pí Lèng.",
+      "x": 0.24,
+      "y": 0.35,
+      "radius": 0.042,
       "score": 150,
       "spriteType": "bat",
       "scale": 0.44,
@@ -81,14 +117,14 @@
     {
       "id": "night-firefly-river",
       "name": "Đom Đóm Mặt Sông",
-      "clue": "Đom đóm lập lòe sát mặt nước sương mờ trên dòng sông Nho Quế.",
-      "x": 0.58,
-      "y": 0.68,
-      "radius": 0.03,
+      "clue": "Đom đóm dệt thành dải sao sa lấp lánh sát mặt nước êm.",
+      "x": 0.7,
+      "y": 0.72,
+      "radius": 0.039,
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "chameleon",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -116,16 +152,16 @@
     },
     {
       "id": "night-civet-rock",
-      "name": "Cầy Vòi Hương Kiếm Ăn",
-      "clue": "Chú cầy hương đêm thoăn thoắt di chuyển dọc theo bờ ruộng bậc thang.",
-      "x": 0.32,
-      "y": 0.64,
-      "radius": 0.032,
+      "name": "Cầy Mực Vách Đá Đêm",
+      "clue": "Chú cầy mực đuôi rậm thoăn thoắt leo mỏm đá ngửi hương rừng khuya.",
+      "x": 0.68,
+      "y": 0.25,
+      "radius": 0.042,
       "score": 120,
-      "spriteType": "civet",
+      "spriteType": "binturong",
       "scale": 0.44,
-      "camo": "chameleon",
-      "foundText": "Cầy vòi hương leo trèo điệu nghệ tìm trái rừng chín rụng."
+      "camo": "ink",
+      "foundText": "Quốc khuyển vùng cao trung thành thức canh sự bình yên cho bản làng."
     },
     {
       "id": "artist-seal",
@@ -140,25 +176,25 @@
     },
     {
       "id": "secret-pocket-watch-moon",
-      "name": "Đồng Hồ Trăng Khuyết",
-      "clue": "[BÍ MẬT] Chiếc đồng hồ quả quýt ánh trăng phát sáng giữa bầu trời đêm lấp lánh sao.",
-      "x": 0.45,
+      "name": "Đồng Hồ Quả Quýt Ánh Trăng",
+      "clue": "[BÍ MẬT] Mặt đồng hồ ánh bạc lấp lánh phản chiếu trăng rằm trên đỉnh đèo.",
+      "x": 0.29,
       "y": 0.24,
-      "radius": 0.038,
+      "radius": 0.049,
       "score": 300,
       "isSecret": true,
       "spriteType": "pocket-watch",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Báu vật thời gian ghi lại khoảnh khắc trăng soi đáy vực Tu Sản!"
+      "foundText": "Khèn đêm trao duyên réo rắt phá tan sự tĩnh lặng của thung lũng đá tai mèo!"
     },
     {
       "id": "bonus-night-moth",
       "name": "Bướm Đêm Vách Đá",
-      "clue": "Bướm đêm vùng cao chập chờn men theo dốc đèo Mã Pí Lèng.",
-      "x": 0.22,
-      "y": 0.52,
-      "radius": 0.026,
+      "clue": "Bướm đêm cánh mịn ẩn mình vào rêu đá ẩm ướt.",
+      "x": 0.12,
+      "y": 0.42,
+      "radius": 0.034,
       "score": 100,
       "isBonus": true,
       "spriteType": "moth",
@@ -169,10 +205,10 @@
     {
       "id": "bonus-night-frog",
       "name": "Chàng Hiu Hốc Nước",
-      "clue": "Chú ếch suối cất tiếng kêu đêm râm ran bên ghềnh đá ven sông.",
-      "x": 0.52,
-      "y": 0.73,
-      "radius": 0.028,
+      "clue": "Chú chàng hiu bám vách đá cất tiếng hát đêm thanh vắng.",
+      "x": 0.28,
+      "y": 0.72,
+      "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "frog",

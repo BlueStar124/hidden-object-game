@@ -102,7 +102,7 @@ export function readProgress(raw: unknown): GameProgress {
   const upToDate = typeof data.schemaVersion === 'number' && data.schemaVersion >= SCHEMA_VERSION;
   const bestScores = Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0);
   return {
-    ...data,
+    ...Object.fromEntries(entries(data)),
     schemaVersion: SCHEMA_VERSION,
     unlockedScenes: strings(data.unlockedScenes),
     sceneResults,

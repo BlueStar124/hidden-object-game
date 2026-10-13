@@ -341,6 +341,14 @@ describe('backups', () => {
     expect(Object.getPrototypeOf(read.sceneResults)).toBe(Object.prototype);
     expect(read.discovered).toEqual({});
   });
+
+  test('a save whose own top-level keys would reach the prototype keeps none of them', () => {
+    const read = readProgress(JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"bad": true}, "totalScore": 5}'));
+    expect(Object.getPrototypeOf(read)).toBe(Object.prototype);
+    expect(Object.keys(read)).not.toContain('__proto__');
+    expect(Object.keys(read)).not.toContain('constructor');
+    expect('polluted' in {}).toBe(false);
+  });
 });
 
 describe('where the player left off', () => {

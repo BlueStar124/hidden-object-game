@@ -67,6 +67,15 @@ export type SpriteType =
   | 'stick-insect'
   | 'saola'
   | 'water-buffalo'
+  | 'golden-turtle'
+  | 'dong-tao-chicken'
+  | 'hmong-dog'
+  | 'langur'
+  | 'highland-elephant'
+  | 'mudskipper'
+  | 'ca-mau-crab'
+  | 'phu-quoc-dog'
+  | 'dugong'
   // Đồ vật văn hóa & thám tử
   | 'durian'
   | 'fortune-cat'
@@ -80,10 +89,77 @@ export type SpriteType =
   | 'conical-hat'
   | 'lantern'
   | 'cyclo'
+  // Đồ vật văn hóa Việt Nam
+  | 'water-puppet'
+  | 'khen'
+  | 'cham-statue'
+  | 'gong'
+  | 'dragon-boat'
+  | 'dan-bau'
+  | 'banh-mi'
+  | 'coffee-phin'
+  | 'sampan'
+  | 'dong-son-drum'
+  | 'pho-bowl'
+  | 'brocade'
+  | 'basket-boat'
+  | 'ao-dai'
+  | 't-rung'
+  // Sinh vật đặc hữu Việt Nam mới
+  | 'nghe'
+  | 'red-crowned-crane'
+  | 'dong-ho-pig'
+  | 'bamboo-dragonfly'
+  | 'black-carp'
+  | 'giant-water-bug'
+  | 'green-peafowl'
+  | 'pygmy-loris'
+  | 'gray-shanked-douc'
+  | 'binturong'
+  | 'indochinese-tiger'
+  | 'white-cheeked-gibbon'
+  | 'flying-squirrel'
+  | 'treeshrew'
+  | 'water-rail'
+  | 'tiger-prawn'
+  | 'climbing-perch'
+  | 'giant-featherback'
+  | 'mangrove-clam'
+  | 'pearl-oyster'
+  | 'horned-owl'
+  | 'centipede'
+  | 'silver-pheasant'
+  | 'bamboo-rat'
+  | 'river-snail'
+  // Đồ vật văn hóa Việt Nam mới
+  | 'crane-statue'
+  | 'ly-dragon'
+  | 'hoan-kiem-sword'
+  | 'star-lantern'
+  | 'bamboo-flute'
+  | 'to-he'
+  | 'non-quai-thao'
+  | 'lotus-flower'
+  | 'banh-chung'
+  | 'bat-trang-pottery'
+  | 'bamboo-basket'
+  | 'h-mong-flute'
+  | 'terraced-sheaf'
+  | 'champa-relief'
+  | 'hue-kite'
+  | 'incense-burner'
+  | 'palm-leaf-fan'
+  | 'cham-lamp'
+  | 'royal-umbrella'
+  | 'sea-shell-curtain'
+  | 'highland-crossbow'
+  | 'southern-scarf'
+  | 'dan-kim'
+  | 'clay-piggy'
+  | 'coconut-candy'
   // Sinh vật Thái Lan
   | 'betta'
   | 'crocodile'
-  | 'mudskipper'
   | 'giant-catfish'
   | 'river-prawn'
   | 'stingray'
@@ -227,7 +303,7 @@ export const isCritter = (o: HiddenObject) => !!o.isBonus && !o.requires;
 export const isOptionalObject = (o: HiddenObject) => !isMainObject(o);
 
 /** Sprite width as a fraction of the spread width, before the per-object `scale`. */
-export const SPRITE_BASE_WIDTH = 0.044;
+export const SPRITE_BASE_WIDTH = 0.058;
 
 /* ------------------------------------------------------------------------- */
 /*                                   Content                                 */
@@ -368,7 +444,7 @@ export interface PageTurn {
 /* ------------------------------------------------------------------------- */
 
 export interface ActiveHint {
-  level: 1 | 2 | 3;
+  level: 1 | 2; // 1: the card's name and clue shown · 2: the loupe tugs and a radar pulses on it
   objectId: string;
   clueText?: string;
   radarPoint?: { x: number; y: number };
@@ -391,6 +467,7 @@ export interface CaseState {
   combo: number;
   comboTimer: number; // seconds left before combo resets
   activeHint: ActiveHint | null;
+  revealedTextIds: string[]; // Objects whose card shows its name and clue (a hint taken, or found)
 }
 
 /* ------------------------------------------------------------------------- */

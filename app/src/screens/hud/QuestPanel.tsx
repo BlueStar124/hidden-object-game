@@ -31,7 +31,9 @@ interface QuestPanelProps {
   layout: HudLayout;
   objects: HiddenObject[];
   foundIds: string[];
+  revealedTextIds: string[]; // Cards a hint has read (core/hints)
   activeHintId?: string;
+  onHintObject: (id: string) => void; // Reads an unread card, as a hint
   bottomInset: number;
   insetLeft: number;
   insetRight: number;
@@ -65,22 +67,37 @@ function camoTrait(obj: HiddenObject): CamoTrait | null {
   return { key: 'ink', icon: Feather, label: 'Hòa vào nét vẽ' };
 }
 
-/** What a card is called: a riddle keeps the name hidden until found. */
-const cardName = (obj: HiddenObject, found: boolean) => (obj.riddle && !found ? 'Câu đố' : obj.name);
+/**
+ * What a card is called. Until a hint reads it (`read`) or it is found, only its silhouette tells
+ * what to look for; a riddle stands in for the name.
+ */
+function cardName(obj: HiddenObject, found: boolean, read: boolean): string {
+  if (found || read) return obj.name;
+  if (obj.isSecret) return '??? Vật Phẩm Bí Mật';
+  return obj.riddle ? 'Câu đố' : '???';
+}
 
-/** What a card says: the found text, the riddle until solved, or the clue. */
-const cardText = (obj: HiddenObject, found: boolean) => (found ? obj.foundText || 'Đã tìm thấy!' : (obj.riddle ?? obj.clue));
+/** What a card says: the found text, the clue once read, else the riddle or how to read it. */
+function cardText(obj: HiddenObject, found: boolean, read: boolean): string {
+  if (found) return obj.foundText || 'Đã tìm thấy!';
+  if (read) return obj.clue;
+  if (obj.isSecret) return SECRET_CLUE;
+  return obj.riddle ?? 'Chạm thẻ hoặc bấm Gợi Ý để đọc tên và manh mối';
+}
 
 const QuestCard: React.FC<{
   obj: HiddenObject;
   found: boolean;
+  read: boolean;
   hinted: boolean;
   expanded: boolean;
   compact: boolean;
   width: number;
   onPress: () => void;
-}> = ({ obj, found, hinted, expanded, compact, width, onPress }) => {
+}> = ({ obj, found, read, hinted, expanded, compact, width, onPress }) => {
   const trait = camoTrait(obj);
+  // A card not read yet (a riddle is read from the start: the riddle is the clue)
+  const sealed = !found && !read && !obj.riddle;
   const bounce = useSharedValue(0);
   useEffect(() => {
     if (hinted) bounce.value = withRepeat(withTiming(-4, { duration: 1000 }), -1, true);
@@ -96,11 +113,18 @@ const QuestCard: React.FC<{
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel={`${cardName(obj, found)}. ${cardText(obj, found)}`}
-        style={[styles.card, { width }, compact && styles.cardCompact, found && styles.cardFound, hinted && styles.cardHint]}
+        accessibilityLabel={sealed ? 'Thẻ chưa đọc. Chạm để đọc tên và manh mối (tốn một lượt gợi ý).' : `${cardName(obj, found, read)}. ${cardText(obj, found, read)}`}
+        style={[
+          styles.card,
+          { width },
+          compact && styles.cardCompact,
+          sealed && styles.cardSealed,
+          found && styles.cardFound,
+          hinted && styles.cardHint,
+        ]}
       >
         <View style={[styles.thumb, compact && styles.thumbCompact]}>
-          {obj.riddle && !found ? (
+          {obj.riddle && !found && !read ? (
             // A riddle: even the silhouette would give the answer away
             <CircleQuestionMark size={22} color={colors.earth} />
           ) : obj.spriteType && obj.spriteType !== 'seal' ? (
@@ -121,7 +145,7 @@ const QuestCard: React.FC<{
           )}
         </View>
         <View style={styles.cardInfo}>
-          {trait && !compact && (
+          {trait && !compact && (found || read) && (
             <View style={[styles.trait, found && { opacity: 0.6 }]}>
               <trait.icon size={10} color={TRAIT_COLOR[trait.key]} />
               <Text style={[styles.traitText, { color: TRAIT_COLOR[trait.key] }]} numberOfLines={1}>
@@ -129,12 +153,12 @@ const QuestCard: React.FC<{
               </Text>
             </View>
           )}
-          <Text style={[styles.name, compact && { fontSize: 13 }, found && styles.nameFound]} numberOfLines={1}>
-            {cardName(obj, found)}
+          <Text style={[styles.name, compact && { fontSize: 13 }, found && styles.nameFound, sealed && styles.nameSealed]} numberOfLines={1}>
+            {cardName(obj, found, read)}
           </Text>
           {(!compact || expanded) && (
-            <Text style={styles.clue} numberOfLines={expanded ? undefined : 2}>
-              {cardText(obj, found)}
+            <Text style={[styles.clue, sealed && styles.clueSealed]} numberOfLines={expanded ? undefined : 2}>
+              {cardText(obj, found, read)}
             </Text>
           )}
         </View>
@@ -148,7 +172,9 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
   layout,
   objects,
   foundIds,
+  revealedTextIds: readIds,
   activeHintId,
+  onHintObject,
   bottomInset,
   insetLeft,
   insetRight,
@@ -172,6 +198,12 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
 
   // Long clues are clipped: tapping a card reveals the whole text
   const toggle = (id: string) => setExpanded((cur) => (cur === id ? null : id));
+  // Tapping a card not read yet reads it (a hint's first step); afterwards a tap only opens and
+  // closes it, so reading a long clue never costs anything
+  const press = (id: string) => {
+    if (!foundIds.includes(id) && !readIds.includes(id)) onHintObject(id);
+    toggle(id);
+  };
   const expandedObj = expanded ? objects.find((o) => o.id === expanded) : undefined;
 
   // The landscape clue bubble closes by itself after a few seconds
@@ -259,32 +291,34 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           key={obj.id}
           obj={obj}
           found={foundIds.includes(obj.id)}
+          read={readIds.includes(obj.id)}
           hinted={activeHintId === obj.id}
           expanded={grows && expanded === obj.id}
           compact={compact}
           width={grows && expanded === obj.id ? cardWidth + 90 : cardWidth}
-          onPress={() => toggle(obj.id)}
+          onPress={() => press(obj.id)}
         />
       ))}
       {secret && (
         <Pressable
-          onPress={() => toggle(secret.id)}
+          onPress={() => press(secret.id)}
           style={[
             styles.card,
             { width: grows && expanded === secret.id ? cardWidth + 90 : cardWidth },
             compact && styles.cardCompact,
             secretFound ? styles.secretCardFound : styles.secretCard,
+            activeHintId === secret.id && styles.cardHint,
           ]}
         >
           {secretFound ? <Sparkles size={18} color="#ca8a04" /> : <Lock size={16} color={colors.inkFaint} />}
           {secretFound && secret.spriteType && <SpriteIcon type={secret.spriteType} size={compact ? 22 : 28} glow />}
           <View style={styles.cardInfo}>
             <Text style={[styles.name, compact && { fontSize: 13 }]} numberOfLines={1}>
-              {secretFound ? secret.name : '??? Vật Phẩm Bí Mật'}
+              {cardName(secret, secretFound, readIds.includes(secret.id))}
             </Text>
             {grows && (
               <Text style={styles.clue} numberOfLines={expanded === secret.id ? undefined : 2}>
-                {secretFound ? secret.foundText : SECRET_CLUE}
+                {cardText(secret, secretFound, readIds.includes(secret.id))}
               </Text>
             )}
           </View>
@@ -321,8 +355,8 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
         {expandedObj && (
           // Read-only and touch-through: it floats over the sketchbook, whose taps must still land
           <View pointerEvents="none" style={[styles.bubble, { left: insetLeft + 10, right: insetRight + 10 }]}>
-            <Text style={styles.bubbleName}>{expandedObj.isSecret && !found ? '??? Vật Phẩm Bí Mật' : cardName(expandedObj, found)}</Text>
-            <Text style={styles.bubbleText}>{expandedObj.isSecret && !found ? SECRET_CLUE : cardText(expandedObj, found)}</Text>
+            <Text style={styles.bubbleName}>{cardName(expandedObj, found, readIds.includes(expandedObj.id))}</Text>
+            <Text style={styles.bubbleText}>{cardText(expandedObj, found, readIds.includes(expandedObj.id))}</Text>
           </View>
         )}
         {counter}
@@ -599,5 +633,19 @@ const styles = StyleSheet.create({
   secretCardFound: {
     backgroundColor: '#fefce8',
     borderColor: '#fde047',
+  },
+  nameSealed: {
+    color: colors.inkSoft,
+    letterSpacing: 2,
+    fontWeight: '700',
+  },
+  clueSealed: {
+    color: colors.inkFaint,
+    fontStyle: 'italic',
+    fontSize: 9.5,
+  },
+  cardSealed: {
+    backgroundColor: '#faf8f5',
+    borderColor: '#e7e0d5',
   },
 });

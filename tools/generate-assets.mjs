@@ -363,7 +363,10 @@ async function main() {
   const markups = renderMarkups();
   console.log(`  ${Object.keys(markups).length} sprite types`);
 
-  const browser = await chromium.launch();
+  // An installed Chrome on Windows spares downloading Playwright's; elsewhere (CI, macOS, Linux)
+  // Playwright's own Chromium, as before (`npx playwright install chromium`)
+  const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+  const browser = await chromium.launch(fs.existsSync(chromePath) ? { executablePath: chromePath } : {});
   try {
     const page = await browser.newPage();
     const spriteCss = fs.readFileSync(SPRITE_CSS, 'utf8');

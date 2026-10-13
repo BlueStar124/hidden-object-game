@@ -27,6 +27,7 @@ export function openCase(page: Page): CaseState {
     combo: 1,
     comboTimer: 0,
     activeHint: null,
+    revealedTextIds: [],
   };
 }
 
@@ -52,6 +53,8 @@ export interface FindResult {
   solved: { timeBonus: number; stars: number; score: number } | null;
 }
 
+const withId = (ids: string[], id: string) => (ids.includes(id) ? ids : [...ids, id]);
+
 /** Something was found during the investigation. */
 export function recordFind(
   c: CaseState,
@@ -74,6 +77,7 @@ export function recordFind(
     combo: combo + 1,
     comboTimer: COMBO_WINDOW,
     activeHint: null,
+    revealedTextIds: withId(c.revealedTextIds, object.id),
   };
   if (object.isSecret) changes.secretFound = true;
   if (solved) changes.isCompleted = true;
@@ -95,11 +99,13 @@ export function recordMiss(c: CaseState): CaseState {
   return { ...c, mistakes: c.mistakes + 1, combo: 1, comboTimer: 0, score: mistakePenalty(c.score) };
 }
 
+/** A hint taken: it costs points, and the target's card shows its name and clue from now on. */
 export function recordHint(c: CaseState, hint: HintResult): CaseState {
   return {
     ...c,
     hintsUsed: c.hintsUsed + 1,
     score: hintPenalty(c.score, hint.level),
+    revealedTextIds: withId(c.revealedTextIds, hint.targetObject.id),
     activeHint: {
       level: hint.level,
       objectId: hint.targetObject.id,

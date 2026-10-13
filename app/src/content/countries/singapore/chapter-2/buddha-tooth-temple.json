@@ -17,7 +17,14 @@
       "spriteType": "dove",
       "scale": 0.55,
       "camo": "ink",
-      "foundText": "Chim bồ câu trắng biểu tượng cho sự an lạc tại chốn thiền môn thanh tịnh."
+      "foundText": "Chim bồ câu trắng biểu tượng cho sự an lạc tại chốn thiền môn thanh tịnh.",
+      "spots": [
+        {
+          "x": 0.35,
+          "y": 0.36,
+          "clue": "Chú bồ câu trắng đậu trên góc mái cong của gian tiền điện."
+        }
+      ]
     },
     {
       "id": "lantern-bat",
@@ -43,7 +50,14 @@
       "spriteType": "vase",
       "scale": 0.6,
       "camo": "ink",
-      "foundText": "Cổ vật gốm sứ tinh xảo lưu giữ tro trầm hương thanh khiết hàng trăm năm."
+      "foundText": "Cổ vật gốm sứ tinh xảo lưu giữ tro trầm hương thanh khiết hàng trăm năm.",
+      "spots": [
+        {
+          "x": 0.22,
+          "y": 0.68,
+          "clue": "Chiếc bình gốm men lam đặt cạnh chân cột thềm đá bên trái."
+        }
+      ]
     },
     {
       "id": "roof-red-envelope",
@@ -57,7 +71,15 @@
       "scale": 0.5,
       "rotation": -20,
       "camo": "chameleon",
-      "foundText": "Bên trong bao lì xì là mảnh giấy ghi mật mã \"8 – 8 – 8\"… con số may mắn!"
+      "foundText": "Bên trong bao lì xì là mảnh giấy ghi mật mã \"8 – 8 – 8\"… con số may mắn!",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.48,
+          "rotation": 15,
+          "clue": "Chiếc bao lì xì đỏ giắt trên đầu đao mái hiên bên phải."
+        }
+      ]
     },
     {
       "id": "fortune-cat",
@@ -70,7 +92,14 @@
       "spriteType": "fortune-cat",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Mèo thần tài vẫy tay chào — Chinatown luôn đón khách bằng may mắn!"
+      "foundText": "Mèo thần tài vẫy tay chào — Chinatown luôn đón khách bằng may mắn!",
+      "spots": [
+        {
+          "x": 0.52,
+          "y": 0.69,
+          "clue": "Chú mèo thần tài nhỏ ngồi bên bậc thềm đá ngay lối chính điện."
+        }
+      ]
     },
     {
       "id": "artist-seal",
