@@ -16,7 +16,7 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Ngước nhìn lên, hai vách đá Tu Sản sừng sững cao cả ngàn mét che khuất mặt trời.",
       "waterline": 0.65
     },
@@ -57,8 +57,8 @@
       "score": 150,
       "spriteType": "indochinese-tiger",
       "scale": 0.5,
-      "camo": "ink",
-      "foundText": "Quốc khuyển can trường, bạn đồng hành trên mọi cung đường hiểm trở Hà Giang."
+      "camo": "gouache",
+      "foundText": "Chúa sơn lâm hổ Đông Dương uy phong lẫm liệt, linh thú huyền thoại của núi rừng biên cương."
     },
     {
       "id": "peace-dove-canyon",
@@ -71,7 +71,7 @@
       "spriteType": "dove",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Nón lá duyên dáng soi bóng xuống dòng sông màu ngọc bích phẳng lặng."
+      "foundText": "Cánh bồ câu trắng chao liệng thanh bình giữa hai vách đá kỳ vĩ của hẻm vực sâu nhất Đông Nam Á."
     },
     {
       "id": "artist-seal",
@@ -96,7 +96,7 @@
       "spriteType": "bat-trang-pottery",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Tấm thổ cẩm dệt muôn sắc hoa tam giác mạch và kỳ vĩ mây trời Đồng Văn!"
+      "foundText": "Bình gốm hoa lam cổ kính men ngọc tinh xảo, cổ vật quý báu lưu dấu dòng chảy văn hóa ngàn năm!"
     },
     {
       "id": "bonus-butterfly",
@@ -110,21 +110,22 @@
       "spriteType": "treeshrew",
       "scale": 0.36,
       "camo": "ink",
-      "foundText": "Hoa tam giác mạch đổi sắc từ trắng sang hồng tím theo từng tuần."
+      "foundText": "Chú chuột chù cây đồi chuốt thoăn thoắt chuyền cành bên thảm hoa tam giác mạch rực rỡ."
     },
     {
       "id": "bonus-gecko",
       "name": "Cá Suối Nho Quế",
-      "clue": "Cá suối dẻo dai lội ngược dòng nước trong vắt hẻm Tu Sản.",
-      "x": 0.86,
-      "y": 0.52,
+      "clue": "Cá suối dẻo dai lội ngược dòng nước ngọc bích hẻm Tu Sản.",
+      "x": 0.72,
+      "y": 0.68,
       "radius": 0.036,
       "score": 100,
       "isBonus": true,
       "spriteType": "climbing-perch",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Đá tai mèo Hà Giang là biểu tượng của ý chí kiên cường người miền đá."
+      "foundText": "Cá suối Nho Quế kiên cường bơi ngược dòng nước lạnh màu ngọc bích phẳng lặng.",
+      "waterline": 0.6
     },
     {
       "id": "bonus-otter",
@@ -140,20 +141,6 @@
       "camo": "chameleon",
       "waterline": 0.6,
       "foundText": "Rái cá tinh nghịch bơi lội trong dòng nước lạnh như băng."
-    },
-    {
-      "id": "clue-oil-lamp",
-      "name": "Ngọn Đèn Dầu Nhỏ",
-      "clue": "Ngọn đèn dầu nhỏ vẽ lẫn vào vách đá hẻm vực bên phải, phía trên dòng sông.",
-      "x": 0.63,
-      "y": 0.37,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "clay-lamp",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Kèm theo là mẩu giấy: “Vẽ cả khi trời tối, vì vẻ đẹp không chờ ai.”"
     }
   ]
 }

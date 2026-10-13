@@ -29,7 +29,7 @@
       "score": 120,
       "spriteType": "conical-hat",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Nón lá chao nghiêng in bóng xuống dòng nước trong vắt nhìn thấy đáy rong rêu."
     },
     {
@@ -42,8 +42,8 @@
       "score": 120,
       "spriteType": "bamboo-dragonfly",
       "scale": 0.46,
-      "camo": "ink",
-      "foundText": "Cánh cò trắng phau nổi bật trên nền vách núi biếc xanh."
+      "camo": "gouache",
+      "foundText": "Chuồn chuồn tre mộc mạc giữ thăng bằng diệu kỳ, món quà quê thanh bình chốn kinh đô xưa."
     },
     {
       "id": "ancient-scroll",
@@ -55,8 +55,8 @@
       "score": 120,
       "spriteType": "ly-dragon",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Nghệ thuật múa rối nước tái hiện huyền sử thời Đinh - Tiền Lê ngàn năm."
+      "camo": "tint",
+      "foundText": "Hình tượng rồng thời Lý uốn lượn hình sin mềm mại, biểu trưng cho vương quyền và nền văn minh sông Hồng."
     },
     {
       "id": "pond-frog",
@@ -69,7 +69,7 @@
       "spriteType": "river-snail",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Khu bảo tồn đất ngập nước Vân Long - Tràng An là thánh địa của loài voọc mông trắng."
+      "foundText": "Ốc núi Tràng An bám mình trên vách đá vôi ẩm ướt, sản vật trứ danh chỉ xuất hiện sau những cơn mưa."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "banh-chung",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Thuyền rồng ngự du của vua Đinh Tiên Hoàng trên dòng sông Sào Khê lịch sử!"
+      "foundText": "Chiếc bánh chưng vuông vức gói trọn đất trời, tấm lòng thơm thảo của con cháu dâng cúng tổ tiên!"
     },
     {
       "id": "bonus-dragonfly",
@@ -137,36 +137,6 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Màu da hòa vào sắc đá rêu khiến đôi mắt tinh tường mới nhận ra."
-    },
-    {
-      "id": "clue-engraved-loupe",
-      "name": "Kính Lúp Khắc Chữ",
-      "clue": "Chiếc kính lúp vẽ lẫn vào vách núi xanh phía bên phải dòng sông.",
-      "x": 0.7,
-      "y": 0.4,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "magnifying-glass",
-      "scale": 0.45,
-      "rotation": -10,
-      "camo": "chameleon",
-      "foundText": "Cán kính khắc hai chữ cái, giống hệt chiếc kính lúp bạn đang cầm trên tay."
-    },
-    {
-      "id": "tiny-sketch-1",
-      "name": "Nét Vẽ Tí Hon 1/10",
-      "clue": "Nét vẽ tí hon đậu trên tán cây nhỏ ven bờ đảo chùa, giữa trang.",
-      "x": 0.525,
-      "y": 0.57,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "ladybug",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Ta là người giữ sổ thứ nhất, một họa sĩ trong cung Huế. Con thấy được nét vẽ này, nghĩa là con đã nhìn đủ gần.” (1/10)"
     }
   ]
 }

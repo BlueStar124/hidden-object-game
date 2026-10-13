@@ -30,7 +30,7 @@
       "spriteType": "h-mong-flute",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Tiếng khèn H'Mông dạt dào gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn."
+      "foundText": "Tiếng sáo Mèo véo von réo rắt gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn."
     },
     {
       "id": "altimeter-watch",
@@ -42,8 +42,8 @@
       "score": 120,
       "spriteType": "silver-pheasant",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Tấm thổ cẩm dệt tay chứa đựng sự khéo léo và tâm hồn người phụ nữ H'Mông Sa Pa."
+      "camo": "gouache",
+      "foundText": "Gà lôi trắng quý hiếm với bộ lông bạc kiêu hãnh ẩn hiện giữa rừng đỗ quyên Fansipan."
     },
     {
       "id": "wind-kite",
@@ -69,7 +69,7 @@
       "spriteType": "pho-bowl",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chiếc nón lá mộc mạc theo chân người Việt chinh phục đỉnh cao 3.143 mét."
+      "foundText": "Hương vị phở bò nóng hổi nghi ngút sưởi ấm lòng người lữ khách nơi đỉnh cao 3.143 mét."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "vintage-camera",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Hào khí Đông Sơn ngàn năm hội tụ nơi đỉnh núi cao nhất Tổ quốc!"
+      "foundText": "Ống kính máy ảnh cổ ghi lại khoảnh khắc chạm đỉnh Fansipan mây ngàn huyền ảo!"
     },
     {
       "id": "bonus-sunbird",
@@ -121,7 +121,7 @@
       "isBonus": true,
       "spriteType": "flying-squirrel",
       "scale": 0.38,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Chú sóc nhanh nhẹn gặm một quả thông rừng tươi rói."
     },
     {
@@ -137,36 +137,6 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Loài bướm núi thích nghi kỳ diệu với cái lạnh khắc nghiệt đỉnh trời."
-    },
-    {
-      "id": "clue-summit-crane",
-      "name": "Hạc Giấy Trên Đỉnh Núi",
-      "clue": "Chiếc hạc giấy đậu trên lan can của sàn gỗ ngắm cảnh bên phải.",
-      "x": 0.79,
-      "y": 0.71,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "paper-crane",
-      "scale": 0.42,
-      "rotation": 6,
-      "camo": "chameleon",
-      "foundText": "Trong cánh hạc có dòng chữ: “Ta chưa đi xa đâu. Hãy đi tiếp về phía Nam.”"
-    },
-    {
-      "id": "tiny-sketch-2",
-      "name": "Nét Vẽ Tí Hon 2/10",
-      "clue": "Nét vẽ tí hon ẩn giữa đám cây bụi mọc trên mỏm đá, bên trái cầu thang gỗ.",
-      "x": 0.34,
-      "y": 0.61,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "bee",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Ta vẽ những sinh vật bé nhất, vì trong cung chẳng ai để ý tới chúng.” (2/10)"
     }
   ]
 }

@@ -341,6 +341,8 @@ export interface Page {
   // Night variant of a page: dark overlay, the loupe becomes a flashlight
   isNight?: boolean;
   nightLights?: NightLight[];
+  // Optional stable cache identity when multiple content records share one layout.
+  variantKey?: string;
   // Set by core/layout and core/daily on a visit laid out unlike the JSON (other spots, a daily
   // crop): the page keeps its id (progress is saved by it) and the board's caches tell layouts apart
   layout?: string;

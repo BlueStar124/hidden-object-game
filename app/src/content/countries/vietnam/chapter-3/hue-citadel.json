@@ -29,7 +29,7 @@
       "score": 120,
       "spriteType": "ao-dai",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Chiếc áo dài tím duyên dáng tôn vinh vẻ đẹp kín đáo thanh tao của người con gái xứ Huế."
     },
     {
@@ -42,7 +42,7 @@
       "score": 120,
       "spriteType": "conical-hat",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Soi nón lên ánh nắng, hai câu thơ lục bát hiện lên mềm mại giữa hai lớp lá."
     },
     {
@@ -68,8 +68,8 @@
       "score": 100,
       "spriteType": "royal-umbrella",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Thuyền rồng hoàng cung triều Nguyễn từng đưa vua ngự du nghe ca Huế trên dòng Hương giang."
+      "camo": "tint",
+      "foundText": "Chiếc lọng vàng thêu rồng phượng kim tuyến tôn nghiêm, vật phẩm nghi trượng cao quý chốn hoàng cung triều Nguyễn."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "incense-burner",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Bảo vật ngàn năm biểu trưng cho sự trường tồn của non sông gấm vóc!"
+      "foundText": "Chiếc lư đồng chạm kỳ lân tỏa làn khói trầm thơm ngát, biểu trưng cho sự trường tồn và tôn nghiêm của vương triều!"
     },
     {
       "id": "bonus-koi",
@@ -122,8 +122,8 @@
       "isBonus": true,
       "spriteType": "hue-kite",
       "scale": 0.4,
-      "camo": "ink",
-      "foundText": "Bồ câu sống hiền hòa trong không gian thanh tịnh của đại nội."
+      "camo": "gouache",
+      "foundText": "Cánh diều rồng ngũ sắc lộng lẫy chao lượn trên nền trời Kỳ Đài, biểu tượng nghệ thuật thủ công tinh xảo của đất Cố đô."
     },
     {
       "id": "bonus-butterfly",
@@ -136,37 +136,8 @@
       "isBonus": true,
       "spriteType": "lotus-flower",
       "scale": 0.36,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Vườn hoa ngự uyển ngạt ngào hương sắc bốn mùa."
-    },
-    {
-      "id": "clue-dried-lotus",
-      "name": "Nụ Sen Ép Khô",
-      "clue": "Nụ sen ép khô vẽ lẫn vào mái điện xa nhất, ở giữa trang.",
-      "x": 0.51,
-      "y": 0.3,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "lotus-bud",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Nụ sen kẹp trong lá thư: “Người giữ sổ đầu tiên là một họa sĩ cung đình Huế.”"
-    },
-    {
-      "id": "tiny-sketch-5",
-      "name": "Nét Vẽ Tí Hon 5/10",
-      "clue": "Nét vẽ tí hon bên chiếc đỉnh đồng phía bên phải sân chầu.",
-      "x": 0.58,
-      "y": 0.57,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "snail",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Ta vẽ chậm như con ốc sên này, nhưng chưa ngày nào dừng bút.” (5/10)"
     }
   ]
 }

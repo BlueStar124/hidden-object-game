@@ -16,7 +16,7 @@
       "score": 150,
       "spriteType": "dragon-boat",
       "scale": 0.5,
-      "camo": "ink",
+      "camo": "gouache",
       "waterline": 0.65,
       "foundText": "Thuyền rồng truyền thuyết đưa thám tử chiêm ngưỡng kỳ quan non nước rồng thiêng."
     },
@@ -43,8 +43,8 @@
       "score": 120,
       "spriteType": "basket-boat",
       "scale": 0.42,
-      "camo": "ink",
-      "foundText": "Chiếc nón lá nghiêng che sóng gió cho ngư dân các làng chài cổ trên vịnh."
+      "camo": "gouache",
+      "foundText": "Thuyền thúng tre nan mộc mạc gắn liền với nếp sống ngàn đời của ngư dân làng chài Cửa Vạn."
     },
     {
       "id": "brass-compass",
@@ -56,14 +56,14 @@
       "score": 120,
       "spriteType": "pearl-oyster",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "tint",
       "waterline": 0.6,
       "shy": {
         "period": 7.5,
         "offset": 1.5,
         "from": "below"
       },
-      "foundText": "Rùa Vàng bơi lượn quanh vách đá vịnh, canh giữ những hang động kỳ bí."
+      "foundText": "Viên ngọc trai sáng lấp lánh kết tinh từ tinh hoa biển trời vịnh Hạ Long kỳ vĩ."
     },
     {
       "id": "marine-spyglass",
@@ -75,7 +75,7 @@
       "score": 100,
       "spriteType": "water-puppet",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Điệu múa rối nước dân gian tái hiện truyền thuyết rồng mẹ hạ thế cứu nước."
     },
     {
@@ -101,7 +101,7 @@
       "spriteType": "dugong",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Trống đồng cổ ngàn năm lưu giữ hào khí non nước rồng thiêng nơi vịnh ngọc!"
+      "foundText": "Nàng tiên cá bò biển dugong hiền hòa rẽ nước vịnh ngọc, bảo vật sinh học quý báu của đại dương!"
     },
     {
       "id": "bonus-heron",
@@ -167,21 +167,6 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Cá ngựa hiền hòa nép mình tránh dòng hải lưu xiết."
-    },
-    {
-      "id": "clue-indochina-map",
-      "name": "Bản Đồ Đông Dương Cũ",
-      "clue": "Tấm bản đồ cũ vẽ lẫn vào vách núi đá vôi lớn phía xa bên trái.",
-      "x": 0.25,
-      "y": 0.34,
-      "radius": 0.03,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "treasure-map",
-      "scale": 0.5,
-      "rotation": 8,
-      "camo": "chameleon",
-      "foundText": "Một đường mực nối Hà Nội, Singapore, Bangkok rồi vòng về phía Nam: cả hành trình đã được vẽ sẵn."
     }
   ]
 }

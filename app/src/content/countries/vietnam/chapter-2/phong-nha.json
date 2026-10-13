@@ -30,7 +30,7 @@
       "spriteType": "centipede",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Phong Nha là nơi cư ngụ của hàng triệu cá thể dơi hang tự nhiên."
+      "foundText": "Loài rết hang khổng lồ thích nghi hoàn hảo với bóng tối và độ ẩm ngàn năm nơi thạch động Phong Nha."
     },
     {
       "id": "son-river-boat",
@@ -62,7 +62,7 @@
     {
       "id": "explorer-camera",
       "name": "Voọc Hà Tĩnh Hang Đá",
-      "clue": "Voọc Hà Tĩnh lông đen đuôi dài ngó nghiêng từ hốc đá cao.",
+      "clue": "Voọc Hà Tĩnh lông đen đuôi dài ngó nghiêng bên bệ thạch nhũ ven lối đi.",
       "x": 0.58,
       "y": 0.71,
       "radius": 0.042,
@@ -95,7 +95,7 @@
       "spriteType": "compass",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Bảo vật cổ ngàn năm được che chở trong lòng kỳ quan đệ nhất động Phong Nha!"
+      "foundText": "Chiếc la bàn thám hiểm chỉ đường soi rọi lối đi qua mê cung kỳ vĩ chốn đệ nhất động!"
     },
     {
       "id": "bonus-cave-crab",

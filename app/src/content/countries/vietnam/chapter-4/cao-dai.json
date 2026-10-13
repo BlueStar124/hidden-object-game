@@ -16,7 +16,7 @@
       "score": 150,
       "spriteType": "ao-dai",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Màu áo dài trắng thanh bạch biểu trưng cho sự thanh tịnh và tinh thần bác ái đại đồng."
     },
     {
@@ -42,8 +42,8 @@
       "score": 120,
       "spriteType": "star-lantern",
       "scale": 0.46,
-      "camo": "ink",
-      "foundText": "Hàng cột rồng sơn màu rực rỡ là nét kiến trúc độc đáo hiếm có."
+      "camo": "luminous",
+      "foundText": "Ngọn đèn hoa đăng tỏa ánh sáng ấm áp, biểu trưng cho ngọn đèn trí tuệ soi đường dẫn lối."
     },
     {
       "id": "holy-scroll",
@@ -55,8 +55,8 @@
       "score": 120,
       "spriteType": "lotus-bud",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Thanh âm đàn bầu hòa cùng dàn nhạc dân tộc trang nghiêm trong các giờ cúng tế."
+      "camo": "tint",
+      "foundText": "Búp sen hồng dâng lên trước bệ thờ Thiên Nhãn, tượng trưng cho tâm hồn thanh khiết và lòng thành kính."
     },
     {
       "id": "temple-teacup",
@@ -69,7 +69,7 @@
       "spriteType": "teacup",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chiếc nón lá theo chân người hành hương về chiêm bái đất thánh linh thiêng."
+      "foundText": "Tách trà ấm tiếp đãi khách đạo hữu, thể hiện nét văn hóa hiếu khách và hòa ái chốn Thánh địa."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "incense-burner",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Âm vang chiêng trống đánh dấu khoảnh khắc giao hòa thiêng liêng giữa trời và đất!"
+      "foundText": "Khói trầm thơm ngát tỏa ra từ lư đồng cổ, đưa lời nguyện cầu hòa bình và bác ái bay lên cõi thiêng!"
     },
     {
       "id": "bonus-sunbird",
@@ -137,35 +137,6 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Đôi cánh lấp lánh phản chiếu ánh sáng muôn màu từ các ô kính màu."
-    },
-    {
-      "id": "clue-small-bell",
-      "name": "Chiếc Chuông Khắc Tọa Độ",
-      "clue": "Chiếc chuông nhỏ vẽ lẫn vào tán cây rậm phía trên bên phải.",
-      "x": 0.76,
-      "y": 0.32,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "temple-bell",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Chuông khắc một dòng số: 8°37′ Bắc, 104°43′ Đông."
-    },
-    {
-      "id": "tiny-sketch-8",
-      "name": "Nét Vẽ Tí Hon 8/10",
-      "clue": "Nét vẽ tí hon nằm giữa những luống hoa của khu vườn bên phải.",
-      "x": 0.78,
-      "y": 0.45,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "moth",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Mỗi người giữ sổ thêm vào đó một điều mình học được.” (8/10)"
     }
   ]
 }

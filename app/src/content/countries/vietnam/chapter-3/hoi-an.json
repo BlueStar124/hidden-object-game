@@ -16,9 +16,8 @@
       "score": 150,
       "spriteType": "teacup",
       "scale": 0.48,
-      "camo": "ink",
-      "foundText": "Đèn lồng truyền thống Hội An làm từ tre già ngâm muối và lụa Hà Đông.",
-      "riddle": "Miệng tròn bụng rỗng, nóng hổi tay cầm; rót đầy hương sen, mời khách bên hiên. Là cái gì?"
+      "camo": "tint",
+      "foundText": "Ly nước mót thảo mộc thơm lừng hương sả, chanh và cánh sen, thức uống nức tiếng làm say lòng khách du lịch phố Hội."
     },
     {
       "id": "street-hat",
@@ -31,8 +30,7 @@
       "spriteType": "conical-hat",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ.",
-      "riddle": "Chóp nhọn vành tròn, khâu bằng lá non; trưa che nắng gắt, chiều che mưa rào. Là cái gì?"
+      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ."
     },
     {
       "id": "river-boat",
@@ -44,10 +42,9 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Thuyền hoa đăng đưa những ước nguyện may mắn trôi xuôi dòng nước sông Hoài.",
-      "waterline": 0.6,
-      "riddle": "Không chân mà đi, không cánh mà lướt; chở đầy hoa đăng trôi trên sông Hoài. Là cái gì?"
+      "waterline": 0.6
     },
     {
       "id": "ancient-cat",
@@ -59,9 +56,8 @@
       "score": 120,
       "spriteType": "dong-ho-pig",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Áo dài lụa phố Hội tôn thêm nét trầm mặc cổ kính của di sản văn hóa thế giới.",
-      "riddle": "Mình tròn vằn xoáy, nằm trên giấy dó; chẳng ăn cám bao giờ, Tết về treo vách. Là con gì?"
+      "camo": "gouache",
+      "foundText": "Bức tranh lợn Đông Hồ ngộ nghĩnh mang ý nghĩa ấm no, phúc lộc treo trang trọng trong gian nhà cổ trăm năm."
     },
     {
       "id": "hoian-cyclo",
@@ -73,9 +69,8 @@
       "score": 120,
       "spriteType": "paper-umbrella",
       "scale": 0.52,
-      "camo": "ink",
-      "foundText": "Tiếng chuông xích lô leng keng thong thả trên những con phố đi bộ.",
-      "riddle": "Xòe ra thì tròn, cụp vào thì dài; giấy dầu nan trúc, che nắng phố Hội. Là cái gì?"
+      "camo": "gouache",
+      "foundText": "Chiếc ô giấy dầu che nắng mưa cho lữ khách dạo bước thảnh thơi trên những con ngõ nhỏ ngập tràn hoa giấy."
     },
     {
       "id": "artist-seal",
@@ -134,7 +129,7 @@
     {
       "id": "bonus-dragonfly",
       "name": "Chuồn Chuồn Tre Phố Cổ",
-      "clue": "Chuồn chuồn tre giữ thăng bằng trên mái ngói âm dương rêu phong.",
+      "clue": "Chuồn chuồn tre giữ thăng bằng trên mâm tre quầy lưu niệm bên góc phố.",
       "x": 0.82,
       "y": 0.68,
       "radius": 0.034,
@@ -142,22 +137,8 @@
       "isBonus": true,
       "spriteType": "bamboo-dragonfly",
       "scale": 0.36,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Gió sông thổi nhẹ làm chuồn chuồn khẽ rung rinh đôi cánh."
-    },
-    {
-      "id": "clue-merchant-abacus",
-      "name": "Bàn Tính Của Người Thầy",
-      "clue": "Chiếc bàn tính vẽ lẫn vào những mái ngói phố cổ ở giữa trang bên phải.",
-      "x": 0.61,
-      "y": 0.33,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "abacus",
-      "scale": 0.45,
-      "camo": "chameleon",
-      "foundText": "Bàn tính khắc tên người giữ sổ thứ hai: một thương nhân phố Hội từng sang Bangkok buôn bán."
     }
   ]
 }

@@ -85,7 +85,7 @@
       "score": 150,
       "spriteType": "star-lantern",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "luminous",
       "foundText": "Ngọn đèn soi sáng từng con sóng dập dềnh quanh mạn thuyền."
     },
     {
@@ -98,7 +98,7 @@
       "score": 150,
       "spriteType": "bat",
       "scale": 0.46,
-      "camo": "ink",
+      "camo": "shadow",
       "foundText": "Dơi hang vỗ cánh bay lướt qua ngọn núi đá vôi im lìm."
     },
     {
@@ -124,7 +124,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.42,
-      "camo": "ink",
+      "camo": "luminous",
       "roam": {
         "path": [
           [
@@ -160,8 +160,8 @@
       "score": 120,
       "spriteType": "civet",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Voọc Cát Bà cuộn tròn giữ ấm qua đêm sương lạnh trên vịnh."
+      "camo": "shadow",
+      "foundText": "Cầy gấm thoăn thoắt săn mồi đêm, bộ lông hoa văn ẩn mình khéo léo vào vách đá vôi."
     },
     {
       "id": "artist-seal",
@@ -186,7 +186,7 @@
       "spriteType": "spyglass",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "Thuyền rồng rẽ màn sương đêm vịnh Hạ Long, mở lối đến hành trình mới!"
+      "foundText": "Ống kính viễn vọng đồng thau hướng lên bầu trời sao lung linh huyền ảo của vịnh Hạ Long!"
     },
     {
       "id": "bonus-night-moth",
@@ -213,8 +213,8 @@
       "isBonus": true,
       "spriteType": "mangrove-clam",
       "scale": 0.45,
-      "camo": "ink",
-      "foundText": "Cua biển đi đêm lùng sục tìm mồi trên phiến đá rêu phong."
+      "camo": "tint",
+      "foundText": "Vỏ sò biển óng ánh ngọc trai nằm khép mình tĩnh lặng trên phiến đá rêu phong."
     }
   ]
 }

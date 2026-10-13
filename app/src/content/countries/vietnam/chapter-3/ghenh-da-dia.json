@@ -48,8 +48,8 @@
       "score": 120,
       "spriteType": "sea-shell-curtain",
       "scale": 0.46,
-      "camo": "ink",
-      "foundText": "Thuyền thúng nan là phương tiện đánh bắt mộc mạc đặc trưng của ngư dân duyên hải miền Trung."
+      "camo": "tint",
+      "foundText": "Rèm vỏ ốc biển thủ công khua lách cách trong gió biển mặn mòi xứ Nẫu Phú Yên."
     },
     {
       "id": "seabird-kingfisher",
@@ -61,7 +61,7 @@
       "score": 120,
       "spriteType": "champa-relief",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Dải đất duyên hải miền Trung lưu giữ những dấu tích kiến trúc điêu khắc Chăm Pa rực rỡ."
     },
     {
@@ -75,7 +75,7 @@
       "spriteType": "dugong",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Nón lá cùng ngư dân vươn khơi bám biển qua bao thế hệ."
+      "foundText": "Nàng tiên cá dugong hiền lành lướt qua những khối đá bazan tổ ong triệu năm kỳ vĩ."
     },
     {
       "id": "artist-seal",
@@ -100,7 +100,7 @@
       "spriteType": "treasure-map",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Tiếng đàn bầu ngân vang hòa cùng bản hòa ca sóng vỗ ngàn năm Ghềnh Đá Đĩa!"
+      "foundText": "Tấm bản đồ hải trình cổ da thuộc ghi dấu hải trình của các thương thuyền xưa qua vùng biển bão dông miền Trung!"
     },
     {
       "id": "bonus-seahorse",
@@ -144,36 +144,6 @@
       "scale": 0.4,
       "camo": "ink",
       "foundText": "Bóng diệc cô đơn kiêu hãnh giữa sóng gầm gió lộng."
-    },
-    {
-      "id": "clue-keeper-notes",
-      "name": "Sổ Chép Tay Của Người Giữ Sổ",
-      "clue": "Cuốn sổ chép tay vẽ lẫn vào những cột đá bazan cao nhất trên vách.",
-      "x": 0.56,
-      "y": 0.34,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "palm-leaf-book",
-      "scale": 0.45,
-      "rotation": -6,
-      "camo": "chameleon",
-      "foundText": "“Ba người đã giữ cuốn sổ. Người thứ tư đang đọc những dòng này.”"
-    },
-    {
-      "id": "tiny-sketch-6",
-      "name": "Nét Vẽ Tí Hon 6/10",
-      "clue": "Nét vẽ tí hon giăng giữa những cột đá lục giác ở chính giữa trang.",
-      "x": 0.525,
-      "y": 0.57,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "spider",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Ta trao cuốn sổ cho một thương nhân phố Hội, người kiên nhẫn nhất ta từng gặp.” (6/10)"
     }
   ]
 }

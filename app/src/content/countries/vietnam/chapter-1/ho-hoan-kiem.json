@@ -17,12 +17,12 @@
       "spriteType": "hoan-kiem-sword",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Dưới vành nón lá có ghi một dòng mật mã chỉ đường đến phố cổ!",
+      "foundText": "Thanh gươm thần Thuận Thiên tỏa sáng, biểu tượng cho hào khí bảo vệ non sông Đại Việt!",
       "spots": [
         {
-          "x": 0.791,
-          "y": 0.568,
-          "clue": "Thanh kiếm thần tỏa ánh hào quang nép bên tường Tháp Rùa giữa hồ."
+          "x": 0.78,
+          "y": 0.55,
+          "clue": "Thanh kiếm thần tỏa ánh hào quang linh thiêng nép cạnh gốc liễu ven hồ bên phải."
         }
       ]
     },
@@ -59,9 +59,9 @@
       "foundText": "Bác tài xích lô đã cất giữ một phong thư niêm sáp của kiến trúc sư.",
       "spots": [
         {
-          "x": 0.88,
-          "y": 0.45,
-          "clue": "Chiếc xích lô thong dong đón khách trên lối dạo ven hồ bên phải."
+          "x": 0.35,
+          "y": 0.52,
+          "clue": "Chiếc xích lô thong dong đón khách trên lối dạo ven hồ."
         }
       ]
     },
@@ -75,13 +75,13 @@
       "score": 120,
       "spriteType": "crane-statue",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Hương vị phở Thăng Long ngạt ngào quế hồi thảo quả làm ấm lòng người lữ khách.",
+      "camo": "tint",
+      "foundText": "Hình tượng hạc đứng trên lưng rùa biểu trưng cho sự thanh cao, trường thọ và hòa hợp âm dương.",
       "spots": [
         {
-          "x": 0.575,
+          "x": 0.62,
           "y": 0.65,
-          "clue": "Hình tượng hạc chầu trên lưng rùa đứng nơi mỏm cỏ đầu đảo Tháp Rùa."
+          "clue": "Hình tượng hạc thanh cao chầu trên lưng rùa nơi bờ hồ hướng về Tháp Rùa."
         }
       ]
     },
@@ -96,12 +96,12 @@
       "spriteType": "nghe",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Chú Tễu tươi cười rạng rỡ, nhân vật dẫn chuyện hóm hỉnh của nghệ thuật múa rối nước dân gian.",
+      "foundText": "Con nghê đá thuần Việt canh giữ chốn linh thiêng, xua tan tà khí bảo vệ chốn tôn nghiêm.",
       "spots": [
         {
-          "x": 0.47,
-          "y": 0.43,
-          "clue": "Linh thú nghê đá ngồi gác dưới hàng cây ven hồ, sát gáy sổ bên trái."
+          "x": 0.42,
+          "y": 0.45,
+          "clue": "Linh thú nghê đá uy nghi gác bên đầu cầu Thê Húc."
         }
       ]
     },
@@ -141,15 +141,15 @@
       "isBonus": true,
       "spriteType": "dong-tao-chicken",
       "scale": 0.42,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Giống gà tiến vua trứ danh vùng châu thổ sông Hồng với đôi chân to dũng mãnh."
     },
     {
       "id": "bonus-gecko",
       "name": "Cá Chép Đen Hồ Tây",
-      "clue": "Cá chép đen bơi lượn dưới bóng cầu Thê Húc đón ánh ban mai.",
-      "x": 0.11,
-      "y": 0.36,
+      "clue": "Cá chép đen bơi lượn dưới làn nước biếc ven hồ đón ánh ban mai.",
+      "x": 0.28,
+      "y": 0.68,
       "radius": 0.036,
       "score": 100,
       "isBonus": true,
@@ -157,59 +157,23 @@
       "scale": 0.38,
       "rotation": -45,
       "camo": "ink",
-      "foundText": "Thạch sùng đang chăm chú rình bắt một chú muỗi nhỏ ven tường."
+      "foundText": "Cá chép đen vượt vũ môn hóa rồng, gắn liền với truyền thuyết ngàn năm của đất kinh kỳ.",
+      "waterline": 0.6
     },
     {
       "id": "bonus-butterfly",
       "name": "Bông Sen Hồng Tây Hồ",
       "clue": "Bông sen hồng thanh khiết thơm ngát nép bên mép nước hồ Gươm.",
       "x": 0.58,
-      "y": 0.39,
+      "y": 0.65,
       "radius": 0.034,
       "score": 100,
       "isBonus": true,
       "spriteType": "lotus-flower",
       "scale": 0.36,
-      "camo": "ink",
-      "roam": {
-        "path": [
-          [
-            0.62,
-            0.58
-          ],
-          [
-            0.65,
-            0.55
-          ],
-          [
-            0.67,
-            0.59
-          ],
-          [
-            0.63,
-            0.61
-          ]
-        ],
-        "period": 14,
-        "loop": true,
-        "bob": true
-      },
-      "foundText": "Cánh bướm mỏng manh dập dờn như chiếc lá thu rơi."
-    },
-    {
-      "id": "clue-old-red-envelope",
-      "name": "Phong Bao Lì Xì Cũ",
-      "clue": "Phong bao đỏ lẫn vào những ô cửa sổ của tòa nhà cao phía sau hàng cây bên trái.",
-      "x": 0.335,
-      "y": 0.315,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "red-envelope",
-      "scale": 0.42,
-      "rotation": -6,
-      "camo": "chameleon",
-      "foundText": "Mặt sau phong bao viết: “Hà Nội, Tết năm ấy, trước khi theo thầy đi xa.”"
+      "camo": "tint",
+      "foundText": "Hoa sen Tây Hồ ngát hương, quốc hoa thanh khiết vươn lên từ bùn lầy tỏa ngát hương thơm.",
+      "waterline": 0.6
     }
   ]
 }

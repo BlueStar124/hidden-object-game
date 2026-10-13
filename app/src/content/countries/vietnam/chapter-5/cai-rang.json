@@ -16,7 +16,7 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Cây bẹo dựng đầu ghe: treo gì bán nấy, nét văn hóa giao thương độc đáo miền Tây.",
       "waterline": 0.65
     },
@@ -43,8 +43,8 @@
       "score": 150,
       "spriteType": "water-rail",
       "scale": 0.52,
-      "camo": "ink",
-      "foundText": "Đồng bằng sông Cửu Long trù phú bồi đắp bởi chín nhánh sông rồng thiêng."
+      "camo": "gouache",
+      "foundText": "Chú chim trích cồ với bộ lông xanh biếc và chiếc mỏ đỏ tươi lội nước kiếm mồi ven đầm dừa nước."
     },
     {
       "id": "mekong-durian",
@@ -56,8 +56,8 @@
       "score": 120,
       "spriteType": "coconut-candy",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Nước dừa xiêm mát lành làm dịu đi cái nắng gắt phương Nam."
+      "camo": "tint",
+      "foundText": "Kẹo dừa Bến Tre thơm béo ngậy mùi mạch nha và nước cốt dừa, thức quà ngọt ngào của miền Tây sông nước."
     },
     {
       "id": "river-otter",
@@ -70,7 +70,7 @@
       "spriteType": "mudskipper",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Cà phê kho, cà phê phin đón bình minh trên sông là nét sinh hoạt thi vị của người Nam Bộ."
+      "foundText": "Chú cá thòi lòi lanh lợi nhảy tưng tưng trên bãi bồi ven sông, sinh vật độc đáo của vùng ngập mặn Cửu Long."
     },
     {
       "id": "artist-seal",
@@ -95,7 +95,7 @@
       "spriteType": "dan-kim",
       "scale": 0.46,
       "camo": "invisible",
-      "foundText": "Tiếng đàn bầu réo rắt hồn quê sông nước Cửu Long, di sản văn hóa phi vật thể của nhân loại!"
+      "foundText": "Tiếng đàn kìm nguyệt cầm réo rắt câu vọng cổ mênh mang trên sóng nước, linh hồn của nghệ thuật Đờn ca tài tử Nam Bộ!"
     },
     {
       "id": "bonus-river-crab",
@@ -109,7 +109,7 @@
       "spriteType": "giant-featherback",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Cua đồng, cua sông béo ngậy bồi đắp bởi nguồn phù sa màu mỡ phù sa sông Cửu Long."
+      "foundText": "Cá thát lát sông Hậu thịt dai ngọt lừ, làm nên món chả cá thơm lừng danh tiếng miền Tây."
     },
     {
       "id": "bonus-kingfisher",
@@ -137,36 +137,7 @@
       "spriteType": "climbing-perch",
       "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Tiếng ếch òn è hòa cùng câu đờn ca tài tử văng vẳng bên sông."
-    },
-    {
-      "id": "clue-carved-coconut",
-      "name": "Trái Dừa Khắc Chữ",
-      "clue": "Trái dừa vẽ lẫn vào những mái nhà san sát bên bờ phải con sông.",
-      "x": 0.8,
-      "y": 0.58,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "coconut",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Khắc trên vỏ dừa: “Xuôi dòng Hậu Giang, ra tới biển là gặp.”"
-    },
-    {
-      "id": "tiny-sketch-9",
-      "name": "Nét Vẽ Tí Hon 9/10",
-      "clue": "Nét vẽ tí hon bám trên mạn một chiếc ghe nhỏ giữa sông, phía trên chợ nổi.",
-      "x": 0.42,
-      "y": 0.45,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "river-snail",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Điều của ta là: hãy nhìn thật gần, rồi nhìn gần thêm chút nữa.” (9/10)"
+      "foundText": "Cá rô đồng mùa nước nổi vượt bờ tìm mồi, món quà hào sảng của thiên nhiên ban tặng cho miệt vườn phương Nam."
     }
   ]
 }

@@ -85,7 +85,7 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "luminous",
       "foundText": "Ngọn đèn giữ ấm cho người lái đò giữa đêm sương lạnh giá."
     },
     {
@@ -111,7 +111,7 @@
       "score": 150,
       "spriteType": "bat",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "shadow",
       "foundText": "Dơi đêm săn côn trùng bay là là trên mặt nước dòng sông."
     },
     {
@@ -124,7 +124,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "ink",
+      "camo": "luminous",
       "roam": {
         "path": [
           [
@@ -160,8 +160,8 @@
       "score": 120,
       "spriteType": "binturong",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Quốc khuyển vùng cao trung thành thức canh sự bình yên cho bản làng."
+      "camo": "shadow",
+      "foundText": "Cầy mực binturong với chiếc đuôi rậm dài khéo léo bám vách đá tai mèo tĩnh mịch."
     },
     {
       "id": "artist-seal",
@@ -186,7 +186,7 @@
       "spriteType": "pocket-watch",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Khèn đêm trao duyên réo rắt phá tan sự tĩnh lặng của thung lũng đá tai mèo!"
+      "foundText": "Mặt đồng hồ quả quýt chạm khắc tinh xảo lấp lánh dưới ánh trăng huyền ảo nơi đỉnh đèo Mã Pí Lèng!"
     },
     {
       "id": "bonus-night-moth",
@@ -214,7 +214,7 @@
       "spriteType": "frog",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Chú ếch cất tiếng kêu trầm đục điểm xuyết cho sự tĩnh mịch của màn đêm."
+      "foundText": "Chú chàng hiu bám chân giác hút trên vách đá ướt, cất tiếng kêu thánh thót điểm xuyết đêm trăng."
     }
   ]
 }

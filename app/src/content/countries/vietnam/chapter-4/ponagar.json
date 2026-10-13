@@ -16,7 +16,7 @@
       "score": 150,
       "spriteType": "cham-statue",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Điệu múa Apsara huyền bí dâng lên Nữ thần Mẹ Xứ Sở Yan Po Nagar."
     },
     {
@@ -29,8 +29,8 @@
       "score": 150,
       "spriteType": "cham-lamp",
       "scale": 0.46,
-      "camo": "ink",
-      "foundText": "Thuyền thúng nan theo ngư dân miền biển Khánh Hòa vượt sóng ra khơi."
+      "camo": "tint",
+      "foundText": "Ngọn đèn dầu đất nung Champa thắp sáng không gian huyền bí trong các đêm hội Ka-tê truyền thống."
     },
     {
       "id": "sanskrit-scroll",
@@ -48,15 +48,15 @@
     {
       "id": "sacred-dove",
       "name": "Voi Đá Tháp Bà",
-      "clue": "Tượng voi đá cổ uy nghiêm canh giữ bậc thềm tháp Chăm trầm mặc.",
+      "clue": "Tượng voi đá cổ chạm khắc uy nghiêm nơi hốc vòm tháp Chăm trầm mặc.",
       "x": 0.48,
       "y": 0.36,
       "radius": 0.042,
       "score": 100,
       "spriteType": "highland-elephant",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Tà áo dài duyên dáng trong không gian văn hóa lễ hội Tháp Bà truyền thống."
+      "camo": "tint",
+      "foundText": "Tượng voi đá biểu trưng cho thần lực và sự chở che, kiệt tác điêu khắc đá cổ kính của nền văn minh Champa."
     },
     {
       "id": "ceremony-teacup",
@@ -69,7 +69,7 @@
       "spriteType": "t-rung",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Thanh âm đàn bầu độc huyền cầm ngân nga trầm bổng giữa nắng gió tháp Chàm."
+      "foundText": "Thanh âm đàn T'rưng trong trẻo vang vọng giữa những tháp gạch nung rực rỡ nắng gió miền duyên hải."
     },
     {
       "id": "artist-seal",
@@ -94,7 +94,7 @@
       "spriteType": "key",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Nhạc cụ cổ truyền giao hòa âm hưởng giữa núi rừng và biển cả miền Trung!"
+      "foundText": "Chiếc chìa khóa đồng cổ mở ra cánh cửa dẫn vào kho tàng huyền tích ngàn năm của vương triều Champa!"
     },
     {
       "id": "bonus-gecko",
@@ -121,7 +121,7 @@
       "isBonus": true,
       "spriteType": "champa-relief",
       "scale": 0.36,
-      "camo": "ink",
+      "camo": "tint",
       "foundText": "Hoa sứ trăm tuổi rụng cánh trắng tinh trên thềm đá cổ."
     },
     {
@@ -137,35 +137,6 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Ốc sên tận hưởng bóng râm mát dịu của ngôi tháp cổ."
-    },
-    {
-      "id": "clue-unlit-lantern",
-      "name": "Chiếc Đèn Trời Chưa Thả",
-      "clue": "Chiếc đèn trời vẽ lẫn vào những mái nhà thành phố phía xa bên trái.",
-      "x": 0.16,
-      "y": 0.39,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "sky-lantern",
-      "scale": 0.45,
-      "camo": "chameleon",
-      "foundText": "Trên đèn vẽ một mũi đất nhọn nhô ra biển, nơi mặt trời mọc và lặn trên cùng một vùng nước."
-    },
-    {
-      "id": "tiny-sketch-7",
-      "name": "Nét Vẽ Tí Hon 7/10",
-      "clue": "Nét vẽ tí hon đậu trên những đường chạm khắc của ngọn tháp Chăm lớn.",
-      "x": 0.42,
-      "y": 0.49,
-      "radius": 0.016,
-      "score": 100,
-      "isBonus": true,
-      "requires": "twin-lens",
-      "spriteType": "dragonfly",
-      "scale": 0.22,
-      "camo": "invisible",
-      "foundText": "“Đừng vẽ để được khen. Hãy vẽ để nhớ.” (7/10)"
     }
   ]
 }

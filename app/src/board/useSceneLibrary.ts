@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PixelRatio } from 'react-native';
 import type { SkImage, SkPicture } from '@shopify/react-native-skia';
 import { scheduleOnRN, scheduleOnUI } from 'react-native-worklets';
-import { layoutKey } from '../core/layout';
 import type { Page } from '../core/model';
+import { layoutKey } from '../core/layout';
 import { artIdOf, artOf } from '../content';
 import { loadSceneImage, type LoadedScene } from '../platform/sceneImage';
 import type { SceneData } from './render';
@@ -24,18 +24,14 @@ const loading = new Set<string>();
 const MAX_IMAGES = 5;
 const retiredArt = new Set<LoadedScene>();
 
-// What a painting tells about a page (chameleon tints, where the paper is): read once per layout of
-// a page (core/layout: tints follow where objects are). Replays may lay pages out anew, so only the
-// latest few are kept
+// What a painting tells about a page (chameleon tints, where the paper is): read once per page
 const analyses = new Map<string, SceneAnalysis>();
-const MAX_ANALYSES = 40;
 function analysisOf(page: Page, art: LoadedScene): SceneAnalysis {
   const key = layoutKey(page);
   let analysis = analyses.get(key);
   if (!analysis) {
     analysis = analyzeScene(art.readPixels(SAMPLE_WIDTH), page.objects);
     analyses.set(key, analysis);
-    if (analyses.size > MAX_ANALYSES) analyses.delete(analyses.keys().next().value!);
   }
   return analysis;
 }
@@ -54,7 +50,7 @@ export interface SceneLibrary {
   /** Changes whenever artwork arrives or a page is prepared in the background */
   version: number;
   bump: () => void;
-  /** Loads the artwork of these pages; beyond a few, the rest is let go — and scenes of other layouts */
+  /** Loads the artwork of these pages; beyond a few, the rest is let go */
   keepArt: (pages: Page[]) => void;
   imageOf: (page: Page) => SkImage | undefined;
   /** Called after the frame mapper was updated, keeping anything it still draws alive. */
@@ -74,8 +70,7 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
     for (const picture of pictures) retiredPictures.add(picture);
   }, [retiredPictures]);
 
-  // Pages laid out for this loupe size, layout and sprite sharpness (by core/layout.layoutKey: a
-  // replay with objects elsewhere is another scene of the same page)
+  // Pages laid out for this loupe size, layout and sprite sharpness
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const scenes = useMemo(() => new Map<string, SceneData>(), [loupe, compact, density]);
   useEffect(() => () => {
@@ -126,14 +121,11 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
           images.delete(id);
         }
       }
-      // Scenes are kept only for the layouts wanted now: every replay, golden visit or day's visitors
-      // lays a page out anew, and each scene holds its own sprite sheet on the GPU
       const alive = new Set([...images.values()].map((art) => art.image));
-      const layouts = new Set(pages.map(layoutKey));
-      for (const [key, prepared] of scenes) {
-        if (alive.has(prepared.image) && layouts.has(key)) continue;
+      for (const [id, prepared] of scenes) {
+        if (alive.has(prepared.image)) continue;
         retiredScenes.add(prepared);
-        scenes.delete(key);
+        scenes.delete(id);
       }
     },
     [scenes, bump, retiredScenes]
@@ -182,10 +174,10 @@ export function useSceneLibrary(page: Page, loupe: LoupePaints, compact: boolean
   };
 }
 
-/** Loads the artwork of `pages` whenever that list — or a layout in it — or the library's content changes. */
+/** Loads the artwork of `pages` whenever that list (or the library's content) changes. */
 export function useKeepArt(library: SceneLibrary, pages: Page[]) {
   const { keepArt, version } = library;
-  const key = pages.map(layoutKey).join('|');
+  const key = pages.map((p) => p.id).join('|');
   const latest = useRef(pages);
   latest.current = pages;
   useEffect(() => {

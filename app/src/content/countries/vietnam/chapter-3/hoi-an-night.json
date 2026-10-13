@@ -4,8 +4,8 @@
   "title": "Đêm Hoa Đăng Phố Hội",
   "subtitle": "Trang 10 · Đêm — Rực rỡ sông Hoài",
   "art": "hoi-an",
-  "timeLimit": 285,
-  "storyClue": "Khi phố cổ tắt đèn điện, hàng vạn chiếc đèn lồng lụa và hoa đăng trên sông Hoài bừng sáng huyền ảo như bước vào truyện cổ tích. Kỳ lạ thay, vài món đồ ban ngày đã rời chỗ: thẻ manh mối kể ban ngày chúng ở đâu, hãy tìm xem đêm nay chúng nằm đâu.",
+  "timeLimit": 240,
+  "storyClue": "Khi phố cổ tắt đèn điện, hàng vạn chiếc đèn lồng lụa và hoa đăng trên sông Hoài bừng sáng huyền ảo như bước vào truyện cổ tích.",
   "nightLights": [
     {
       "x": 0.21,
@@ -91,7 +91,7 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "luminous",
       "foundText": "Lễ hội hoa đăng đêm rằm Hội An là di sản văn hóa phi vật thể quý báu."
     },
     {
@@ -104,7 +104,7 @@
       "score": 150,
       "spriteType": "cat",
       "scale": 0.42,
-      "camo": "ink",
+      "camo": "shadow",
       "foundText": "Đôi mắt mèo phát sáng như ngọc bích trong ánh nến lung linh."
     },
     {
@@ -117,7 +117,7 @@
       "score": 150,
       "spriteType": "paper-boat",
       "scale": 0.48,
-      "camo": "ink",
+      "camo": "luminous",
       "foundText": "Từng ngọn nến hoa đăng thả trôi mang theo lời chúc bình an và hạnh phúc."
     },
     {
@@ -143,7 +143,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "ink",
+      "camo": "luminous",
       "roam": {
         "path": [
           [
@@ -192,7 +192,7 @@
       "spriteType": "star-lantern",
       "scale": 0.48,
       "camo": "invisible",
-      "foundText": "Thuyền rồng lộng lẫy tái hiện lễ hội hoa đăng tráng lệ của thương cảng xưa!"
+      "foundText": "Đèn ông sao năm cánh giấy kiếng rực rỡ mang không khí Tết Trung thu ấm áp về với phố cổ Hội An!"
     },
     {
       "id": "bonus-night-moth",
@@ -219,51 +219,8 @@
       "isBonus": true,
       "spriteType": "mouse",
       "scale": 0.4,
-      "camo": "ink",
-      "foundText": "Cá sông tụ lại quanh ánh nến bập bùng trên mặt nước.",
-      "waterline": 0.6
-    },
-    {
-      "id": "moved-street-hat",
-      "name": "Nón Lá Trên Đò Đêm",
-      "clue": "Chiếc nón lá giờ nằm trên mạn chiếc đò chở đèn lồng ở góc phải sông Hoài.",
-      "x": 0.78,
-      "y": 0.69,
-      "radius": 0.044,
-      "score": 150,
-      "spriteType": "conical-hat",
-      "scale": 0.46,
-      "camo": "ink",
-      "dayTwin": "street-hat",
-      "foundText": "Cô bán hàng rong đã xuống đò bán hoa đăng, bỏ quên chiếc nón bên mạn."
-    },
-    {
-      "id": "moved-hoian-cyclo",
-      "name": "Ô Giấy Dưới Đèn Lồng",
-      "clue": "Chiếc ô giấy dầu được dựng bên hiên quán sáng đèn lồng giữa phố.",
-      "x": 0.38,
-      "y": 0.45,
-      "radius": 0.049,
-      "score": 150,
-      "spriteType": "paper-umbrella",
-      "scale": 0.52,
-      "camo": "ink",
-      "dayTwin": "hoian-cyclo",
-      "foundText": "Ô giấy được mở ra hong khô dưới ánh đèn lồng, như một bông hoa đêm."
-    },
-    {
-      "id": "moved-silk-lantern",
-      "name": "Chén Trà Bên Kia Sông",
-      "clue": "Chén trà được mang ra chiếc bàn quán nước dưới hàng cây bờ bên kia sông.",
-      "x": 0.78,
-      "y": 0.41,
-      "radius": 0.044,
-      "score": 150,
-      "spriteType": "teacup",
-      "scale": 0.48,
-      "camo": "ink",
-      "dayTwin": "silk-lantern",
-      "foundText": "Chén trà sen theo khách sang bờ bên kia, ngắm phố đèn lồng từ xa."
+      "camo": "shadow",
+      "foundText": "Chú chuột nhắt tinh nghịch lẩn trốn dưới chân trụ gỗ Chùa Cầu tìm mồi trong đêm thanh vắng."
     }
   ]
 }

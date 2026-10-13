@@ -29,8 +29,8 @@
       "score": 120,
       "spriteType": "tiffin",
       "scale": 0.46,
-      "camo": "ink",
-      "foundText": "Chợ hoa sớm mai ngạt ngào sắc hương của muôn loài hoa miền nhiệt đới."
+      "camo": "tint",
+      "foundText": "Chiếc cà mèn ba tầng quen thuộc chứa đầy tình cảm và bữa cơm ấm nóng của các cô chú tiểu thương chợ Bến Thành."
     },
     {
       "id": "street-camera",
@@ -42,7 +42,7 @@
       "score": 120,
       "spriteType": "banh-mi",
       "scale": 0.44,
-      "camo": "ink",
+      "camo": "gouache",
       "foundText": "Món ăn đường phố trứ danh của Sài Gòn với vỏ bánh giòn rụm và nhân đậm đà nức tiếng năm châu."
     },
     {
@@ -68,8 +68,8 @@
       "score": 100,
       "spriteType": "clay-piggy",
       "scale": 0.44,
-      "camo": "ink",
-      "foundText": "Tô phở đậm đà phong vị phương Nam với nhiều loại rau thơm tươi mát."
+      "camo": "gouache",
+      "foundText": "Chú heo đất Lái Thiêu vẽ màu thủ công sặc sỡ, món đồ chơi tuổi thơ gắn liền với bao thế hệ."
     },
     {
       "id": "artist-seal",
@@ -121,8 +121,8 @@
       "isBonus": true,
       "spriteType": "southern-scarf",
       "scale": 0.38,
-      "camo": "ink",
-      "foundText": "Đàn bồ câu hàng trăm con quen thuộc với người dân Sài Gòn."
+      "camo": "tint",
+      "foundText": "Chiếc khăn rằn mộc mạc vắt vai áo bà ba, biểu tượng dịu dàng và chịu thương chịu khó của phụ nữ phương Nam."
     },
     {
       "id": "bonus-sunbird",
@@ -137,20 +137,6 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Tiếng chim lích chích vui tai giữa nhịp sống đô thị hối hả."
-    },
-    {
-      "id": "clue-noodle-bowl",
-      "name": "Tô Hủ Tiếu Còn Nóng",
-      "clue": "Tô hủ tiếu vẽ lẫn vào những dãy nhà cao tầng nhiều màu phía xa bên phải.",
-      "x": 0.7,
-      "y": 0.31,
-      "radius": 0.028,
-      "score": 150,
-      "isClue": true,
-      "spriteType": "noodle-bowl",
-      "scale": 0.42,
-      "camo": "chameleon",
-      "foundText": "Bà chủ quán kể có một cụ già vừa ăn ở đây và hỏi thăm “cô cậu thám tử”."
     }
   ]
 }
