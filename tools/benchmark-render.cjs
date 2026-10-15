@@ -1,6 +1,6 @@
 // Compare exported web builds with the same browser, viewport and GPU.
 // node tools/benchmark-render.cjs http://127.0.0.1:8093 [results.json]
-// WIDTH=844 HEIGHT=390 DPR=2 changes the viewport, not the physical GPU.
+// WIDTH=844 HEIGHT=390 DPR=2 changes the viewport, not the physical GPU. THROTTLE=4 slows the CPU like a phone's.
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 
@@ -17,6 +17,12 @@ const fs = require('node:fs');
     });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
+    if (+process.env.THROTTLE > 1) {
+      const cdp = await page.context().newCDPSession(page);
+      await cdp.send('Emulation.setCPUThrottlingRate', { rate: +process.env.THROTTLE });
+    }
+    // Straight into the game: the sign-in screen only shows on a first launch (platform/accountPrefs)
+    await page.addInitScript(() => { try { localStorage.setItem('detective_sketchbook_entered', '1'); } catch {} });
     await page.addInitScript(() => {
       window.__renderBench = { calls: {}, frames: [] };
       const names = ['drawElements', 'drawArrays', 'drawElementsInstanced', 'drawArraysInstanced',

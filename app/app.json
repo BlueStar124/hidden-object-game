@@ -2,6 +2,7 @@
   "expo": {
     "name": "The Lost Sketchbook",
     "slug": "lost-sketchbook",
+    "scheme": "lostsketchbook",
     "version": "0.3.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
@@ -45,7 +46,8 @@
       ],
       "expo-asset",
       "expo-sharing",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "tsconfigPaths": false

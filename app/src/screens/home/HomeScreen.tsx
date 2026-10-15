@@ -54,6 +54,9 @@ interface HomeScreenProps {
   onEnterChallenge: () => void;
   onOpenBackup: () => void;
   accountEmail: string;
+  /** The name in the game (core/profile), shown instead of the email once there is one */
+  accountName: string | null;
+  onEditName: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
 }
@@ -81,6 +84,8 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     onEnterChallenge,
     onOpenBackup,
     accountEmail,
+    accountName,
+    onEditName,
     onSignIn,
     onSignOut,
   }) => {
@@ -163,7 +168,7 @@ export const HomeScreen = React.memo<HomeScreenProps>(
           <Chip label="Thử thách" icon={<Swords size={controlIcon.small} color={controlIcon.color} />} onPress={onEnterChallenge} iconOnly={tight} />
           {tight && (
             <Chip
-              label={accountEmail ? `Đăng xuất (${accountEmail})` : 'Đăng nhập để đồng bộ tiến độ'}
+              label={accountEmail ? `Đăng xuất (${accountName ?? accountEmail})` : 'Đăng nhập để đồng bộ tiến độ'}
               icon={<UserRound size={controlIcon.small} color={controlIcon.color} />}
               onPress={accountEmail ? onSignOut : onSignIn}
               iconOnly
@@ -179,7 +184,10 @@ export const HomeScreen = React.memo<HomeScreenProps>(
         {!tight && (accountEmail ? (
           <View style={[styles.account, !columns && styles.centredRow]}>
             <UserRound size={13} color={controlIcon.color} />
-            <Text style={styles.accountEmail} numberOfLines={1}>{accountEmail}</Text>
+            <Text style={[styles.accountEmail, !!accountName && styles.accountName]} numberOfLines={1}>{accountName ?? accountEmail}</Text>
+            <Pressable onPress={onEditName} accessibilityRole="button" accessibilityLabel="Đổi tên trong game">
+              <Text style={styles.signOut}>Đổi tên</Text>
+            </Pressable>
             <Pressable onPress={onSignOut} accessibilityRole="button" accessibilityLabel="Đăng xuất khỏi tài khoản">
               <Text style={styles.signOut}>Đăng xuất</Text>
             </Pressable>
@@ -518,6 +526,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     marginTop: 8,
+  },
+  accountName: {
+    color: colors.ink,
+    fontWeight: '700',
   },
   accountEmail: {
     flexShrink: 1,

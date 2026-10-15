@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import type { Session } from '@supabase/supabase-js';
+import { displayNameOf } from '../../core/profile';
 import { hasEntered, rememberEntered } from '../../platform/accountPrefs';
 import { connectCloudProgress, type CloudSync } from '../../platform/cloudProgress';
 import { supabase } from '../../platform/supabase';
 import { colors, fonts } from '../../ui/theme';
 import { AuthContextProvider } from './AuthContext';
 import AuthScreen from './AuthScreen';
+import { NameDialog } from './NameDialog';
 
 // A sign-in waits this long for the account's progress, then the game opens anyway (sync goes on)
 const SYNC_WAIT_MS = 4000;
@@ -23,6 +25,9 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [accountOpen, setAccountOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  // "Để sau" on the first ask: not asked again until the app opens next time
+  const [nameLater, setNameLater] = useState(false);
   // Bumped once a sign-in has brought the account's progress: the game opens again with it
   const [generation, setGeneration] = useState(0);
   const sync = useRef<CloudSync | null>(null);
@@ -73,10 +78,24 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
     };
   }, [userId]);
 
+  // The name in the game: chosen, or the sign-in provider's (core/profile); none yet: asked for once
+  const name = displayNameOf(session?.user.user_metadata);
+  const saveName = async (next: string): Promise<string | null> => {
+    if (!supabase) return 'Chưa kết nối máy chủ.';
+    try {
+      const { error } = await supabase.auth.updateUser({ data: { display_name: next } });
+      return error ? 'Chưa lưu được tên. Hãy kiểm tra kết nối rồi thử lại.' : null;
+    } catch {
+      return 'Chưa lưu được tên. Hãy kiểm tra kết nối rồi thử lại.';
+    }
+  };
+
   const value = useMemo(
     () => ({
       email: session?.user.email ?? '',
+      name,
       openAccount: () => setAccountOpen(true),
+      editName: () => setEditingName(true),
       signOut: async () => {
         if (!supabase) return;
         const current = sync.current;
@@ -85,7 +104,7 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
         await supabase.auth.signOut({ scope: 'local' });
       },
     }),
-    [session]
+    [session, name]
   );
 
   const playAsGuest = () => {
@@ -112,6 +131,17 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
             <AuthScreen configured={!!supabase} onPlayAsGuest={playAsGuest} guestLabel={entered ? 'Quay lại sổ ký họa' : undefined} />
           )}
         </View>
+      )}
+      {!asking && session && (editingName || (!name && !nameLater)) && (
+        <NameDialog
+          initial={name ?? ''}
+          required={!name}
+          onSave={saveName}
+          onClose={() => {
+            setEditingName(false);
+            setNameLater(true);
+          }}
+        />
       )}
     </View>
   );
