@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Challenge } from '../core/challenge';
+import {
+  canChallengePage,
+  friendChallengeRefusal,
+  friendPage,
+  isFriendChallenge,
+  type Challenge,
+  type ChallengeRefusal,
+  type FriendChallenge,
+} from '../core/challenge';
 import { dailyPage, type DailyPuzzle } from '../core/daily';
 import { withDayTwins } from '../core/dayNight';
 import { hasSpots, layOutPage } from '../core/layout';
@@ -26,7 +34,7 @@ import { ownedTools } from './ownedTools';
 export type PlayMode =
   | { kind: 'book' }
   | { kind: 'daily'; puzzle: DailyPuzzle }
-  | { kind: 'challenge'; challenge: Challenge };
+  | { kind: 'challenge'; challenge: Challenge | FriendChallenge };
 
 const BOOK: PlayMode = { kind: 'book' };
 
@@ -62,8 +70,10 @@ export interface Navigation {
   replay: () => void;
   /** Opens a day's daily page; false if that page is not in the books */
   openDaily: (puzzle: DailyPuzzle) => boolean;
-  /** Opens a friend's challenge; false if its page is not in this version of the books */
-  openChallenge: (challenge: Challenge) => boolean;
+  /** Opens a challenge code's hunt; or why it cannot (not in these books, page not played, a turn pending) */
+  openChallenge: (challenge: Challenge) => ChallengeRefusal | null;
+  /** Opens a friend's hunt (downloaded) on a page the player has played; or why it cannot */
+  openFriendChallenge: (challenge: FriendChallenge) => ChallengeRefusal | null;
   /** Back from a daily page or a challenge to the page the player was at in the book */
   leaveSpecial: () => void;
   /** A page exactly as turning to it will open it — layout and chance decided ahead (the board prepares neighbours with it) */
@@ -107,7 +117,9 @@ const visitOf = (page: Page, tools: readonly ToolId[], day: string, fate: Fate) 
 /** The page as a visit plays it (a daily corner has only main objects: no visitor, no golden critter). */
 function pageFor(country: Country, index: number, night: boolean, seed: number, mode: PlayMode, roll: number, tools: ToolId[], day: string): Page {
   const page = pageAt(country, index, night);
-  return mode.kind === 'daily' ? dailyPage(withTools(page, tools), mode.puzzle) : visitOf(page, tools, day, { seed, roll });
+  if (mode.kind === 'daily') return dailyPage(withTools(page, tools), mode.puzzle);
+  const visit = visitOf(page, tools, day, { seed, roll });
+  return mode.kind === 'challenge' && isFriendChallenge(mode.challenge) ? friendPage(visit, mode.challenge) : visit;
 }
 
 /** A first visit plays the page as written; once solved, its objects may hide elsewhere. */
@@ -292,13 +304,30 @@ export function useNavigation(): Navigation {
   );
 
   const openChallenge = useCallback(
-    (challenge: Challenge) => {
+    (challenge: Challenge): ChallengeRefusal | null => {
       const at = pageOfChallenge(challenge);
-      if (!at) return false;
+      if (!at) return 'missing';
+      const page = at.night ? at.ref.night! : at.ref.day;
+      if (!canChallengePage(page.id, progress.playedPages())) return 'unplayed';
+      if (isTurning) return 'turning';
       openSpecial({ countryId: at.ref.country.id, index: at.ref.index, night: at.night }, challenge.seed, { kind: 'challenge', challenge });
-      return true;
+      return null;
     },
-    [openSpecial]
+    [openSpecial, isTurning]
+  );
+
+  const openFriendChallenge = useCallback(
+    (challenge: FriendChallenge): ChallengeRefusal | null => {
+      const refused = friendChallengeRefusal(challenge);
+      if (refused) return refused;
+      const at = placeOf(challenge.pageId);
+      if (!at) return 'missing';
+      if (!canChallengePage(challenge.pageId, progress.playedPages())) return 'unplayed';
+      if (isTurning) return 'turning';
+      openSpecial({ countryId: at.ref.country.id, index: at.ref.index, night: at.night }, 0, { kind: 'challenge', challenge });
+      return null;
+    },
+    [openSpecial, isTurning]
   );
 
   const leaveSpecial = useCallback(() => {
@@ -338,6 +367,7 @@ export function useNavigation(): Navigation {
     replay,
     openDaily,
     openChallenge,
+    openFriendChallenge,
     leaveSpecial,
     preparedPage,
   };

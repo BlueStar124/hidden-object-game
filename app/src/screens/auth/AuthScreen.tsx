@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BookOpen, Lock, Mail } from '../../ui/icons';
-import { PrimaryButton } from '../../ui/Buttons';
+import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { colors, fonts, shadow } from '../../ui/theme';
 import { supabase } from '../../platform/supabase';
 
-/** Email and password entry shown while the protected game is locked. */
-const AuthScreen: React.FC<{ configured: boolean }> = ({ configured }) => {
+/** Offers account access or lets the player continue directly to the game as a guest. */
+const AuthScreen: React.FC<{
+  configured: boolean;
+  onPlayAsGuest: () => void;
+  /** The way back without an account (the game is already open behind) */
+  guestLabel?: string;
+}> = ({ configured, onPlayAsGuest, guestLabel = 'Chơi không cần đăng nhập' }) => {
   const [createAccount, setCreateAccount] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -107,6 +112,12 @@ const AuthScreen: React.FC<{ configured: boolean }> = ({ configured }) => {
         ) : (
           <Text style={styles.message}>Hãy thêm địa chỉ dự án và publishable key vào cấu hình EXPO_PUBLIC_SUPABASE_URL và EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY.</Text>
         )}
+        <SecondaryButton
+          label={guestLabel}
+          icon={<BookOpen size={18} color={colors.earth} />}
+          onPress={onPlayAsGuest}
+          style={styles.guestButton}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -147,5 +158,6 @@ const styles = StyleSheet.create({
   input: { flex: 1, minHeight: 46, color: colors.ink, fontSize: 14 },
   message: { alignSelf: 'stretch', marginVertical: 10, color: colors.crimson, fontSize: 12, lineHeight: 18, textAlign: 'center' },
   full: { alignSelf: 'stretch', flex: 0, marginTop: 5 },
+  guestButton: { alignSelf: 'stretch', flex: 0, marginTop: 12 },
   toggle: { marginTop: 15, color: colors.earth, fontSize: 13, fontWeight: '700' },
 });

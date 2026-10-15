@@ -2,6 +2,7 @@ import React from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { FIRST_COUNTRY, pagesOf } from '../src/content';
+import { FRIEND_CONTENT_VERSION } from '../src/core/challenge';
 import { dailyPuzzle } from '../src/core/daily';
 import { hasSpots, layoutKey } from '../src/core/layout';
 import { useNavigation, type Navigation } from '../src/game/useNavigation';
@@ -11,11 +12,13 @@ import type { SceneLibrary } from '../src/board/useSceneLibrary';
 jest.mock('../src/platform/sound', () => ({ sound: { playPageTurn: jest.fn() } }));
 // Pages the player has solved (a replay of one may lay it out anew)
 const mockSolved = new Set<string>();
+const mockPlayed = new Set<string>();
 jest.mock('../src/core/progress', () => ({
   progress: {
     lastPage: () => undefined,
     pageResult: (id: string) => (mockSolved.has(id) ? { stars: 3 } : undefined),
     isMysterySolved: () => false,
+    playedPages: () => [...new Set([...mockPlayed, ...mockSolved])],
   },
 }));
 jest.mock('../src/board/useSceneLibrary', () => ({ useKeepArt: jest.fn() }));
@@ -39,6 +42,7 @@ beforeEach(() => {
 
 afterEach(() => {
   mockSolved.clear();
+  mockPlayed.clear();
   if (renderer) act(() => renderer.unmount());
   jest.useRealTimers();
   jest.restoreAllMocks();
@@ -150,13 +154,69 @@ describe('Ways of playing a page', () => {
 
   test('a challenge opens its page, laid out as in the code; an unknown page is refused', () => {
     act(() => { renderer = create(<NavigationProbe />); });
-    let opened = false;
-    act(() => { opened = navigation.openChallenge({ country: 'SG', page: 2, night: false, seed: 4242, time: 60 }); });
-    expect(opened).toBe(true);
+    mockPlayed.add(pagesOf(FIRST_COUNTRY)[1].day.id);
+    let refused: string | null = 'missing';
+    act(() => { refused = navigation.openChallenge({ country: 'SG', page: 2, night: false, seed: 4242, time: 60 }); });
+    expect(refused).toBeNull();
     expect(navigation.mode.kind).toBe('challenge');
     expect(navigation.page.id).toBe(pagesOf(FIRST_COUNTRY)[1].day.id);
     expect(navigation.seed).toBe(4242);
-    act(() => { opened = navigation.openChallenge({ country: 'ZZ', page: 1, night: false, seed: 1 }); });
-    expect(opened).toBe(false);
+    act(() => { refused = navigation.openChallenge({ country: 'ZZ', page: 1, night: false, seed: 1 }); });
+    expect(refused).toBe('missing');
+  });
+
+  test('an unplayed challenge is refused without changing the page, even when its day has been played', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    const original = navigation.page;
+    let refused: string | null = null;
+    const ref = pagesOf(FIRST_COUNTRY).find((p) => p.night)!;
+    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: false, seed: 42 }); });
+    expect(refused).toBe('unplayed');
+    expect(navigation.page).toBe(original);
+    expect(navigation.mode.kind).toBe('book');
+    mockPlayed.add(ref.day.id);
+    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: true, seed: 42 }); });
+    expect(refused).toBe('unplayed');
+    mockPlayed.add(ref.night!.id);
+    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: true, seed: 42 }); });
+    expect(refused).toBeNull();
+    expect(navigation.page.id).toBe(ref.night!.id);
+  });
+
+  test("a friend's hunt opens on a played page with only its objects; newer content or an unplayed page is refused", () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    const target = pagesOf(FIRST_COUNTRY)[1].day;
+    const hunt = {
+      kind: 'friend' as const,
+      id: 'f1',
+      code: 'H-3FA9C1D2E4B5',
+      pageId: target.id,
+      contentVersion: FRIEND_CONTENT_VERSION,
+      title: 'Thử thách',
+      objects: [{ id: 'a', spriteType: 'cat' as const, name: 'Mèo', clue: 'Trên mái nhà', x: 0.5, y: 0.5, radius: 0.03 }],
+      createdAt: '2026-10-14T00:00:00Z',
+    };
+    let refused: string | null = null;
+    act(() => { refused = navigation.openFriendChallenge(hunt); });
+    expect(refused).toBe('unplayed');
+    mockPlayed.add(target.id);
+    act(() => { refused = navigation.openFriendChallenge({ ...hunt, contentVersion: FRIEND_CONTENT_VERSION + 1 }); });
+    expect(refused).toBe('newer');
+    act(() => { refused = navigation.openFriendChallenge(hunt); });
+    expect(refused).toBeNull();
+    expect(navigation.page.id).toBe(target.id);
+    expect(navigation.page.objects.map((o) => o.id)).toEqual(['a']);
+  });
+
+  test('a pending page turn refuses a challenge rather than reporting success without opening it', () => {
+    act(() => { renderer = create(<NavigationProbe />); });
+    const ref = pagesOf(FIRST_COUNTRY)[0];
+    mockPlayed.add(ref.day.id);
+    act(() => navigation.next());
+    const turn = navigation.turn;
+    let refused: string | null = null;
+    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: false, seed: 42 }); });
+    expect(refused).toBe('turning');
+    expect(navigation.turn).toBe(turn);
   });
 });

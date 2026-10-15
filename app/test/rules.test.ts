@@ -1,6 +1,18 @@
 import { describe, expect, test } from '@jest/globals';
 import { clockTick, COMBO_WINDOW, leftovers, openCase, recordExploreFind, recordFind, recordHint, recordMiss } from '../src/core/caseFile';
-import { encodeChallenge, parseChallenge } from '../src/core/challenge';
+import {
+  canChallengePage,
+  challengeSeed,
+  encodeChallenge,
+  FRIEND_CONTENT_VERSION,
+  FRIEND_OBJECT_SCORE,
+  friendChallengeRefusal,
+  friendPage,
+  isFriendChallenge,
+  parseChallenge,
+  parseFriendCode,
+  readFriendChallenge,
+} from '../src/core/challenge';
 import { DAILY_MAX_FINDS, DAILY_MIN_FINDS, DAILY_TIME_LIMIT, dailyPage, dailyPuzzle, inFocus } from '../src/core/daily';
 import { withDayTwins } from '../src/core/dayNight';
 import { detectObject, nextInSequence } from '../src/core/detection';
@@ -34,6 +46,25 @@ function atPhase(period: number, phase: number): number {
   const current = shyPhase({ period }, now);
   return now + ((phase - current + 1) % 1) * period * 1000;
 }
+
+describe('challenge eligibility', () => {
+  test('requires prior play of the exact page, with day and night kept separate', () => {
+    expect(canChallengePage('gardens-by-the-bay', [])).toBe(false);
+    expect(canChallengePage('gardens-by-the-bay', ['gardens-by-the-bay'])).toBe(true);
+    expect(canChallengePage('gardens-by-the-bay-night', ['gardens-by-the-bay'])).toBe(false);
+    expect(canChallengePage('gardens-by-the-bay', ['gardens-by-the-bay-night'])).toBe(false);
+    expect(canChallengePage('merlion-park', ['gardens-by-the-bay'])).toBe(false);
+  });
+
+  test('new challenges always use a reproducible nonzero seed within the code range', () => {
+    for (const roll of [0, 0.25, 0.5, 0.999999, 1]) {
+      const seed = challengeSeed(roll);
+      expect(seed).toBeGreaterThan(0);
+      expect(seed).toBeLessThan(SEED_COUNT);
+      expect(parseChallenge(encodeChallenge({ country: 'SG', page: 2, night: false, seed }))?.seed).toBe(seed);
+    }
+  });
+});
 
 describe('scoring', () => {
   test('a find scores its points times the combo, plus 50 per combo step', () => {
@@ -623,5 +654,57 @@ describe('travelling creatures', () => {
     expect(migrantProgress(swallow, (id) => seen[id] ?? [])).toEqual({ met: 1, total: 2 });
     seen.b = [migrantObjectId(swallow)];
     expect(migrantProgress(swallow, (id) => seen[id] ?? [])).toEqual({ met: 2, total: 2 });
+  });
+});
+
+describe("a friend's hunt", () => {
+  const knows = (type: string) => type === 'cat' || type === 'owl';
+  const item = (id: string, extra: Record<string, unknown> = {}) => ({ id, spriteType: 'cat', name: 'Mèo', clue: 'Trên mái nhà', x: 0.5, y: 0.5, radius: 0.03, ...extra });
+  const raw = (objects: unknown[], extra: Record<string, unknown> = {}) => ({
+    id: 'f1',
+    code: 'H-3FA9C1D2E4B5',
+    pageId: 'merlion-park',
+    contentVersion: FRIEND_CONTENT_VERSION,
+    title: ' Thử thách ',
+    objects,
+    createdAt: '2026-10-14T00:00:00Z',
+    ...extra,
+  });
+
+  test('its code is found in any message', () => {
+    expect(parseFriendCode('Nhập mã h-3fa9c1d2e4b5 nhé!')).toBe('H-3FA9C1D2E4B5');
+    expect(parseFriendCode('SG3-7K2P-142')).toBeNull();
+  });
+
+  test('what the server sends is checked object by object', () => {
+    const ok = readFriendChallenge(raw([item('a'), item('b', { camo: 'chameleon', flip: true })]), knows)!;
+    expect(ok.title).toBe('Thử thách');
+    expect(isFriendChallenge(ok)).toBe(true);
+    expect(ok.objects.map((o) => o.id)).toEqual(['a', 'b']);
+    for (const bad of [
+      raw([item('a', { x: 'a' })]),
+      raw([item('a', { x: 0.99 })]),
+      raw([item('a'), item('a')]),
+      raw([item('a', { spriteType: 'dragon' })]),
+      raw([item('a', { spriteType: 'seal' })]),
+      raw([item('a', { camo: 'gouache' })]),
+      raw([item('a', { name: '  ' })]),
+      raw([]),
+      raw([item('a')], { code: 'nope' }),
+      null,
+    ]) {
+      expect(readFriendChallenge(bad, knows)).toBeNull();
+    }
+  });
+
+  test('a hunt made for newer content is refused; it is played with only its own objects', () => {
+    const ok = readFriendChallenge(raw([item('a')]), knows)!;
+    expect(friendChallengeRefusal(ok)).toBeNull();
+    expect(friendChallengeRefusal({ ...ok, contentVersion: FRIEND_CONTENT_VERSION + 1 })).toBe('newer');
+    const page = friendPage(pageOf('merlion-park', [object('main')]), ok);
+    expect(page.objects).toEqual([expect.objectContaining({ id: 'a', score: FRIEND_OBJECT_SCORE })]);
+    expect(page.title).toBe('Thử thách');
+    expect(layoutKey(page)).toBe('merlion-park#friend-f1');
+    expect(isFriendChallenge({ country: 'SG', page: 1, night: false, seed: 1 })).toBe(false);
   });
 });

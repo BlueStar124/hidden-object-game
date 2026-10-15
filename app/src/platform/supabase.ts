@@ -1,3 +1,4 @@
+import { AppState, Platform } from 'react-native';
 import { createClient } from '@supabase/supabase-js';
 import { supabaseStorage } from './supabaseStorage';
 
@@ -16,3 +17,13 @@ export const supabase =
         },
       })
     : null;
+
+// iOS/Android: refresh the session only while the app is in the foreground (a timer in the
+// background is unreliable there, and a stale token would sign the player out on return)
+if (supabase && Platform.OS !== 'web') {
+  const client = supabase;
+  AppState.addEventListener('change', (state) => {
+    if (state === 'active') void client.auth.startAutoRefresh();
+    else void client.auth.stopAutoRefresh();
+  });
+}

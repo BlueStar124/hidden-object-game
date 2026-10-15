@@ -93,6 +93,12 @@ export function readProgress(raw: unknown): GameProgress {
   // (Damaged values are dropped rather than kept as unknown fields)
   const solvedMysteries = Array.isArray(data.solvedMysteries) ? strings(data.solvedMysteries) : undefined;
   const rareFound = Array.isArray(data.rareFound) ? strings(data.rareFound) : undefined;
+  // Older saves did not keep visits; only finished pages and the last book page prove prior play.
+  const playedPages = Array.from(new Set([
+    ...strings(data.playedPages),
+    ...Object.keys(sceneResults).filter((id) => sceneResults[id].stars > 0),
+    ...(typeof data.lastPageId === 'string' ? [data.lastPageId] : []),
+  ]));
   const stamps = readStamps(data.stamps);
   const cover = readCover(data.cover);
 
@@ -114,6 +120,7 @@ export function readProgress(raw: unknown): GameProgress {
     stamps,
     cover,
     rareFound,
+    playedPages: playedPages.length ? playedPages : undefined,
   };
 }
 
@@ -160,6 +167,7 @@ export function mergeProgress(current: GameProgress, other: GameProgress): GameP
     ...current,
     schemaVersion: SCHEMA_VERSION,
     unlockedScenes: union(current.unlockedScenes, other.unlockedScenes),
+    playedPages: union(current.playedPages, other.playedPages),
     sceneResults,
     totalScore: Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0),
     discovered,
@@ -199,6 +207,7 @@ export function readBackup(text: string): GameProgress | null {
  * album can ask for every page without reading storage (SQLite on iOS/Android) each time.
  */
 let copy: GameProgress | null = null;
+const listeners = new Set<() => void>();
 
 // Web: another tab of the game saved — read the save again
 if (typeof addEventListener === 'function') {
@@ -225,9 +234,22 @@ function save(progress: GameProgress): void {
   } catch (e) {
     console.warn('Unable to save progress', e);
   }
+  for (const listener of listeners) {
+    try {
+      listener();
+    } catch {
+      // A cloud sync observer must never interrupt a local save.
+    }
+  }
 }
 
 export const progress = {
+  /** Watches local saves so platform services can mirror them without entering game rules. */
+  subscribe(listener: () => void): () => void {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  },
+
   /* ---- Backups ---- */
 
   /** The whole save as the text of a backup file. */
@@ -241,6 +263,15 @@ export const progress = {
     if (!other) return false;
     save(mergeProgress(load(), other));
     return true;
+  },
+
+  /**
+   * Another player's save in place of this device's (null: a fresh one), keeping this device's
+   * settings: an account signing in must not take over the progress of the one before it.
+   */
+  replace(text: string | null): void {
+    const next = (text ? readBackup(text) : null) ?? readProgress(null);
+    save({ ...next, settings: load().settings ?? next.settings });
   },
 
   /** A case closed: keeps the best stars, score and time, and unlocks the next page. */
@@ -288,8 +319,15 @@ export const progress = {
   /** The player is in this page now: "Chơi tiếp" comes back to it next time. */
   recordVisit(pageId: string): void {
     const current = load();
-    if (current.lastPageId === pageId) return;
-    save({ ...current, lastPageId: pageId });
+    const playedPages = current.playedPages ?? [];
+    if (current.lastPageId === pageId && playedPages.includes(pageId)) return;
+    save({ ...current, lastPageId: pageId, playedPages: union(playedPages, [pageId]) });
+  },
+
+  /** Prior book visits, including evidence kept by older versions. */
+  playedPages(): string[] {
+    const current = load();
+    return union(current.playedPages, Object.keys(current.sceneResults).filter((id) => current.sceneResults[id].stars > 0));
   },
 
   /** The page the player was last in (it may be gone from the content since), if any. */

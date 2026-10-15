@@ -3,9 +3,10 @@ import { createContext, useContext } from 'react';
 interface AuthContextValue {
   email: string;
   signOut: () => Promise<void>;
+  openAccount: () => void;
 }
 
-const AuthContext = createContext<AuthContextValue>({ email: '', signOut: async () => {} });
+const AuthContext = createContext<AuthContextValue>({ email: '', signOut: async () => {}, openAccount: () => {} });
 
 export const AuthContextProvider = AuthContext.Provider;
 

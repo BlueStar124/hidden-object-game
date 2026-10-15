@@ -7,6 +7,7 @@ import {
   recordHint,
   recordMiss,
 } from '../core/caseFile';
+import { isFriendChallenge } from '../core/challenge';
 import { inFocus } from '../core/daily';
 import { detectObject } from '../core/detection';
 import { nextHint } from '../core/hints';
@@ -66,6 +67,7 @@ export function useCase(
   notify: Notify
 ): Case {
   const { clockRuns, isTurning, nextPage, night, mode } = context;
+  const friendHunt = mode.kind === 'challenge' && isFriendChallenge(mode.challenge);
 
   // A page opened (or opened again) starts a new case — in the same render, so nothing of the
   // previous case ever shows on the new page
@@ -111,7 +113,7 @@ export function useCase(
   // clue fragment of a chapter opens its deduction board
   const discover = useCallback(
     (found: HiddenObject, at: { x: number; y: number }) => {
-      progress.recordDiscovery(page.id, found.id);
+      if (!friendHunt) progress.recordDiscovery(page.id, found.id);
       if (found.rare && found.spriteType) {
         const first = progress.recordRareFind(found.spriteType);
         sound.playCreature();
@@ -133,7 +135,7 @@ export function useCase(
         notify('Đủ manh mối của chương! Mở Mục Lục để suy luận', { x: at.x, y: at.y - 44 }, 'info');
       }
     },
-    [page.id, notify]
+    [page.id, friendHunt, notify]
   );
 
   // After the case is closed: the remaining critters, clues & secret go into the album (no score)
@@ -198,19 +200,23 @@ export function useCase(
           unlockedNight = null;
         } else if (find.solved) {
           sound.playVictory();
-          const wasPassed = (progress.pageResult(page.id)?.stars ?? 0) > 0;
-          const foundItems = find.changes.foundItems ?? c.foundItems;
-          const critters = page.objects.filter((o) => o.isBonus && foundItems.includes(o.id)).map((o) => o.id);
-          progress.recordVictory(
-            page.id,
-            nextPage?.id ?? null,
-            find.solved.score,
-            find.solved.stars,
-            page.timeLimit - c.remainingTime,
-            critters
-          );
-          // First clear of a day page opens its night variant
-          unlockedNight = !wasPassed && night ? night.title : null;
+          if (friendHunt) {
+            unlockedNight = null;
+          } else {
+            const wasPassed = (progress.pageResult(page.id)?.stars ?? 0) > 0;
+            const foundItems = find.changes.foundItems ?? c.foundItems;
+            const critters = page.objects.filter((o) => o.isBonus && foundItems.includes(o.id)).map((o) => o.id);
+            progress.recordVictory(
+              page.id,
+              nextPage?.id ?? null,
+              find.solved.score,
+              find.solved.stars,
+              page.timeLimit - c.remainingTime,
+              critters
+            );
+            // First clear of a day page opens its night variant
+            unlockedNight = !wasPassed && night ? night.title : null;
+          }
         }
         setStore((s) => ({
           ...s,
@@ -247,7 +253,7 @@ export function useCase(
         setStore((s) => ({ ...s, state: recordMiss(s.state), fogUntil: fogged ? now + FOG_DURATION_MS : s.fogUntil }));
       }
     },
-    [c, page, isTurning, fogUntil, nextPage, night, mode, notify, inspectWhileExploring, discover]
+    [c, page, isTurning, fogUntil, nextPage, night, mode, friendHunt, notify, inspectWhileExploring, discover]
   );
 
   const requestHint = useCallback(

@@ -12,11 +12,14 @@ import type { PostcardContent } from './postcard';
 const GAME = 'The Lost Sketchbook';
 
 /** The code and the message of a challenge on a page laid out with `seed`, done in `time` seconds. */
-export function challengeMessage(page: Page, seed: number, time: number): { code: string; text: string } {
+export function challengeMessage(page: Page, seed: number, time?: number): { code: string; text: string } {
   const code = encodeChallenge(challengeOf(page, seed, time));
   const link = challengeLink(code);
   const text =
-    `Thách bạn tìm nhanh hơn mình ở trang “${page.title}” trong ${GAME}: mình mất ${formatDuration(time)}. ` +
+    (time === undefined
+      ? `Cùng tìm vật ở trang “${page.title}” trong ${GAME}. `
+      : `Thách bạn tìm nhanh hơn mình ở trang “${page.title}” trong ${GAME}: mình mất ${formatDuration(time)}. `) +
+    'Bạn cần từng chơi trang này trước khi nhận thử thách. ' +
     `Nhập mã ${code} ở trang chủ${link ? ` hoặc mở ${link}` : ''}.`;
   return { code, text };
 }
@@ -94,3 +97,13 @@ export function dailyShare(page: Page, day: string, time: number): { postcard: P
     text: `Trang của ngày ${when} trong ${GAME}: mình tìm xong trong ${formatDuration(time)}. Bạn thử xem nhanh hơn không?`,
   };
 }
+
+/** The message of a friend's hunt just published (`count` objects hidden on `pageTitle`). */
+export function friendChallengeMessage(code: string, pageTitle: string, count: number): string {
+  const link = challengeLink(code);
+  return `Mình đã giấu ${count} vật trong trang “${pageTitle}” của ${GAME}. Hãy đăng nhập, chơi trang này rồi nhập mã ${code}${link ? ` hoặc mở ${link}` : ''}.`;
+}
+
+/** The message after finishing a friend's hunt. */
+export const friendSolvedMessage = (code: string, title: string) =>
+  `Mình vừa hoàn thành thử thách “${title}” trong ${GAME}. Mã thử thách: ${code}.`;

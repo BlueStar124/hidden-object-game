@@ -93,7 +93,10 @@ export const SCREENS: Record<string, () => ReactElement> = {
   finale: () => <Finale share={share} onClose={nothing} />,
   passport: () => <Passport today="2026-10-12" canPlayToday onPlayDaily={nothing} onClose={nothing} />,
   cover: () => <MyCover onClose={nothing} />,
-  challenge: () => <ChallengeEntry onPlay={() => true} onClose={nothing} />,
+  challenge: () => <ChallengeEntry initialMode="receive" onPlay={() => null} onClose={nothing} />,
+  'challenge-create': () => <ChallengeEntry playedPageIds={allPages().map((p) => p.id)} onPlay={() => null} onClose={nothing} />,
+  'challenge-empty': () => <ChallengeEntry playedPageIds={[]} onPlay={() => null} onClose={nothing} />,
+  'challenge-locked': () => <ChallengeEntry initialMode="receive" initialText="SG2N-7K2P-12345" initialError="Bạn chưa chơi trang “Vườn Siêu Cây Lên Đèn”. Hãy chơi trang này trong Mục Lục trước." onPlay={() => null} onClose={nothing} />,
   backup: () => <Backup onRestored={nothing} onClose={nothing} />,
   'daily-done': () => (
     <DailyDone

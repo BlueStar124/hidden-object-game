@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Board } from '../board/Board';
 import { leftovers } from '../core/caseFile';
-import { parseChallenge, type Challenge } from '../core/challenge';
 import { dailyPuzzle } from '../core/daily';
 import type { Chapter, Page } from '../core/model';
 import { progress } from '../core/progress';
@@ -13,7 +12,6 @@ import { localDay } from '../core/random';
 import { completionBonus } from '../core/scoring';
 import { allChapters, allPages } from '../content';
 import { useGame } from '../game/useGame';
-import { takeLaunchCode } from '../platform/launchLink';
 import { sound } from '../platform/sound';
 import { useStableCallback } from '../ui/useStableCallback';
 import { colors } from '../ui/theme';
@@ -36,10 +34,11 @@ import { HomeScreen } from './home/HomeScreen';
 import { FloatingScores } from './hud/FloatingScores';
 import { HUD, type HudLayout } from './hud/HUD';
 import { QuestPanel } from './hud/QuestPanel';
-import { certificateShare, challengeMessage, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
+import { certificateShare, dailyShare, postcardMessage, victoryPostcard } from './share/messages';
 import { useShare } from './share/useShare';
 import { useDeviceBehaviour } from './useDeviceBehaviour';
 import { useAuth } from './auth/AuthContext';
+import { useChallenges } from './useChallenges';
 
 /** A sheet over the game from the home screen (the index and the album have their own flags). */
 type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
@@ -50,7 +49,7 @@ type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
  * victory, index, album) over everything.
  */
 export const GameScreen: React.FC = () => {
-  const { email: accountEmail, signOut } = useAuth();
+  const { email: accountEmail, openAccount, signOut } = useAuth();
   const [showIndex, setShowIndex] = useState(false);
   const [showAlbum, setShowAlbum] = useState(false);
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -180,7 +179,7 @@ export const GameScreen: React.FC = () => {
 
   /* ------------------------- Daily page, challenges, sharing ------------------------- */
 
-  const { openDaily: openDailyPage, openChallenge, leaveSpecial } = nav;
+  const { openDaily: openDailyPage, leaveSpecial } = nav;
   const openPassport = useCallback(() => setSheet('passport'), []);
   const openCover = useCallback(() => setSheet('cover'), []);
   // The inside cover's stickers lie on the desk too: read again when the cover closes
@@ -189,7 +188,6 @@ export const GameScreen: React.FC = () => {
     setSheet(null);
     setCoverStickers(progress.cover());
   }, []);
-  const enterChallenge = useCallback(() => setSheet('challenge'), []);
   const openBackup = useCallback(() => setSheet('backup'), []);
   // A backup brought back: the home screen reads the progress again (it reads it once when it opens)
   const [homeKey, setHomeKey] = useState(0);
@@ -206,26 +204,23 @@ export const GameScreen: React.FC = () => {
     setHome(false);
   }, [puzzle, openDailyPage, setHome]);
 
-  const playChallenge = useCallback(
-    (challenge: Challenge) => {
-      if (!openChallenge(challenge)) return false;
-      setSheet(null);
-      setShowIndex(false);
-      setHome(false);
-      return true;
-    },
-    [openChallenge, setHome]
-  );
-
-  // Opened from a challenge link (web): straight into that hunt
-  const launched = useRef(false);
-  useEffect(() => {
-    if (launched.current) return;
-    launched.current = true;
-    const code = takeLaunchCode();
-    const challenge = code ? parseChallenge(code) : null;
-    if (challenge) playChallenge(challenge);
-  }, [playChallenge]);
+  // Codes, friends' hunts and links (useChallenges): opening one closes what is over the board
+  const challengeOpened = useCallback(() => {
+    setSheet(null);
+    setShowIndex(false);
+    setHome(false);
+  }, [setHome]);
+  const showChallengeSheet = useCallback(() => setSheet('challenge'), []);
+  const challenges = useChallenges({
+    nav,
+    page,
+    completed: c.isCompleted,
+    timeTaken,
+    signedIn: !!accountEmail,
+    onOpened: challengeOpened,
+    showSheet: showChallengeSheet,
+  });
+  const { draft: challengeDraft, enter: enterChallenge, play: playChallenge, playFriend: playFriendChallenge, solved: solvedChallenge } = challenges;
 
   const leaveToHome = useCallback(() => {
     leaveSpecial();
@@ -233,10 +228,6 @@ export const GameScreen: React.FC = () => {
   }, [leaveSpecial, setHome]);
 
   const share = useShare();
-  const solvedChallenge = useMemo(
-    () => (c.isCompleted && mode.kind !== 'daily' ? challengeMessage(page, nav.seed, timeTaken) : null),
-    [c.isCompleted, mode.kind, page, nav.seed, timeTaken]
-  );
 
   const measureRoot = useCallback(() => {
     rootRef.current?.measureInWindow((x, y) => setRootOffset({ x, y }));
@@ -274,6 +265,7 @@ export const GameScreen: React.FC = () => {
         onToggleSound={toggleSound}
         onUseHint={hintButton}
         onPause={togglePause}
+        onHome={leaveToHome}
       />
 
       {/* The sketchbook runs under the camera cut-out too: only the controls keep clear of it */}
@@ -327,6 +319,7 @@ export const GameScreen: React.FC = () => {
           onEnterChallenge={enterChallenge}
           onOpenBackup={openBackup}
           accountEmail={accountEmail}
+          onSignIn={openAccount}
           onSignOut={onSignOut}
         />
       )}
@@ -377,7 +370,7 @@ export const GameScreen: React.FC = () => {
 
       {sheet === 'cover' && <MyCover onClose={closeCover} />}
 
-      {sheet === 'challenge' && <ChallengeEntry onPlay={playChallenge} onClose={closeSheet} />}
+      {sheet === 'challenge' && <ChallengeEntry initialMode={challengeDraft ? 'receive' : 'create'} initialText={challengeDraft?.text} initialError={challengeDraft?.error} onPlay={playChallenge} onPlayFriend={playFriendChallenge} onClose={closeSheet} onSignIn={openAccount} signedIn={!!accountEmail} />}
 
       {sheet === 'backup' && <Backup onRestored={restored} onClose={closeSheet} />}
 
@@ -452,7 +445,7 @@ export const GameScreen: React.FC = () => {
           foundIds={c.foundItems}
           hasNextPage={ref.index < pages.length - 1}
           nightUnlocked={kase.unlockedNight ?? undefined}
-          rivalTime={mode.kind === 'challenge' ? mode.challenge.time : undefined}
+          rivalTime={mode.kind === 'challenge' && !('kind' in mode.challenge) ? mode.challenge.time : undefined}
           share={
             solvedChallenge
               ? {

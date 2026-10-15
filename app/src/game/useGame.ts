@@ -32,9 +32,10 @@ export function useGame({ browsing }: { browsing: boolean }) {
   // (a page of the book: a daily page or a challenge is a hunt beside it)
   const pageId = nav.page.id;
   const inBook = nav.mode.kind === 'book';
+  const readyToPlay = !nav.turn && !nav.showPrologue && !nav.showNightIntro && !browsing;
   useEffect(() => {
-    if (!home && inBook) progress.recordVisit(pageId);
-  }, [home, pageId, inBook]);
+    if (!home && inBook && readyToPlay) progress.recordVisit(pageId);
+  }, [home, pageId, inBook, readyToPlay]);
 
   // The sound switch is saved: a player who muted the game finds it muted next time
   const [soundEnabled, setSoundEnabled] = useState(() => progress.soundEnabled());

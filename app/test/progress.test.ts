@@ -326,6 +326,19 @@ describe('backups', () => {
     expect(saved().totalScore).toBe(1300);
   });
 
+  test("another account's save replaces this one, keeping only the device's settings", () => {
+    progress.recordVictory('merlion-park', null, 800, 2, 100);
+    progress.setSoundEnabled(false);
+    const theirs = JSON.stringify({ game: 'the-lost-sketchbook', save: { sceneResults: { 'hoi-an': result(3, 900, 70) } } });
+    progress.replace(theirs);
+    expect(progress.pageResult('merlion-park')).toBeUndefined();
+    expect(progress.pageResult('hoi-an')?.stars).toBe(3);
+    expect(progress.soundEnabled()).toBe(false);
+    progress.replace(null);
+    expect(progress.pageResult('hoi-an')).toBeUndefined();
+    expect(progress.soundEnabled()).toBe(false);
+  });
+
   test('a save pasted as it is stored works too; anything else is refused and changes nothing', () => {
     expect(readBackup(JSON.stringify(firstVersionSave))?.sceneResults['merlion-park'].highScore).toBe(800);
     for (const text of ['', 'xin chào', '{}', '[1, 2]', JSON.stringify({ game: 'the-lost-sketchbook', save: 'bad' })]) {
@@ -352,6 +365,37 @@ describe('backups', () => {
 });
 
 describe('where the player left off', () => {
+  test('book visits survive a reload and a backup merge, even without finishing a page', () => {
+    progress.recordVisit('merlion-park');
+    progress.recordVisit('gardens-by-the-bay-night');
+    expect(progress.playedPages()).toEqual(['merlion-park', 'gardens-by-the-bay-night']);
+    const file = progress.backup();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    expect(progress.playedPages()).toEqual(['merlion-park', 'gardens-by-the-bay-night']);
+    storage.clear();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    progress.recordVisit('ha-long');
+    expect(progress.restore(file)).toBe(true);
+    expect(progress.playedPages().sort()).toEqual(['gardens-by-the-bay-night', 'ha-long', 'merlion-park']);
+  });
+
+  test('older saves infer prior play from completed pages and the last book page, never unlocks or daily finds', () => {
+    const old = readProgress({ ...firstVersionSave, lastPageId: 'hoi-an', discovered: { 'ha-long': ['daily-find'] } });
+    expect(old.playedPages?.sort()).toEqual(['hoi-an', 'marina-bay-sands', 'merlion-park']);
+    expect(old.playedPages).not.toContain('gardens-by-the-bay');
+    expect(old.playedPages).not.toContain('ha-long');
+  });
+
+  test('damaged played pages are sanitized and duplicate visits do not grow the save', () => {
+    expect(readProgress({ playedPages: ['a', 3, null, 'a'] }).playedPages).toEqual(['a']);
+    expect(readProgress({ playedPages: 'a' }).playedPages).toBeUndefined();
+    progress.recordVisit('merlion-park');
+    progress.recordVisit('merlion-park');
+    expect(saved().playedPages).toEqual(['merlion-park']);
+  });
+
   test('a new player has no page to go back to', () => {
     expect(progress.lastPage()).toBeUndefined();
     expect(progress.totalScore()).toBe(0);

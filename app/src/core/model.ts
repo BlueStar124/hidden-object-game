@@ -341,8 +341,6 @@ export interface Page {
   // Night variant of a page: dark overlay, the loupe becomes a flashlight
   isNight?: boolean;
   nightLights?: NightLight[];
-  // Optional stable cache identity when multiple content records share one layout.
-  variantKey?: string;
   // Set by core/layout and core/daily on a visit laid out unlike the JSON (other spots, a daily
   // crop): the page keeps its id (progress is saved by it) and the board's caches tell layouts apart
   layout?: string;
@@ -510,6 +508,8 @@ export interface GameProgress {
   discovered: Record<string, string[]>;
   // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
   lastPageId?: string;
+  /** Pages entered in the book, separately for day and night; challenges require prior play. */
+  playedPages?: string[];
   settings?: GameSettings;
   solvedMysteries?: string[]; // Chapter ids whose mystery was solved on the deduction board
   stamps?: Record<string, DailyStamp>; // Daily pages done, by the player's local day ('2026-10-12')
