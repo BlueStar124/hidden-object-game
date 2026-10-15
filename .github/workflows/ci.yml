@@ -39,6 +39,9 @@ jobs:
       - name: Architecture (layers of app/src)
         run: npm run check:architecture
 
+      - name: Supabase catalog (every page and sprite is known to the backend's challenge rules)
+        run: node ../tools/check-supabase-catalog.mjs
+
       - name: Expo Doctor
         run: npx expo-doctor
 
@@ -64,3 +67,31 @@ jobs:
           name: screens
           path: scratch/screens
           if-no-files-found: ignore
+
+  # The database follows the code: once every check has passed on main, the migrations in
+  # supabase/migrations that the project does not have yet are applied (already applied ones are
+  # skipped, so a push without a new migration changes nothing). Secrets: Settings → Secrets and
+  # variables → Actions — SUPABASE_ACCESS_TOKEN (supabase.com/dashboard/account/tokens),
+  # SUPABASE_DB_PASSWORD (the database password) and SUPABASE_PROJECT_ID (the project's reference).
+  migrate:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: supabase-production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link the project
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
+
+      - name: Apply new migrations
+        run: supabase db push

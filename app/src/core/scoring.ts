@@ -24,9 +24,9 @@ export function mistakePenalty(currentScore: number): number {
   return Math.max(0, currentScore - 20);
 }
 
-/** Each hint tier costs more: 50, 100, 150 points. */
+/** A hint's first step (the card's name and clue) costs 50 points, its second (where it is) 100. */
 export function hintPenalty(currentScore: number, hintLevel: number): number {
-  const penalty = hintLevel === 1 ? 50 : hintLevel === 2 ? 100 : 150;
+  const penalty = hintLevel === 1 ? 50 : 100;
   return Math.max(0, currentScore - penalty);
 }
 

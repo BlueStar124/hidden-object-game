@@ -17,14 +17,7 @@
       "spriteType": "hoan-kiem-sword",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Thanh gươm thần Thuận Thiên tỏa sáng, biểu tượng cho hào khí bảo vệ non sông Đại Việt!",
-      "spots": [
-        {
-          "x": 0.78,
-          "y": 0.55,
-          "clue": "Thanh kiếm thần tỏa ánh hào quang linh thiêng nép cạnh gốc liễu ven hồ bên phải."
-        }
-      ]
+      "foundText": "Thanh gươm thần Thuận Thiên tỏa sáng, biểu tượng cho hào khí bảo vệ non sông Đại Việt!"
     },
     {
       "id": "golden-turtle",
@@ -75,15 +68,8 @@
       "score": 120,
       "spriteType": "crane-statue",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Hình tượng hạc đứng trên lưng rùa biểu trưng cho sự thanh cao, trường thọ và hòa hợp âm dương.",
-      "spots": [
-        {
-          "x": 0.62,
-          "y": 0.65,
-          "clue": "Hình tượng hạc thanh cao chầu trên lưng rùa nơi bờ hồ hướng về Tháp Rùa."
-        }
-      ]
+      "camo": "chameleon",
+      "foundText": "Hình tượng hạc đứng trên lưng rùa biểu trưng cho sự thanh cao, trường thọ và hòa hợp âm dương."
     },
     {
       "id": "peace-dove",
@@ -141,7 +127,7 @@
       "isBonus": true,
       "spriteType": "dong-tao-chicken",
       "scale": 0.42,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Giống gà tiến vua trứ danh vùng châu thổ sông Hồng với đôi chân to dũng mãnh."
     },
     {
@@ -171,9 +157,24 @@
       "isBonus": true,
       "spriteType": "lotus-flower",
       "scale": 0.36,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Hoa sen Tây Hồ ngát hương, quốc hoa thanh khiết vươn lên từ bùn lầy tỏa ngát hương thơm.",
       "waterline": 0.6
+    },
+    {
+      "id": "clue-old-red-envelope",
+      "name": "Phong Bao Lì Xì Cũ",
+      "clue": "Phong bao đỏ lẫn vào những ô cửa sổ của tòa nhà cao phía sau hàng cây bên trái.",
+      "x": 0.335,
+      "y": 0.315,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "red-envelope",
+      "scale": 0.42,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "Mặt sau phong bao viết: “Hà Nội, Tết năm ấy, trước khi theo thầy đi xa.”"
     }
   ]
 }

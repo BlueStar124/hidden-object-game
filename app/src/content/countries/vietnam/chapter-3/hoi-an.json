@@ -16,8 +16,16 @@
       "score": 150,
       "spriteType": "teacup",
       "scale": 0.48,
-      "camo": "tint",
-      "foundText": "Ly nước mót thảo mộc thơm lừng hương sả, chanh và cánh sen, thức uống nức tiếng làm say lòng khách du lịch phố Hội."
+      "camo": "chameleon",
+      "foundText": "Ly nước mót thảo mộc thơm lừng hương sả, chanh và cánh sen, thức uống nức tiếng làm say lòng khách du lịch phố Hội.",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.375,
+          "clue": "Chén trà thơm đặt trên lan can ban công tầng hai của ngôi nhà vàng treo đèn lồng đỏ bên trái."
+        }
+      ],
+      "riddle": "Bụng tròn áo lụa, đêm đêm thắp sáng; treo dưới mái hiên, phố Hội lung linh. Là cái gì?"
     },
     {
       "id": "street-hat",
@@ -30,7 +38,15 @@
       "spriteType": "conical-hat",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ."
+      "foundText": "Mùi thơm của tô mì quảng và cao lầu phố Hội lan tỏa khắp ngõ nhỏ.",
+      "spots": [
+        {
+          "x": 0.67,
+          "y": 0.45,
+          "clue": "Nón lá chao nghiêng giữa dòng người dạo bộ trên con phố ven sông, bên phải gáy sổ."
+        }
+      ],
+      "riddle": "Chẳng phải ô dù mà che mưa nắng; tròn như vành trăng, quai thao duyên dáng. Là cái gì?"
     },
     {
       "id": "river-boat",
@@ -42,9 +58,17 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Thuyền hoa đăng đưa những ước nguyện may mắn trôi xuôi dòng nước sông Hoài.",
-      "waterline": 0.6
+      "waterline": 0.6,
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.6,
+          "clue": "Chiếc xuồng nan lặng lẽ trôi giữa dòng sông Hoài ánh hồng, bên trái đoàn thuyền hoa đăng."
+        }
+      ],
+      "riddle": "Không chân mà đi, không cánh mà lướt; chở đầy hoa đăng trôi trên sông Hoài. Là cái gì?"
     },
     {
       "id": "ancient-cat",
@@ -56,8 +80,16 @@
       "score": 120,
       "spriteType": "dong-ho-pig",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Bức tranh lợn Đông Hồ ngộ nghĩnh mang ý nghĩa ấm no, phúc lộc treo trang trọng trong gian nhà cổ trăm năm."
+      "camo": "ink",
+      "foundText": "Bức tranh lợn Đông Hồ ngộ nghĩnh mang ý nghĩa ấm no, phúc lộc treo trang trọng trong gian nhà cổ trăm năm.",
+      "spots": [
+        {
+          "x": 0.545,
+          "y": 0.405,
+          "clue": "Bức tranh lợn Đông Hồ treo trên bức tường vàng có đèn lồng đỏ, dưới giàn hoa giấy tím bên phải gáy sổ."
+        }
+      ],
+      "riddle": "Râu dài mấy sợi, mắt sáng đêm khuya; ngày ngủ trên mái, đêm rình chuột nhà. Là con gì?"
     },
     {
       "id": "hoian-cyclo",
@@ -69,8 +101,16 @@
       "score": 120,
       "spriteType": "paper-umbrella",
       "scale": 0.52,
-      "camo": "gouache",
-      "foundText": "Chiếc ô giấy dầu che nắng mưa cho lữ khách dạo bước thảnh thơi trên những con ngõ nhỏ ngập tràn hoa giấy."
+      "camo": "ink",
+      "foundText": "Chiếc ô giấy dầu che nắng mưa cho lữ khách dạo bước thảnh thơi trên những con ngõ nhỏ ngập tràn hoa giấy.",
+      "spots": [
+        {
+          "x": 0.12,
+          "y": 0.685,
+          "clue": "Chiếc ô nan giấy dựng nơi mũi chiếc thuyền xanh neo sát bờ kè, góc dưới bên trái trang."
+        }
+      ],
+      "riddle": "Ba bánh hai người, một ngồi một đạp; dạo quanh phố cổ, chậm rãi ngắm nhìn. Là cái gì?"
     },
     {
       "id": "artist-seal",
@@ -137,8 +177,22 @@
       "isBonus": true,
       "spriteType": "bamboo-dragonfly",
       "scale": 0.36,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Gió sông thổi nhẹ làm chuồn chuồn khẽ rung rinh đôi cánh."
+    },
+    {
+      "id": "clue-merchant-abacus",
+      "name": "Bàn Tính Của Người Thầy",
+      "clue": "Chiếc bàn tính vẽ lẫn vào những mái ngói phố cổ ở giữa trang bên phải.",
+      "x": 0.61,
+      "y": 0.33,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "abacus",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Bàn tính khắc tên người giữ sổ thứ hai: một thương nhân phố Hội từng sang Bangkok buôn bán."
     }
   ]
 }

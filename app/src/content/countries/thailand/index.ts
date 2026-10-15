@@ -11,6 +11,7 @@ import chiangMai from './chapter-3/chiang-mai.json';
 import doiSuthep from './chapter-3/doi-suthep.json';
 import doiSuthepNight from './chapter-3/doi-suthep-night.json';
 import loyKrathong from './chapter-3/loy-krathong.json';
+import { CHAO_PHRAYA, HERITAGE_RUINS, LANNA } from './mysteries';
 
 // JSON imports are typed loosely (e.g. "camo": string): the files follow the Page shape
 const page = (json: unknown) => json as Page;
@@ -19,9 +20,10 @@ const page = (json: unknown) => json as Page;
 export const thailand: Country = {
   id: 'thailand',
   name: 'Thái Lan',
+  code: 'TH',
   chapters: [
     {
-      id: 'chapter-01',
+      id: 'thailand-01',
       title: 'Bình Minh Chao Phraya',
       subtitle: 'Temple of Dawn & Kênh Rạch Hoàng Gia',
       prologue: [
@@ -35,9 +37,10 @@ export const thailand: Country = {
         { day: page(damnoenSaduak) },
         { day: page(grandPalace) },
       ],
+      mystery: CHAO_PHRAYA,
     },
     {
-      id: 'chapter-02',
+      id: 'thailand-02',
       title: 'Phố Cổ & Di Tích Ngàn Năm',
       subtitle: 'Heritage & Ancient Ruins — Dấu Tích Xiêm La',
       prologue: [
@@ -50,21 +53,23 @@ export const thailand: Country = {
         { day: page(yaowarat), night: page(yaowaratNight) },
         { day: page(ayutthaya) },
       ],
+      mystery: HERITAGE_RUINS,
     },
     {
-      id: 'chapter-03',
+      id: 'thailand-03',
       title: 'Phương Bắc & Ánh Sáng Ước Nguyện',
-      subtitle: 'The Lanna Rose & Floating Lanterns — Hồi Kết Kỳ Thú',
+      subtitle: 'The Lanna Rose & Floating Lanterns — Đường Về Phương Đông',
       prologue: [
         'Chặng đường cuối cùng đưa chúng ta đặt chân lên miền sơn cước Chiang Mai — kinh đô cổ của vương quốc Lanna.',
         'Dạo bước qua ngọn tháp đồ sộ Wat Chedi Luang, vượt cầu thang rồng Naga lên đỉnh núi thiêng Doi Suthep ngập trong biển mây bồng bềnh, và hòa mình vào đêm hội hoa đăng Loy Krathong huyền ảo trên dòng sông Ping.',
-        'Bức màn bí mật cuối cùng của cuốn sổ ký họa sắp sửa hé lộ dưới đôi mắt tinh tường của bạn!',
+        'Những manh mối cuối cùng ở xứ Chùa Vàng sẽ chỉ cho bạn con đường trở về của vị kiến trúc sư!',
       ],
       pages: [
         { day: page(chiangMai) },
         { day: page(doiSuthep), night: page(doiSuthepNight) },
         { day: page(loyKrathong) },
       ],
+      mystery: LANNA,
     },
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)

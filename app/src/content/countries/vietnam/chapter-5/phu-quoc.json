@@ -18,7 +18,8 @@
       "scale": 0.5,
       "camo": "ink",
       "waterline": 0.65,
-      "foundText": "Bò biển Dugong hiền lành là sinh vật biển quý hiếm được bảo tồn tại vùng biển đảo Phú Quốc."
+      "foundText": "Bò biển Dugong hiền lành là sinh vật biển quý hiếm được bảo tồn tại vùng biển đảo Phú Quốc.",
+      "order": 3
     },
     {
       "id": "coral-crab",
@@ -30,8 +31,15 @@
       "score": 120,
       "spriteType": "tiger-prawn",
       "scale": 0.38,
-      "camo": "gouache",
-      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà danh bất hư truyền."
+      "camo": "ink",
+      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà danh bất hư truyền.",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.49,
+          "clue": "Tôm sú vằn bơi trong vũng nước nông nơi bờ cát uốn cong, ngay dưới chân cây cầu bên phải."
+        }
+      ]
     },
     {
       "id": "coral-seahorse",
@@ -44,7 +52,14 @@
       "spriteType": "seahorse",
       "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương."
+      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương.",
+      "spots": [
+        {
+          "x": 0.44,
+          "y": 0.435,
+          "clue": "Cá ngựa đuôi xoắn quấn quanh chân trụ cây cầu vượt biển, ngay bên trái gáy cuốn sổ."
+        }
+      ]
     },
     {
       "id": "squid-boat",
@@ -56,9 +71,10 @@
       "score": 150,
       "spriteType": "basket-boat",
       "scale": 0.48,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Thuyền thúng nan mộc mạc đưa ngư dân câu mực đêm giữa muôn ngàn ánh đèn rực sáng.",
-      "waterline": 0.6
+      "waterline": 0.6,
+      "order": 2
     },
     {
       "id": "island-spyglass",
@@ -71,7 +87,8 @@
       "spriteType": "phu-quoc-dog",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Chó xoáy Phú Quốc với xoáy lông dọc sống lưng và biệt tài bơi lội là quốc khuyển trứ danh của Việt Nam."
+      "foundText": "Chó xoáy Phú Quốc với xoáy lông dọc sống lưng và biệt tài bơi lội là quốc khuyển trứ danh của Việt Nam.",
+      "order": 1
     },
     {
       "id": "artist-seal",
@@ -139,6 +156,35 @@
       "scale": 0.4,
       "camo": "ink",
       "foundText": "Bãi Sao với hàng dừa nghiêng là một trong những bãi biển đẹp nhất hành tinh."
+    },
+    {
+      "id": "clue-keeper-lantern",
+      "name": "Đèn Lồng Người Canh Biển",
+      "clue": "Chiếc đèn lồng treo lẫn trên đường cáp treo vượt biển.",
+      "x": 0.65,
+      "y": 0.43,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "lantern",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Người canh biển nhắn lại: “Người giữ sổ đang chờ bạn ở mũi đất cuối cùng.”"
+    },
+    {
+      "id": "tiny-sketch-10",
+      "name": "Nét Vẽ Tí Hon 10/10",
+      "clue": "Nét vẽ tí hon bám trên thân hàng dừa ven bãi biển giữa trang.",
+      "x": 0.54,
+      "y": 0.57,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "cicada",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Người giữ sổ thứ tư ơi, những trang còn trống đang chờ nét vẽ của con.” (10/10)"
     }
   ]
 }

@@ -4,6 +4,7 @@ import { Canvas, Skia, useCanvasRef, type ISkiaViewApi, type SkPicture } from '@
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useAnimatedReaction, useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
 import { scheduleOnUI } from 'react-native-worklets';
+import { layoutKey } from '../core/layout';
 import type { HiddenObject, Page, PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { ZoomIn, ZoomOut } from '../ui/icons';
@@ -50,6 +51,8 @@ export interface BoardProps {
   preload: Page[];
   /** False while a dialog covers the board */
   active?: boolean;
+  /** The watercolour wash over a page until its case is closed (render/types WASH_ALPHA) */
+  wash?: boolean;
   children?: React.ReactNode; // overlays (explore banner…)
 }
 
@@ -75,6 +78,7 @@ export const Board = React.memo<BoardProps>(function Board({
   onInspect,
   preload,
   active = true,
+  wash = true,
   children,
 }) {
   const win = useWindowDimensions();
@@ -99,9 +103,9 @@ export const Board = React.memo<BoardProps>(function Board({
   // The order of these hooks is the order their effects run in: keep it
   const density = size ? atlasDensity(fittedScale(size.w, size.h), PixelRatio.get()) : 1;
   const library = useSceneLibrary(page, loupePaints, compact, density);
-  const camera = useCamera(size, library.shown, page.id, diameter, turning);
-  const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera);
-  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, turning, onTurnComplete);
+  const camera = useCamera(size, library.shown, layoutKey(page), diameter, turning);
+  const marks = useCaseMarks(page, foundIds, foundAt, radarTargetId, nudgeTarget, fogged, camera, wash);
+  const pageTurn = usePageTurn(turn, page, library, camera, marks.foundNow, marks.reveal, wash, turning, onTurnComplete);
   const warm = usePagesAround(library, page, preload, pageTurn.turningTo);
   const warmUp = useWarmUp(library.scene, !active, camera, library.retirePictures);
 
@@ -120,27 +124,28 @@ export const Board = React.memo<BoardProps>(function Board({
   const { shown } = library;
   const { flip, flipStart } = pageTurn;
   const { s, tx, ty, lx, ly, dims } = camera;
-  const { found, radar, fogStart, nudge, reveal } = marks;
+  const { found, radar, fogStart, reveal, nudge } = marks;
   // Keep one owner across mapper rebuilds so a retired output cannot be deleted twice.
   const frameBuffer = useMemo(() => ({ picture: null as SkPicture | null }), []);
   const picture = useDerivedValue<SkPicture>(() => {
     const base = shown ?? flip?.S;
     if (!base) return emptyPicture;
-    const { w, h } = dims.value;
+    const { w, h, fit } = dims.value;
     const next = renderFrame(base, {
       now: clock.value,
       width: w,
       height: h,
       s: s.value,
+      zoom: s.value / fit,
       tx: tx.value,
       ty: ty.value,
       lx: lx.value,
       ly: ly.value,
       found: found.value,
+      reveal: reveal.value,
       radar: radar.value,
       fogStart: fogStart.value,
       nudge: nudge.value,
-      reveal: reveal.value,
       flip,
       flipStart: flipStart.value,
       warm,

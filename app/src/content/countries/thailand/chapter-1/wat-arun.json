@@ -21,8 +21,8 @@
       "foundText": "Thuyền ngự Suphannahong chỉ xuất hiện trong lễ rước thuyền hoàng gia trên sông Chao Phraya!",
       "spots": [
         {
-          "x": 0.52,
-          "y": 0.68,
+          "x": 0.529,
+          "y": 0.67,
           "clue": "Thuyền ngự Suphannahong rẽ sóng lướt qua khoảng sông trước tháp Wat Arun."
         }
       ]
@@ -95,8 +95,8 @@
       "foundText": "Người lái thuyền treo hoa ở mũi để tạ ơn nữ thần thuyền Mae Ya Nang, cầu chuyến đi bình an.",
       "spots": [
         {
-          "x": 0.68,
-          "y": 0.69,
+          "x": 0.691,
+          "y": 0.695,
           "clue": "Vòng hoa nhài treo nơi mạn chiếc phà chở khách lớn bên phải."
         }
       ]
@@ -117,7 +117,7 @@
         {
           "x": 0.48,
           "y": 0.55,
-          "clue": "Chú sáo nâu đậu trên cành cây ven tường hoa bên tháp chính."
+          "clue": "Chú sáo nâu đậu trên mái ngói cam của ngôi điện nhỏ trước tháp chính."
         }
       ]
     },
@@ -195,6 +195,36 @@
       "rotation": 10,
       "camo": "chameleon",
       "foundText": "Tiếng ve râm ran báo hiệu mùa nóng đã về bên bờ sông Chao Phraya."
+    },
+    {
+      "id": "clue-old-deerstalker",
+      "name": "Chiếc Mũ Thám Tử Cũ",
+      "clue": "Chiếc mũ thám tử cũ vẽ lẫn vào những tầng tháp của ngọn prang lớn.",
+      "x": 0.635,
+      "y": 0.455,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "deerstalker",
+      "scale": 0.45,
+      "rotation": -8,
+      "camo": "chameleon",
+      "foundText": "Bên trong mũ thêu dòng chữ: “Tặng trò nhỏ của thầy. Bangkok, mùa mưa năm ấy.”"
+    },
+    {
+      "id": "prism-sketch-1",
+      "name": "Nét Vẽ Cầu Vồng 1/9",
+      "clue": "Nét vẽ cầu vồng ẩn trên tầng tháp bên trái của ngọn tháp chính Wat Arun.",
+      "x": 0.54,
+      "y": 0.45,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "khon-mask",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Trò nhỏ của thầy, nếu con thấy được dải cầu vồng này, con đã tìm ra lăng kính của thầy.” (1/9)"
     }
   ]
 }

@@ -1,12 +1,9 @@
 import type { SpriteType } from '../core/model';
 
-export type ReactionType = 'hop' | 'flutter' | 'scurry' | 'splash' | 'spin';
-
 export interface BestiaryEntry {
   name: string;
   kind: 'creature' | 'object';
   fact: string;
-  reaction?: ReactionType;
 }
 
 /** Field-guide entries for the "Sổ Tay Sinh Vật" album — one per sprite type. */
@@ -207,10 +204,26 @@ export function isCreature(type?: SpriteType): boolean {
   return !!type && type !== 'seal' && BESTIARY[type].kind === 'creature';
 }
 
-export function reactionOf(type?: SpriteType): ReactionType | null {
-  if (!type || type === 'seal') return null;
-  const entry = BESTIARY[type as Exclude<SpriteType, 'seal'>];
-  if (entry?.reaction) return entry.reaction;
-  if (entry?.kind === 'creature') return 'hop';
-  return null;
-}
+/** How a creature startles when it is caught (board/anim.ts startle); objects just bounce. */
+export type Startle = 'hop' | 'scurry' | 'splash' | 'flutter';
+
+const startles = (kind: Startle, types: SpriteType[]) => types.map((t): [SpriteType, Startle] => [t, kind]);
+
+export const STARTLE: Partial<Record<SpriteType, Startle>> = Object.fromEntries([
+  ...startles('hop', [
+    'cat', 'dog', 'squirrel', 'frog', 'mouse', 'monkey', 'gibbon', 'siamese-cat', 'rooster', 'saola', 'civet', 'slow-loris', 'sun-bear', 'porcupine', 'mudskipper', 'water-buffalo', 'elephant',
+    'dong-tao-chicken', 'hmong-dog', 'langur', 'highland-elephant', 'phu-quoc-dog', 'nghe', 'dong-ho-pig', 'pygmy-loris', 'gray-shanked-douc', 'binturong', 'indochinese-tiger', 'white-cheeked-gibbon', 'treeshrew', 'bamboo-rat',
+  ]),
+  ...startles('scurry', [
+    'gecko', 'chameleon', 'crab', 'snail', 'ladybug', 'spider', 'turtle', 'pangolin', 'monitor-lizard', 'scorpion', 'crocodile', 'flying-lizard', 'stick-insect', 'mantis', 'lantern-bug', 'rhino-beetle',
+    'golden-turtle', 'ca-mau-crab', 'giant-water-bug', 'centipede', 'river-snail',
+  ]),
+  ...startles('splash', [
+    'koi', 'goldfish', 'betta', 'giant-catfish', 'stingray', 'jellyfish', 'seahorse', 'otter', 'duck', 'river-prawn',
+    'dugong', 'black-carp', 'tiger-prawn', 'climbing-perch', 'giant-featherback', 'mangrove-clam', 'pearl-oyster',
+  ]),
+  ...startles('flutter', [
+    'butterfly', 'moth', 'dragonfly', 'dove', 'owl', 'bat', 'kingfisher', 'heron', 'hornbill', 'sunbird', 'firefly', 'swallow', 'myna', 'parakeet', 'peacock', 'bee', 'cicada', 'colugo', 'flying-snake',
+    'red-crowned-crane', 'bamboo-dragonfly', 'green-peafowl', 'flying-squirrel', 'water-rail', 'horned-owl', 'silver-pheasant',
+  ]),
+]);

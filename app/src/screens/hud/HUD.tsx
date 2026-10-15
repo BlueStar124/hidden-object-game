@@ -17,6 +17,7 @@ import {
   ChevronRight,
   CircleQuestionMark,
   Flame,
+  House,
   Moon,
   Pause,
   Volume2,
@@ -24,7 +25,7 @@ import {
 } from '../../ui/icons';
 import type { Page } from '../../core/model';
 import { formatClock, formatNumber } from '../../ui/format';
-import { colors, fonts, gradients } from '../../ui/theme';
+import { accentControl, colors, controlIcon, fonts, gradients } from '../../ui/theme';
 import { ExploreStatus } from './ExploreStatus';
 
 export type HudLayout = 'phone' | 'phoneLandscape' | 'wide';
@@ -35,6 +36,8 @@ interface HUDProps {
   chapterNumber: number;
   pageIndex: number; // position in the country's book (0-based)
   pageCount: number;
+  /** A hunt beside the book (daily page, challenge): shown instead of the page number, no arrows */
+  huntLabel?: string;
   score: number;
   remainingTime: number;
   combo: number;
@@ -53,13 +56,15 @@ interface HUDProps {
   onToggleSound: () => void;
   onUseHint: () => void;
   onPause: () => void;
+  onHome: () => void;
 }
 
 const IconButton: React.FC<{
   onPress: () => void;
   label: string;
   showLabel?: boolean;
-  tone?: 'default' | 'hint' | 'album';
+  /** 'accent': the one button that asks for attention (the hint) */
+  tone?: 'default' | 'accent';
   children: React.ReactNode;
 }> = ({ onPress, label, showLabel, tone = 'default', children }) => (
   <Pressable
@@ -69,27 +74,36 @@ const IconButton: React.FC<{
     hitSlop={4}
     style={({ pressed }) => [
       styles.btn,
-      tone === 'hint' && styles.btnHint,
-      tone === 'album' && styles.btnAlbum,
+      !showLabel && styles.btnIcon,
+      tone === 'accent' && accentControl,
       pressed && styles.btnPressed,
     ]}
   >
     {children}
     {showLabel && (
-      <Text style={[styles.btnText, tone === 'hint' && { color: colors.earth }, tone === 'album' && { color: colors.emerald }]}>
+      <Text style={[styles.btnText, tone === 'accent' && styles.btnTextAccent]}>
         {label}
       </Text>
     )}
   </Pressable>
 );
 
-const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
+const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'huntLabel' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
   pageIndex,
   pageCount,
+  huntLabel,
   onPrevPage,
   onNextPage,
   onOpenIndex,
-}) => (
+}) =>
+  huntLabel ? (
+    // Outside the book there is no page before or after: the index still leads back to it
+    <Pressable onPress={onOpenIndex} hitSlop={6} accessibilityLabel={`${huntLabel}. Mở mục lục để về cuốn sổ`} style={styles.picker}>
+      <BookOpen size={13} color={controlIcon.color} />
+      <Text style={styles.pickerText}>{huntLabel}</Text>
+      <Text style={styles.caret}>▾</Text>
+    </Pressable>
+  ) : (
   <View style={styles.switcher}>
     <Pressable
       onPress={onPrevPage}
@@ -98,10 +112,10 @@ const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPr
       accessibilityLabel="Lật về trang trước"
       style={[styles.arrow, pageIndex <= 0 && styles.disabled]}
     >
-      <ChevronLeft size={16} color={colors.inkSoft} />
+      <ChevronLeft size={16} color={controlIcon.color} />
     </Pressable>
     <Pressable onPress={onOpenIndex} hitSlop={6} accessibilityLabel="Mục lục các trang ký họa" style={styles.picker}>
-      <BookOpen size={13} color={colors.ink} />
+      <BookOpen size={13} color={controlIcon.color} />
       <Text style={styles.pickerText}>
         Trang {pageIndex + 1} / {pageCount}
       </Text>
@@ -114,10 +128,11 @@ const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'onPr
       accessibilityLabel="Lật sang trang sau"
       style={[styles.arrow, pageIndex >= pageCount - 1 && styles.disabled]}
     >
-      <ChevronRight size={16} color={colors.inkSoft} />
+      <ChevronRight size={16} color={controlIcon.color} />
     </Pressable>
   </View>
-));
+  )
+);
 
 const NightBadge = () => (
   <View style={styles.nightBadge}>
@@ -195,25 +210,29 @@ const ComboBadge: React.FC<{ combo: number; comboTimer: number; compact: boolean
   );
 };
 
-/** Album, sound, hint, pause. */
+/** Home, album, sound, hint, pause. */
 const Actions = React.memo<
-  Pick<HUDProps, 'soundEnabled' | 'onOpenAlbum' | 'onToggleSound' | 'onUseHint' | 'onPause'> & { wide: boolean }
->(({ wide, soundEnabled, onOpenAlbum, onToggleSound, onUseHint, onPause }) => {
-  const iconSize = wide ? 18 : 17;
+  Pick<HUDProps, 'soundEnabled' | 'onOpenAlbum' | 'onToggleSound' | 'onUseHint' | 'onPause' | 'onHome'> & { wide: boolean }
+>(({ wide, soundEnabled, onOpenAlbum, onToggleSound, onUseHint, onPause, onHome }) => {
+  // One size and one colour for every icon of the bar (ui/theme controlIcon)
+  const icon = { size: controlIcon.size, color: controlIcon.color };
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
   return (
-    <View style={styles.actions}>
-      <IconButton onPress={onOpenAlbum} label="Sổ Tay" showLabel={wide} tone="album">
-        <BookHeart size={iconSize} color={colors.emerald} />
+    <View style={[styles.actions, !wide && styles.actionsNarrow]}>
+      <IconButton onPress={onHome} label="Về trang chủ" showLabel={wide}>
+        <House {...icon} />
+      </IconButton>
+      <IconButton onPress={onOpenAlbum} label="Sổ Tay" showLabel={wide}>
+        <BookHeart {...icon} />
       </IconButton>
       <IconButton onPress={onToggleSound} label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}>
-        <SoundIcon size={iconSize} color={colors.ink} />
+        <SoundIcon {...icon} />
       </IconButton>
-      <IconButton onPress={onUseHint} label="Gợi Ý" showLabel={wide} tone="hint">
-        <CircleQuestionMark size={iconSize} color={colors.earth} />
+      <IconButton onPress={onUseHint} label="Gợi Ý" showLabel={wide} tone="accent">
+        <CircleQuestionMark {...icon} />
       </IconButton>
       <IconButton onPress={onPause} label="Tạm dừng">
-        <Pause size={iconSize} color={colors.ink} />
+        <Pause {...icon} />
       </IconButton>
     </View>
   );
@@ -236,12 +255,14 @@ export const HUD: React.FC<HUDProps> = (props) => {
       onToggleSound={props.onToggleSound}
       onUseHint={props.onUseHint}
       onPause={props.onPause}
+      onHome={props.onHome}
     />
   );
   const switcher = (
     <PageSwitcher
       pageIndex={props.pageIndex}
       pageCount={props.pageCount}
+      huntLabel={props.huntLabel}
       onPrevPage={props.onPrevPage}
       onNextPage={props.onNextPage}
       onOpenIndex={props.onOpenIndex}
@@ -357,10 +378,10 @@ const styles = StyleSheet.create({
   switcher: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(220, 214, 200, 0.55)',
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.paper,
+    borderWidth: 1,
     borderColor: colors.hairline,
-    borderRadius: 20,
+    borderRadius: 10,
     paddingHorizontal: 3,
     paddingVertical: 2,
   },
@@ -516,18 +537,19 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     paddingHorizontal: 8,
+    // The home screen's buttons (ui/Buttons' secondary), at the bar's height
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.paper,
+    borderWidth: 1,
     borderColor: colors.hairline,
   },
-  btnHint: {
-    backgroundColor: 'rgba(160, 107, 71, 0.16)',
-    borderColor: 'rgba(160, 107, 71, 0.4)',
+  // Icons only (a narrow bar): five buttons must fit a phone held upright
+  btnIcon: {
+    minWidth: 34,
+    paddingHorizontal: 6,
   },
-  btnAlbum: {
-    backgroundColor: 'rgba(45, 122, 79, 0.08)',
-    borderColor: 'rgba(45, 122, 79, 0.35)',
+  actionsNarrow: {
+    gap: 4,
   },
   btnPressed: {
     backgroundColor: '#fff',
@@ -536,5 +558,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: colors.ink,
+  },
+  btnTextAccent: {
+    color: colors.earth,
+    fontWeight: '700',
   },
 });

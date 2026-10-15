@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { BookOpen, CircleCheckBig, Lock, Moon, PawPrint, Star, X } from '../../ui/icons';
-import type { Country, Page, PageRef } from '../../core/model';
+import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScrollText, Star, X } from '../../ui/icons';
+import { isCritter, type Chapter, type Country, type Page, type PageRef } from '../../core/model';
+import { withTools } from '../../core/tools';
+import { ownedTools } from '../../game/ownedTools';
+import { canDeduce, hasMystery, mysteryProgress } from '../../core/mystery';
 import { progress } from '../../core/progress';
 import { COUNTRIES, pagesOf } from '../../content';
+import { TOOLS } from '../../content/tools';
+import { byTool, TOOL_MARKS } from '../../ui/toolMarks';
 import { BookThumb } from '../BookThumb';
 import { colors, fonts } from '../../ui/theme';
 import { formatNumber } from '../../ui/format';
@@ -17,8 +22,32 @@ interface PageIndexProps {
   isNight: boolean;
   /** A page of a country's book (its index), day or night */
   onSelect: (index: number, night: boolean, countryId: string) => void;
+  /** The deduction board of a chapter whose clue fragments are all found */
+  onOpenDeduction: (chapter: Chapter, chapterNumber: number) => void;
   onClose: () => void;
 }
+
+/** A chapter's mystery in its heading: fragments found, then the way to the deduction board. */
+const MysteryBadge: React.FC<{ chapter: Chapter; onOpen: () => void }> = ({ chapter, onOpen }) => {
+  const { found, total } = mysteryProgress(chapter, progress.discovered);
+  if (!canDeduce(chapter, progress.discovered)) {
+    return (
+      <View style={styles.clues} accessibilityLabel={`Đã tìm ${found} trên ${total} mảnh manh mối của chương`}>
+        <ScrollText size={12} color={colors.earth} />
+        <Text style={styles.cluesText}>
+          {found}/{total} mảnh manh mối
+        </Text>
+      </View>
+    );
+  }
+  const solved = progress.isMysterySolved(chapter.id);
+  return (
+    <Pressable onPress={onOpen} accessibilityRole="button" style={({ pressed }) => [styles.deduce, solved && styles.deduceSolved, pressed && { opacity: 0.8 }]}>
+      {solved ? <CircleCheckBig size={13} color={colors.emerald} /> : <Lightbulb size={13} color="#fff" />}
+      <Text style={[styles.deduceText, solved && { color: colors.emerald }]}>{solved ? 'Bí ẩn đã giải' : 'Suy luận ngay!'}</Text>
+    </Pressable>
+  );
+};
 
 const Stars: React.FC<{ count: number; size?: number }> = ({ count, size = 12 }) => (
   <View style={{ flexDirection: 'row', gap: 2 }}>
@@ -30,16 +59,27 @@ const Stars: React.FC<{ count: number; size?: number }> = ({ count, size = 12 })
 
 function critterProgress(page: Page) {
   const seen = new Set(progress.discovered(page.id));
-  const ids = page.objects.filter((o) => o.isBonus).map((o) => o.id);
+  const ids = page.objects.filter(isCritter).map((o) => o.id);
   return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
+}
+
+/** What the player's tools reveal on a page (invisible ink, the prism's drawings…): found and how many. */
+function toolProgress(page: Page, tools: ReturnType<typeof ownedTools>) {
+  const seen = new Set(progress.discovered(page.id));
+  return byTool(withTools(page, tools).objects).map(([tool, finds]) => ({
+    tool,
+    total: finds.length,
+    spotted: finds.filter((o) => seen.has(o.id)).length,
+  }));
 }
 
 /**
  * "Mục Lục" — every page of a country's sketchbook, with progress and the night variants. With
  * several sketchbooks, a row of tabs switches between the countries.
  */
-export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onClose }) => {
+export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onOpenDeduction, onClose }) => {
   const [country, setCountry] = useState(playing);
+  const tools = useMemo(() => ownedTools(), []);
   const pages = pagesOf(country);
   const here = country.id === playing.id; // the book being played is the one shown
   const { width } = useWindowDimensions();
@@ -94,6 +134,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
               <Text style={styles.chapterBadge}>CHƯƠNG {c + 1}</Text>
               <Text style={styles.chapterName}>{chapter.title}</Text>
               {columns > 1 && <Text style={styles.chapterSub}> — {chapter.subtitle}</Text>}
+              {hasMystery(chapter) && <MysteryBadge chapter={chapter} onOpen={() => onOpenDeduction(chapter, c + 1)} />}
             </View>
             <View style={styles.grid} onLayout={(e) => setGridWidth(e.nativeEvent.layout.width)}>
               {refs.map((ref) => {
@@ -103,6 +144,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                 const result = progress.pageResult(scene.id);
                 const passed = !!result && result.stars > 0;
                 const critters = critterProgress(scene);
+                const toolFinds = toolProgress(scene, tools);
                 const night = ref.night;
                 const nightResult = night ? progress.pageResult(night.id) : undefined;
                 const nightCritters = night ? critterProgress(night) : null;
@@ -153,6 +195,18 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
                             </Text>
                           </View>
                         )}
+                        {toolFinds.map(({ tool, spotted, total }) => {
+                          const { icon: Icon, color } = TOOL_MARKS[tool];
+                          const done = spotted === total;
+                          return (
+                            <View key={tool} style={styles.row} accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${total}`}>
+                              <Icon size={11} color={done ? colors.emerald : color} />
+                              <Text style={[styles.critters, { color: done ? colors.emerald : color }]}>
+                                {spotted}/{total}
+                              </Text>
+                            </View>
+                          );
+                        })}
                       </View>
                       {night && (
                         <Pressable
@@ -282,6 +336,37 @@ const styles = StyleSheet.create({
   chapterSub: {
     fontSize: 12,
     color: colors.inkFaint,
+  },
+  clues: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 999,
+    backgroundColor: 'rgba(154, 106, 62, 0.1)',
+  },
+  cluesText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.earth,
+  },
+  deduce: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: colors.gold,
+  },
+  deduceSolved: {
+    backgroundColor: 'rgba(45, 122, 79, 0.12)',
+  },
+  deduceText: {
+    fontSize: 11.5,
+    fontWeight: '800',
+    color: '#fff',
   },
   grid: {
     flexDirection: 'row',

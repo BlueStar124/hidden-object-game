@@ -43,8 +43,29 @@ const VIEWPORTS = [
 ];
 
 /** Gallery dialogs (app/test/screens/Gallery.tsx). Lists scroll; everything else must fit. */
-const DIALOGS = ['victory', 'victory-perfect', 'timeup', 'pause', 'prologue', 'night-intro', 'rotate', 'index', 'album'];
-const SCROLLING = new Set(['index', 'album']);
+const DIALOGS = [
+  'victory',
+  'victory-perfect',
+  'victory-challenge',
+  'timeup',
+  'pause',
+  'prologue',
+  'night-intro',
+  'rotate',
+  'index',
+  'album',
+  'deduction',
+  'passport',
+  'cover',
+  'challenge',
+  'challenge-create',
+  'challenge-empty',
+  'challenge-locked',
+  'daily-done',
+  'backup',
+  'finale',
+];
+const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create', 'challenge-empty']);
 
 // A dialog may shrink to fit, down to this: below it, its smallest text gets hard to read
 const MIN_SCALE = 0.75;
@@ -95,14 +116,16 @@ function inspectPage({ scrolls, minScale }) {
   const describe = (el) => (el.getAttribute('aria-label') || el.textContent || '').trim().slice(0, 40);
   // In a list that scrolls (the clue cards, the page index…), items may be scrolled out of view:
   // the list itself must be on screen
+  // (the outermost one: a row that scrolls sideways inside a dialog that scrolls may itself be scrolled away)
   const scroller = (el) => {
+    let found = null;
     for (let p = el.parentElement; p; p = p.parentElement) {
       const s = getComputedStyle(p);
       const x = /(auto|scroll)/.test(s.overflowX) && p.scrollWidth > p.clientWidth + 1;
       const y = /(auto|scroll)/.test(s.overflowY) && p.scrollHeight > p.clientHeight + 1;
-      if (x || y) return p;
+      if (x || y) found = p;
     }
-    return null;
+    return found;
   };
   const onScreen = (el) => scroller(el) ?? el;
 

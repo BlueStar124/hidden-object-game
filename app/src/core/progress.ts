@@ -1,4 +1,4 @@
-import type { GameProgress, PageResult } from './model';
+import type { CoverSticker, DailyStamp, GameProgress, PageResult, SpriteType } from './model';
 
 /**
  * Saved progress: stars, best scores, and every object ever spotted. Stored as JSON in
@@ -17,31 +17,63 @@ export const SCHEMA_VERSION = 2;
 
 type Fields = Record<string, unknown>;
 
-const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-
 const isRecord = (v: unknown): v is Fields => typeof v === 'object' && v !== null && !Array.isArray(v);
+// Keys a save written by hand (or an imported file) could use to reach Object.prototype
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+/** The entries of a record, without the keys that would tamper with prototypes. */
+const entries = (v: Fields) => Object.entries(v).filter(([key]) => !UNSAFE_KEYS.has(key));
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.filter((s): s is string => typeof s === 'string') : []);
 const count = (v: unknown): number => (typeof v === 'number' && Number.isFinite(v) ? Math.max(0, v) : 0);
+const between = (v: unknown, min: number, max: number, fallback: number): number =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+
+/** Passport stamps kept: about a year of daily pages, so the save never keeps growing. */
+export const MAX_STAMPS = 400;
+/** Stickers on the inside cover, at most. */
+export const MAX_STICKERS = 60;
+
+/** The latest stamps only (days sort as text, '2026-10-12'): a save — or two merged — stays small. */
+function latestStamps(stamps: Record<string, DailyStamp>): Record<string, DailyStamp> {
+  const days = Object.keys(stamps).sort();
+  for (const old of days.slice(0, Math.max(0, days.length - MAX_STAMPS))) delete stamps[old];
+  return stamps;
+}
+
+function readStamps(v: unknown): Record<string, DailyStamp> | undefined {
+  if (!isRecord(v)) return undefined;
+  const stamps: Record<string, DailyStamp> = {};
+  for (const [day, s] of entries(v)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !isRecord(s) || typeof s.pageId !== 'string') continue;
+    stamps[day] = { pageId: s.pageId, countryId: typeof s.countryId === 'string' ? s.countryId : '', time: count(s.time) };
+  }
+  return latestStamps(stamps);
+}
+
+function readCover(v: unknown): CoverSticker[] | undefined {
+  if (!Array.isArray(v)) return undefined;
+  return v
+    .filter((s): s is Record<string, unknown> => isRecord(s) && typeof s.type === 'string')
+    .slice(0, MAX_STICKERS)
+    .map((s) => ({
+      type: s.type as SpriteType, // an unknown drawing is skipped where stickers are shown
+      x: between(s.x, 0, 1, 0.5),
+      y: between(s.y, 0, 1, 0.5),
+      rotation: between(s.rotation, -360, 360, 0),
+      scale: between(s.scale, 0.4, 3, 1),
+    }));
+}
 
 /**
  * A save of any version, read back safely: missing or damaged fields become empty ones, fields
- * this version does not know are kept, dangerous prototype keys are removed, and older saves are brought up to date.
+ * this version does not know are kept, and older saves are brought up to date.
  */
 export function readProgress(raw: unknown): GameProgress {
   const data = isRecord(raw) ? raw : {};
 
-  // Strip dangerous prototype pollution keys
-  const cleanData: Fields = {};
-  for (const [k, v] of Object.entries(data)) {
-    if (!DANGEROUS_KEYS.has(k)) {
-      cleanData[k] = v;
-    }
-  }
-
   const sceneResults: Record<string, PageResult> = {};
-  if (isRecord(cleanData.sceneResults)) {
-    for (const [pageId, r] of Object.entries(cleanData.sceneResults)) {
-      if (!isRecord(r) || DANGEROUS_KEYS.has(pageId)) continue;
+  if (isRecord(data.sceneResults)) {
+    for (const [pageId, r] of entries(data.sceneResults)) {
+      if (!isRecord(r)) continue;
       sceneResults[pageId] = {
         ...r,
         sceneId: pageId,
@@ -55,54 +87,119 @@ export function readProgress(raw: unknown): GameProgress {
   }
 
   const discovered: Record<string, string[]> = {};
-  if (isRecord(cleanData.discovered)) {
-    for (const [pageId, seen] of Object.entries(cleanData.discovered)) {
-      if (!DANGEROUS_KEYS.has(pageId)) discovered[pageId] = strings(seen);
-    }
+  if (isRecord(data.discovered)) {
+    for (const [pageId, seen] of entries(data.discovered)) discovered[pageId] = strings(seen);
   }
-
-  const playCount: Record<string, number> = {};
-  if (isRecord(cleanData.playCount)) {
-    for (const [pageId, n] of Object.entries(cleanData.playCount)) {
-      if (!DANGEROUS_KEYS.has(pageId)) playCount[pageId] = count(n);
-    }
-  }
+  // (Damaged values are dropped rather than kept as unknown fields)
+  const solvedMysteries = Array.isArray(data.solvedMysteries) ? strings(data.solvedMysteries) : undefined;
+  const rareFound = Array.isArray(data.rareFound) ? strings(data.rareFound) : undefined;
+  // Older saves did not keep visits; only finished pages and the last book page prove prior play.
+  const playedPages = Array.from(new Set([
+    ...strings(data.playedPages),
+    ...Object.keys(sceneResults).filter((id) => sceneResults[id].stars > 0),
+    ...(typeof data.lastPageId === 'string' ? [data.lastPageId] : []),
+  ]));
+  const stamps = readStamps(data.stamps);
+  const cover = readCover(data.cover);
 
   // Sound stays on unless the player turned it off
-  const settings = isRecord(cleanData.settings) ? { ...cleanData.settings, soundEnabled: cleanData.settings.soundEnabled !== false } : undefined;
+  const settings = isRecord(data.settings) ? { ...data.settings, soundEnabled: data.settings.soundEnabled !== false } : undefined;
 
-  const upToDate = typeof cleanData.schemaVersion === 'number' && cleanData.schemaVersion >= SCHEMA_VERSION;
+  const upToDate = typeof data.schemaVersion === 'number' && data.schemaVersion >= SCHEMA_VERSION;
   const bestScores = Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0);
-  const result: GameProgress = {
-    ...cleanData,
+  return {
+    ...Object.fromEntries(entries(data)),
     schemaVersion: SCHEMA_VERSION,
-    unlockedScenes: strings(cleanData.unlockedScenes),
+    unlockedScenes: strings(data.unlockedScenes),
     sceneResults,
-    totalScore: upToDate ? count(cleanData.totalScore) : bestScores,
+    totalScore: upToDate ? count(data.totalScore) : bestScores,
     discovered,
+    lastPageId: typeof data.lastPageId === 'string' ? data.lastPageId : undefined,
     settings, // (a damaged value is dropped rather than kept as an unknown field)
+    solvedMysteries,
+    stamps,
+    cover,
+    rareFound,
+    playedPages: playedPages.length ? playedPages : undefined,
   };
-  if (typeof cleanData.lastPageId === 'string') {
-    result.lastPageId = cleanData.lastPageId;
-  } else {
-    delete result.lastPageId;
+}
+
+/* ---- Two saves into one (a backup brought back) ---- */
+
+const union = (a: string[] = [], b: string[] = []) => Array.from(new Set([...a, ...b]));
+
+function mergeResult(a: PageResult | undefined, b: PageResult | undefined): PageResult {
+  if (!a || !b) return (a ?? b)!;
+  const times = [a.bestTime, b.bestTime].filter((t) => t > 0);
+  return {
+    ...b,
+    ...a,
+    stars: Math.max(a.stars, b.stars),
+    highScore: Math.max(a.highScore, b.highScore),
+    bestTime: times.length ? Math.min(...times) : 0,
+    completedAt: a.completedAt > b.completedAt ? a.completedAt : b.completedAt,
+    creaturesFound: union(a.creaturesFound, b.creaturesFound),
+  };
+}
+
+/**
+ * Two saves as one, losing nothing of either: every page keeps its best stars, score and time,
+ * every find and stamp is kept. Where only one can win (the cover, settings, the page the player is
+ * in), `current` does — unless it has none. Both are read with readProgress first.
+ */
+export function mergeProgress(current: GameProgress, other: GameProgress): GameProgress {
+  const sceneResults: Record<string, PageResult> = {};
+  for (const id of union(Object.keys(current.sceneResults), Object.keys(other.sceneResults))) {
+    sceneResults[id] = mergeResult(current.sceneResults[id], other.sceneResults[id]);
   }
-  if (cleanData.playCount && isRecord(cleanData.playCount)) {
-    result.playCount = playCount;
-  } else {
-    delete result.playCount;
+  const discovered: Record<string, string[]> = {};
+  for (const id of union(Object.keys(current.discovered), Object.keys(other.discovered))) {
+    discovered[id] = union(current.discovered[id], other.discovered[id]);
   }
-  if (cleanData.rareFound) {
-    result.rareFound = strings(cleanData.rareFound);
-  } else {
-    delete result.rareFound;
+  const stamps: Record<string, DailyStamp> = { ...other.stamps };
+  for (const [day, stamp] of Object.entries(current.stamps ?? {})) {
+    if (!stamps[day] || stamp.time <= stamps[day].time) stamps[day] = stamp;
   }
-  if (cleanData.solvedMysteries) {
-    result.solvedMysteries = strings(cleanData.solvedMysteries);
-  } else {
-    delete result.solvedMysteries;
+  const solved = union(current.solvedMysteries, other.solvedMysteries);
+  const rare = union(current.rareFound, other.rareFound);
+  return {
+    ...other,
+    ...current,
+    schemaVersion: SCHEMA_VERSION,
+    unlockedScenes: union(current.unlockedScenes, other.unlockedScenes),
+    playedPages: union(current.playedPages, other.playedPages),
+    sceneResults,
+    totalScore: Object.values(sceneResults).reduce((sum, r) => sum + r.highScore, 0),
+    discovered,
+    lastPageId: current.lastPageId ?? other.lastPageId,
+    settings: current.settings ?? other.settings,
+    solvedMysteries: solved.length ? solved : undefined,
+    rareFound: rare.length ? rare : undefined,
+    stamps: Object.keys(stamps).length ? latestStamps(stamps) : undefined,
+    cover: current.cover?.length ? current.cover : other.cover,
+  };
+}
+
+/** What a backup file holds: the save, marked as this game's. */
+const BACKUP_GAME = 'the-lost-sketchbook';
+
+/** Whether something read from a backup looks like a save at all (not just any JSON). */
+const looksLikeSave = (v: unknown): v is Fields =>
+  isRecord(v) && (isRecord(v.sceneResults) || isRecord(v.discovered) || Array.isArray(v.unlockedScenes));
+
+/**
+ * The save of a backup (a file written by `progress.backup()`, or a save pasted as it is stored),
+ * or null if the text is not one.
+ */
+export function readBackup(text: string): GameProgress | null {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    return null;
   }
-  return result;
+  const save = isRecord(data) && data.game === BACKUP_GAME ? data.save : data;
+  return looksLikeSave(save) ? readProgress(save) : null;
 }
 
 /**
@@ -110,6 +207,7 @@ export function readProgress(raw: unknown): GameProgress {
  * album can ask for every page without reading storage (SQLite on iOS/Android) each time.
  */
 let copy: GameProgress | null = null;
+const listeners = new Set<() => void>();
 
 // Web: another tab of the game saved — read the save again
 if (typeof addEventListener === 'function') {
@@ -136,12 +234,44 @@ function save(progress: GameProgress): void {
   } catch (e) {
     console.warn('Unable to save progress', e);
   }
+  for (const listener of listeners) {
+    try {
+      listener();
+    } catch {
+      // A cloud sync observer must never interrupt a local save.
+    }
+  }
 }
 
 export const progress = {
-  /** Returns the current in-memory progress. */
-  current(): GameProgress {
-    return load();
+  /** Watches local saves so platform services can mirror them without entering game rules. */
+  subscribe(listener: () => void): () => void {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  },
+
+  /* ---- Backups ---- */
+
+  /** The whole save as the text of a backup file. */
+  backup(): string {
+    return JSON.stringify({ game: BACKUP_GAME, savedAt: new Date().toISOString(), save: load() });
+  },
+
+  /** Brings a backup back, merged into this device's save (nothing is lost); false if it is not one. */
+  restore(text: string): boolean {
+    const other = readBackup(text);
+    if (!other) return false;
+    save(mergeProgress(load(), other));
+    return true;
+  },
+
+  /**
+   * Another player's save in place of this device's (null: a fresh one), keeping this device's
+   * settings: an account signing in must not take over the progress of the one before it.
+   */
+  replace(text: string | null): void {
+    const next = (text ? readBackup(text) : null) ?? readProgress(null);
+    save({ ...next, settings: load().settings ?? next.settings });
   },
 
   /** A case closed: keeps the best stars, score and time, and unlocks the next page. */
@@ -189,14 +319,79 @@ export const progress = {
   /** The player is in this page now: "Chơi tiếp" comes back to it next time. */
   recordVisit(pageId: string): void {
     const current = load();
-    if (current.lastPageId === pageId) return;
-    save({ ...current, lastPageId: pageId });
+    const playedPages = current.playedPages ?? [];
+    if (current.lastPageId === pageId && playedPages.includes(pageId)) return;
+    save({ ...current, lastPageId: pageId, playedPages: union(playedPages, [pageId]) });
+  },
+
+  /** Prior book visits, including evidence kept by older versions. */
+  playedPages(): string[] {
+    const current = load();
+    return union(current.playedPages, Object.keys(current.sceneResults).filter((id) => current.sceneResults[id].stars > 0));
   },
 
   /** The page the player was last in (it may be gone from the content since), if any. */
   lastPage(): string | undefined {
     return load().lastPageId;
   },
+
+  /* ---- Chapter mysteries ---- */
+
+  isMysterySolved(chapterId: string): boolean {
+    return (load().solvedMysteries ?? []).includes(chapterId);
+  },
+
+  recordMysterySolved(chapterId: string): void {
+    const current = load();
+    const solved = current.solvedMysteries ?? [];
+    if (solved.includes(chapterId)) return;
+    save({ ...current, solvedMysteries: [...solved, chapterId] });
+  },
+
+  /* ---- Golden critters ---- */
+
+  /** Kinds of golden critters caught at least once. */
+  rareFound(): string[] {
+    return load().rareFound ?? [];
+  },
+
+  /** A golden critter caught: true the first time of its kind. */
+  recordRareFind(kind: string): boolean {
+    const current = load();
+    const found = current.rareFound ?? [];
+    if (found.includes(kind)) return false;
+    save({ ...current, rareFound: [...found, kind] });
+    return true;
+  },
+
+  /* ---- Passport ---- */
+
+  /** Daily pages done, by day. */
+  stamps(): Record<string, DailyStamp> {
+    return load().stamps ?? {};
+  },
+
+  /** A daily page done: its stamp (the best time, when the same day is played again). */
+  recordStamp(day: string, stamp: DailyStamp): void {
+    const current = load();
+    const stamps = { ...current.stamps };
+    const existing = stamps[day];
+    if (existing && existing.time <= stamp.time) return;
+    stamps[day] = stamp;
+    save({ ...current, stamps: latestStamps(stamps) });
+  },
+
+  /* ---- Inside cover ---- */
+
+  cover(): CoverSticker[] {
+    return load().cover ?? [];
+  },
+
+  saveCover(stickers: CoverSticker[]): void {
+    save({ ...load(), cover: stickers.slice(0, MAX_STICKERS) });
+  },
+
+  /* ---- Settings ---- */
 
   /** Whether the player wants sound (on until they turn it off). */
   soundEnabled(): boolean {
@@ -208,6 +403,17 @@ export const progress = {
     const current = load();
     if ((current.settings?.soundEnabled !== false) === enabled) return;
     save({ ...current, settings: { ...current.settings, soundEnabled: enabled } });
+  },
+
+  /** Whether pages are washed over until their case is closed (on until the player turns it off). */
+  washEnabled(): boolean {
+    return load().settings?.wash !== false;
+  },
+
+  setWashEnabled(enabled: boolean): void {
+    const current = load();
+    if ((current.settings?.wash !== false) === enabled) return;
+    save({ ...current, settings: { soundEnabled: current.settings?.soundEnabled !== false, ...current.settings, wash: enabled } });
   },
 
   /** Sum of every page's best score. */
@@ -222,113 +428,4 @@ export const progress = {
       new Set([...(current.discovered[pageId] || []), ...(current.sceneResults[pageId]?.creaturesFound || [])])
     );
   },
-
-  /** Increment and return the play count for a page (used to seed replays). */
-  recordPlay(pageId: string): number {
-    const current = load();
-    const countNum = (current.playCount?.[pageId] ?? 0) + 1;
-    save({
-      ...current,
-      playCount: { ...(current.playCount || {}), [pageId]: countNum },
-    });
-    return countNum;
-  },
-
-  playCount(pageId: string): number {
-    return load().playCount?.[pageId] ?? 0;
-  },
-
-  /** Records finding a rare shiny variant of a sprite. */
-  recordRare(spriteType: string): void {
-    const current = load();
-    const rares = current.rareFound || [];
-    if (rares.includes(spriteType)) return;
-    save({
-      ...current,
-      rareFound: [...rares, spriteType],
-    });
-  },
-
-  isRareFound(spriteType: string): boolean {
-    return (load().rareFound || []).includes(spriteType);
-  },
-
-  /** Export the current save as a base64 encoded string. */
-  exportSave(): string {
-    const json = JSON.stringify(load());
-    if (typeof btoa === 'function') {
-      try {
-        return btoa(unescape(encodeURIComponent(json)));
-      } catch {
-        // Fallback
-      }
-    }
-    return json;
-  },
-
-  /** Import a save string (base64 or raw JSON) safely. */
-  importSave(dataStr: string): { success: boolean; error?: string } {
-    try {
-      let json = dataStr.trim();
-      if (typeof atob === 'function' && !json.startsWith('{')) {
-        try {
-          json = decodeURIComponent(escape(atob(json)));
-        } catch {
-          // If atob fails, might already be raw json
-        }
-      }
-      const parsed = JSON.parse(json);
-      if (!isRecord(parsed)) {
-        return { success: false, error: 'Dữ liệu không đúng định dạng' };
-      }
-      const loaded = readProgress(parsed);
-      save(loaded);
-      return { success: true };
-    } catch {
-      return { success: false, error: 'Không thể giải mã bản lưu' };
-    }
-  },
 };
-
-const SOUND_STORAGE_KEY = 'detective_sketchbook_sound_enabled_v1';
-
-export function loadSoundEnabled(): boolean {
-  try {
-    const val = localStorage.getItem(SOUND_STORAGE_KEY);
-    return val !== null ? val === 'true' : true;
-  } catch {
-    return true;
-  }
-}
-
-export function saveSoundEnabled(enabled: boolean): void {
-  try {
-    localStorage.setItem(SOUND_STORAGE_KEY, String(enabled));
-  } catch {
-    // ignore
-  }
-}
-
-const REVEAL_EFFECT_STORAGE_KEY = 'detective_sketchbook_reveal_effect_v1';
-
-export function loadRevealEffect(): boolean {
-  try {
-    const val = localStorage.getItem(REVEAL_EFFECT_STORAGE_KEY);
-    return val !== null ? val === 'true' : true;
-  } catch {
-    return true;
-  }
-}
-
-export function saveRevealEffect(enabled: boolean): void {
-  try {
-    localStorage.setItem(REVEAL_EFFECT_STORAGE_KEY, String(enabled));
-  } catch {
-    // ignore
-  }
-}
-
-// Request persistent storage on Web where supported to prevent Safari/browsers from evicting saves
-if (typeof navigator !== 'undefined' && 'storage' in navigator && navigator.storage?.persist) {
-  navigator.storage.persist().catch(() => {});
-}

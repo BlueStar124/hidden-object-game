@@ -15,10 +15,9 @@ Một trò chơi phiêu lưu tìm vật thể ẩn (Hidden Object Game) lấy c�
 - **Hệ Thống Điểm & Combo:**
   - Nhân đôi, nhân ba điểm khi tìm liên tiếp trong vòng 6 giây ($\times 2, \times 3$).
   - Trừ điểm nhẹ khi click sai kèm hiệu ứng rung màn hình (Screen shake).
-- **Hệ Thống Gợi Ý 3 Cấp Độ (Hint System):**
-  - Cấp 1: Gợi ý văn bản mở rộng.
-  - Cấp 2: Kính lúp rung nhẹ định hướng về phía vật thể.
-  - Cấp 3: Vòng sóng radar phát sáng trực tiếp trên bản đồ.
+- **Hệ Thống Gợi Ý 2 Bước (Hint System):** thẻ manh mối ban đầu chỉ có hình bóng, tên và lời gợi ý còn ẩn.
+  - Bước 1: đọc thẻ (chạm thẻ hoặc bấm Gợi Ý): hiện tên và lời gợi ý vị trí.
+  - Bước 2: kính lúp nhích về phía vật và vòng sóng radar phát sáng ngay trên vật.
 - **Âm Thanh Tự Nhiên (Web Audio API):**
   - Tiếng chuông tìm trúng vật phẩm (TING!), âm click sai, âm thanh sột soạt lật trang giấy, và nhạc chiến thắng.
 - **Lưu Tiến Độ Tự Động (localStorage):**
@@ -138,6 +137,61 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 
 ---
 
+## 🔎 Phiên Bản 0.6 — Bí Ẩn Chương, Trang Của Ngày & Thử Thách Bạn Bè
+
+- **Bí ẩn chương:** mỗi trang ngày giấu thêm một **mảnh manh mối** (không bắt buộc để qua màn). Đủ mảnh của chương thì
+  mở **Bảng Suy Luận** trong Mục Lục: chọn đáp án đúng để đọc đoạn kết. Chọn sai không bị phạt, chỉ được nhắc lại manh
+  mối. Cả 11 chương của Singapore, Thái Lan và Việt Nam đều có bí ẩn (37 mảnh manh mối), nối thành một câu chuyện: ai đã để lại cuốn sổ, và vì sao nó đến tay bạn.
+- **Chơi lại không nhàm:** trang đã giải có thể đặt vật ở chỗ nấp khác (kèm gợi ý mới) mỗi lần chơi lại, trên cả trang ngày và 11 trang đêm. Dấu triện và các món thuộc nhiệm vụ ngày và đêm giữ chỗ cố định.
+- **Trang của ngày:** mỗi ngày một góc tranh với 3–5 vật, giống nhau cho mọi người chơi (không cần server). Xong thì
+  được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
+- **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
+- **Bưu thiếp:** thắng màn thì gửi được một tấm bưu thiếp vẽ từ chính trang tranh, kèm số sao và thời gian. Nước nào
+  có tem vàng hộ chiếu thì bưu thiếp có viền vàng.
+- **Trang câu đố và trang theo dấu:** Merlion, Yaowarat và Hội An là trang câu đố (thẻ chỉ hiện câu đố, tìm ra mới biết
+  tên); Phú Quốc là trang theo dấu (chó xoáy → thuyền thúng → bò biển, đúng thứ tự).
+- **Ngày và đêm:** ở trang đêm Lau Pa Sat, Yaowarat và Hội An, ba món đồ ban ngày đã rời chỗ. Thẻ của chúng kể ban ngày
+  chúng ở đâu; tìm ra thì cuốn sổ vẽ đường chúng đã đi.
+- **Tô màu dần:** trang mở ra nhạt màu như phủ một lớp nước rửa; mỗi vật tìm được làm màu loang đậm lại quanh nó, phá
+  án thì cả trang bừng màu. Kính lúp luôn thấy màu thật. Tắt được trong menu Tạm Dừng.
+- **Hồi kết:** giải bí ẩn cuối cùng ở Mũi Cà Mau thì nhận Chứng Nhận Người Giữ Sổ Thứ Tư, kèm thống kê cả hành trình
+  và bưu thiếp chứng nhận để gửi bạn bè.
+- **Bạn đồng hành lữ hành:** chim én, chú mèo của vị kiến trúc sư và một cánh bướm đường xa mỗi ngày ghé một trang khác
+  nhau qua ba nước. Hộ Chiếu cho biết hôm nay chúng ở đâu; gặp đủ mọi nơi thì đọc được câu chuyện của chúng.
+- **Đồ nghề thám tử:** giải bí ẩn chương thì nhận dụng cụ, và các trang đã chơi có thêm thứ để tìm, chỉ hiện trong kính lúp.
+  - *Kính Tia Tím* (chương 3 Singapore): 9 lời nhắn mực tàng hình trên các trang Singapore, ghép lại thành bức thư của
+    vị kiến trúc sư gửi người giữ sổ tiếp theo.
+  - *Lăng Kính Pha Lê* (chương 2 Thái Lan): một dải cầu vồng chéo ngang tròng kính; 9 nét vẽ bằng ánh sáng của người
+    thầy chỉ hiện trong dải sáng ấy, mỗi trang Thái Lan một nét.
+  - *Kính Lúp Hai Tròng* (chương 2 Việt Nam): 10 nét vẽ tí hon của người họa sĩ cung đình, chỉ thấy khi phóng to trang
+    từ ×2.
+- **Sinh vật ánh vàng:** thỉnh thoảng một sinh vật phụ trên trang là bản ánh vàng hiếm (thẻ của nó sáng lên, trên
+  tranh có ánh lấp lánh). Bắt được thì Sổ Tay viền vàng loài đó.
+- **Sinh vật giật mình:** bị bắt, mèo nhảy lên, cua bò ngang, cá quẫy đuôi, chim vỗ cánh bay lên rồi đậu lại.
+- **Sao lưu tiến độ:** nút 💾 ở trang chủ lưu tiến độ ra một tệp; khôi phục (từ tệp hoặc dán nội dung) sẽ gộp với tiến
+  độ đang có, không mất gì. Bản web xin trình duyệt giữ dữ liệu lâu dài.
+- **Thử thách bạn bè:** trang chủ → Thử thách → Tạo thử thách cho chọn màn đã chơi, tạo mã và gửi cho bạn bè,
+  hoặc chơi trước để lập kỷ lục. Sau khi thắng, mã như `SG3-7K2P-142` kèm thời gian của bạn. Cả người tạo và người
+  nhận đều phải từng vào chơi đúng màn đó trong sổ (ngày/đêm tính riêng, không bắt buộc thắng); nhập mã hoặc mở link
+  `…/?c=SG3-7K2P-142` đều kiểm tra điều kiện này. Lịch sử được giữ trong bản lưu và sao lưu.
+
+### Trường mới trong file màn chơi
+
+```jsonc
+{
+  "isClue": true,                      // mảnh manh mối của bí ẩn chương (tùy chọn như bonus)
+  "spots": [                           // chỗ nấp khác cho lần chơi lại, mỗi chỗ một gợi ý riêng
+    { "x": 0.585, "y": 0.625, "clue": "Ngồi giữa hàng cây, dưới chân tòa tháp thứ ba." }
+  ],
+  "riddle": "Thứ gì kêu tích tắc mà không có tim?", // câu đố thay cho tên trên thẻ
+  "order": 1,                          // trang theo dấu: tìm theo thứ tự 1, 2, 3…
+  "dayTwin": "street-hat"              // trang đêm: món đồ này ở trang ngày (id), nay đã đổi chỗ
+}
+```
+
+Câu hỏi của bí ẩn chương nằm trong `countries/<nước>/mysteries.ts` (trường `mystery` của chương). Mỗi nước có thêm
+`code` (2 chữ in hoa) dùng trong mã thử thách.
+
 ## 🛠️ Cài Đặt & Chạy Game
 
 Game chạy bằng bản app trong [`app/`](app/README.md) (iOS · Android · web):
@@ -207,5 +261,12 @@ File [`vercel.json`](vercel.json) ở thư mục gốc cho Vercel deploy **bản
 2. Mỗi nhánh được push lên có một bản **Preview** riêng để thử; push/merge vào `main` thì thay bản chính thức trên tên miền của project (xem ở mục *Domains* trên dashboard).
 3. Cùng tên miền nên người chơi **giữ nguyên tiến độ** (app đọc đúng khóa lưu của bản Vite).
 4. Cần quay về bản trước thì dùng **Instant Rollback** trên dashboard. (Bản Vite cũ nằm trong `archive/web-vite.zip`; muốn deploy lại nó phải giải nén và khôi phục `package.json` như hướng dẫn trong zip.)
+
+`vercel.json` cũng đặt header bảo mật cho bản web: Content-Security-Policy (chỉ tải mã từ chính trang, cho phép
+WebAssembly của CanvasKit), chặn nhúng vào iframe của trang khác, `nosniff`. Thêm tài nguyên từ tên miền khác (font,
+ảnh, API) thì phải mở thêm trong CSP, nếu không trình duyệt sẽ chặn.
+
+Bản app (iOS/Android) gửi link thử thách khi biết địa chỉ bản web: đặt biến môi trường `EXPO_PUBLIC_WEB_URL` (ví dụ
+`https://ten-du-an.vercel.app`) lúc build. Bản web tự dùng địa chỉ của chính nó.
 
 `package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 57 cần Node ≥ 22.13 (hoặc 24.3).

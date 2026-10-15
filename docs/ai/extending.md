@@ -16,6 +16,7 @@ H. Thêm hoặc đổi dữ liệu lưu (progress)
 I. Code riêng theo nền tảng
 J. Thêm thư mục cấp một trong `src/`
 K. Refactor an toàn
+L. Thêm một cách chơi trang (như trang của ngày, thử thách)
 
 ---
 
@@ -148,3 +149,11 @@ trúc trong `app/README.md`.
 5. Không tạo lớp trừu tượng "phòng khi sau này cần". Ba đoạn code giống nhau mới gom thành helper, đặt ở tầng thấp nhất
    có thể dùng nó.
 6. Đổi bất cứ thứ gì được ghi trong `AGENTS.md` hay `docs/ai/` (tên file, hằng số, luồng) thì sửa tài liệu trong cùng commit.
+
+## L. Thêm một cách chơi trang (như trang của ngày, thử thách)
+
+1. Luật chọn trang/vật/seed: hàm thuần trong `core/` (xem `daily.ts`, `challenge.ts`), kèm test trong `rules.test.ts`.
+2. `game/useNavigation.ts`: thêm nhánh vào `PlayMode` và vào `pageFor`. Trang trả về giữ id gốc (tiến độ lưu theo id),
+   đặt `layout` riêng để cache của board tách bạch. Mở bằng `openSpecial` (không lật, không prologue).
+3. `game/useCase.ts`: phá án ở cách chơi mới ghi gì (không ghi `recordVictory` nếu không phải chơi cả trang).
+4. `screens/GameScreen.tsx`: nhãn `huntLabel` trên HUD, hộp thoại kết quả, lối vào ở trang chủ.

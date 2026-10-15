@@ -4,8 +4,8 @@
   "title": "Phố Satay Về Khuya",
   "subtitle": "Trang 6 · Đêm — Chợ Lau Pa Sat lúc nửa đêm",
   "art": "lau-pa-sat",
-  "timeLimit": 240,
-  "storyClue": "Khách đã về, những ngọn đèn quầy hàng vẫn còn leo lét. Đây là lúc cầy vòi hương rời mái nhà đi kiếm trái cây, và là lúc những món đồ bị bỏ quên lộ diện dưới ánh đèn pin.",
+  "timeLimit": 285,
+  "storyClue": "Khách đã về, những ngọn đèn quầy hàng vẫn còn leo lét. Đây là lúc cầy vòi hương rời mái nhà đi kiếm trái cây, và là lúc những món đồ bị bỏ quên lộ diện dưới ánh đèn pin. Kỳ lạ thay, vài món đồ ban ngày đã rời chỗ: thẻ manh mối kể ban ngày chúng ở đâu, hãy tìm xem đêm nay chúng nằm đâu.",
   "nightLights": [
     { "x": 0.3, "y": 0.645, "r": 0.04, "color": "rgba(255, 190, 110, 0.55)" },
     { "x": 0.38, "y": 0.64, "r": 0.035, "color": "rgba(255, 190, 110, 0.5)" },
@@ -76,8 +76,8 @@
       "foundText": "Teh tarik — trà sữa được \"kéo\" qua lại giữa hai ca để tạo bọt.",
       "spots": [
         {
-          "x": 0.62,
-          "y": 0.67,
+          "x": 0.622,
+          "y": 0.686,
           "clue": "Ly teh tarik nguội để quên trên chiếc bàn tròn bên phải."
         }
       ]
@@ -96,8 +96,8 @@
       "foundText": "Bên trong có một đồng xu cổ khắc hình… chiếc la bàn!",
       "spots": [
         {
-          "x": 0.42,
-          "y": 0.69,
+          "x": 0.415,
+          "y": 0.709,
           "clue": "Túi tiền rơi cạnh mép quầy hàng ở giữa chợ."
         }
       ]
@@ -175,6 +175,48 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Chú nhện đang giăng lưới đón đám bướm đêm bị đèn thu hút."
+    },
+    {
+      "id": "moved-playful-puppy",
+      "name": "Chú Cún Đợi Khách Về",
+      "clue": "Đêm khuya, chú cún nằm dưới chân cột gang ngoài cùng bên phải, chờ người bán dọn hàng.",
+      "x": 0.74,
+      "y": 0.69,
+      "radius": 0.033,
+      "score": 150,
+      "spriteType": "dog",
+      "scale": 0.5,
+      "camo": "ink",
+      "dayTwin": "playful-puppy",
+      "foundText": "Chú cún đã theo mùi đồ nướng chạy từ góc trái sang tận góc phải khu chợ!"
+    },
+    {
+      "id": "moved-pocket-watch",
+      "name": "Đồng Hồ Treo Cột Gang",
+      "clue": "Ai đó đã treo chiếc đồng hồ quả quýt lên cột gang giữa chợ, ngay bên phải gáy sổ.",
+      "x": 0.54,
+      "y": 0.57,
+      "radius": 0.03,
+      "score": 150,
+      "spriteType": "pocket-watch",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "dayTwin": "pocket-watch",
+      "foundText": "Chiếc đồng hồ rời đầu hồi, giờ treo nơi ai cũng thấy: kim chỉ đúng nửa đêm."
+    },
+    {
+      "id": "moved-smoky-satay",
+      "name": "Đĩa Satay Nguội",
+      "clue": "Đĩa satay còn sót lại được dọn vào quầy giữa chợ, dưới những vòm sắt bên trái gáy sổ.",
+      "x": 0.46,
+      "y": 0.53,
+      "radius": 0.034,
+      "score": 150,
+      "spriteType": "satay",
+      "scale": 0.55,
+      "camo": "chameleon",
+      "dayTwin": "smoky-satay",
+      "foundText": "Bếp nướng đã tắt, khói đã tan: những xiên satay cuối cùng chờ người đói bụng ghé qua."
     }
   ]
 }

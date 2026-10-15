@@ -17,7 +17,14 @@
       "spriteType": "pygmy-loris",
       "scale": 0.52,
       "camo": "chameleon",
-      "foundText": "Vườn quốc gia Phong Nha - Kẻ Bàng là cái nôi bảo tồn những sinh vật quý báu nhất của đất nước."
+      "foundText": "Vườn quốc gia Phong Nha - Kẻ Bàng là cái nôi bảo tồn những sinh vật quý báu nhất của đất nước.",
+      "spots": [
+        {
+          "x": 0.12,
+          "y": 0.47,
+          "clue": "Cu li lùn tròn mắt bám giữa đám dây leo xanh rì bên vách hang phía trái trang."
+        }
+      ]
     },
     {
       "id": "cave-bat",
@@ -30,7 +37,14 @@
       "spriteType": "centipede",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Loài rết hang khổng lồ thích nghi hoàn hảo với bóng tối và độ ẩm ngàn năm nơi thạch động Phong Nha."
+      "foundText": "Loài rết hang khổng lồ thích nghi hoàn hảo với bóng tối và độ ẩm ngàn năm nơi thạch động Phong Nha.",
+      "spots": [
+        {
+          "x": 0.68,
+          "y": 0.61,
+          "clue": "Chú rết hang bò thầm lặng trên nền đá dưới chân cột thạch nhũ khổng lồ bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "son-river-boat",
@@ -42,9 +56,16 @@
       "score": 120,
       "spriteType": "bamboo-basket",
       "scale": 0.48,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Thuyền nan xuôi theo dòng sông Son đưa du khách khám phá thế giới thạch nhũ kỳ ảo.",
-      "waterline": 0.6
+      "waterline": 0.6,
+      "spots": [
+        {
+          "x": 0.385,
+          "y": 0.575,
+          "clue": "Thúng tre nan mộc mạc trôi trên mặt nước bên phải khúc quanh lối đi gỗ, ngay dưới cửa hang."
+        }
+      ]
     },
     {
       "id": "stalactite-vase",
@@ -56,8 +77,15 @@
       "score": 120,
       "spriteType": "cham-statue",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Những di tích văn hóa Chăm cổ khắc trên vách đá Phong Nha từng khiến các nhà khảo cổ ngỡ ngàng."
+      "camo": "ink",
+      "foundText": "Những di tích văn hóa Chăm cổ khắc trên vách đá Phong Nha từng khiến các nhà khảo cổ ngỡ ngàng.",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.57,
+          "clue": "Pho tượng đá Chăm Pa đứng trầm mặc bên chân cột thạch nhũ lớn, cạnh lối đi gỗ phía xa bên phải."
+        }
+      ]
     },
     {
       "id": "explorer-camera",
@@ -70,7 +98,14 @@
       "spriteType": "langur",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Loài voọc đặc hữu cực kỳ quý hiếm sinh sống tại vùng núi đá vôi Phong Nha - Kẻ Bàng."
+      "foundText": "Loài voọc đặc hữu cực kỳ quý hiếm sinh sống tại vùng núi đá vôi Phong Nha - Kẻ Bàng.",
+      "spots": [
+        {
+          "x": 0.84,
+          "y": 0.36,
+          "clue": "Voọc Hà Tĩnh lông đen ngồi vắt vẻo trên gờ đá cao giữa những nhũ đá rủ, phía trên bên phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -138,6 +173,36 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Thạch sùng canh giữ ngưỡng cửa giữa ánh sáng và bóng tối hang động."
+    },
+    {
+      "id": "clue-cave-quill",
+      "name": "Ngòi Bút Trong Hang",
+      "clue": "Ngòi bút cắm trong khe của khối thạch nhũ vàng ở giữa hang.",
+      "x": 0.6,
+      "y": 0.53,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "quill",
+      "scale": 0.42,
+      "rotation": -14,
+      "camo": "chameleon",
+      "foundText": "Khắc trên ngòi bút: “Mỗi nét vẽ là một lần nhìn kỹ hơn.”"
+    },
+    {
+      "id": "tiny-sketch-4",
+      "name": "Nét Vẽ Tí Hon 4/10",
+      "clue": "Nét vẽ tí hon đậu trên lan can lối đi gỗ, cạnh cột đèn giữa trang.",
+      "x": 0.46,
+      "y": 0.65,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "firefly",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Trong hang tối, ta vẽ dưới ánh đom đóm, và chưa bao giờ thấy sợ.” (4/10)"
     }
   ]
 }

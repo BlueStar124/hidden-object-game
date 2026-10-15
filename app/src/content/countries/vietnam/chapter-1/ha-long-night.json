@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-lantern",
+      "spots": [
+        {
+          "x": 0.25,
+          "y": 0.695,
+          "clue": "Chiếc đèn ông sao được treo trên mạn chiếc thuyền neo ở góc dưới bên trái vịnh."
+        }
+      ],
       "name": "Đèn Ông Sao Đêm Biển",
       "clue": "Chiếc đèn ông sao lung linh soi bóng mạn thuyền trong đêm hội trăng rằm.",
       "x": 0.55,
@@ -85,11 +92,18 @@
       "score": 150,
       "spriteType": "star-lantern",
       "scale": 0.48,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Ngọn đèn soi sáng từng con sóng dập dềnh quanh mạn thuyền."
     },
     {
       "id": "night-bat",
+      "spots": [
+        {
+          "x": 0.44,
+          "y": 0.43,
+          "clue": "Đôi cánh dơi lẫn vào vách đảo phía trên bên trái gáy sổ, ngay sát mặt nước."
+        }
+      ],
       "name": "Dơi Hang Sửng Sốt",
       "clue": "Đôi cánh dơi chao liệng quanh vòm hang vắng lặng.",
       "x": 0.22,
@@ -98,11 +112,18 @@
       "score": 150,
       "spriteType": "bat",
       "scale": 0.46,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Dơi hang vỗ cánh bay lướt qua ngọn núi đá vôi im lìm."
     },
     {
       "id": "night-owl",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.43,
+          "clue": "Chú cú đậu giữa lùm cây trên đỉnh đảo nhỏ ở nửa trái, phía trên đoàn thuyền neo."
+        }
+      ],
       "name": "Cú Vách Đảo Titov",
       "clue": "Đôi mắt tròn xoe chăm chú nhìn mặt nước từ vách đá cao.",
       "x": 0.85,
@@ -124,7 +145,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.42,
-      "camo": "luminous",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -152,6 +173,13 @@
     },
     {
       "id": "night-otter",
+      "spots": [
+        {
+          "x": 0.34,
+          "y": 0.57,
+          "clue": "Bộ lông đốm hoa lẫn vào vách đảo nhỏ ở nửa trái vịnh, phía trên đoàn thuyền neo."
+        }
+      ],
       "name": "Cầy Gấm Leo Vách Đá Đêm",
       "clue": "Bộ lông đốm hoa leo thoăn thoắt trên vách đá tai mèo tĩnh mịch.",
       "x": 0.38,
@@ -160,7 +188,7 @@
       "score": 120,
       "spriteType": "civet",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Cầy gấm thoăn thoắt săn mồi đêm, bộ lông hoa văn ẩn mình khéo léo vào vách đá vôi."
     },
     {
@@ -213,7 +241,7 @@
       "isBonus": true,
       "spriteType": "mangrove-clam",
       "scale": 0.45,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Vỏ sò biển óng ánh ngọc trai nằm khép mình tĩnh lặng trên phiến đá rêu phong."
     }
   ]

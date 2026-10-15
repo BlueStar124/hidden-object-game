@@ -16,8 +16,15 @@
       "score": 150,
       "spriteType": "cham-statue",
       "scale": 0.48,
-      "camo": "tint",
-      "foundText": "Điệu múa Apsara huyền bí dâng lên Nữ thần Mẹ Xứ Sở Yan Po Nagar."
+      "camo": "chameleon",
+      "foundText": "Điệu múa Apsara huyền bí dâng lên Nữ thần Mẹ Xứ Sở Yan Po Nagar.",
+      "spots": [
+        {
+          "x": 0.39,
+          "y": 0.41,
+          "clue": "Tượng vũ nữ Apsara nép trong hốc tường chạm trổ ở tầng trên ngọn tháp lớn, phía bên trái."
+        }
+      ]
     },
     {
       "id": "temple-monkey",
@@ -29,8 +36,15 @@
       "score": 150,
       "spriteType": "cham-lamp",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Ngọn đèn dầu đất nung Champa thắp sáng không gian huyền bí trong các đêm hội Ka-tê truyền thống."
+      "camo": "chameleon",
+      "foundText": "Ngọn đèn dầu đất nung Champa thắp sáng không gian huyền bí trong các đêm hội Ka-tê truyền thống.",
+      "spots": [
+        {
+          "x": 0.235,
+          "y": 0.38,
+          "clue": "Chiếc đèn dầu hoa sen đất nung đặt trên sân thượng tòa nhà trắng giữa dãy phố xa bên trái."
+        }
+      ]
     },
     {
       "id": "sanskrit-scroll",
@@ -43,7 +57,14 @@
       "spriteType": "gong",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Tiếng cồng chiêng rộn rã hòa cùng tiếng trống Baranưng trong ngày hội Ka-tê."
+      "foundText": "Tiếng cồng chiêng rộn rã hòa cùng tiếng trống Baranưng trong ngày hội Ka-tê.",
+      "spots": [
+        {
+          "x": 0.69,
+          "y": 0.6,
+          "clue": "Chiếc cồng đồng dựng ngay trước cửa ngôi tháp nhỏ đứng riêng giữa sân lát gạch bên phải."
+        }
+      ]
     },
     {
       "id": "sacred-dove",
@@ -55,8 +76,15 @@
       "score": 100,
       "spriteType": "highland-elephant",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Tượng voi đá biểu trưng cho thần lực và sự chở che, kiệt tác điêu khắc đá cổ kính của nền văn minh Champa."
+      "camo": "chameleon",
+      "foundText": "Tượng voi đá biểu trưng cho thần lực và sự chở che, kiệt tác điêu khắc đá cổ kính của nền văn minh Champa.",
+      "spots": [
+        {
+          "x": 0.34,
+          "y": 0.74,
+          "clue": "Tượng voi đá đứng cạnh bụi cây trên sân gạch dưới chân ngọn tháp lớn, phía bên trái."
+        }
+      ]
     },
     {
       "id": "ceremony-teacup",
@@ -69,7 +97,14 @@
       "spriteType": "t-rung",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Thanh âm đàn T'rưng trong trẻo vang vọng giữa những tháp gạch nung rực rỡ nắng gió miền duyên hải."
+      "foundText": "Thanh âm đàn T'rưng trong trẻo vang vọng giữa những tháp gạch nung rực rỡ nắng gió miền duyên hải.",
+      "spots": [
+        {
+          "x": 0.21,
+          "y": 0.72,
+          "clue": "Đàn T'rưng ống nứa treo dưới mái hiên ngôi nhà gỗ nép trong tán cây, góc dưới bên trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -121,7 +156,7 @@
       "isBonus": true,
       "spriteType": "champa-relief",
       "scale": 0.36,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Hoa sứ trăm tuổi rụng cánh trắng tinh trên thềm đá cổ."
     },
     {
@@ -137,6 +172,20 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Ốc sên tận hưởng bóng râm mát dịu của ngôi tháp cổ."
+    },
+    {
+      "id": "clue-unlit-lantern",
+      "name": "Chiếc Đèn Trời Chưa Thả",
+      "clue": "Chiếc đèn trời vẽ lẫn vào những mái nhà thành phố phía xa bên trái.",
+      "x": 0.16,
+      "y": 0.39,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "sky-lantern",
+      "scale": 0.45,
+      "camo": "chameleon",
+      "foundText": "Trên đèn vẽ một mũi đất nhọn nhô ra biển, nơi mặt trời mọc và lặn trên cùng một vùng nước."
     }
   ]
 }

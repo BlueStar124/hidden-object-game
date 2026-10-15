@@ -30,22 +30,27 @@ thì tin code, rồi sửa file này.
 | Kính lúp | phóng `LOUPE_ZOOM 2.4`; đường kính `clamp(110, 0.42·min(w,h), 220)` | `constants.ts`, `useCamera.ts` |
 | Lật trang | `PAGE_TURN_MS = 900`; tờ giấy hạ xuống sau `PAGE_TURN_MS - 80` | `core/model.ts`, `usePageTurn.ts` |
 | Combo | `COMBO_WINDOW = 6` giây | `core/caseFile.ts` |
+| Nước rửa (tô màu dần) | phủ `WASH_ALPHA = 0.48`; mỗi vật tìm được rửa sạch một mảng `3.2 ×` bề ngang sprite (110–230 page units) trong `REVEAL_MS = 1100`; phá án thì tan trong `WASH_FADE_MS = 1500` | `board/render/types.ts` |
 | Kính mờ | 4 lần sai trong 3000 ms → mờ 3000 ms | `game/useCase.ts` (`FOG_*`) |
 | Thông báo bay | 1.2 s (điểm) / 1.8 s (thông tin) | `game/useNotices.ts` |
 | Sinh vật nhút nhát | bắt được khi pha nằm trong 0.035–0.455 của chu kỳ | `core/motion.ts` |
 
 **Luật điểm** (`core/scoring.ts`): tìm thấy = `score × combo + (combo − 1) × 50`; combo bắt đầu ×1, tăng sau mỗi lần
-tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 / −100 / −150 (cấp 1/2/3). Điểm không xuống dưới 0.
+tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 (bước 1: đọc thẻ) / −100 (bước 2: chỉ chỗ). Điểm không xuống dưới 0.
 Phá án: thưởng `floor(giây còn lại × 4)`. **3 sao** khi sai ≤ 2, gợi ý ≤ 1 và còn > 60 s; **2 sao** khi sai ≤ 5 và gợi
 ý ≤ 2; còn lại 1 sao.
 
-**Gợi ý** (`core/hints.ts`): Ban đầu mọi chữ (tên, manh mối) trên thẻ chưa tìm bị ẩn (chỉ hiển thị bóng đen silhouette và `???`). Gợi ý vận hành 2 bước cho từng vật (bấm nút Gợi Ý trên HUD hoặc chạm trực tiếp vào thẻ):
-- **Bước 1**: Mở khóa chữ (tên và câu đố manh mối) của riêng vật đó trên thẻ.
-- **Bước 2**: Định vị vị trí vật trên tranh (radar phát xung, kính lúp nhích về phía vật, camera tự lướt tới nếu đang khuất màn hình).
-Sau khi tìm thấy, gợi ý chuyển sang vật chính tiếp theo chưa tìm, hết vật chính thì tới bí mật. **Không bao giờ gợi ý vật bonus.**
+**Gợi ý** (`core/hints.ts`): thẻ của vật chưa tìm ban đầu chỉ có **hình bóng**, tên và `clue` hiện `???` (trừ thẻ
+câu đố: hiện `riddle`). Mỗi vật có 2 bước, ghi trong `CaseState.revealedTextIds` và `activeHint`:
+**bước 1** (50 điểm) mở tên và `clue` trên thẻ; **bước 2** (100 điểm) kính lúp nhích về phía vật, radar phát xung, camera
+tự lướt tới nếu vật đang khuất màn hình. Nút Gợi Ý: bước 2 cho vật vừa đọc, nếu không thì đọc thẻ kế tiếp chưa đọc (theo
+thứ tự trong mảng `objects`, hết vật chính thì tới bí mật), đọc hết rồi thì chỉ chỗ. Chạm thẻ chưa đọc = bước 1 của
+đúng vật đó; chạm thẻ đã đọc chỉ mở/thu thẻ, không tốn gì. **Không bao giờ gợi ý vật bonus hay mảnh manh mối**; trang
+theo dấu (`order`) chỉ gợi ý vật tới lượt.
 
-**Phá án** khi mọi vật chính (`isMainObject`: không `isSecret`, không `isBonus`) đã được tìm. Phá án xong có thể bấm
-"Soi Tiếp" (`isExploring`) để tìm nốt bonus và bí mật: không điểm, không đồng hồ, vẫn ghi vào Sổ Tay. Phá án trang ngày
+**Phá án** khi mọi vật chính (`isMainObject`: không `isSecret`, `isBonus`, `isClue`) đã được tìm. Phá án xong có thể bấm
+"Soi Tiếp" (`isExploring`) để tìm nốt vật tùy chọn (`isOptionalObject`: bonus, mảnh manh mối, bí mật): không điểm, không
+đồng hồ, vẫn ghi vào Sổ Tay. Phá án trang ngày
 lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị khóa tới khi `stars > 0`).
 
 ## 2. Từng file theo tầng
@@ -53,49 +58,57 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 ### core/ — thuần TypeScript, không import package
 | File | Export chính | Ghi chú |
 |---|---|---|
-| `model.ts` | `SpriteType`, `CamoStyle`, `ShyBehavior`, `RoamBehavior`, `HiddenObject`, `isMainObject`, `SPRITE_BASE_WIDTH`, `NightLight`, `Page`, `PageSlot`, `Chapter`, `Country`, `PageRef`, `PAGE_TURN_MS`, `PageTurn`, `ActiveHint`, `CaseState`, `PageResult`, `GameProgress` | **Từ điển của cả game.** Thêm kiểu mới ở đây. |
+| `model.ts` | `SpriteType`, `CamoStyle`, `ShyBehavior`, `RoamBehavior`, `ObjectSpot`, `HiddenObject`, `isMainObject`, `isOptionalObject`, `SPRITE_BASE_WIDTH`, `NightLight`, `Page`, `SpreadRect`, `PageSlot`, `Chapter`, `Mystery`, `MysteryOption`, `Country`, `PageRef`, `PAGE_TURN_MS`, `PageTurn`, `ActiveHint`, `CaseState`, `PageResult`, `GameProgress`, `GameSettings`, `DailyStamp`, `CoverSticker` | **Từ điển của cả game.** Thêm kiểu mới ở đây. |
 | `caseFile.ts` | `COMBO_WINDOW`, `openCase`, `clockTick`, `recordFind` → `FindResult {changes, earned, combo, solved}`, `recordExploreFind`, `recordMiss`, `recordHint`, `leftovers` | Hàm thuần `CaseState → CaseState`. `recordFind` trả về `changes` để **merge** (đồng hồ vẫn chạy song song). |
-| `detection.ts` | `detectObject(nx, ny, objects, foundIds, now?)` → `{hit, object, distance, position, hidingObject}` | Vùng chạm chồng nhau thì vật gần nhất thắng; vật nhút nhát đang trốn trả về `hidingObject` (không tính là sai). |
+| `detection.ts` | `detectObject(nx, ny, objects, foundIds, now?)` → `{hit, object, distance, position, hidingObject, outOfTurn}`, `nextInSequence`, `waitsInSequence` | Vùng chạm chồng nhau thì vật gần nhất thắng; vật nhút nhát đang trốn trả về `hidingObject`, vật chưa tới lượt trong trang theo dấu trả về `outOfTurn` (cả hai không tính là sai). |
 | `scoring.ts` | `foundScore`, `mistakePenalty`, `hintPenalty`, `completionBonus` | Số liệu ở mục 1. |
-| `hints.ts` | `nextHint(currentHintLevel, objects, foundIds, currentLoupePos)` → `HintResult` | |
+| `hints.ts` | `nextHint(activeHint, revealedIds, objects, foundIds, loupePos, targetId?)` → `HintResult` | `targetId`: thẻ được chạm. |
 | `motion.ts` | `motionNow`, `shyPhase`, `isShyVisible`, `roamState`, `objectPosition` | **Worklet**, chạy cả JS thread (bắt vật) lẫn UI thread (vẽ) trên cùng một đồng hồ, nên vật chỉ bắt được đúng nơi, đúng lúc nó được vẽ. |
-| `random.ts` | `hashString`, `rng` (mulberry32), `pick`, `shuffle`, `localDay` | Bộ sinh số ngẫu nhiên có seed tái lập được và hàm ngày theo giờ địa phương. |
-| `resolvePage.ts` | `resolvePage(page, ctx)` | Dựng trang cho lượt chơi: hoán đổi vị trí theo `spots`, thêm sinh vật di cư, gắn cờ biến thể hiếm, ẩn vật cần dụng cụ chưa mở khóa. |
-| `tools.ts` | `toolsOwned`, `isCountryCleared` | Quản lý đồ nghề mở khóa (như `'uv-lens'` khi hoàn thành các nước). |
-| `migrants.ts` | `migrantsOn(pageId, day, migrants)` | Tính toán danh sách sinh vật di cư ghé trang theo ngày. |
-| `progress.ts` | `SCHEMA_VERSION` (=2), `readProgress(raw)`, `progress.{recordVictory, pageResult, recordDiscovery, discovered, recordVisit, lastPage, soundEnabled, setSoundEnabled, totalScore, exportSave, importSave, saveRevealEffect, loadRevealEffect}` | `lastPageId` là trang dở dang; `settings.soundEnabled` là công tắc âm; lọc prototype pollution (`__proto__`, `constructor`); hỗ trợ xuất/nhập save Base64. |
+| `random.ts` | `SEED_BITS` (20), `SEED_COUNT`, `hashString` (FNV-1a), `rng(seed)` (mulberry32), `draw`, `shuffled`, `localDay(date)` | Ngẫu nhiên tái lập được: cùng seed ra cùng kết quả trên mọi máy. `localDay` theo giờ máy, không theo UTC. |
+| `layout.ts` | `layOutPage(page, seed)`, `hasSpots`, `layoutKey(page)` | Seed 0 là trang đúng như JSON. Vật có `spots` có thể sang chỗ khác (kèm `clue` của chỗ đó); id trang và id vật giữ nguyên. Trang đã sắp đặt có `layout` (`s<seed>`); mọi cache theo trang dùng `layoutKey`. |
+| `daily.ts` | `DAILY_TIME_LIMIT` (150 s), `DAILY_MIN_FINDS`/`MAX` (3/5), `dailyPuzzle(day, pages)` → `DailyPuzzle {day, pageId, seed, focus, objectIds}`, `dailyPage(page, puzzle)`, `inFocus(page, nx, ny)`, `STAMPS_FOR_SEAL` (7), `stampsByCountry` | Trang của ngày: chọn theo ngày, giống nhau cho mọi người. Một góc 0.4 × 0.36 của trang (khung giấy), 3–5 vật chính không di chuyển, không có thứ tự. Không tính là chơi trang đó: chỉ đóng dấu hộ chiếu. |
+| `mystery.ts` | `cluesOf(chapter)`, `hasMystery`, `mysteryProgress(chapter, seen)`, `canDeduce`, `isRightAnswer` | Đủ mảnh manh mối (`isClue`) của chương thì mở Bảng Suy Luận. |
+| `rare.ts` | `RARE_CHANCE` (1/25 mỗi lượt), `withRareCritter(page, roll)` | Một sinh vật phụ (`isCritter`: không bao giờ là lời nhắn mực tàng hình) thành bản ánh vàng (`rare: true`, chỉ trong lượt đó, không bao giờ ghi trong JSON). `roll` do `useNavigation` tung khi mở trang (trang đầu tiên của người chơi mới thì không). Trang có sinh vật vàng mang `layout` riêng (`r<id>`). |
+| `tools.ts` | `toolsOwned(chapters, isSolved)`, `chapterGiving(chapters, tool)`, `withTools(page, tools)` | Đồ nghề là phần thưởng của bí ẩn chương (`Mystery.reward`). Vật `requires` chỉ có trên trang khi người chơi có dụng cụ đó; trang thiếu dụng cụ mang `layout` `t…`, cùng một object cho mỗi bộ dụng cụ (memo WeakMap). Ba dụng cụ, mỗi cái hiện vật của mình **chỉ trong kính lúp**, mỗi cái một kiểu (`board/render/book.ts`, theo `SceneSprite.lens`): `uv-lens` (bí ẩn chương 3 Singapore; 9 lời nhắn mực tàng hình `uv-note-<n>`, sáng xanh), `prism` (bí ẩn chương 2 Thái Lan; 9 nét vẽ cầu vồng `prism-sketch-<n>`, chỉ hiện trong dải cầu vồng chéo ngang tròng kính, quầng sáng đổi màu theo thời gian), `twin-lens` (bí ẩn chương 2 Việt Nam; 10 nét vẽ tí hon `tiny-sketch-<n>`, `scale` ≤ 0.3, chỉ hiện khi phóng to tranh từ `TINY_ZOOM_FROM` 1.6× tới đủ ở `TINY_ZOOM_FULL` 2×). |
+| `dayNight.ts` | `hasDayTwins(page)`, `withDayTwins(night, day)` | Trang đêm "ngày và đêm": vật có `dayTwin` nhận `dayAt` (vị trí và `clue` của vật đó ở trang ngày; chỉ trong lượt chơi, không ghi trong JSON). Cùng một object cho mỗi trang (memo WeakMap), mang `layout` `n` (không dùng `d`: chữ đó đánh dấu trang của ngày). `useNavigation` áp khi mở, lật, nạp sẵn (`openingPage`). Thẻ ghi "Ban ngày: …"; tìm được thì `book.ts` vẽ đường cong nét đứt từ chỗ ban ngày tới chỗ ban đêm (`SceneSprite.dayTrail`, `DAY_TRAIL_MS`). Hiện có ở Lau Pa Sat, Yaowarat, Hội An (đêm), mỗi trang 3 vật `moved-<id ngày>`. |
+| `migrants.ts` | `migrantObjectId`, `migrantSpot(m, day)`, `withVisitors(page, day, migrants)`, `migrantProgress(m, seen)` | Mỗi ngày mỗi sinh vật lữ hành ở một trang (theo ngày, giống nhau cho mọi người), thành vật phụ id `migrant-<id>` (`camo: chameleon`). Trang có khách mang `layout` `v…`. `useNavigation` thêm khách khi mở, lật, nạp sẵn (`openingPage`). |
+| `challenge.ts` | `Challenge`, `FriendChallenge`, `FriendChallengeObject`, `ChallengeRefusal` (`missing` · `unplayed` · `turning` · `newer`), `encodeChallenge`, `parseChallenge(text)`, `parseFriendCode(text)`, `isFriendChallenge`, `readFriendChallenge(raw, knownSprite)` (kiểm từng vật dữ liệu server gửi về; sai một vật là bỏ cả thử thách), `friendChallengeRefusal`, `friendPage(visit, c)`, `canChallengePage(pageId, playedPages)`, `challengeSeed(roll)`; hằng số `FRIEND_CONTENT_VERSION`, `FRIEND_AREA`, `FRIEND_RADIUS`, `FRIEND_MAX_OBJECTS`, `FRIEND_OBJECT_SCORE` (khớp với kiểm tra trong SQL) | Mã local `SG3N-7K2P-142` dùng seed; mã `H-…` trỏ tới thử thách người chơi tự đặt trên backend. Thử thách bạn bè lưu ID trang, sprite, tọa độ, ngụy trang và gợi ý; hai phía phải đăng nhập và đã chơi đúng trang ngày/đêm. |
+| `progress.ts` | `SCHEMA_VERSION` (=2), `MAX_STAMPS` (400), `MAX_STICKERS` (60), `readProgress(raw)`, `mergeProgress(current, other)`, `readBackup(text)`, `progress.{subscribe, backup, restore, recordVictory, pageResult, recordDiscovery, discovered, recordVisit, playedPages, lastPage, …}` | Lưu local vẫn là bản gốc và đọc được bản cũ. `subscribe` báo cho tầng platform khi local save đổi để đồng bộ cloud; khôi phục bản sao lưu và gộp tiến độ không ghi đè mất dữ liệu. |
 
 ### content/ — chỉ dữ liệu
 | File | Export | Ghi chú |
 |---|---|---|
-| `index.ts` | `COUNTRIES`, `FIRST_COUNTRY` (=`COUNTRIES[0]`), `countryById`, `pagesOf(country)` → `PageRef[]`, `pageRefOf(page)`, `artOf(page)` → asset `require`, `artIdOf(page)` → `"<country>/<art>"`, `allPages()` (mọi trang ngày rồi tới mọi trang đêm), `placeOf(pageId)` → `{ref, night}` hoặc `null` | Khi load sẽ **throw** nếu id trang bị trùng hoặc `art` không có trong bảng `art` của nước. |
+| `migrants.ts` | `MIGRANTS` (én, mèo của vị kiến trúc sư, bướm; mỗi con 4 chỗ ghé qua 3 nước) | Test bắt chỗ ghé phải ở trang ngày, trên giấy, không đè vật nào. Id sinh vật và id trang của chỗ ghé là vĩnh viễn. |
+| `tools.ts` | `TOOLS: Record<ToolId, {name, description, finds, badge}>` | Tên và mô tả dụng cụ cho người chơi (Bảng Suy Luận hiện khi trao); `finds`/`badge`: tên những thứ nó làm hiện ra, ở Mục Lục và thanh manh mối. |
+| `index.ts` | `COUNTRIES`, `FIRST_COUNTRY` (=`COUNTRIES[0]`), `allChapters()`, `countryById`, `pagesOf(country)` → `PageRef[]`, `pageRefOf(page)`, `artOf(page)` → asset `require`, `artIdOf(page)` → `"<country>/<art>"`, `allPages()` (mọi trang ngày rồi tới mọi trang đêm), `placeOf(pageId)` → `{ref, night}` hoặc `null`, `codeOf(country)`, `challengeOf(page, seed, time?)`, `pageOfChallenge(challenge)` | Khi load sẽ **throw** nếu id trang hay id chương bị trùng (kể cả giữa hai nước), `art` không có trong bảng `art` của nước, hoặc hai nước trùng `code`. |
 | `countries/<nước>/index.ts` | `const <nước>: Country` | Chương, prologue, `pages: [{ day }, { day, night }]`, bảng `art`. Ép kiểu JSON bằng `const page = (json: unknown) => json as Page`. |
 | `countries/<nước>/chapter-N/*.json` | — | Một trang mỗi file (định dạng: add-country.md). |
-| `bestiary.ts` | `BESTIARY: Record<Exclude<SpriteType,'seal'>, {name, kind, fact}>`, `isCreature(type)`, `reactionOf(type)` | Sổ Tay Sinh Vật và hoạt ảnh phản ứng (`ReactionType`). |
-| `migrants.ts` | `MIGRANTS: Migrant[]` | Danh sách các sinh vật di cư ghé thăm các trang theo ngày. |
+| `countries/<nước>/mysteries.ts` | `Mystery` của từng chương | Câu hỏi, đáp án, đoạn kết của bí ẩn chương. Cả 11 chương của 3 nước đều có; mạch truyện xuyên suốt: vị kiến trúc sư là người giữ sổ thứ ba, hẹn trao sổ cho người chơi ở Mũi Cà Mau. |
+| `bestiary.ts` | `BESTIARY: Record<Exclude<SpriteType,'seal'>, {name, kind, fact}>`, `isCreature(type)`, `STARTLE` (`hop` · `scurry` · `splash` · `flutter`) | Sổ Tay Sinh Vật. TypeScript **bắt buộc** mỗi `SpriteType` có một mục. Sinh vật mới phải có một kiểu `STARTLE` (test), đồ vật thì không. |
 
 ### game/ — một lượt chơi (hooks)
 | File | Vai trò |
 |---|---|
-| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Rời trang chủ thì ghi trang đang ở (`progress.recordVisit`). Kiểu trả về: `Game`. |
-| `useNavigation.ts` | Mở sẵn ở trang người chơi đang dở (`progress.lastPage()` + `placeOf`); người chơi mới bắt đầu ở trang 1 với prologue, người chơi cũ thì không. Nước, chỉ số trang, ngày/đêm, `visit` (tăng mỗi lần mở trang, kể cả chơi lại), `turn`, `next/prev/goTo/replay`, `showPrologue`, `showNightIntro`. Từ trang đêm bấm "sau" sẽ sang trang ngày kế; bấm "trước" về trang ngày của chính nó. Prologue mở lại khi `next()` sang chương mới hoặc `goTo` sang nước khác. Ở trang cuối, `next()` quay về trang 1 (không lật). |
-| `useCase.ts` | Vụ án của trang: `inspect`, `requestHint`, `togglePause`, `explore`, `isFogged`, `screenShake`, `unlockedNight`. Khi `visit` đổi thì reset vụ án **ngay trong lần render đó** (không lộ trạng thái cũ). Đây là nơi gọi `sound`, `notify`, `progress`. |
+| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + bật/tắt nước rửa (`washEnabled`, lưu trong `settings.wash`) + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Trang thực sự mở để chơi trong sổ (không còn trang chủ, intro, lật trang hay hộp thoại) thì ghi trang đang ở và lịch sử đã chơi (`progress.recordVisit`). Kiểu trả về: `Game`. |
+| `useNavigation.ts` | `mode: PlayMode` (`book` · `daily` · `challenge`) và `seed`: trang được dựng qua `layOutPage` / `dailyPage` một lần mỗi lượt. Lần đầu chơi một trang là seed 0; trang đã giải (và có `spots`) thì mỗi lần chơi lại một seed mới. Trang lân cận được chuẩn bị trước khi lật để đích khớp `layoutKey`. `openDaily`, `openChallenge`, `openFriendChallenge` (trả về `ChallengeRefusal` hoặc null khi mở được), `leaveSpecial` (về chỗ đang ở trong sổ). Thử thách bạn bè dựng bằng `friendPage` (core). Ngoài sổ thì `nextPage` là null. Trang đang dở được mở sẵn từ tiến độ local. |
+| `useCase.ts` | Vụ án của trang: `inspect`, `requestHint`, `togglePause`, `explore`, `isFogged`, `screenShake`, `unlockedNight`. Chạm ngoài góc của trang của ngày bị bỏ qua; vật chưa tới lượt chỉ báo nhắc; mảnh manh mối cuối của chương báo mở Bảng Suy Luận. Phá trang của ngày thì `recordStamp` thay cho `recordVictory`. Khi `visit` đổi thì reset vụ án **ngay trong lần render đó** (không lộ trạng thái cũ). Đây là nơi gọi `sound`, `notify`, `progress`. |
 | `useNotices.ts` | `notify(text, at, 'score' \| 'info')`. |
+| `ownedTools.ts` | `ownedTools()`: dụng cụ đang có, đọc từ bản lưu (bí ẩn đã giải). `useNavigation` lọc trang qua `withTools` khi mở/lật; `GameScreen` nạp sẵn trang lân cận qua `nav.preparedPage` (đúng trang lượt lật sẽ mở: dụng cụ, sinh vật lữ hành, seed, sinh vật vàng) để lật không phải dựng lại. |
 
 ### board/ — cuốn sổ (Skia)
 | File | Vai trò |
 |---|---|
 | `Board.tsx` | Ghép các hook theo **đúng thứ tự**: `useSceneLibrary → useCamera → useCaseMarks → usePageTurn → usePagesAround → useWarmUp`; `useDerivedValue` gọi `renderFrame`, đưa picture thẳng vào Canvas và giải phóng đầu ra cũ. Dừng clock/cử chỉ khi bị che hoặc chờ đích (trừ warm-up/lật đang chạy); nút zoom. |
 | `constants.ts` | `PAGE_W/H`, `PX` (page units cho mỗi px CSS của bản web gốc rộng 960 px), `LOUPE_ZOOM`, `spriteSize`, `MIN/MAX_ZOOM`. |
-| `anim.ts` | Easing và đường cong hoạt ảnh (worklet): `track`, `loop`, `alternate`, `shyPeek`, `shyJump`, `foundBounce`, `bloom`, `blinkScale`… |
-| `useCamera.ts` | Shared value `s, tx, ty, lx, ly, dims`; `bounds`, `centre`, `placeLoupe`, `zoomTo`, `markZoomed`; `fittedScale`, `loupeDiameter`. Camera ôm khung giấy chứ không ôm cả ảnh. |
+| `anim.ts` | Easing và đường cong hoạt ảnh (worklet): `track`, `loop`, `alternate`, `shyPeek`, `shyJump`, `foundBounce`, `startle` (sinh vật giật mình khi bị bắt, `STARTLE_MS = 760`, luôn trở về đúng chỗ bị bắt), `bloom`, `blinkScale`… |
+| `useCamera.ts` | Shared value `s, tx, ty, lx, ly, dims`; `bounds`, `centre`, `placeLoupe`, `zoomTo`, `markZoomed`; `fittedScale`, `loupeDiameter`. Camera ôm khung giấy chứ không ôm cả ảnh; trang của ngày thì ôm góc đang chơi (`SceneData.focus`). |
 | `useBoardGestures.ts` | Cử chỉ native: kéo kính lúp (tròng hoặc cán), thả là soi; chạm để soi; kéo trang, chụm để zoom, lăn chuột (web); kéo sát mép thì trang tự cuộn. Chạm ra mặt bàn không tính là soi. |
-| `useCaseMarks.ts` | Đẩy trạng thái vụ án sang UI thread: `found` (thời điểm + vị trí, để vật "nở" màu), `radar`, `fogStart`, `nudge`. |
+| `useCaseMarks.ts` | Đẩy trạng thái vụ án sang UI thread: `found` (thời điểm + vị trí, để vật "nở" màu), `radar`, `fogStart`, `nudge`, `reveal` (nước rửa: -1 tắt / trang đêm, 0 đang phủ, lúc phá án thì tan dần). |
 | `usePageTurn.ts` | Vòng đời một lần lật trang (mục 4). |
 | `usePagesAround.ts` | Ưu tiên dựng đích chưa có cache trước khi hoạt ảnh bắt đầu; thử lại khi ảnh tới. Dựng trang lân cận mỗi lần một trang, 120 ms sau khi ổn định, **không trong hoạt ảnh lật**. Trả về ảnh để giữ "ấm" trên GPU. |
-| `useSceneLibrary.ts` | Cache cấp module: `images` (tranh đã giải mã, tối đa `MAX_IMAGES = 5`), `analyses` (theo id trang); cache `scenes` theo (loupe, compact, density). API: `prepare`, `keepArt`, `useKeepArt`… |
+| `useSceneLibrary.ts` | Cache cấp module: `images` (tranh đã giải mã theo `artIdOf`, tối đa `MAX_IMAGES = 5`), `analyses` (theo `layoutKey`, tối đa 40); cache `scenes` theo `layoutKey` và (loupe, compact, density); `keepArt` cho nghỉ mọi scene có `layoutKey` không còn trong danh sách cần (trang này, đích lật, `preload`), vì mỗi scene giữ sprite sheet riêng trên GPU. API: `prepare`, `keepArt`, `useKeepArt`… |
 | `useWarmUp.ts` | Mỗi loại trang (ngày, đêm) một lần, khi hộp thoại đang phủ: vẽ ẩn các khung "lần đầu" (tìm thấy, radar, mờ kính, lật trang) để GPU biên dịch shader trước. |
-| `scene/buildScene.ts` | Dựng `SceneData` một lần trên JS thread: sprite ở mọi biến thể ngụy trang, occluder, waterline, đêm (đèn, sao, trăng), sprite sheet. |
+| `scene/buildScene.ts` | Dựng `SceneData` một lần trên JS thread: sprite ở mọi biến thể ngụy trang, occluder, waterline, đêm (đèn, sao, trăng), sprite sheet, góc của trang của ngày (`focus` + 4 hình chữ nhật `focusVeil` phủ phần còn lại). |
 | `scene/disposeScene.ts` | Giải phóng atlas, waterline, occluder, trăng và shader đèn của scene đã thôi dùng; tài nguyên dùng chung có chủ sở hữu riêng. |
 | `scene/snapshotPage.ts` | Chụp trang thành picture chứa một ảnh tạm, tối đa 2048 px mỗi chiều, trước khi lật/warm-up; dùng lại một surface GPU, chuyển snapshot sang pixel để vẽ qua context của Canvas. GPU không sẵn sàng thì giữ picture gốc. |
 | `scene/analyze.ts` | Đọc pixel tranh (thu nhỏ còn rộng 880): màu tắc kè hoa quanh từng vật `chameleon`; khung sổ = bounding box các pixel đục (alpha ≥ 128). |
@@ -103,40 +116,50 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `scene/spriteParts.ts`, `spriteArt.ts` | Biến `SPRITE_ART` (sinh tự động) thành các phần vẽ được; cờ hoạt ảnh `ANIM_BLINK/WING/TAIL/WAVE/GLOW_SPOT`. |
 | `scene/spriteAtlas.ts` | Sprite đứng yên được vẽ sẵn vào một sheet (tối đa 2048 px); `atlasDensity`. |
 | `scene/loupeBody.ts` | Hình kính lúp đồng / đèn pin. |
-| `render/*.ts` | **Worklet, UI thread.** `frame.ts` (thứ tự lớp: ảnh warm → bóng → sách → radar/dấu mộc → kính lúp), `book.ts` (tranh, sprite ngụy trang, occluder, đêm, cắt bỏ thứ ngoài khung nhìn), `sprites.ts` (tư thế từng vật trong khung này), `marks.ts`, `pageTurn.ts`, `loupe.ts`, `types.ts` (`SceneData`, `FrameState`, `CAMO_*`, `FOUND_FADE_MS`). |
+| `render/*.ts` | **Worklet, UI thread.** `frame.ts` (thứ tự lớp: ảnh warm → bóng → sách → radar/dấu mộc → kính lúp), `book.ts` (tranh, sprite ngụy trang, occluder, nước rửa `drawWash` (một `saveLayer` giới hạn trong phần trang đang thấy, đục lỗ mềm `washHole` quanh vật đã tìm; không vẽ trong kính lúp: kính lúp luôn thấy màu thật), đêm, cắt bỏ thứ ngoài khung nhìn), `sprites.ts` (tư thế từng vật trong khung này), `marks.ts`, `pageTurn.ts`, `loupe.ts` (kể cả dải cầu vồng của lăng kính khi `SceneData.prism`), `types.ts` (`SceneData`, `FrameState` (có `zoom`: độ phóng so với khung vừa trang), `CAMO_*`, `LENS_*`, `PRISM_ANGLE`/`PRISM_BAND`, `TINY_ZOOM_*`, `FOUND_FADE_MS`). |
 
 ### screens/
 | File | Vai trò |
 |---|---|
-| `GameScreen.tsx` | Màn hình duy nhất. Tính `preload` (trang sau, trang trước, trang kế của đích đang lật), `boardActive`, `playing`; quyết định hộp thoại nào hiện (prologue, Tạm Dừng, Thắng, Hết Giờ chỉ hiện khi đã rời trang chủ). Layout HUD: `height < 500` → `'phoneLandscape'`, `width < 700` → `'phone'`, còn lại `'wide'`. |
-| `home/HomeScreen.tsx` | **Trang chủ**, lớp phủ zIndex 180 (trên HUD, dưới mọi hộp thoại): Chơi Tiếp / Bắt Đầu Điều Tra, thẻ từng cuốn sổ (mở ở trang chưa xong đầu tiên), Mục Lục, Sổ Tay, âm thanh, tổng điểm. Ngang ≥ 600 px: 2 cột; hẹp hơn: 1 cột cuộn. Số liệu trong `home/summary.ts` (`bookSummary`, `albumProgress`). |
+| `useChallenges.ts` | Mở mã thử thách, thử thách bạn bè (kể cả từ link `?c=`), nháp của hộp thoại khi bị từ chối (lý do → câu tiếng Việt), lời nhắn chia sẻ sau khi thắng. |
+| `GameScreen.tsx` | Màn hình duy nhất. Điều phối trang chủ, hộp thoại và HUD; thử thách qua `useChallenges`. Hộp thoại prologue, Tạm Dừng, Thắng, Hết Giờ chỉ hiện khi đã rời trang chủ. |
+| `home/HomeScreen.tsx` | **Trang chủ**: tiếp tục/chọn trang; khách có đường dẫn đăng nhập để đồng bộ tiến độ và xuất bản/nhận thử thách. |
 | `ErrorBoundary.tsx` | Bọc `GameScreen` trong `App.tsx`. Lỗi lúc render thì hiện màn "Cuốn sổ gặp chút sự cố" thay vì màn trắng: "Mở lại cuốn sổ" mount lại game (về trang chủ), "Gửi báo lỗi" chia sẻ hoặc chép `crashLog.report()`. |
 | `BookThumb.tsx` | Ảnh thu nhỏ một trang (cắt đúng khung giấy, 16:9), dùng ở Mục Lục và trang chủ. |
-| `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`). |
+| `Desk.tsx` | Mặt bàn: `paper-wash.jpg` và tán lá `botany-*.webp` (chỉ khi `width > 800`), sticker của Trang Bìa đặt theo tọa độ người chơi chọn (cuốn sổ che phần nằm sau nó; `GameScreen` đọc lại khi đóng Trang Bìa hoặc khôi phục bản sao lưu). |
 | `useDeviceBehaviour.ts` | Giữ màn hình sáng, ẩn thanh điều hướng Android, rời app thì tạm dừng, nút Back Android. |
-| `hud/HUD.tsx` | Thanh trên: điểm, đồng hồ, combo, chuyển trang, các nút (gợi ý, tạm dừng, âm thanh, Mục Lục, Sổ Tay), `ExploreStatus`. |
-| `hud/QuestPanel.tsx` | Thẻ manh mối: **hình bóng** của vật chính + nhãn kiểu ngụy trang. |
+| `hud/HUD.tsx` | Thanh trên: điểm, đồng hồ, combo, chuyển trang, nút về trang chủ, gợi ý, tạm dừng, âm thanh, Mục Lục, Sổ Tay; `ExploreStatus`. |
+| `hud/QuestPanel.tsx`, `hud/QuestCard.tsx` | Bảng và từng thẻ manh mối (`QuestCard` memo, `cardName`, `cardText`, `cardStyles`): **hình bóng** của vật chính; tên, `clue` và nhãn kiểu ngụy trang hiện khi thẻ đã đọc (gợi ý bước 1) hoặc vật đã tìm. |
 | `hud/FloatingScores.tsx` | Điểm và thông báo bay lên từ chỗ chạm. |
-| `ErrorBoundary.tsx` | Bọc toàn bộ app/GameScreen, hứng lỗi crash và cung cấp nút tải lại / sao chép chẩn đoán. |
-| `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen`, `TimeUpScreen`, `PageIndex` (Mục Lục; có tab nước khi `COUNTRIES.length > 1`), `CreatureAlbum` (Sổ Tay), `RotatePrompt` (web, điện thoại cầm dọc), `SaveBackupDialog` (xuất/nhập mã tiến độ Base64). |
+| `dialogs/*` | `StoryPrologue` (prologue chương / intro trang đêm), `PauseMenu`, `VictoryScreen` (kèm so thời gian thử thách, bưu thiếp, mã thử thách), `TimeUpScreen`, `PageIndex` (Mục Lục; tab nước khi có nhiều nước; số mảnh manh mối và nút Suy Luận ở đầu chương), `CreatureAlbum` (Sổ Tay), `RotatePrompt`, `Deduction` (Bảng Suy Luận), `Passport` (Hộ Chiếu), `MyCover` (Trang Bìa), `ChallengeEntry` (nhận mã local hoặc mã `H-…` từ backend), `ChallengeCreate` (chọn trang đã chơi, chọn sprite, chạm tranh để đặt vật, đặt tên/ngụy trang/gợi ý và xuất bản mã), `DailyDone`, `Finale`, `Backup` (khôi phục xong thì `GameScreen` mount lại trang chủ để đọc tiến độ). |
+| `share/*` | `postcard.ts` (`drawPostcard`: vẽ bưu thiếp 1200 × 630 bằng Skia trên JS thread, viền và con dấu vàng khi nước đó có tem vàng hộ chiếu, font nạp một lần, xuất JPEG base64; đo chữ bằng glyph vì web không có `measureText`), `messages.ts` (lời nhắn thử thách, bưu thiếp thắng, bưu thiếp trang của ngày), `useShare.ts` (`busy`, `note`, `sharePostcard`, `shareMessage`), `ShareRow.tsx` (nút bưu thiếp/thách bạn; màn thấp thì thành icon hai bên hàng sao). |
 
 ### platform/
 | File | Vai trò |
 |---|---|
 | `sound.d.ts` | Hợp đồng `GameSound`: `playFound/Wrong/Hint/PageTurn/Voice/Fog/Creature/Rustle/Victory`, `prepareVoices`, `setSoundEnabled`. |
+| `cloudProgress.ts` | `connectCloudProgress(userId)` → `{ ready, flush, stop }`. Mỗi lần đồng bộ: đọc `user_progress`, gộp vào máy (`progress.restore`), ghi lại bản **đã gộp** (hai máy không ghi đè nhau), rồi gửi từng trang đã chơi. Mỗi request có timeout 8 s; lỗi thì thử lại sau 30 s, không bao giờ chặn game. Bản lưu của tài khoản khác trên máy được thay bằng bản của tài khoản này (`progress.replace`); tiến độ chơi khách nhập vào tài khoản đầu tiên. |
+| `accountPrefs.ts` | `saveOwner`/`setSaveOwner` (bản lưu trên máy thuộc tài khoản nào), `hasEntered`/`rememberEntered` (đã vào game: lần sau vào thẳng, kể cả offline). |
+| `friendChallenges.ts` | RPC xuất bản layout vật (`requestId` giữ nguyên khi gửi lại cùng bản nháp: không tạo trùng) và nhận layout theo mã, kiểm bằng `readFriendChallenge`; Postgres kiểm tra quyền, sprite và giới hạn payload. Điều kiện "đã chơi trang" do client tự khai (`record_page_visit`), nên chỉ là luật mềm, không phải bảo mật. |
+| `auth/*` | `AuthGate`: màn đăng nhập chỉ hiện ở lần mở đầu tiên (hoặc khi người chơi bấm mở tài khoản, dạng lớp phủ trên game); sau đó vào thẳng game, session có sẵn thì đồng bộ nền. Vừa đăng nhập thì chờ đồng bộ tối đa 4 s rồi mở lại game với tiến độ của tài khoản. Đăng xuất: đẩy nốt thay đổi rồi `signOut({ scope: 'local' })` (chạy được offline). |
 | `sound.web.ts` | Web: synth chạy trực tiếp + rung. Mở AudioContext ở lần chạm đầu. |
 | `sound.native.ts` | iOS/Android: phát WAV đã sinh (`generated/sounds.ts`), mỗi âm 2 player; + rung. |
 | `synth/synth.ts`, `synth/voices.ts` | Bộ tổng hợp Web Audio: **nguồn gốc của mọi âm thanh**. `VOICE_OF: SpriteType → tên giọng`. |
 | `crashLog.ts` | 10 lỗi gần nhất lưu trên máy, khóa riêng `detective_sketchbook_crashes_v1` (không có server). `installCrashLog()` gọi trong `App.tsx`: native bọc `ErrorUtils` (giữ handler gốc), web nghe `error` / `unhandledrejection`. Không bao giờ throw. |
 | `haptics.ts` | Rung theo từng sự kiện, kiểu fire-and-forget. |
+| `share.d.ts`, `share.native.ts` / `.web.ts` | `shareText`, `shareImage(jpegBase64, fileName, text)` → `ShareOutcome`. Native: bảng chia sẻ (`Share`; ảnh ghi ra cache bằng `expo-file-system` rồi `expo-sharing`). Web: Web Share API nếu có, không thì chép clipboard / tải ảnh. Không bao giờ throw. |
+| `backupFile.d.ts`, `backupFile.native.ts` / `.web.ts` | `saveBackupFile(text, fileName)` (native: tệp trong cache qua bảng chia sẻ; web: tải về), `pickBackupFile()` (`expo-document-picker`, đọc bằng `expo-file-system` / `File.text()`). |
+| `keepStorage.ts` / `.web.ts` | `askToKeepStorage()` gọi trong `App.tsx`: web xin `navigator.storage.persist()` để trình duyệt không tự xóa bản lưu; native không cần. |
+| `launchLink.ts` / `.web.ts` | `takeLaunchCode()` (web: đọc rồi xóa `?c=` khỏi địa chỉ), `challengeLink(code)` (web: địa chỉ của chính trang; native: `EXPO_PUBLIC_WEB_URL` nếu có). |
 | `sceneImage.ts` / `.web.ts` | Giải mã tranh ngoài luồng vẽ (native: JS thread + `makeNonTextureImage`; web: `createImageBitmap` rồi copy pixel qua canvas 2D, tránh lazy texture không vẽ được trên surface CPU), `readPixels` để phân tích. |
 
 ### ui/
-`theme.ts` (`colors`, `fonts`, `gradients`, `shadow`), `ModalShell.tsx` (nền mờ + thẻ giấy; tự thu nhỏ tối thiểu 0.75×;
+`theme.ts` (`colors`, `fonts`, `gradients`, `shadow`), `DialogHeader.tsx` (tiêu đề + nút đóng của hộp thoại dạng tờ), `ModalShell.tsx` (nền mờ + thẻ giấy; tự thu nhỏ tối thiểu 0.75×;
 `scroll` chỉ cho danh sách dài; `footer` ghim nút chính), `Buttons.tsx` (`PrimaryButton`, `SecondaryButton`,
 `RoundIconButton`), `SpriteIcon.tsx` (SVG tĩnh từ `SPRITE_SVG`), `icons.ts` (Lucide, mỗi icon một import),
 `layout.ts` (`useCompact`: cao < 680; `useShortLandscape`: ngang và cao < 560), `format.ts` (`formatNumber` "12.345",
-`formatClock` "03:45", `formatDuration`), `useStableCallback.ts`.
+`formatClock` "03:45", `formatDuration`), `useStableCallback.ts`, `toolMarks.ts` (`TOOL_MARKS`: icon và màu cho vật của
+từng dụng cụ; `byTool(objects)`).
 
 ### tools/ (gốc repo)
 `generate-assets.mjs` (sprite + âm thanh), `generate-icons.mjs`, `check-architecture.mjs`, `test-screens.mjs`
@@ -144,7 +167,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 (`ObjectSprite.tsx` và `sprites.css` là **nguồn** của mọi hình vẽ).
 
 ### test/ (app/test, Jest)
-`rules.test.ts` (điểm, phát hiện, chuyển động, gợi ý, hồ sơ vụ án), `progress.test.ts` (đọc/ghi/nâng cấp bản lưu),
+`rules.test.ts` (điểm, phát hiện, chuyển động, gợi ý, hồ sơ vụ án, seed, vị trí thay thế, theo dấu, bí ẩn chương, trang của ngày, mã thử thách), `progress.test.ts` (đọc/ghi/nâng cấp bản lưu),
 `content.test.ts` (soát **mọi trang**: tọa độ trong 0–1, `0 < radius < 0.2`, sprite có art và mục Sổ Tay, `roam` ≥ 2
 điểm, `occluder` ≥ 3 điểm, `0 < waterline < 1`, ≤ 1 bí mật, có ít nhất một vật chính, id vật không trùng trong trang,
 trang đêm dùng chung `art` với trang ngày), `session.test.tsx` (chờ đích, hủy completion cũ, dựng lại khi ảnh tới),

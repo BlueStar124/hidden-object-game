@@ -1,5 +1,5 @@
 import type { Skia, SkImage, SkPaint, SkPath, SkPicture, SkRect, SkRRect } from '@shopify/react-native-skia';
-import type { RoamBehavior, ShyBehavior, ToolId } from '../../core/model';
+import type { RoamBehavior, ShyBehavior } from '../../core/model';
 import type { BoardPaints, LoupePaints } from '../scene/paints';
 import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import type { Part } from '../scene/spriteParts';
@@ -15,8 +15,40 @@ export const CAMO_INK = 0;
 export const CAMO_CHAMELEON = 1;
 export const CAMO_INVISIBLE = 2;
 
+/*
+ * How the loupe shows a sprite in invisible ink: by the tool its object needs (core/model ToolId).
+ * Never on the page itself.
+ */
+export const LENS_PLAIN = 0; // all through the loupe, glowing blue (and the UV lens' messages)
+export const LENS_PRISM = 1; // only inside the rainbow band the prism casts across the lens, shimmering
+export const LENS_TINY = 2; // only once the page is zoomed in (the twin lens' tiny drawings)
+
+/** The prism's band across the lens: its tilt (degrees) and half its width (fraction of the lens radius). */
+export const PRISM_ANGLE = -24;
+export const PRISM_BAND = 0.34;
+/** The twin lens' drawings appear as the page is zoomed in from this (× the fitted view)… */
+export const TINY_ZOOM_FROM = 1.6;
+/** …and are all there from this (the tool's description tells players "×2"). */
+export const TINY_ZOOM_FULL = 2;
+
+/** A thing that moved since the day: once found, the way it went draws itself in over this long (ms). */
+export const DAY_TRAIL_MS = 900;
+
 /** Colours bloom back over this long once something is found (web: 0.6–0.9s transitions). */
 export const FOUND_FADE_MS = 900;
+
+/*
+ * The watercolour wash: until a page's case is closed, a paper-coloured wash lies over the painting
+ * (the loupe still shows its true colours) and every find washes it away around itself, as water
+ * spreading on paper. Being a layer over everything, it treats the painting, the camouflaged sprites
+ * and the scraps of painting over them alike: no disguise stands out more for it.
+ */
+/** How opaque the wash is over an untouched page (0–1). */
+export const WASH_ALPHA = 0.48;
+/** How long a find takes to wash the paper around it clear (ms). */
+export const REVEAL_MS = 1100;
+/** How long the rest of the wash takes to fade once the case is closed (ms). */
+export const WASH_FADE_MS = 1500;
 
 export interface SceneSprite {
   id: string;
@@ -26,6 +58,7 @@ export interface SceneSprite {
   rot: number; // degrees
   flip: number; // 1 | -1
   camo: number; // CAMO_*
+  lens: number; // LENS_*: how the loupe shows it, when it is in invisible ink
   shy: ShyBehavior | null;
   shyDx: number; // hiding direction (fraction of the sprite box)
   shyDy: number;
@@ -46,9 +79,13 @@ export interface SceneSprite {
   pageCell: AtlasCell | null; // hidden, on the page
   foundCell: AtlasCell | null; // found (only sprites that stay still once found)
   blinks: boolean; // its eyes close now and then (drawn from its shapes meanwhile)
-  reaction: 'hop' | 'flutter' | 'scurry' | 'splash' | 'spin' | null;
-  rare: boolean;
-  requires: ToolId | null;
+  gold: boolean; // a rare golden critter on this visit (core/rare): glints while hidden, gold once found
+  // Day-and-night hunt (core/dayNight): once found, the way it went since the day (page units) and
+  // where it was by day
+  dayTrail: SkPath | null;
+  dayX: number;
+  dayY: number;
+  startle: number; // STARTLE_* (board/anim): how it reacts when caught
 }
 
 export interface SceneMark {
@@ -56,6 +93,14 @@ export interface SceneMark {
   x: number; // page units
   y: number;
   roam: RoamBehavior | null;
+  reveal: RevealBlob[]; // the patch of wash a find of it clears, around where it was found
+}
+
+/** One round of the irregular patch a find washes clear (page units, at full size). */
+export interface RevealBlob {
+  dx: number; // from the find
+  dy: number;
+  r: number;
 }
 
 export interface NightScene {
@@ -77,6 +122,9 @@ export interface SceneData {
   pageRect: SkRect;
   pageRRect: SkRRect;
   bookRRect: SkRRect; // the paper inside the artwork's transparent margin
+  // Daily page: the corner in play (the camera frames it) and the rectangles veiling the rest
+  focus: SkRect | null;
+  focusVeil: SkRect[];
   paperRRect: SkRRect; // the same with the paper's rounded corners (shadows stay on the paper)
   sprites: SceneSprite[];
   poses: Pose[]; // scratch buffer, updated only by the renderer worklet
@@ -88,6 +136,7 @@ export interface SceneData {
   stampSize: number;
   atlas: SpriteAtlas | null;
   pixelRatio: number; // device pixels per screen unit
+  prism: boolean; // something on the page shows in the prism's band: the loupe casts it
 }
 
 export interface FoundInfo {
@@ -102,11 +151,15 @@ export interface FrameState {
   width: number;
   height: number;
   s: number; // page → screen scale
+  zoom: number; // the camera's zoom over the fitted view (1: the whole spread)
   tx: number;
   ty: number;
   lx: number; // loupe centre on screen
   ly: number;
   found: Record<string, FoundInfo>;
+  // The watercolour wash: -1 none (night, turned off), 0 over the page, else when the case was
+  // closed (creature clock): it fades away
+  reveal: number;
   radar: string | null;
   fogStart: number;
   nudge: { x: number; y: number; t: number } | null;
@@ -114,7 +167,6 @@ export interface FrameState {
   flipStart: number; // when the leaf started to turn (0: not yet)
   warm: SkImage[]; // artwork of the pages likely to come next, kept on the GPU
   warmUp?: FrameState[] | null; // frames drawn all but invisibly, to set the GPU up for them
-  reveal?: boolean; // watercolor bloom effect active on day pages
 }
 
 /** A page turning over. Both pages are recorded flat, in page units, when the turn begins. */

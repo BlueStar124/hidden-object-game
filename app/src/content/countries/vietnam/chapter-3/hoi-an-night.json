@@ -83,6 +83,13 @@
   "objects": [
     {
       "id": "night-silk-lantern",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.415,
+          "clue": "Chiếc đèn lồng lục giác hòa vào dãy đèn trước hiên nhà vàng ở nửa trái phố cổ."
+        }
+      ],
       "name": "Đèn Lồng Đêm Rằm",
       "clue": "Đèn lồng lục giác thắp nến lung linh rực sáng phố đêm rằm.",
       "x": 0.62,
@@ -91,11 +98,18 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Lễ hội hoa đăng đêm rằm Hội An là di sản văn hóa phi vật thể quý báu."
     },
     {
       "id": "night-cat-eyes",
+      "spots": [
+        {
+          "x": 0.55,
+          "y": 0.34,
+          "clue": "Đôi mắt mèo ló ra từ mái ngói bên phải gáy sổ, phía trên hàng cây ven sông."
+        }
+      ],
       "name": "Mèo Đêm Mắt Ngọc",
       "clue": "Đôi mắt mèo phát sáng trong bóng tối bên mái ngói âm dương.",
       "x": 0.14,
@@ -104,11 +118,18 @@
       "score": 150,
       "spriteType": "cat",
       "scale": 0.42,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Đôi mắt mèo phát sáng như ngọc bích trong ánh nến lung linh."
     },
     {
       "id": "night-boat-candle",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.62,
+          "clue": "Thuyền giấy chở nến trôi trên khoảng nước thoáng bên phải gáy sổ, giữa hai đoàn đò hoa đăng."
+        }
+      ],
       "name": "Thuyền Giấy Hoa Đăng Thả Sông Hoài",
       "clue": "Thuyền giấy gấp chở ngọn nến nhỏ bềnh bồng trên dòng nước êm trôi.",
       "x": 0.58,
@@ -117,11 +138,18 @@
       "score": 150,
       "spriteType": "paper-boat",
       "scale": 0.48,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Từng ngọn nến hoa đăng thả trôi mang theo lời chúc bình an và hạnh phúc."
     },
     {
       "id": "night-owl-roof",
+      "spots": [
+        {
+          "x": 0.69,
+          "y": 0.3,
+          "clue": "Chú cú đậu trên đường nóc mái nhà phía phải, cao hơn những tán cây ven bờ."
+        }
+      ],
       "name": "Cú Đêm Chùa Cầu",
       "clue": "Chú cú lặng lẽ đậu trên đỉnh bờ mái ngói Chùa Cầu cổ kính.",
       "x": 0.85,
@@ -143,7 +171,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "luminous",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -219,7 +247,7 @@
       "isBonus": true,
       "spriteType": "mouse",
       "scale": 0.4,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Chú chuột nhắt tinh nghịch lẩn trốn dưới chân trụ gỗ Chùa Cầu tìm mồi trong đêm thanh vắng."
     }
   ]

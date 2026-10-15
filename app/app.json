@@ -43,7 +43,9 @@
           "backgroundColor": "#ece7dc"
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "expo-sharing",
+      "expo-secure-store"
     ],
     "experiments": {
       "tsconfigPaths": false

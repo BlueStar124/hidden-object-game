@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { readProgress, SCHEMA_VERSION } from '../src/core/progress';
+import { MAX_STAMPS, MAX_STICKERS, mergeProgress, readBackup, readProgress, SCHEMA_VERSION } from '../src/core/progress';
 
 const KEY = 'detective_sketchbook_progress_v1';
 
@@ -173,12 +173,229 @@ describe('the sound switch', () => {
     expect(progress.soundEnabled()).toBe(true);
   });
 
+  test('the watercolour wash is on until turned off, and kept apart from the sound', () => {
+    expect(progress.washEnabled()).toBe(true);
+    progress.setWashEnabled(false);
+    expect(saved().settings).toEqual({ soundEnabled: true, wash: false });
+    progress.setSoundEnabled(false);
+    expect(progress.washEnabled()).toBe(false);
+    expect(saved().settings).toEqual({ soundEnabled: false, wash: false });
+  });
+
   test('a damaged switch counts as on', () => {
     expect(readProgress({ settings: { soundEnabled: 'no' } }).settings).toEqual({ soundEnabled: true });
   });
 });
 
+describe('chapter mysteries', () => {
+  test('a solved mystery is remembered once', () => {
+    expect(progress.isMysterySolved('singapore-01')).toBe(false);
+    progress.recordMysterySolved('singapore-01');
+    progress.recordMysterySolved('singapore-01');
+    expect(saved().solvedMysteries).toEqual(['singapore-01']);
+    expect(progress.isMysterySolved('singapore-01')).toBe(true);
+  });
+
+  test('a damaged list is dropped', () => {
+    expect(readProgress({ solvedMysteries: 'singapore-01' }).solvedMysteries).toBeUndefined();
+    expect(readProgress({ solvedMysteries: ['a', 3] }).solvedMysteries).toEqual(['a']);
+  });
+});
+
+describe('golden critters', () => {
+  test('a kind caught golden is remembered once, the first time told apart', () => {
+    expect(progress.recordRareFind('gecko')).toBe(true);
+    expect(progress.recordRareFind('gecko')).toBe(false);
+    expect(progress.rareFound()).toEqual(['gecko']);
+    expect(saved().rareFound).toEqual(['gecko']);
+  });
+});
+
+describe('the passport', () => {
+  const stamp = (time: number) => ({ pageId: 'merlion-park', countryId: 'singapore', time });
+
+  test('a daily page done stamps its day, keeping the best time of that day', () => {
+    progress.recordStamp('2026-10-12', stamp(90));
+    progress.recordStamp('2026-10-12', stamp(120));
+    expect(progress.stamps()['2026-10-12'].time).toBe(90);
+    progress.recordStamp('2026-10-12', stamp(60));
+    expect(saved().stamps).toEqual({ '2026-10-12': stamp(60) });
+  });
+
+  test('only the latest days are kept', () => {
+    for (let i = 0; i < MAX_STAMPS + 5; i++) {
+      const day = new Date(2026, 0, 1 + i);
+      progress.recordStamp(`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`, stamp(50));
+    }
+    const days = Object.keys(progress.stamps()).sort();
+    expect(days).toHaveLength(MAX_STAMPS);
+    expect(days[0]).toBe('2026-01-06');
+  });
+
+  test('damaged stamps are skipped', () => {
+    const read = readProgress({ stamps: { '2026-10-12': stamp(30), yesterday: stamp(10), '2026-10-11': { time: 5 } } });
+    expect(read.stamps).toEqual({ '2026-10-12': stamp(30) });
+  });
+
+  test('a save read back, or two merged, keep only the latest days too', () => {
+    const daysFrom = (year: number) =>
+      Object.fromEntries(
+        Array.from({ length: MAX_STAMPS }, (_, i) => {
+          const day = new Date(year, 0, 1 + i);
+          return [`${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`, stamp(40)];
+        })
+      );
+    const old = readProgress({ stamps: { '2001-01-01': stamp(10), ...daysFrom(2024) } });
+    expect(Object.keys(old.stamps ?? {})).toHaveLength(MAX_STAMPS);
+    expect(old.stamps?.['2001-01-01']).toBeUndefined();
+    const merged = mergeProgress(readProgress({ stamps: daysFrom(2026) }), old);
+    const days = Object.keys(merged.stamps ?? {}).sort();
+    expect(days).toHaveLength(MAX_STAMPS);
+    expect(days[0].startsWith('2026')).toBe(true);
+  });
+});
+
+describe('the inside cover', () => {
+  test('stickers are saved where the player put them', () => {
+    const sticker = { type: 'cat' as const, x: 0.3, y: 0.6, rotation: -12, scale: 1.4 };
+    progress.saveCover([sticker]);
+    expect(progress.cover()).toEqual([sticker]);
+  });
+
+  test('damaged stickers are mended or skipped, and there are never too many', () => {
+    const read = readProgress({ cover: [{ type: 'cat', x: 4, y: 'a', rotation: 10, scale: 9 }, { x: 0.2 }, 'cat'] });
+    expect(read.cover).toEqual([{ type: 'cat', x: 1, y: 0.5, rotation: 10, scale: 3 }]);
+    progress.saveCover(Array.from({ length: MAX_STICKERS + 10 }, () => ({ type: 'owl' as const, x: 0.5, y: 0.5, rotation: 0, scale: 1 })));
+    expect(progress.cover()).toHaveLength(MAX_STICKERS);
+  });
+});
+
+describe('backups', () => {
+  const result = (stars: number, highScore: number, bestTime: number, completedAt = '2026-10-01T00:00:00.000Z') => ({
+    sceneId: '',
+    stars,
+    highScore,
+    bestTime,
+    completedAt,
+    creaturesFound: [] as string[],
+  });
+
+  test('two saves merge without losing anything of either', () => {
+    const phone = readProgress({
+      sceneResults: { a: result(3, 900, 80), b: result(1, 300, 200) },
+      discovered: { a: ['cat'], b: ['dog'] },
+      stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 70 } },
+      solvedMysteries: ['singapore-01'],
+      lastPageId: 'b',
+      settings: { soundEnabled: false },
+    });
+    const web = readProgress({
+      sceneResults: { a: result(2, 1200, 60, '2026-10-05T00:00:00.000Z'), c: result(2, 500, 120) },
+      discovered: { a: ['owl'], c: ['frog'] },
+      stamps: { '2026-10-11': { pageId: 'a', countryId: 'singapore', time: 50 }, '2026-10-12': { pageId: 'c', countryId: 'thailand', time: 90 } },
+      solvedMysteries: ['singapore-02'],
+      cover: [{ type: 'cat', x: 0.5, y: 0.5, rotation: 0, scale: 1 }],
+      lastPageId: 'c',
+    });
+    const merged = mergeProgress(phone, web);
+    expect(merged.sceneResults.a).toMatchObject({ stars: 3, highScore: 1200, bestTime: 60, completedAt: '2026-10-05T00:00:00.000Z' });
+    expect(Object.keys(merged.sceneResults).sort()).toEqual(['a', 'b', 'c']);
+    expect(merged.totalScore).toBe(1200 + 300 + 500);
+    expect(merged.discovered.a.sort()).toEqual(['cat', 'owl']);
+    expect(merged.stamps?.['2026-10-11'].time).toBe(50);
+    expect(Object.keys(merged.stamps ?? {})).toHaveLength(2);
+    expect(merged.solvedMysteries?.sort()).toEqual(['singapore-01', 'singapore-02']);
+    // Only one can win: this device, unless it has nothing
+    expect(merged.lastPageId).toBe('b');
+    expect(merged.settings).toEqual({ soundEnabled: false });
+    expect(merged.cover).toHaveLength(1);
+  });
+
+  test('a backup brought back on another device merges into its save', () => {
+    progress.recordVictory('merlion-park', null, 800, 2, 100);
+    const file = progress.backup();
+    expect(JSON.parse(file)).toMatchObject({ game: 'the-lost-sketchbook', save: { sceneResults: { 'merlion-park': { stars: 2 } } } });
+
+    storage.clear();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    progress.recordVictory('gardens-by-the-bay', null, 500, 1, 150);
+    expect(progress.restore(file)).toBe(true);
+    expect(progress.pageResult('merlion-park')?.stars).toBe(2);
+    expect(progress.pageResult('gardens-by-the-bay')?.stars).toBe(1);
+    expect(saved().totalScore).toBe(1300);
+  });
+
+  test("another account's save replaces this one, keeping only the device's settings", () => {
+    progress.recordVictory('merlion-park', null, 800, 2, 100);
+    progress.setSoundEnabled(false);
+    const theirs = JSON.stringify({ game: 'the-lost-sketchbook', save: { sceneResults: { 'hoi-an': result(3, 900, 70) } } });
+    progress.replace(theirs);
+    expect(progress.pageResult('merlion-park')).toBeUndefined();
+    expect(progress.pageResult('hoi-an')?.stars).toBe(3);
+    expect(progress.soundEnabled()).toBe(false);
+    progress.replace(null);
+    expect(progress.pageResult('hoi-an')).toBeUndefined();
+    expect(progress.soundEnabled()).toBe(false);
+  });
+
+  test('a save pasted as it is stored works too; anything else is refused and changes nothing', () => {
+    expect(readBackup(JSON.stringify(firstVersionSave))?.sceneResults['merlion-park'].highScore).toBe(800);
+    for (const text of ['', 'xin chào', '{}', '[1, 2]', JSON.stringify({ game: 'the-lost-sketchbook', save: 'bad' })]) {
+      expect(readBackup(text)).toBeNull();
+      expect(progress.restore(text)).toBe(false);
+    }
+    expect(storage.peek(KEY)).toBeNull();
+  });
+
+  test('keys that would reach the prototype are ignored', () => {
+    const read = readProgress(JSON.parse('{"sceneResults": {"__proto__": {"stars": 3}, "a": {"stars": 1}}, "discovered": {"constructor": ["x"]}}'));
+    expect(Object.keys(read.sceneResults)).toEqual(['a']);
+    expect(Object.getPrototypeOf(read.sceneResults)).toBe(Object.prototype);
+    expect(read.discovered).toEqual({});
+  });
+
+  test('a save whose own top-level keys would reach the prototype keeps none of them', () => {
+    const read = readProgress(JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"bad": true}, "totalScore": 5}'));
+    expect(Object.getPrototypeOf(read)).toBe(Object.prototype);
+    expect(Object.keys(read)).not.toContain('__proto__');
+    expect(Object.keys(read)).not.toContain('constructor');
+    expect('polluted' in {}).toBe(false);
+  });
+});
+
 describe('where the player left off', () => {
+  test('book visits survive a reload and a backup merge, even without finishing a page', () => {
+    progress.recordVisit('merlion-park');
+    progress.recordVisit('gardens-by-the-bay-night');
+    expect(progress.playedPages()).toEqual(['merlion-park', 'gardens-by-the-bay-night']);
+    const file = progress.backup();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    expect(progress.playedPages()).toEqual(['merlion-park', 'gardens-by-the-bay-night']);
+    storage.clear();
+    jest.resetModules();
+    ({ progress } = jest.requireActual<typeof import('../src/core/progress')>('../src/core/progress'));
+    progress.recordVisit('ha-long');
+    expect(progress.restore(file)).toBe(true);
+    expect(progress.playedPages().sort()).toEqual(['gardens-by-the-bay-night', 'ha-long', 'merlion-park']);
+  });
+
+  test('older saves infer prior play from completed pages and the last book page, never unlocks or daily finds', () => {
+    const old = readProgress({ ...firstVersionSave, lastPageId: 'hoi-an', discovered: { 'ha-long': ['daily-find'] } });
+    expect(old.playedPages?.sort()).toEqual(['hoi-an', 'marina-bay-sands', 'merlion-park']);
+    expect(old.playedPages).not.toContain('gardens-by-the-bay');
+    expect(old.playedPages).not.toContain('ha-long');
+  });
+
+  test('damaged played pages are sanitized and duplicate visits do not grow the save', () => {
+    expect(readProgress({ playedPages: ['a', 3, null, 'a'] }).playedPages).toEqual(['a']);
+    expect(readProgress({ playedPages: 'a' }).playedPages).toBeUndefined();
+    progress.recordVisit('merlion-park');
+    progress.recordVisit('merlion-park');
+    expect(saved().playedPages).toEqual(['merlion-park']);
+  });
+
   test('a new player has no page to go back to', () => {
     expect(progress.lastPage()).toBeUndefined();
     expect(progress.totalScore()).toBe(0);
@@ -227,44 +444,5 @@ describe('the copy kept in memory', () => {
     expect(progress.pageResult('marina-bay-sands')?.stars).toBe(2);
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
-  });
-});
-
-describe('security and new features', () => {
-  test('readProgress removes dangerous prototype keys', () => {
-    const malicious = JSON.parse('{"__proto__": {"polluted": true}, "constructor": {"bad": true}, "sceneResults": {"__proto__": {}}}');
-    const read = readProgress(malicious);
-    expect((read as unknown as Record<string, unknown>).__proto__).toBe(Object.prototype);
-    expect((read.sceneResults as unknown as Record<string, unknown>).__proto__).toBe(Object.prototype);
-    expect(('polluted' in {})).toBe(false);
-  });
-
-  test('recordPlay and playCount track replays', () => {
-    expect(progress.playCount('page-1')).toBe(0);
-    expect(progress.recordPlay('page-1')).toBe(1);
-    expect(progress.recordPlay('page-1')).toBe(2);
-    expect(progress.playCount('page-1')).toBe(2);
-  });
-
-  test('recordRare and isRareFound track rare variants', () => {
-    expect(progress.isRareFound('cat')).toBe(false);
-    progress.recordRare('cat');
-    expect(progress.isRareFound('cat')).toBe(true);
-    // Duplicate does not duplicate
-    progress.recordRare('cat');
-    expect(progress.isRareFound('cat')).toBe(true);
-  });
-
-  test('exportSave and importSave roundtrip correctly', () => {
-    progress.recordVictory('marina-bay-sands', null, 999, 3, 30);
-    const exported = progress.exportSave();
-    expect(typeof exported).toBe('string');
-    expect(exported.length).toBeGreaterThan(0);
-
-    // Clear and restore
-    storage.clear();
-    const result = progress.importSave(exported);
-    expect(result.success).toBe(true);
-    expect(progress.pageResult('marina-bay-sands')?.highScore).toBe(999);
   });
 });

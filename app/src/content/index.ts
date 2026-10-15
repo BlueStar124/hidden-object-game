@@ -1,4 +1,5 @@
-import type { Country, Page, PageRef } from '../core/model';
+import type { Challenge } from '../core/challenge';
+import type { Chapter, Country, Page, PageRef } from '../core/model';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
 import { vietnam } from './countries/vietnam';
@@ -16,10 +17,14 @@ export const FIRST_COUNTRY = COUNTRIES[0];
 
 const pagesByCountry = new Map<string, PageRef[]>();
 const refByPageId = new Map<string, PageRef>();
+const chapterIds = new Set<string>();
 
 for (const country of COUNTRIES) {
   const refs: PageRef[] = [];
   country.chapters.forEach((chapter, c) => {
+    // Solved mysteries are saved by chapter id, whichever country the chapter is in
+    if (chapterIds.has(chapter.id)) throw new Error(`Duplicate chapter id "${chapter.id}": solved mysteries are saved by chapter id`);
+    chapterIds.add(chapter.id);
     for (const slot of chapter.pages) {
       const ref: PageRef = {
         country,
@@ -40,6 +45,15 @@ for (const country of COUNTRIES) {
     }
   });
   pagesByCountry.set(country.id, refs);
+}
+
+/** The two letters of a country in challenge codes. */
+export const codeOf = (country: Country) => country.code ?? country.id.slice(0, 2).toUpperCase();
+
+{
+  const codes = COUNTRIES.map(codeOf);
+  const twice = codes.find((code, i) => codes.indexOf(code) !== i);
+  if (twice) throw new Error(`Two countries share the code "${twice}": challenge codes would be ambiguous`);
 }
 
 export function countryById(id: string): Country {
@@ -78,6 +92,23 @@ export function artIdOf(page: Page): string {
   return `${refOf(page).country.id}/${page.art}`;
 }
 
+/** The challenge of a hunt on a page (day or night) laid out with a seed, done in `time` seconds. */
+export function challengeOf(page: Page, seed: number, time?: number): Challenge {
+  const { ref, night } = placeOf(page.id) ?? { ref: refOf(page), night: false };
+  return { country: codeOf(ref.country), page: ref.number, night, seed, ...(time ? { time } : {}) };
+}
+
+/** The page a challenge is played on (null: no such page in this version of the books). */
+export function pageOfChallenge(c: Challenge): { ref: PageRef; night: boolean } | null {
+  const country = COUNTRIES.find((k) => codeOf(k) === c.country);
+  const ref = country ? pagesOf(country)[c.page - 1] : undefined;
+  if (!ref || (c.night && !ref.night)) return null;
+  return { ref, night: c.night };
+}
+
+/** Every chapter of every country, in reading order. */
+export const allChapters = (): Chapter[] => COUNTRIES.flatMap((c) => c.chapters);
+
 /** Every page there is — day and night, all countries (the album lists their creatures). */
 export function allPages(): Page[] {
   const days: Page[] = [];
@@ -90,5 +121,3 @@ export function allPages(): Page[] {
   }
   return [...days, ...nights];
 }
-
-export { MIGRANTS } from './migrants';

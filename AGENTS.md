@@ -11,6 +11,9 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
   màn hình chơi, **không dùng thư viện navigation**: trang chủ (`screens/home/`) và hộp thoại đều là lớp phủ.
 - Dữ liệu: `Country → Chapter → PageSlot { day, night? } → Page → HiddenObject[]`. Mỗi trang là một file JSON cùng một
   bức tranh 1760 × 1240.
+- **Supabase là phần tùy chọn**: tài khoản, đồng bộ tiến độ lên đám mây, thử thách bạn bè tự tạo (`supabase/migrations/`).
+  Game phải **chơi trọn vẹn khi không có mạng hay không cấu hình Supabase**: chỉ lần mở đầu tiên mới hiện màn đăng nhập
+  (có nút chơi khách), sau đó vào thẳng game; đồng bộ chạy nền, gộp chứ không ghi đè (`platform/cloudProgress.ts`).
 - `tools/` ở gốc repo: sinh sprite + âm thanh (`generate-assets.mjs`), icon, kiểm tra kiến trúc, test cỡ màn hình,
   benchmark. Cần chạy `npm install` ở **gốc repo** trước khi dùng.
 - Ngôn ngữ: **comment code bằng tiếng Anh**, giải thích *vì sao*; **mọi chữ người chơi thấy** (kể cả
@@ -21,13 +24,13 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 | Tầng | Vai trò | Được import |
 |---|---|---|
-| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ) | chỉ `core` — **không package nào** |
-| `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts` | `core`, `content` — **không package nào** |
-| `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices` | `core`, `content`, `platform`, `game` |
+| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách), `rare.ts` (sinh vật ánh vàng), `tools.ts` (đồ nghề), `migrants.ts` (sinh vật lữ hành), `dayNight.ts` (ngày và đêm) | chỉ `core` — **không package nào** |
+| `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts`, `migrants.ts`, `tools.ts` | `core`, `content` — **không package nào** |
+| `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices`; `ownedTools` | `core`, `content`, `platform`, `game` |
 | `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
-| `screens/` | `GameScreen`, `ErrorBoundary`, `Desk`, `hud/`, `dialogs/` | mọi thứ |
-| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog` | `core`, `platform`, `generated` |
-| `ui/` | Dùng chung: `theme`, `ModalShell`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
+| `screens/` | `GameScreen`, `useChallenges` (mã, thử thách bạn bè, link), `ErrorBoundary`, `Desk`, `auth/` (cổng tài khoản), `hud/` (`QuestPanel` + `QuestCard`), `dialogs/`, `share/` (bưu thiếp, lời nhắn) | mọi thứ |
+| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)`, `backupFile.native/.web`, `keepStorage(.web)`, `supabase` + `supabaseStorage` (client), `cloudProgress` (đồng bộ), `friendChallenges`, `accountPrefs` | `core`, `platform`, `generated` |
+| `ui/` | Dùng chung: `theme`, `ModalShell`, `DialogHeader`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
 | `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động, **không sửa tay** | `core`, `board`, `generated` |
 
 `npm run check:architecture` (`tools/check-architecture.mjs`) bắt lỗi khi import sai chiều. Thêm thư mục cấp một mới
@@ -48,6 +51,10 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
 5. **Không làm hỏng bản lưu của người chơi.** Khóa `detective_sketchbook_progress_v1`, **id trang** và **id vật** đã phát
    hành là vĩnh viễn (tiến độ lưu theo chúng). Đổi định dạng lưu = tăng `SCHEMA_VERSION`, chuyển đổi trong
    `readProgress`, kèm test trong `progress.test.ts`.
+   Thử thách chỉ dành cho trang **đã chơi trong sổ** ở cả người tạo và người nhận (`playedPages`, ngày/đêm riêng);
+   dùng `canChallengePage`, chặn ở `useNavigation.openChallenge` cả khi nhập mã lẫn mở link (trả về lý do từ chối,
+   `ChallengeRefusal`). Dữ liệu thử thách bạn bè tải từ server phải qua `readFriendChallenge` (core). Đổi tài khoản
+   không được gộp tiến độ của tài khoản trước (`accountPrefs.saveOwner`, `progress.replace`).
 6. **Đường vẽ là worklet.** Mọi hàm gọi từ `board/render/`, `board/anim.ts`, `core/motion.ts` phải có `'worklet'` ở
    dòng đầu và không chạm tới React state. Paint, shader, path được tạo **một lần** trên JS thread (`scene/paints.ts`,
    `scene/buildScene.ts`), không tạo trong từng khung hình.
@@ -82,9 +89,10 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
 - **Kiểu dữ liệu chung khai báo trong `core/model.ts`**: trường mới là trường *tùy chọn* kèm comment đơn vị/ý nghĩa.
   Dùng union string (`'ink' | 'chameleon'`) thay cho enum. Hằng số đặt tên `UPPER_CASE` cạnh nơi dùng, kèm comment
   đơn vị (giây, ms, phần của bề ngang trang…).
-- **Không lặp logic**: "vật chính" dùng `isMainObject`; "là sinh vật" dùng `isCreature`; vị trí vật lúc này dùng
-  `objectPosition`; tranh của trang dùng `artOf` / `artIdOf`; danh sách trang dùng `pagesOf` / `allPages`. Tìm helper
-  có sẵn trong `docs/ai/architecture.md` trước khi viết hàm mới.
+- **Không lặp logic**: "vật chính" dùng `isMainObject` (vật tùy chọn: `isOptionalObject`); "là sinh vật" dùng
+  `isCreature`, "sinh vật phụ" (không tính lời nhắn mực tàng hình) dùng `isCritter`; vị trí vật lúc này dùng `objectPosition`; tranh của trang dùng `artOf` / `artIdOf`; danh sách trang dùng
+  `pagesOf` / `allPages`; trang theo một lượt chơi dùng `layOutPage` / `dailyPage`, cache theo trang dùng `layoutKey`
+  (không dùng `page.id`). Tìm helper có sẵn trong `docs/ai/architecture.md` trước khi viết hàm mới.
 - **Dữ liệu suy ra từ `COUNTRIES`**, không viết cứng danh sách trang/nước ở chỗ khác.
 - **Component**: `GameScreen` render lại mỗi giây vì đồng hồ, nên component con nặng phải bọc `React.memo`. Callback
   truyền xuống dùng `useCallback` hoặc `useStableCallback`; mảng/object truyền xuống dùng `useMemo`.
@@ -103,14 +111,16 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
 Chạy trong `app/`:
 
 ```bash
-npm run check          # lint + typecheck + jest + check:architecture — BẮT BUỘC trước khi báo xong
+npm run check          # lint + typecheck + jest + check:architecture + check-supabase-catalog — BẮT BUỘC trước khi báo xong
 npm run build:web      # khi đụng code riêng cho web, Skia hoặc tài nguyên
 npm run test:screens   # khi đụng hộp thoại, HUD, QuestPanel, layout (Playwright, 13 cỡ màn hình)
 npm run generate       # khi đổi sprite (tools/sprites) hoặc âm thanh (platform/synth); commit cả file sinh ra
 npx expo-doctor        # khi đổi dependency hoặc app.json
 ```
 
-CI (`.github/workflows/ci.yml`) chạy tất cả các bước trên ở mỗi lần push. `npm test` tự soát **mọi trang của mọi nước**.
+CI (`.github/workflows/ci.yml`) chạy tất cả các bước trên ở mỗi lần push. Push lên `main` mà mọi bước đều qua thì job
+`migrate` áp các migration mới trong `supabase/migrations/` lên dự án Supabase (`supabase db push`). Migration đã phát
+hành không sửa nữa, chỉ thêm file mới (`npx supabase migration new <tên>`). `npm test` tự soát **mọi trang của mọi nước**.
 
 ## 7. Giữ tài liệu này đúng
 

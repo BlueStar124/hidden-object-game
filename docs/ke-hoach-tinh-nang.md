@@ -1,8 +1,47 @@
 # Kế hoạch tính năng: giữ chân người chơi
 
-> Trạng thái: **đề xuất**, chưa làm. Viết 10/2026 dựa trên code nhánh `react-native`.
+> Viết 10/2026 dựa trên code nhánh `react-native`.
 > Ràng buộc chung: **không có backend**, mobile chơi offline hoàn toàn, chỉ dùng module có trong Expo Go,
 > tuân thủ `AGENTS.md` (luật chơi trong `core/`, nội dung là dữ liệu, không làm hỏng bản lưu).
+
+## Trạng thái (13/10/2026)
+
+Đã gộp `main` (nhánh `feature/bao_work`): 50 linh vật Việt Nam, sprite to hơn 30 %, gợi ý 2 bước (thẻ chỉ có hình
+bóng; bước 1 đọc tên và `clue`, bước 2 chỉ chỗ). Phần `main` làm trùng (random, `resolvePage`, đồ nghề, di cư, sao lưu)
+dùng bản của nhánh này.
+
+| Mục | Trạng thái | Còn lại |
+|---|---|---|
+| 0.1–0.3 Nền tảng (seed, `layOutPage`, `spots`) | **Đã làm**: mọi vật chính đứng yên trên trang ngày và cả 11 trang đêm có ít nhất 1 chỗ nấp khác (trừ dấu triện và vật `dayTwin`), soát trên tranh; test chặn chỗ nấp đè lên vật khác hay chỗ ghé của sinh vật lữ hành | Chơi thử các chỗ nấp đêm mới trên máy thật qua Expo Go |
+| 0.4 ErrorBoundary, lưu âm thanh, sao lưu | **Đã làm**: cả xuất/nhập bản lưu (gộp, không ghi đè), `storage.persist()`, chặn khóa `__proto__` (cả ở cấp ngoài cùng), header bảo mật web | |
+| 1.1 Tranh lên màu dần | **Đã làm** theo phương án lớp phủ, đã đo trước/sau (không tụt fps); tắt được trong menu Tạm Dừng | |
+| 1.2 Phản ứng sinh vật | **Đã làm**: 4 kiểu (nhảy, bò ngang, quẫy nước, vỗ cánh) cho mọi sinh vật, kể cả linh vật Việt Nam mới | |
+| 2.3 Biến thể hiếm | **Đã làm**: sinh vật ánh vàng 1/25 lượt, Sổ Tay viền vàng | |
+| 2.1 Đồ nghề | **Đã làm**: Kính Tia Tím (chương 3 Singapore, 9 lời nhắn mực tàng hình), Lăng Kính Pha Lê (chương 2 Thái Lan, 9 nét vẽ chỉ hiện trong dải cầu vồng), Kính Lúp Hai Tròng (chương 2 Việt Nam, 10 nét vẽ tí hon, phải phóng to từ ×2) | |
+| 2.2 Sinh vật di cư | **Đã làm**: 3 sinh vật lữ hành, 12 chỗ ghé, theo dõi trong Hộ Chiếu | |
+| 3 Mảnh manh mối + Bảng Suy Luận | **Đã làm**: 11 chương, 37 mảnh manh mối. Id chương nay là `<nước>-0N` (trước đó trùng giữa các nước, giải một chương là giải luôn chương cùng số của nước khác) | |
+| 4.1 Trang của ngày | **Đã làm**, chọn từ mọi trang ngày, kể cả trang chưa mở | |
+| 4.2 Hộ chiếu | **Đã làm**: tem vàng làm bưu thiếp của nước đó có viền vàng | |
+| 5.1 Trang bìa | **Đã làm**, sticker cũng hiện trên mặt bàn khi chơi | |
+| 5.2 Kiểu nhiệm vụ | **Đã làm**: câu đố (Merlion, Yaowarat, Hội An), theo dấu (Phú Quốc), ngày và đêm (Lau Pa Sat, Yaowarat, Hội An đêm: 3 món đồ ban ngày đã đổi chỗ, tìm được thì hiện đường chúng đã đi). Hình bóng: mọi thẻ nay chỉ có hình bóng tới khi đọc | |
+| 6.1 Bưu thiếp | **Đã làm** (Skia, chia sẻ bằng `expo-sharing` / Web Share API) | |
+| 6.2 Mã thử thách | **Đã làm**: tạo từ trang chủ bằng cách chọn trang đã chơi, gửi mã hoặc chơi lập kỷ lục; nhập mã và link `?c=` đều yêu cầu người nhận đã chơi đúng trang đó (ngày/đêm riêng) | Bản app gửi kèm link khi build có `EXPO_PUBLIC_WEB_URL`: chờ tên miền chính thức (câu 4, mục 9) |
+
+Kịch bản tổng dùng theo đề xuất: vị kiến trúc sư cố ý để lại cuốn sổ để tìm người kế nghiệp, kết ở Mũi Cà Mau. Mục 9:
+câu 1–3 đã chốt theo đề xuất (tô màu dần bật mặc định cho mọi trang, tắt được; trang của ngày chọn cả trang chưa mở),
+còn câu 4 (tên miền).
+
+Đợt bổ sung 13/10/2026: thêm 31 chỗ nấp cho 8 trang đêm còn thiếu (Vườn Siêu Cây, Yaowarat, Doi Suthep,
+Hạ Long, Nho Quế, Hội An, Đà Lạt, Bến Thành), mỗi chỗ có gợi ý riêng. Dấu triện vẽ sẵn, vật `roam`/`shy` và
+các món `dayTwin` giữ nguyên vị trí/hành vi. Test nội dung kiểm tra mọi vật chính đứng yên ở trang đêm đều có
+chỗ thay thế, với các ngoại lệ trên. Các phần bên dưới là thiết kế ban đầu; trạng thái triển khai thực tế ở bảng trên.
+
+Kiểm tra đường đi cũng bắt một chỗ nấp cũ của chồn bay ở sông Singapore quá gần đoạn khép vòng của đom đóm;
+đã dời xuống dưới dầm cầu. Test kiểm tra khoảng cách tới toàn bộ đoạn đường đi, kể cả đoạn nối cuối vòng.
+
+Kiểm chứng đợt này: `npm run check` qua 961 test, `npm run build:web` thành công, `npm run test:screens`
+qua 264/264 trường hợp trên 13 cỡ màn hình. Playwright mở được cả 8 trang đêm bổ sung bằng mã thử thách,
+không lỗi trình duyệt; gợi ý ở Vườn Siêu Cây hiển thị đúng chỗ thay thế. Chưa thử trên điện thoại thật qua Expo Go.
 
 ## Mục lục
 
@@ -416,6 +455,17 @@ trong `QuestPanel` (`camoTrait`).
 
 ### 6.2. Mã thử thách
 
+**Quyết định bổ sung 13/10/2026.** Trang chủ → Thử thách → Tạo thử thách: chọn trong những trang đã vào chơi
+trong sổ, tạo một bố trí mới có seed và gửi mã, hoặc chơi để lập kỷ lục trước. Người nhận cũng phải đã chơi đúng
+trang đó; không thể bỏ qua bằng link. Ngày và đêm tính riêng. “Đã chơi” không yêu cầu thắng, nhưng xem trang chủ,
+intro hay một góc Trang của ngày không tính. Bản lưu thêm `playedPages?: string[]`, gộp bằng hợp; bản lưu cũ dùng
+màn đã hoàn thành và trang đang chơi gần nhất làm bằng chứng, không suy ra từ màn được mở khóa hay vật của trang ngày.
+
+Kiểm chứng phần tạo/nhận: `npm run check` qua 968 test; `npm run build:web` thành công; `npm run test:screens`
+qua 303/303 trường hợp trên 13 cỡ màn hình, gồm danh sách tạo, chưa có màn đã chơi và mã bị khóa. Playwright dùng
+hai hồ sơ độc lập: người tạo vào chơi rồi tạo/gửi mã và chơi lập kỷ lục; người nhận bị chặn cả link lẫn mã trước
+khi chơi màn, nhận được sau một lượt vào chơi, lịch sử còn sau khi tải lại. Chia sẻ được giả lập trong kiểm tra.
+
 **Trải nghiệm.**
 - Sau khi xong một trang (từ lần chơi lại thứ hai, khi vật đã đổi chỗ), hoặc xong trang của ngày: có mã như
   `SG3-7K2P-142`.
@@ -469,6 +519,7 @@ Làm theo `docs/ai/extending.md` mục H: thêm vào `GameProgress` trong `core/
 | `stamps` | `Record<day, { pageId, time }>` | 4.2 | Hợp theo ngày, cùng ngày lấy `time` nhỏ hơn |
 | `cover` | mảng sticker | 5.1 | Lấy bản sửa sau cùng (cần thêm `coverUpdatedAt`) |
 | `playCount` | `Record<pageId, number>` | 0.3 (seed khi chơi lại) | Lấy lớn hơn |
+| `playedPages` | `string[]` | 6.2: lịch sử trang đã vào chơi trong sổ, ngày/đêm riêng | Hợp |
 
 Những thứ **suy ra, không lưu**: dụng cụ đã có, sticker đã có, mảnh manh mối đã tìm (nằm trong `discovered`), số nơi
 đã gặp sinh vật di cư.

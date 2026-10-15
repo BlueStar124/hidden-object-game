@@ -71,6 +71,13 @@
   "objects": [
     {
       "id": "night-owl",
+      "spots": [
+        {
+          "x": 0.37,
+          "y": 0.365,
+          "clue": "Chú cú nép giữa những nhánh thép trên tán siêu cây lớn ở nửa trái trang sổ."
+        }
+      ],
       "name": "Cú Mèo Gác Đêm",
       "clue": "Chú cú mèo nép trong tán siêu cây ngoài cùng bên phải — tìm đôi mắt vàng đang lấp lánh.",
       "x": 0.795,
@@ -124,6 +131,13 @@
     },
     {
       "id": "night-bat",
+      "spots": [
+        {
+          "x": 0.71,
+          "y": 0.535,
+          "clue": "Chú dơi treo dưới đoạn cầu cong nối hai siêu cây ngoài cùng bên phải."
+        }
+      ],
       "name": "Dơi Quả Dưới Cầu",
       "clue": "Chú dơi quả treo ngược dưới nhịp cầu OCBC Skyway bên phải, ngay cạnh siêu cây nhỏ.",
       "x": 0.585,
@@ -137,6 +151,13 @@
     },
     {
       "id": "night-colugo",
+      "spots": [
+        {
+          "x": 0.26,
+          "y": 0.65,
+          "clue": "Chú chồn bay ôm phần thân thấp của siêu cây ngoài cùng bên trái, sát bệ tròn."
+        }
+      ],
       "name": "Chồn Bay Ôm Thân Cây",
       "clue": "Chú chồn bay khoác màu vỏ cây, ôm chặt thân siêu cây lớn bên phải.",
       "x": 0.668,
@@ -150,6 +171,13 @@
     },
     {
       "id": "night-camera",
+      "spots": [
+        {
+          "x": 0.43,
+          "y": 0.475,
+          "clue": "Chiếc máy ảnh nằm trên lan can cầu treo, giữa siêu cây lớn bên trái và gáy sổ."
+        }
+      ],
       "name": "Máy Ảnh Của Nhiếp Ảnh Gia",
       "clue": "Chiếc máy ảnh cổ bị bỏ quên trên nhịp cầu treo bên trái, lúc chủ nhân mải ngắm đèn.",
       "x": 0.33,

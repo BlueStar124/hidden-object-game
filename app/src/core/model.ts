@@ -217,6 +217,15 @@ export type SpriteType =
  */
 export type CamoStyle = 'ink' | 'chameleon' | 'invisible';
 
+/**
+ * The detective's tools, handed over by chapter mysteries (Mystery.reward, core/tools). Each shows
+ * its own objects (`requires`) in the loupe only, in its own way (board/render/book.ts):
+ * - 'uv-lens': invisible-ink messages left by earlier keepers, glowing blue
+ * - 'prism': drawings in light, only inside the rainbow band the prism casts across the lens
+ * - 'twin-lens': tiny drawings, seen only once the page is zoomed in (TINY_ZOOM_FROM)
+ */
+export type ToolId = 'uv-lens' | 'prism' | 'twin-lens';
+
 /** A shy creature hides most of the time and only peeks out for a moment every cycle. */
 export interface ShyBehavior {
   period: number; // Seconds for one hide → peek → hide cycle
@@ -234,16 +243,19 @@ export interface RoamBehavior {
   bob?: boolean; // Gentle up-and-down flutter while moving (flying creatures)
 }
 
-export type ToolId = 'uv-lens' | 'prism' | 'brass-loupe';
-
+/**
+ * Another place an object may be hidden on a replay (core/layout). Clues say WHERE an object is,
+ * so each spot brings its own; everything else not given here stays as on the object.
+ */
 export interface ObjectSpot {
-  x: number;
+  x: number; // Normalized spread coordinates, as HiddenObject.x / y
   y: number;
-  radius?: number; // defaults to the object's radius
-  rotation?: number;
+  clue: string;
+  radius?: number;
   scale?: number;
-  occluder?: [number, number][];
-  clue: string; // the clue describes WHERE the object is, so each spot needs its own
+  rotation?: number;
+  flip?: boolean;
+  occluder?: [number, number][]; // Painting laid back over the sprite at this spot (none otherwise)
 }
 
 export interface HiddenObject {
@@ -272,16 +284,35 @@ export interface HiddenObject {
   waterline?: number;
   // Night pages: eyes (and firefly lights) glow in the dark unless this is false
   glow?: boolean;
-  /** Alternative hiding spots when replaying the page or in special modes */
+  // Other hiding places, one of which a replay may pick (the object's own x/y stays one of them).
+  // Not for roaming or shy creatures: their paths and hiding directions belong to the painting
   spots?: ObjectSpot[];
-  /** Only accessible if the player owns this tool (must be isBonus or isSecret) */
-  requires?: ToolId;
-  /** Rare shiny variant of a bonus critter */
+  // A fragment of the chapter's mystery (Chapter.mystery): optional, like a bonus critter
+  isClue?: boolean;
+  // Shown on the clue card instead of the name and clue until found ("Thứ gì kêu tích tắc…?")
+  riddle?: string;
+  // Sequence hunt: catchable only once every object of a lower order on the page is found (1, 2, 3…)
+  order?: number;
+  // Set for one visit by core/rare, never in the JSON: this critter is a rare golden one
   rare?: boolean;
+  // Only there for a player who has this tool (core/tools); always optional (isBonus)
+  requires?: ToolId;
+  // Night page, day-and-night hunt (core/dayNight): the id of the same thing on the day page, which has
+  // moved since night fell. Its card tells where it was by day. Main objects only; never roaming, shy or
+  // with other spots (the way it went is drawn to where the JSON puts it)
+  dayTwin?: string;
+  // Set by core/dayNight for a visit, never in the JSON: where the dayTwin was on the day page
+  dayAt?: { x: number; y: number; clue: string };
 }
 
-/** Objects that must be found to close the case: not the secret, not the optional critters. */
-export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus;
+/** Objects that must be found to close the case: not the secret, the critters or the mystery clues. */
+export const isMainObject = (o: HiddenObject) => !o.isSecret && !o.isBonus && !o.isClue;
+
+/** An optional critter of the page (not the invisible-ink messages a tool reveals, core/tools). */
+export const isCritter = (o: HiddenObject) => !!o.isBonus && !o.requires;
+
+/** Optional finds (secret, critters, mystery clues): still there to find once the case is closed. */
+export const isOptionalObject = (o: HiddenObject) => !isMainObject(o);
 
 /** Sprite width as a fraction of the spread width, before the per-object `scale`. */
 export const SPRITE_BASE_WIDTH = 0.058;
@@ -310,8 +341,42 @@ export interface Page {
   // Night variant of a page: dark overlay, the loupe becomes a flashlight
   isNight?: boolean;
   nightLights?: NightLight[];
-  // Unique cache key when the page is resolved with alternative spots or seeds
-  variantKey?: string;
+  // Set by core/layout and core/daily on a visit laid out unlike the JSON (other spots, a daily
+  // crop): the page keeps its id (progress is saved by it) and the board's caches tell layouts apart
+  layout?: string;
+  // Daily page: the part of the spread in play, normalized (the camera frames it, the rest is veiled)
+  focus?: SpreadRect;
+}
+
+/** A rectangle of the spread, in normalized coordinates (0–1 of the whole 1760 × 1240 painting). */
+export interface SpreadRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * A travelling creature (core/migrants): each day it is on one of its spots, a page of any country.
+ * Its id is saved with every find: once published, permanent.
+ */
+export interface Migrant {
+  id: string;
+  name: string; // on its clue card
+  spriteType: SpriteType;
+  greeting: string; // its found text, wherever it is met
+  story: string; // told once it has been met at every one of its places
+  spots: MigrantSpot[]; // one per page at most
+}
+
+export interface MigrantSpot {
+  pageId: string; // a day page
+  x: number; // normalized spread coordinates, as HiddenObject.x / y
+  y: number;
+  clue: string;
+  radius?: number;
+  scale?: number;
+  flip?: boolean;
 }
 
 /** A page in the book: the day spread, and its night variant when it has one. */
@@ -326,6 +391,23 @@ export interface Chapter {
   subtitle: string;
   prologue: string[]; // Paragraphs of the case file opened at the start of the chapter
   pages: PageSlot[];
+  // Solved on the deduction board once every clue fragment (HiddenObject.isClue) of the chapter is found
+  mystery?: Mystery;
+}
+
+/** The question a chapter's clue fragments answer (core/mystery). */
+export interface Mystery {
+  question: string;
+  options: MysteryOption[]; // Exactly one is correct
+  epilogue: string[]; // Paragraphs revealed once solved
+  reward?: ToolId; // The tool solving it hands over
+  finale?: boolean; // The last mystery of the story: solving it opens the keeper's certificate
+}
+
+export interface MysteryOption {
+  text: string;
+  correct?: boolean;
+  nudge?: string; // Shown when this wrong answer is picked: points back at the clues, never punishes
 }
 
 /**
@@ -335,6 +417,7 @@ export interface Chapter {
 export interface Country {
   id: string;
   name: string; // "Singapore"
+  code?: string; // Two capital letters for challenge codes ("SG3-…"), unique across countries; once published, permanent
   chapters: Chapter[];
   /** Painting of each `Page.art` key: a bundled image (`require('….webp')`) */
   art: Record<string, number>;
@@ -373,7 +456,7 @@ export interface PageTurn {
 /* ------------------------------------------------------------------------- */
 
 export interface ActiveHint {
-  level: 1 | 2 | 3;
+  level: 1 | 2; // 1: the card's name and clue shown · 2: the loupe tugs and a radar pulses on it
   objectId: string;
   clueText?: string;
   radarPoint?: { x: number; y: number };
@@ -396,7 +479,7 @@ export interface CaseState {
   combo: number;
   comboTimer: number; // seconds left before combo resets
   activeHint: ActiveHint | null;
-  revealedTextIds: string[]; // List of object IDs whose text/clue has been revealed by hint
+  revealedTextIds: string[]; // Objects whose card shows its name and clue (a hint taken, or found)
 }
 
 /* ------------------------------------------------------------------------- */
@@ -425,20 +508,33 @@ export interface GameProgress {
   discovered: Record<string, string[]>;
   // The page the player was last in (day or night): "Chơi tiếp" on the home screen opens it
   lastPageId?: string;
-  // Solved mystery IDs per chapter
-  solvedMysteries?: string[];
-  // Sprite types of rare shiny variants ever found
-  rareFound?: string[];
-  // Daily stamps: keyed by localDay (YYYY-MM-DD)
-  stamps?: Record<string, { pageId: string; time: number }>;
-  // Placed stickers on the player's inner cover
-  cover?: { s: string; x: number; y: number; r: number; k: number }[];
-  // Number of times each page has been played (used as seed for replays)
-  playCount?: Record<string, number>;
+  /** Pages entered in the book, separately for day and night; challenges require prior play. */
+  playedPages?: string[];
   settings?: GameSettings;
+  solvedMysteries?: string[]; // Chapter ids whose mystery was solved on the deduction board
+  stamps?: Record<string, DailyStamp>; // Daily pages done, by the player's local day ('2026-10-12')
+  cover?: CoverSticker[]; // The player's own inside cover
+  rareFound?: string[]; // Kinds (SpriteType) of golden critters caught at least once
+}
+
+/** A daily page done: a stamp in the detective's passport. */
+export interface DailyStamp {
+  pageId: string;
+  countryId: string;
+  time: number; // Seconds the hunt took (the best of the day)
+}
+
+/** A sticker on the inside cover, at a place the player chose. */
+export interface CoverSticker {
+  type: SpriteType;
+  x: number; // Centre, 0–1 of the cover's width
+  y: number; // Centre, 0–1 of the cover's height
+  rotation: number; // Degrees
+  scale: number; // 1 = the default sticker size
 }
 
 /** The player's preferences, saved with the progress (the first web version already wrote them here). */
 export interface GameSettings {
   soundEnabled: boolean; // false: the player muted the game
+  wash?: boolean; // false: no watercolour wash over the pages (on unless turned off)
 }

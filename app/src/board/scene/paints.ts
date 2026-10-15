@@ -98,29 +98,26 @@ function compose(a: M20, b: M20): M20 {
   return out;
 }
 
+/** A golden critter, found: its drawing turned to old gold (`sepia(1) saturate(2.6) brightness(1.12)`). */
+const GOLD_FILTER = [saturate(2.6), brightness(1.12)].reduce((acc, m) => compose(m, acc), sepia(1));
+
 /** `filter: saturate(0.35) sepia(0.4) contrast(0.92) brightness(1.04)` — the "ink" camouflage. */
 const INK_FILTER = [sepia(0.4), contrast(0.92), brightness(1.04)].reduce((acc, m) => compose(m, acc), saturate(0.35));
 
-/** `filter: saturate(0.22) sepia(0.28) contrast(0.96) brightness(1.04)` — washed watercolour page */
-const WASHED_FILTER = [sepia(0.28), contrast(0.96), brightness(1.04)].reduce(
-  (acc, m) => compose(m, acc),
-  saturate(0.22)
-);
-
-/** Golden tint matrix for rare shiny variants */
-const GOLDEN_FILTER: M20 = [
-  1.2, 0.1, 0, 0, 0.1,
-  0.1, 1.1, 0, 0, 0.08,
-  0, 0, 0.45, 0, 0,
-  0, 0, 0, 1, 0,
+/** The rainbow the prism casts, in order (the band's stripes and its drawings' glow). */
+const PRISM_COLOURS = [
+  'rgba(239, 68, 68, 1)',
+  'rgba(249, 115, 22, 1)',
+  'rgba(234, 179, 8, 1)',
+  'rgba(34, 197, 94, 1)',
+  'rgba(59, 130, 246, 1)',
+  'rgba(139, 92, 246, 1)',
 ];
 
 /* ------------------------------------ Board ------------------------------------ */
 
 export function createBoardPaints() {
   const inkFilter = Skia.ColorFilter.MakeMatrix(INK_FILTER);
-  const washedFilter = Skia.ColorFilter.MakeMatrix(WASHED_FILTER);
-  const goldenFilter = Skia.ColorFilter.MakeMatrix(GOLDEN_FILTER);
   // Opaque, white-backed cells multiply all RGBA components. Fade RGB towards white,
   // leaving alpha at one, rather than making the painting itself transparent.
   const modulatePaints = (opacity: number) => Array.from({ length: 129 }, (_, i) => {
@@ -140,12 +137,6 @@ export function createBoardPaints() {
 
   return {
     image: paint(),
-    washed: paint((p) => {
-      p.setColorFilter(washedFilter);
-    }),
-    golden: paint((p) => {
-      p.setColorFilter(goldenFilter);
-    }),
     inkFilter,
     inkModulate: modulatePaints(0.8),
     chameleonModulate: modulatePaints(0.95),
@@ -167,17 +158,13 @@ export function createBoardPaints() {
         )
       )
     ),
-    // UV secret items glowing with purple luminescence
-    uv: paint((p) =>
-      p.setImageFilter(
-        dropShadow(
-          0,
-          (8 * PX) / LOUPE_ZOOM,
-          'rgba(168, 85, 247, 0.65)',
-          dropShadow(0, (3 * PX) / LOUPE_ZOOM, 'rgba(216, 180, 254, 0.95)')
-        )
-      )
+    // The prism's drawings in light, through the loupe: their glow runs through the rainbow (one
+    // paint per colour, picked by time — never a new filter per frame)
+    prism: PRISM_COLOURS.map((c) =>
+      paint((p) => p.setImageFilter(dropShadow(0, (7 * PX) / LOUPE_ZOOM, c.replace('1)', '0.6)'), dropShadow(0, (2 * PX) / LOUPE_ZOOM, c))))
     ),
+    // The twin lens' tiny drawings, through the loupe: in their colours, lifted by a thin warm halo
+    tiny: paint((p) => p.setImageFilter(dropShadow(0, (3 * PX) / LOUPE_ZOOM, 'rgba(180, 120, 40, 0.75)'))),
     plain: paint(),
     sheet: paint(), // a sprite's cell of the sprite sheet, inside its layer
     // Found sprites: `drop-shadow(0 2px 3px rgba(44, 36, 27, 0.32))`
@@ -185,6 +172,20 @@ export function createBoardPaints() {
     foundLoupe: paint((p) =>
       p.setImageFilter(dropShadow((2 * PX) / LOUPE_ZOOM, (3 * PX) / LOUPE_ZOOM, 'rgba(44, 36, 27, 0.32)'))
     ),
+    // A golden critter, found: gold, with a warm glow instead of the shadow
+    foundGoldPage: paint((p) => {
+      p.setColorFilter(Skia.ColorFilter.MakeMatrix(GOLD_FILTER));
+      p.setImageFilter(dropShadow(0, 8 * PX, 'rgba(250, 204, 21, 0.85)'));
+    }),
+    foundGoldLoupe: paint((p) => {
+      p.setColorFilter(Skia.ColorFilter.MakeMatrix(GOLD_FILTER));
+      p.setImageFilter(dropShadow(0, (8 * PX) / LOUPE_ZOOM, 'rgba(250, 204, 21, 0.85)'));
+    }),
+    // …and still hidden: two glints twinkle on it, for sharp eyes (unit radius)
+    goldGlint: paint((p) => {
+      p.setShader(radial(['rgba(255, 246, 200, 1)', 'rgba(250, 204, 21, 0.7)', 'rgba(250, 204, 21, 0)'], [0, 0.35, 1]));
+      p.setBlendMode(BlendMode.Screen);
+    }),
     glowSpot: paint(),
     // Watercolour bloom behind a newly found sprite (unit radius = gradient radius)
     bloom: paint((p) =>
@@ -264,6 +265,37 @@ export function createBoardPaints() {
         )
       )
     ),
+
+    // The watercolour wash over a page whose case is open, and the soft patches finds wash clear
+    // (unit radius, punched out of the wash layer)
+    wash: paint((p) => p.setColor(color('rgb(240, 235, 224)'))),
+    washHole: paint((p) => {
+      p.setShader(radial(['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0.9)', 'rgba(0, 0, 0, 0)'], [0, 0.55, 1]));
+      p.setBlendMode(BlendMode.DstOut);
+    }),
+
+    // A thing that moved since the day: the way it went, and a ring where it was (moonlit, over the night)
+    dayTrail: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(3 * PX);
+      p.setColor(color('rgb(244, 214, 140)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([10 * PX, 7 * PX], 0));
+    }),
+    dayRing: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(2 * PX);
+      p.setColor(color('rgb(244, 214, 140)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([6 * PX, 5 * PX], 0));
+    }),
+
+    // Daily page: the spread outside the corner in play, washed over with paper, and the corner's edge
+    focusVeil: paint((p) => p.setColor(color('rgba(236, 231, 220, 0.82)'))),
+    focusEdge: paint((p) => {
+      p.setStyle(PaintStyle.Stroke);
+      p.setStrokeWidth(3 * PX);
+      p.setColor(color('rgba(154, 106, 62, 0.6)'));
+      p.setPathEffect(Skia.PathEffect.MakeDash([14 * PX, 8 * PX], 0));
+    }),
 
     // Keeps the next pages' artwork on the GPU (one pixel, all but transparent)
     warm: paint((p) => p.setAlphaf(1 / 255)),
@@ -354,6 +386,16 @@ export function createLoupePaints(d: number, pixelRatio: number) {
     ),
     ferruleShadow: blurred('rgba(0, 0, 0, 0.3)', 2),
     lensBg: paint((p) => p.setColor(color('#ded7c8'))),
+    prismRect: Skia.XYWHRect(-1.5, -1, 3, 2), // the band, in units of its half-width (long enough to cross the lens)
+    // The prism's rainbow band across the lens, in unit coordinates (scaled to the band): a light
+    // wash of colour over the magnified page, soft at its edges
+    prismBand: paint((p) => {
+      const stripes = PRISM_COLOURS.map((c) => c.replace('1)', '0.24)'));
+      const clear = (c: string) => c.replace('1)', '0)');
+      p.setShader(
+        grad([0, -1], [0, 1], [clear(PRISM_COLOURS[0]), ...stripes, clear(PRISM_COLOURS[5])], [0, 0.1, 0.28, 0.44, 0.56, 0.72, 0.9, 1])
+      );
+    }),
     // radial-gradient(circle at 32% 28%, …) with mix-blend-mode: overlay
     specular: paint((p) => {
       const cx = -lensR + 0.64 * lensR;

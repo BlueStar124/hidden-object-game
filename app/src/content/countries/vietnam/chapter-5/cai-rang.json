@@ -16,9 +16,16 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Cây bẹo dựng đầu ghe: treo gì bán nấy, nét văn hóa giao thương độc đáo miền Tây.",
-      "waterline": 0.65
+      "waterline": 0.65,
+      "spots": [
+        {
+          "x": 0.56,
+          "y": 0.43,
+          "clue": "Chiếc xuồng ba lá chở đầy dưa hấu nép cạnh mấy chiếc ghe sát bờ phải, phía trên chợ nổi."
+        }
+      ]
     },
     {
       "id": "western-hat",
@@ -31,7 +38,14 @@
       "spriteType": "conical-hat",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Thưởng thức tô hủ tiếu nóng hổi ngay trên sóng nước dập dềnh là trải nghiệm khó quên."
+      "foundText": "Thưởng thức tô hủ tiếu nóng hổi ngay trên sóng nước dập dềnh là trải nghiệm khó quên.",
+      "spots": [
+        {
+          "x": 0.455,
+          "y": 0.525,
+          "clue": "Chiếc nón lá nằm trên mui chiếc ghe mái xanh neo cạnh cồn cây xanh giữa sông."
+        }
+      ]
     },
     {
       "id": "river-buffalo",
@@ -43,8 +57,15 @@
       "score": 150,
       "spriteType": "water-rail",
       "scale": 0.52,
-      "camo": "gouache",
-      "foundText": "Chú chim trích cồ với bộ lông xanh biếc và chiếc mỏ đỏ tươi lội nước kiếm mồi ven đầm dừa nước."
+      "camo": "ink",
+      "foundText": "Chú chim trích cồ với bộ lông xanh biếc và chiếc mỏ đỏ tươi lội nước kiếm mồi ven đầm dừa nước.",
+      "spots": [
+        {
+          "x": 0.535,
+          "y": 0.615,
+          "clue": "Chú chim trích mỏ đỏ lội trên bãi bùn bày đầy thúng mủng, cạnh dãy nhà mái ngói bên phải sông."
+        }
+      ]
     },
     {
       "id": "mekong-durian",
@@ -56,8 +77,15 @@
       "score": 120,
       "spriteType": "coconut-candy",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Kẹo dừa Bến Tre thơm béo ngậy mùi mạch nha và nước cốt dừa, thức quà ngọt ngào của miền Tây sông nước."
+      "camo": "chameleon",
+      "foundText": "Kẹo dừa Bến Tre thơm béo ngậy mùi mạch nha và nước cốt dừa, thức quà ngọt ngào của miền Tây sông nước.",
+      "spots": [
+        {
+          "x": 0.665,
+          "y": 0.62,
+          "clue": "Gói kẹo dừa bọc giấy nằm trên sạp hàng ven con đường rực ánh đèn đông người bên phải."
+        }
+      ]
     },
     {
       "id": "river-otter",
@@ -70,7 +98,14 @@
       "spriteType": "mudskipper",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Chú cá thòi lòi lanh lợi nhảy tưng tưng trên bãi bồi ven sông, sinh vật độc đáo của vùng ngập mặn Cửu Long."
+      "foundText": "Chú cá thòi lòi lanh lợi nhảy tưng tưng trên bãi bồi ven sông, sinh vật độc đáo của vùng ngập mặn Cửu Long.",
+      "spots": [
+        {
+          "x": 0.11,
+          "y": 0.545,
+          "clue": "Chú cá thòi lòi nhảy tưng tưng ở mép bờ kè bên trái, ngay phía trên chiếc ghe lớn neo sát bờ."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -138,6 +173,20 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Cá rô đồng mùa nước nổi vượt bờ tìm mồi, món quà hào sảng của thiên nhiên ban tặng cho miệt vườn phương Nam."
+    },
+    {
+      "id": "clue-carved-coconut",
+      "name": "Trái Dừa Khắc Chữ",
+      "clue": "Trái dừa vẽ lẫn vào những mái nhà san sát bên bờ phải con sông.",
+      "x": 0.8,
+      "y": 0.58,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "coconut",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Khắc trên vỏ dừa: “Xuôi dòng Hậu Giang, ra tới biển là gặp.”"
     }
   ]
 }

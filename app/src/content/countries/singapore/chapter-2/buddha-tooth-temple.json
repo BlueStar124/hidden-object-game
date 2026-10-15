@@ -20,9 +20,9 @@
       "foundText": "Chim bồ câu trắng biểu tượng cho sự an lạc tại chốn thiền môn thanh tịnh.",
       "spots": [
         {
-          "x": 0.35,
-          "y": 0.36,
-          "clue": "Chú bồ câu trắng đậu trên góc mái cong của gian tiền điện."
+          "x": 0.287,
+          "y": 0.482,
+          "clue": "Chú bồ câu trắng đậu trên đầu mái cong bên trái của gian tiền điện, sát dây lồng đèn."
         }
       ]
     },
@@ -37,7 +37,14 @@
       "spriteType": "bat",
       "scale": 0.55,
       "camo": "ink",
-      "foundText": "Dơi là biểu tượng của phúc lộc trong văn hóa Á Đông — chú dơi này mang đến vận may cho thám tử!"
+      "foundText": "Dơi là biểu tượng của phúc lộc trong văn hóa Á Đông — chú dơi này mang đến vận may cho thám tử!",
+      "spots": [
+        {
+          "x": 0.432,
+          "y": 0.542,
+          "clue": "Chú dơi quả treo ngược giữa hàng lồng đèn đỏ dưới mái hiên gian tiền điện, xếp cánh như một chiếc đèn."
+        }
+      ]
     },
     {
       "id": "porcelain-vase",
@@ -53,8 +60,8 @@
       "foundText": "Cổ vật gốm sứ tinh xảo lưu giữ tro trầm hương thanh khiết hàng trăm năm.",
       "spots": [
         {
-          "x": 0.22,
-          "y": 0.68,
+          "x": 0.214,
+          "y": 0.681,
           "clue": "Chiếc bình gốm men lam đặt cạnh chân cột thềm đá bên trái."
         }
       ]
@@ -174,6 +181,36 @@
       "rotation": -50,
       "camo": "chameleon",
       "foundText": "Bọ que nằm im đến mức các nhà sư tưởng đó là một mẩu gỗ vụn!"
+    },
+    {
+      "id": "clue-spyglass",
+      "name": "Ống Nhòm Gấp",
+      "clue": "Chiếc ống nhòm gấp gác trên lan can tầng lầu cao của ngôi chùa bên phải.",
+      "x": 0.79,
+      "y": 0.432,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "spyglass",
+      "scale": 0.45,
+      "rotation": -12,
+      "camo": "chameleon",
+      "foundText": "Chiếc ống nhòm vẫn còn hơi ấm: có người vừa đứng trên lan can này dõi theo bạn."
+    },
+    {
+      "id": "uv-note-4",
+      "name": "Lời Nhắn Mực Tàng Hình 4/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống góc trên bên phải.",
+      "x": 0.885,
+      "y": 0.33,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "letter",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(4/9) Thầy của ta dạy: muốn vẽ một ngôi chùa, hãy ngồi nghe tiếng chuông của nó trước.”"
     }
   ]
 }

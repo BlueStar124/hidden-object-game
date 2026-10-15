@@ -11,6 +11,7 @@ import marinaBaySkyline from './chapter-3/marina-bay-skyline.json';
 import singaporeRiverQuay from './chapter-3/singapore-river-quay.json';
 import singaporeRiverQuayNight from './chapter-3/singapore-river-quay-night.json';
 import botanicGardensHeritage from './chapter-3/botanic-gardens-heritage.json';
+import { BAYFRONT, HERITAGE, RIVERSIDE } from './mysteries';
 
 // JSON imports are typed loosely (e.g. "camo": string): the files follow the Page shape
 const page = (json: unknown) => json as Page;
@@ -19,9 +20,10 @@ const page = (json: unknown) => json as Page;
 export const singapore: Country = {
   id: 'singapore',
   name: 'Singapore',
+  code: 'SG',
   chapters: [
     {
-      id: 'chapter-01',
+      id: 'singapore-01',
       title: 'Kỳ Quan Vịnh Marina',
       subtitle: 'The Bayfront Marvels — Vụ Án Đảo Quốc Sư Tử',
       prologue: [
@@ -35,9 +37,10 @@ export const singapore: Country = {
         { day: page(gardensByTheBay), night: page(gardensByTheBayNight) },
         { day: page(merlionPark) },
       ],
+      mystery: BAYFRONT,
     },
     {
-      id: 'chapter-02',
+      id: 'singapore-02',
       title: 'Phố Cổ & Di Sản Văn Hóa',
       subtitle: 'Heritage & Shophouses — Dấu Tích Thời Gian',
       prologue: [
@@ -50,21 +53,23 @@ export const singapore: Country = {
         { day: page(jooChiatShophouses) },
         { day: page(lauPaSatMarket), night: page(lauPaSatMarketNight) },
       ],
+      mystery: HERITAGE,
     },
     {
-      id: 'chapter-03',
+      id: 'singapore-03',
       title: 'Trái Tim Sông Nước & Rừng Bách Thảo',
-      subtitle: 'Riverside & Botanic Flora — Hồi Kết Cuốn Sổ',
+      subtitle: 'Riverside & Botanic Flora — Dấu Vết Rời Đảo Quốc',
       prologue: [
         'Chặng đường cuối cùng của cuộc phiêu lưu đã mở ra!',
         'Từ góc nhìn toàn cảnh đường chân trời Marina Bay Skyline, ngược dòng sông Singapore xuôi theo những con thuyền bumboat, tới cây đại thụ cổ kính tại Vườn Bách Thảo UNESCO.',
-        'Lời giải đáp cuối cùng về tung tích của vị kiến trúc sư và bí mật lớn nhất của cuốn sổ đang chờ bạn khám phá!',
+        'Những trang cuối ở Singapore sẽ cho bạn biết vị kiến trúc sư đã đi đâu tiếp, và vì sao cuốn sổ lại đến tay bạn!',
       ],
       pages: [
         { day: page(marinaBaySkyline) },
         { day: page(singaporeRiverQuay), night: page(singaporeRiverQuayNight) },
         { day: page(botanicGardensHeritage) },
       ],
+      mystery: RIVERSIDE,
     },
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)

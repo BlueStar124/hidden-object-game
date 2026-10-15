@@ -17,7 +17,14 @@
       "spriteType": "water-buffalo",
       "scale": 0.52,
       "camo": "chameleon",
-      "foundText": "Người bạn trung thành của đồng bào Mông trên những triền nương dốc đứng."
+      "foundText": "Người bạn trung thành của đồng bào Mông trên những triền nương dốc đứng.",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.44,
+          "clue": "Chú trâu mộng thong thả gặm cỏ trên đỉnh đồi tròn dưới hai lùm cây xanh, phía trên bên phải."
+        }
+      ]
     },
     {
       "id": "hmong-hat",
@@ -29,8 +36,15 @@
       "score": 120,
       "spriteType": "non-quai-thao",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Mũ nón che nắng che mưa cho những đôi bàn tay dệt nên kỳ quan ruộng bậc thang."
+      "camo": "ink",
+      "foundText": "Mũ nón che nắng che mưa cho những đôi bàn tay dệt nên kỳ quan ruộng bậc thang.",
+      "spots": [
+        {
+          "x": 0.14,
+          "y": 0.47,
+          "clue": "Chiếc nón ba tầm quai thao nằm trên những thửa ruộng dốc đứng ở góc trên bên trái trang."
+        }
+      ]
     },
     {
       "id": "saola-forest",
@@ -43,7 +57,14 @@
       "spriteType": "bamboo-rat",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Chú dúi mốc tròn vo lủi trong bụi nứa, gặm những nhánh măng rừng ngọt ngào."
+      "foundText": "Chú dúi mốc tròn vo lủi trong bụi nứa, gặm những nhánh măng rừng ngọt ngào.",
+      "spots": [
+        {
+          "x": 0.275,
+          "y": 0.5,
+          "clue": "Chú dúi béo tròn lẩn trong vạt rừng xanh dưới đáy thung lũng, giữa hai sườn đồi bên trái."
+        }
+      ]
     },
     {
       "id": "field-frog",
@@ -56,7 +77,14 @@
       "spriteType": "bamboo-flute",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Tiếng sáo trúc trong trẻo véo von vang xa trên những triền sóng lúa Mù Cang Chải."
+      "foundText": "Tiếng sáo trúc trong trẻo véo von vang xa trên những triền sóng lúa Mù Cang Chải.",
+      "spots": [
+        {
+          "x": 0.55,
+          "y": 0.725,
+          "clue": "Cây sáo trúc nằm vắt trên bờ ruộng bậc thang cong vút phía dưới, ngay bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "hill-camera",
@@ -68,8 +96,15 @@
       "score": 120,
       "spriteType": "brocade",
       "scale": 0.46,
-      "camo": "gouache",
-      "foundText": "Họa tiết thổ cẩm mô phỏng từng bậc thang vàng trùng điệp của đất trời Tây Bắc."
+      "camo": "ink",
+      "foundText": "Họa tiết thổ cẩm mô phỏng từng bậc thang vàng trùng điệp của đất trời Tây Bắc.",
+      "spots": [
+        {
+          "x": 0.45,
+          "y": 0.465,
+          "clue": "Tấm vải thổ cẩm rực rỡ phơi cạnh túp lều nhỏ trên đỉnh đồi ruộng, sát bên trái gáy sổ."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -142,6 +177,35 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Hiệp sĩ tí hon bảo vệ ruộng lúa khỏi sâu bệnh."
+    },
+    {
+      "id": "clue-lunch-tiffin",
+      "name": "Cặp Lồng Cơm Còn Ấm",
+      "clue": "Chiếc cặp lồng cơm đặt trên bờ ruộng bậc thang, phía trên chú ếch.",
+      "x": 0.36,
+      "y": 0.55,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "tiffin",
+      "scale": 0.45,
+      "camo": "ink",
+      "foundText": "Cặp lồng cơm còn ấm: người vẽ đã ngồi đây rất lâu để vẽ cho bằng hết những bậc ruộng."
+    },
+    {
+      "id": "tiny-sketch-3",
+      "name": "Nét Vẽ Tí Hon 3/10",
+      "clue": "Nét vẽ tí hon nằm trên bờ ruộng bậc thang, cạnh túp lều nhỏ phía trên bên phải.",
+      "x": 0.74,
+      "y": 0.49,
+      "radius": 0.016,
+      "score": 100,
+      "isBonus": true,
+      "requires": "twin-lens",
+      "spriteType": "mantis",
+      "scale": 0.22,
+      "camo": "invisible",
+      "foundText": "“Một nét vẽ tí hon là một lời hứa: rồi sẽ có người nhìn đủ kỹ để thấy nó.” (3/10)"
     }
   ]
 }

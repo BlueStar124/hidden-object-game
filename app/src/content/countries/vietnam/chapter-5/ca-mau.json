@@ -16,8 +16,15 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.52,
-      "camo": "gouache",
-      "foundText": "Mũi Cà Mau là nơi duy nhất trên đất liền Việt Nam ngắm mặt trời mọc ở biển Đông và lặn ở biển Tây!"
+      "camo": "ink",
+      "foundText": "Mũi Cà Mau là nơi duy nhất trên đất liền Việt Nam ngắm mặt trời mọc ở biển Đông và lặn ở biển Tây!",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.375,
+          "clue": "Xuồng ba lá nằm giữa mấy chiếc ghe trong vũng nước sau con đê cong, cạnh ngôi đình mái đỏ."
+        }
+      ]
     },
     {
       "id": "mangrove-heron",
@@ -29,8 +36,15 @@
       "score": 120,
       "spriteType": "red-crowned-crane",
       "scale": 0.46,
-      "camo": "gouache",
-      "foundText": "Sếu đầu đỏ sải cánh kiêu hãnh trên bầu trời rừng tràm, loài chim quý báu biểu tượng cho sự thanh cao và trường thọ."
+      "camo": "ink",
+      "foundText": "Sếu đầu đỏ sải cánh kiêu hãnh trên bầu trời rừng tràm, loài chim quý báu biểu tượng cho sự thanh cao và trường thọ.",
+      "spots": [
+        {
+          "x": 0.205,
+          "y": 0.61,
+          "clue": "Chim sếu đầu đỏ lội nước cạnh hàng cọc gỗ chạy ra căn nhà sàn giữa biển bên trái."
+        }
+      ]
     },
     {
       "id": "mangrove-crab",
@@ -43,7 +57,14 @@
       "spriteType": "ca-mau-crab",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Cua Năm Căn Cà Mau nổi tiếng chắc thịt và gạch son thơm ngon nhất nước."
+      "foundText": "Cua Năm Căn Cà Mau nổi tiếng chắc thịt và gạch son thơm ngon nhất nước.",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.645,
+          "clue": "Cua biển Năm Căn núp dưới gốc đước ở mép rừng, sát con đường cong phía dưới bên phải."
+        }
+      ]
     },
     {
       "id": "mangrove-otter",
@@ -69,8 +90,15 @@
       "score": 120,
       "spriteType": "compass",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Cột mốc thiêng liêng khẳng định chủ quyền lãnh thổ bất khả xâm phạm của Tổ quốc."
+      "camo": "chameleon",
+      "foundText": "Cột mốc thiêng liêng khẳng định chủ quyền lãnh thổ bất khả xâm phạm của Tổ quốc.",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.4,
+          "clue": "Chiếc la bàn hàng hải nằm trên khoảng sân rộng bên phải chân tháp cột cờ phía trên."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -108,7 +136,7 @@
       "isBonus": true,
       "spriteType": "mangrove-clam",
       "scale": 0.38,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Sò huyết bãi bồi Năm Căn béo tròn, ngập tràn vị ngọt phù sa sông nước Cà Mau."
     },
     {
@@ -138,6 +166,21 @@
       "scale": 0.42,
       "camo": "chameleon",
       "foundText": "Rừng đước chở che bờ cõi khỏi sóng gió bão bùng."
+    },
+    {
+      "id": "clue-new-deerstalker",
+      "name": "Chiếc Mũ Thám Tử Mới",
+      "clue": "Chiếc mũ thám tử vẽ lẫn vào rừng đước xanh thẫm bên phải.",
+      "x": 0.82,
+      "y": 0.5,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "deerstalker",
+      "scale": 0.45,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "Một chiếc mũ mới tinh, gói trong tờ giấy ghi đúng tên bạn."
     }
   ]
 }

@@ -101,8 +101,8 @@
       "foundText": "Diệc xám kiên nhẫn đứng rình cá hàng giờ, kể cả khi phố đã lên đèn.",
       "spots": [
         {
-          "x": 0.38,
-          "y": 0.59,
+          "x": 0.361,
+          "y": 0.6,
           "clue": "Chú diệc xám đứng kiên nhẫn bên bến bậc thềm cạnh chiếc thuyền bumboat bên trái."
         }
       ]
@@ -161,9 +161,9 @@
       "foundText": "Chồn bay có thể lượn xa hàng chục mét từ cây này sang cây khác.",
       "spots": [
         {
-          "x": 0.84,
-          "y": 0.48,
-          "clue": "Chú chồn bay bám vào thân cành thấp hơn của hàng cây ven sông."
+          "x": 0.818,
+          "y": 0.55,
+          "clue": "Chú chồn bay bám dưới thanh dầm cuối cây cầu sắt bên phải."
         }
       ]
     },

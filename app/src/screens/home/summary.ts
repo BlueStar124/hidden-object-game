@@ -42,8 +42,8 @@ export function bookSummary(country: Country): BookSummary {
   };
 }
 
-/** Kinds of creatures and objects spotted at least once, out of every kind hidden in the books. */
-export function albumProgress(): { found: number; total: number } {
+/** Every kind of creature and object hidden in the books, and those spotted at least once. */
+export function spottedKinds(): { all: Set<SpriteType>; found: Set<SpriteType> } {
   const all = new Set<SpriteType>();
   const found = new Set<SpriteType>();
   for (const page of allPages()) {
@@ -54,5 +54,11 @@ export function albumProgress(): { found: number; total: number } {
       if (seen.has(obj.id)) found.add(obj.spriteType);
     }
   }
+  return { all, found };
+}
+
+/** Kinds of creatures and objects spotted at least once, out of every kind hidden in the books. */
+export function albumProgress(): { found: number; total: number } {
+  const { all, found } = spottedKinds();
   return { found: found.size, total: all.size };
 }

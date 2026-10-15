@@ -1,28 +1,43 @@
-import type { Country, GameProgress, ToolId } from './model';
+import type { Chapter, Page, ToolId } from './model';
 
 /**
- * Checks whether all day pages of a country have been cleared (at least 1 star).
+ * The detective's tools: solving some chapter mysteries (Mystery.reward) hands one over, and with it
+ * pages already played have something new — objects that need that tool (HiddenObject.requires) are
+ * only there for a player who has it.
  */
-export function isCountryCleared(progress: GameProgress, country: Country): boolean {
-  for (const chapter of country.chapters) {
-    for (const slot of chapter.pages) {
-      const stars = progress.sceneResults[slot.day.id]?.stars ?? 0;
-      if (stars <= 0) return false;
-    }
-  }
-  return true;
-}
 
-/**
- * Derives the tools owned by the player from their game progress.
- * Completing Singapore unlocks the 'uv-lens'.
- */
-export function toolsOwned(progress: GameProgress, countries: Country[]): ToolId[] {
+/** The tools a player has: the rewards of the mysteries they solved. */
+export function toolsOwned(chapters: readonly Chapter[], isSolved: (chapterId: string) => boolean): ToolId[] {
   const tools: ToolId[] = [];
-  const singapore = countries.find((c) => c.id === 'singapore');
-  if (singapore && isCountryCleared(progress, singapore)) {
-    tools.push('uv-lens');
+  for (const chapter of chapters) {
+    const reward = chapter.mystery?.reward;
+    if (reward && isSolved(chapter.id) && !tools.includes(reward)) tools.push(reward);
   }
   return tools;
 }
 
+/** The chapter whose mystery hands a tool over (null: no chapter does). */
+export const chapterGiving = (chapters: readonly Chapter[], tool: ToolId) => chapters.find((c) => c.mystery?.reward === tool) ?? null;
+
+// Pages with their tool objects taken out, per page and set of tools: the same object every time,
+// so memoised components and the board's caches see one page, not a new copy per render
+const filtered = new WeakMap<Page, Map<string, Page>>();
+
+/** The page as a player with these tools sees it: without the objects their tools do not reveal. */
+export function withTools(page: Page, tools: readonly ToolId[]): Page {
+  if (!page.objects.some((o) => o.requires && !tools.includes(o.requires))) return page;
+  const key = [...tools].sort().join(',');
+  let byTools = filtered.get(page);
+  if (!byTools) filtered.set(page, (byTools = new Map()));
+  let out = byTools.get(key);
+  if (!out) {
+    out = {
+      ...page,
+      objects: page.objects.filter((o) => !o.requires || tools.includes(o.requires)),
+      // Fewer sprites than the page as written: the board's caches must tell it apart
+      layout: `${page.layout ?? ''}t${key}`,
+    };
+    byTools.set(key, out);
+  }
+  return out;
+}

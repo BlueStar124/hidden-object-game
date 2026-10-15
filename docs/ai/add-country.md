@@ -26,6 +26,9 @@ Ví dụ thêm Việt Nam, id nước `vietnam`:
 - [ ] `app/src/content/countries/vietnam/index.ts` export `vietnam: Country` (§3)
 - [ ] Thêm vào **cuối** `COUNTRIES` trong `app/src/content/index.ts` (`COUNTRIES[0]` là cuốn mở đầu của người chơi mới)
 - [ ] Sprite mới, nếu có (§5) → `npm run generate` ở gốc repo
+- [ ] Một migration mới trong `supabase/migrations/` thêm id các trang mới vào `challenge_pages` (và sprite mới vào
+      `challenge_sprites`, kèm tăng `FRIEND_CONTENT_VERSION` trong `core/challenge.ts`): thiếu là
+      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè
 - [ ] `cd app && npm run check && npm run test:screens`, rồi chơi thử `npm run web` (§8)
 - [ ] Cập nhật `README.md` (danh sách nước/trang) nếu cần
 
@@ -59,9 +62,10 @@ const page = (json: unknown) => json as Page;
 export const vietnam: Country = {
   id: 'vietnam',              // kebab-case, không đổi sau khi phát hành
   name: 'Việt Nam',           // hiện ở tab Mục Lục và trong Sổ Tay
+  code: 'VN',                 // 2 chữ in hoa cho mã thử thách, khác mọi nước khác, không đổi sau khi phát hành
   chapters: [
     {
-      id: 'chapter-01',       // 'chapter-0N'
+      id: 'vietnam-01',       // '<nước>-0N': duy nhất trên mọi nước (bí ẩn đã giải lưu theo nó), không đổi sau khi phát hành
       title: 'Phố Cổ Hội An',
       subtitle: 'Lantern Town — Vụ Án Phố Đèn Lồng',   // "English — Tiếng Việt"
       prologue: ['Đoạn 1…', 'Đoạn 2…', 'Đoạn 3…'],     // 3–4 đoạn, hiện ở hồ sơ mở chương
@@ -69,6 +73,7 @@ export const vietnam: Country = {
         { day: page(hoiAnOldTown), night: page(hoiAnOldTownNight) },
         // { day: page(…) },
       ],
+      mystery: LANTERN_TOWN,  // tùy chọn: bí ẩn chương (countries/<nước>/mysteries.ts, xem singapore)
     },
   ],
   // The paintings (1760 × 1240, the open sketchbook on a transparent margin)
@@ -107,6 +112,9 @@ riêng từng nước ("Trang 3 / 9"), tên nước trong Sổ Tay. Singapore c�
    `invisible` hoặc `chameleon`. Mỗi trang **tối đa 1** (có test).
 4. **Bonus**: `"isBonus": true`, `"score": 100`, id `bonus-<sprite>`. **3 cái ở trang ngày, 2 cái ở trang đêm.** Không bao
    giờ được gợi ý; chỉ người tinh mắt mới thấy.
+5. **Mảnh manh mối** (chỉ khi chương có `mystery`, §3): `"isClue": true`, `"score": 150`, id `clue-<…>`, thường 1 mảnh mỗi
+   trang ngày. Tùy chọn như bonus, không được gợi ý; `foundText` là nội dung của mảnh (người chơi đọc lại trên Bảng Suy
+   Luận), nên phải trả lời được câu hỏi của chương khi ghép đủ.
 
 Id vật chỉ cần **duy nhất trong trang** (các trang khác nhau được trùng, ví dụ `artist-seal`), nhưng **không được đổi
 sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
@@ -122,16 +130,18 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `spriteType` | hình vẽ (`SpriteType`) | Mỗi loại xuất hiện **tối đa 3 lần trong một nước** (seal không tính). Đổi đa dạng. |
 | `scale` | 1 = 4.4% bề ngang trang | chính 0.36–0.85 · bonus 0.33–0.6 |
 | `rotation`, `flip` | độ; lật ngang | xoay tự do −80…180 cho hợp chỗ nấp |
-| `camo` | `"ink"` (mặc định) · `"chameleon"` (lấy màu tranh quanh vật) · `"invisible"` (chỉ thấy qua kính lúp) | chính: chủ yếu chameleon/ink, rất ít invisible · bí mật: hay dùng invisible/chameleon · bonus: chủ yếu chameleon |
+| `camo` | `"ink"` (mặc định) · `"chameleon"` (lấy màu tranh quanh vật) · `"invisible"` (chỉ thấy qua kính lúp). Không có giá trị nào khác: JSON không được TypeScript kiểm tra, nên test bắt lỗi chính tả | chính: chủ yếu chameleon/ink, rất ít invisible · bí mật: hay dùng invisible/chameleon · bonus: chủ yếu chameleon |
 | `shy` | `{period, offset?, from?}`: ló ra mỗi `period` giây; `from` là `below`/`above`/`left`/`right`/`jump` | period 6–8, mỗi vật một `offset` khác nhau để không cùng nhịp. **0–2 vật mỗi trang.** |
 | `roam` | `{path:[[x,y],…], period, offset?, loop?, facing?, bob?}` | ≥ 2 điểm (test), period 13–22, `bob` cho vật bay. **0–2 vật mỗi trang.** `x/y` đặt bằng điểm đầu của `path`. |
 | `occluder` | đa giác (≥ 3 điểm) phần tranh vẽ đè lên vật, để vật như nấp sau cột/thân cây | Thường 0–1 vật mỗi trang, và chỉ khi trong tranh có vật che thật |
 | `waterline` | phần chiều cao sprite nằm dưới mặt nước (0–1) | 0.55–0.8, cho vật bơi/thuyền |
 | `glow` | trang đêm: `false` để tắt mắt phát sáng | mặc định là phát sáng |
-| `isSecret`, `isBonus` | xem ở trên | |
-| `spots` | danh sách vị trí ẩn thay thế (`ObjectSpot[]`) khi chơi lại trang | Mỗi spot cần có `clue` riêng; vật có `roam` hoặc `shy` không dùng `spots` |
-| `requires` | dụng cụ yêu cầu để nhìn thấy/thu thập (vd: `'uv-lens'`) | Mở khóa khi hoàn thành các chặng đặc biệt |
-| `rare` | đánh dấu biến thể hiếm (hiệu ứng ánh kim, ghi nhận Sổ Tay) | Suy ra khi resolve trang theo seed |
+| `isSecret`, `isBonus`, `isClue` | xem ở trên | |
+| `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`/`dayTwin` hay dấu triện vẽ sẵn**. Mọi vật chính đứng yên trên 11 trang đêm hiện có đều có ít nhất 1 chỗ (test, trừ `dayTwin` và dấu triện). Vẽ thử trên tranh trước khi ghi |
+| `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy hoặc đọc bằng gợi ý (ẩn cả hình bóng) | tùy chọn; viết cho đúng vật (đổi `spriteType` thì sửa câu đố) |
+| `requires` | chỉ hiện khi người chơi có dụng cụ: `'uv-lens'` (lời nhắn mực tàng hình, đặt trên vùng giấy sáng), `'prism'` (nét vẽ cầu vồng), `'twin-lens'` (nét vẽ tí hon: `scale` ≤ 0.3, `radius` ~0.016). Luôn kèm `isBonus` và `camo: invisible`; phải có chương trao dụng cụ đó (`Mystery.reward`). Test soát cả ba điều | id `uv-note-<n>`, `prism-sketch-<n>`, `tiny-sketch-<n>` |
+| `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
+| `dayTwin` | trang đêm, kiểu "ngày và đêm": id của **cùng món đồ** trên trang ngày, nay đã đổi chỗ. Thẻ ghi "Ban ngày: <clue ở trang ngày>"; tìm được thì bàn vẽ đường nó đã đi | chỉ vật chính, cùng `spriteType` với vật ngày, cách chỗ ban ngày > 0.1; không `roam`/`shy`/`spots` (test). Nên 3 vật mỗi trang và thêm một câu vào `storyClue` |
 
 Mẫu một vật có đủ trường:
 
@@ -152,6 +162,9 @@ Mẫu một vật có đủ trường:
 (JSON thật không có comment. Chỉ ghi trường nào thật sự dùng.)
 
 ## 5. Sinh vật / đồ vật mới (sprite)
+
+> Sinh vật mới cần thêm vào `STARTLE` trong `content/bestiary.ts` (cách nó giật mình khi bị bắt: `hop`, `scurry`,
+> `splash`, `flutter`); test `content.test.ts` sẽ báo nếu thiếu.
 
 Chỉ làm khi trong 112 loại có sẵn (`SpriteType` trong `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
 đèn lồng, xích lô. Mỗi nước nên có bộ hình riêng (Thái Lan có 50 loại không dùng chung với Singapore) để người chơi không
@@ -205,3 +218,6 @@ npm run test:screens # Mục Lục có thêm tab nước: kiểm tra trên 13 c�
 
 Mẹo đặt tọa độ: mở tranh bằng trình xem ảnh có hiện tọa độ pixel, lấy `x = px / 1760`, `y = py / 1240` (làm tròn 3 chữ
 số thập phân). Test chỉ bắt lỗi dữ liệu, không bắt được vật đặt sai chỗ trong tranh: luôn chơi thử.
+
+`camo` chỉ nhận `ink`, `chameleon`, `invisible` (test chặn giá trị khác, vì game sẽ lặng lẽ vẽ chúng thành `ink`). Khi
+gộp nhánh nội dung, kiểm tra cả các vật `isClue` (mảnh manh mối của bí ẩn chương), `riddle`, `spots` không bị mất.

@@ -16,8 +16,15 @@
       "score": 150,
       "spriteType": "ao-dai",
       "scale": 0.46,
-      "camo": "gouache",
-      "foundText": "Màu áo dài trắng thanh bạch biểu trưng cho sự thanh tịnh và tinh thần bác ái đại đồng."
+      "camo": "ink",
+      "foundText": "Màu áo dài trắng thanh bạch biểu trưng cho sự thanh tịnh và tinh thần bác ái đại đồng.",
+      "spots": [
+        {
+          "x": 0.355,
+          "y": 0.475,
+          "clue": "Tà áo dài trắng thấp thoáng giữa hàng xe máy đậu dọc mép vườn hoa bên trái Tòa Thánh."
+        }
+      ]
     },
     {
       "id": "white-dove-temple",
@@ -30,7 +37,14 @@
       "spriteType": "dove",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Biểu tượng của tình thương bao la và tinh thần đại đồng bác ái."
+      "foundText": "Biểu tượng của tình thương bao la và tinh thần đại đồng bác ái.",
+      "spots": [
+        {
+          "x": 0.745,
+          "y": 0.615,
+          "clue": "Chú bồ câu trắng đậu trên mái ngói đỏ của dãy nhà dài bên phải sân Tòa Thánh."
+        }
+      ]
     },
     {
       "id": "sacred-lotus-lantern",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "star-lantern",
       "scale": 0.46,
-      "camo": "luminous",
-      "foundText": "Ngọn đèn hoa đăng tỏa ánh sáng ấm áp, biểu trưng cho ngọn đèn trí tuệ soi đường dẫn lối."
+      "camo": "ink",
+      "foundText": "Ngọn đèn hoa đăng tỏa ánh sáng ấm áp, biểu trưng cho ngọn đèn trí tuệ soi đường dẫn lối.",
+      "spots": [
+        {
+          "x": 0.39,
+          "y": 0.65,
+          "clue": "Đèn hoa rực rỡ treo trên cột đèn đường, cạnh mấy chiếc xe máy trước dãy nhà dài bên trái."
+        }
+      ]
     },
     {
       "id": "holy-scroll",
@@ -55,8 +76,15 @@
       "score": 120,
       "spriteType": "lotus-bud",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Búp sen hồng dâng lên trước bệ thờ Thiên Nhãn, tượng trưng cho tâm hồn thanh khiết và lòng thành kính."
+      "camo": "chameleon",
+      "foundText": "Búp sen hồng dâng lên trước bệ thờ Thiên Nhãn, tượng trưng cho tâm hồn thanh khiết và lòng thành kính.",
+      "spots": [
+        {
+          "x": 0.155,
+          "y": 0.515,
+          "clue": "Búp sen hồng nằm giữa những bồn cỏ cắt tỉa hình học trong khu vườn bên trái."
+        }
+      ]
     },
     {
       "id": "temple-teacup",
@@ -69,7 +97,14 @@
       "spriteType": "teacup",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Tách trà ấm tiếp đãi khách đạo hữu, thể hiện nét văn hóa hiếu khách và hòa ái chốn Thánh địa."
+      "foundText": "Tách trà ấm tiếp đãi khách đạo hữu, thể hiện nét văn hóa hiếu khách và hòa ái chốn Thánh địa.",
+      "spots": [
+        {
+          "x": 0.865,
+          "y": 0.455,
+          "clue": "Tách trà thanh đạm đặt trên lan can đá trong khu vườn cây xanh phía bên phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -137,6 +172,20 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Đôi cánh lấp lánh phản chiếu ánh sáng muôn màu từ các ô kính màu."
+    },
+    {
+      "id": "clue-small-bell",
+      "name": "Chiếc Chuông Khắc Tọa Độ",
+      "clue": "Chiếc chuông nhỏ vẽ lẫn vào tán cây rậm phía trên bên phải.",
+      "x": 0.76,
+      "y": 0.32,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "temple-bell",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Chuông khắc một dòng số: 8°37′ Bắc, 104°43′ Đông."
     }
   ]
 }

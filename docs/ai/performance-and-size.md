@@ -49,7 +49,9 @@ mỗi giây, mở hộp thoại.
 7. Trên web, `BlendMode.Multiply` có thể khiến CanvasKit sao chép cả vùng đích **cho mỗi sprite**. Ô trong sheet vì vậy
    được vẽ trên nền trắng rồi dùng **Modulate**; Multiply và `saveLayer` cho từng sprite chỉ dùng khi sprite phải vẽ
    từ hình. `saveLayer` rất đắt. Hiện nó chỉ có ở: bóng tối ban đêm (`book.ts`), kính mờ (`loupe.ts`), đốm sáng và
-   sprite vẽ từ hình (`sprites.ts`). Đừng thêm layer cho thứ vẽ mỗi khung nếu không bắt buộc.
+   sprite vẽ từ hình (`sprites.ts`), nước rửa của trang ngày (`book.ts` `drawWash`, giới hạn trong phần trang đang thấy; đo
+   10/2026: +~1 lệnh vẽ mỗi khung, fps và p95 không đổi, lật trang ×4 chậm không tệ hơn). Đừng thêm layer cho thứ vẽ mỗi
+   khung nếu không bắt buộc.
 8. **Hiệu ứng mới xuất hiện "lần đầu"** (dấu mới, radar kiểu mới, hiệu ứng lật…) sẽ làm GPU biên dịch shader và khựng
    một khung. Hãy thêm trạng thái đó vào `warmFrames()` trong `useWarmUp.ts`, để nó được vẽ ẩn trước khi người chơi
    gặp.
@@ -63,11 +65,13 @@ mỗi giây, mở hộp thoại.
    Trang lân cận hẹn sau khi ổn định (`PREPARE_MS = 120`), mỗi lần một trang; đồng hồ vụ án dừng khi chờ/lật.
 2. Cache có sẵn, hãy dùng, đừng tạo cache song song:
    - tranh đã giải mã: `images` (module-level, khóa `artIdOf`, tối đa `MAX_IMAGES = 5`);
-   - phân tích tranh: `analyses` (khóa id trang, đọc pixel một lần);
-   - trang đã dựng: `scenes`, chỉ dựng lại khi `loupe`, `compact` hoặc `density` đổi. `atlasDensity` làm tròn theo bước
+   - phân tích tranh: `analyses` (khóa `layoutKey`, đọc pixel một lần mỗi cách sắp đặt);
+   - trang đã dựng: `scenes` (khóa `layoutKey`: cùng trang, vật ở chỗ khác là một scene khác; chỉ giữ các `layoutKey` đang
+     cần: trang này, đích lật, `preload`), chỉ dựng lại khi `loupe`,
+     `compact` hoặc `density` đổi. `atlasDensity` làm tròn theo bước
      0.25 để thay đổi layout nhỏ không dựng lại sheet. **Đừng thêm dependency hay đổi liên tục vào các memo này.**
-3. Trang sắp tới được **preload** (`GameScreen.preload`). Mở đường điều hướng mới (nhảy trang, đổi nước…) thì thêm đích
-   vào `preload` để lật không bị khựng.
+3. Trang sắp tới được **preload** (`GameScreen.preload`, qua `nav.preparedPage`: đúng trang lượt lật sẽ mở, seed và sinh
+   vật vàng định trước). Mở đường điều hướng mới (nhảy trang, đổi nước…) thì thêm đích vào `preload` để lật không bị khựng.
 4. Ảnh của trang lân cận được vẽ thành 1 pixel vô hình mỗi khung (`F.warm`) để luôn nằm trên GPU. Danh sách này phải
    giữ **cùng một mảng** khi nội dung không đổi (xem `warmRef` trong `usePagesAround`), nếu không worklet khung hình sẽ
    bị dựng lại.

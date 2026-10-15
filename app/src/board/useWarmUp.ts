@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { SkPicture } from '@shopify/react-native-skia';
 import { motionNow } from '../core/motion';
-import { CAMO_INVISIBLE, type FoundInfo, type FrameState, type SceneData } from './render';
+import { MAX_ZOOM } from './constants';
+import { CAMO_INVISIBLE, LENS_PLAIN, type FoundInfo, type FrameState, type SceneData } from './render';
 import { snapshotPage } from './scene/snapshotPage';
 import type { Camera } from './useCamera';
 
@@ -28,18 +29,22 @@ function warmFrames(S: SceneData, camera: Camera): FrameState[] {
   // Everything found a moment ago: hidden sprites still fading out, found ones blooming, stamps
   const found: Record<string, FoundInfo> = {};
   for (const m of S.marks) found[m.id] = { t: now - 300, x: m.x, y: m.y, flip: 1 };
-  // The loupe over a sprite (invisible ink if there is some: it has its own glow)
-  const target = S.sprites.find((sp) => sp.camo === CAMO_INVISIBLE) ?? S.sprites[0];
+  // The loupe over a sprite (invisible ink if there is some: it has its own glow; a tool's own the
+  // more so, with the prism's band)
+  const target = S.sprites.find((sp) => sp.camo === CAMO_INVISIBLE && sp.lens !== LENS_PLAIN) ?? S.sprites.find((sp) => sp.camo === CAMO_INVISIBLE) ?? S.sprites[0];
   const base: FrameState = {
     now,
     width: w,
     height: h,
     s,
+    zoom: MAX_ZOOM, // the twin lens' tiny drawings are drawn too
     tx,
     ty,
     lx: target ? target.x * s + tx : w / 2,
     ly: target ? target.y * s + ty : h / 2,
     found,
+    // Day pages: the wash with every patch being washed clear (its layer and soft holes)
+    reveal: S.night ? -1 : 0,
     radar: S.marks[0]?.id ?? null,
     fogStart: now - 500,
     nudge: target ? { x: target.x + 200, y: target.y, t: now - 400 } : null,

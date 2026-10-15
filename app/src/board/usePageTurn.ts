@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
+import { layoutKey } from '../core/layout';
 import { PAGE_TURN_MS, type Page, type PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
 import { type FoundInfo, type FrameState, type PageFlip, type SceneData } from './render';
@@ -39,6 +40,10 @@ export function usePageTurn(
   library: SceneLibrary,
   camera: Camera,
   foundNow: () => Record<string, FoundInfo>,
+  /** The wash on the page being left */
+  reveal: SharedValue<number>,
+  /** The wash is wanted: the page opened starts a fresh case, washed unless it is a night page */
+  wash: boolean,
   turning: MutableRefObject<boolean>,
   onComplete: (request: PageTurn) => void
 ): PageTurnState {
@@ -52,16 +57,18 @@ export function usePageTurn(
 
   // The frame as it is on screen, to record a page with (optionally with the camera elsewhere)
   const frameFor = useCallback(
-    (found: Record<string, FoundInfo>, at?: { tx: number; ty: number }): FrameState => ({
+    (found: Record<string, FoundInfo>, washed: number, at?: { tx: number; ty: number }): FrameState => ({
       now: motionNow(),
       width: dims.value.w,
       height: dims.value.h,
       s: s.value,
+      zoom: s.value / dims.value.fit,
       tx: at ? at.tx : tx.value,
       ty: at ? at.ty : ty.value,
       lx: lx.value,
       ly: ly.value,
       found,
+      reveal: washed,
       radar: null,
       fogStart: 0,
       nudge: null,
@@ -79,12 +86,12 @@ export function usePageTurn(
       const settled = centre(scale);
       return {
         ...pending,
-        to: snapshotPage(next, frameFor({}, settled)),
+        to: snapshotPage(next, frameFor({}, wash && !pending.page.isNight ? 0 : -1, settled)),
         S: next,
         camera: { fromX: tx.value, fromY: ty.value, toX: settled.tx, toY: settled.ty },
       };
     },
-    [centre, frameFor, s, tx, ty]
+    [centre, frameFor, wash, s, tx, ty]
   );
 
   // 1. A turn begins
@@ -96,7 +103,7 @@ export function usePageTurn(
     turnSeen.current = turn;
     setLanded(false);
     const pending: Flip = {
-      from: snapshotPage(shown, frameFor(foundNow())),
+      from: snapshotPage(shown, frameFor(foundNow(), reveal.value)),
       to: null,
       dir: turn.direction,
       S: shown,
@@ -106,7 +113,7 @@ export function usePageTurn(
       source: shown,
     };
     setFlip(openTo(pending, next));
-  }, [turn, shown, frameFor, foundNow, preparedScene, version, openTo]);
+  }, [turn, shown, frameFor, foundNow, reveal, preparedScene, version, openTo]);
 
   // The clock of a turn starts when the page it opens is there. (Never reset it to 0 while a turn
   // is on screen: until React has dropped that turn, the frame would show its first page again —
@@ -130,15 +137,16 @@ export function usePageTurn(
   }, [flipTo, flipDuration, flipStart, request, onComplete]);
 
   // 3. Landed: back to the live page once the game has opened it
+  const pageKey = layoutKey(page);
   useEffect(() => {
     if (!flip || !landed || !scene) return;
     if (turn) return;
-    if (page.id === flip.page.id && flip.camera) {
+    if (pageKey === layoutKey(flip.page) && flip.camera) {
       tx.value = flip.camera.toX;
       ty.value = flip.camera.toY;
     }
     setFlip(null);
-  }, [flip, landed, scene, page.id, turn, tx, ty]);
+  }, [flip, landed, scene, pageKey, turn, tx, ty]);
 
   const flipFrame = useMemo<PageFlip | null>(
     () => (flip ? { from: flip.from, to: flip.to, dir: flip.dir, S: flip.S, duration: flip.duration, camera: flip.camera } : null),

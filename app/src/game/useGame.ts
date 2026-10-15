@@ -23,15 +23,19 @@ export function useGame({ browsing }: { browsing: boolean }) {
       isTurning: nav.turn !== null,
       nextPage: nav.nextPage,
       night: nav.isNight ? undefined : nav.ref.night,
+      mode: nav.mode,
     },
     notify
   );
 
   // "Chơi tiếp" comes back to the page the player is in — once they have left the home screen for it
+  // (a page of the book: a daily page or a challenge is a hunt beside it)
   const pageId = nav.page.id;
+  const inBook = nav.mode.kind === 'book';
+  const readyToPlay = !nav.turn && !nav.showPrologue && !nav.showNightIntro && !browsing;
   useEffect(() => {
-    if (!home) progress.recordVisit(pageId);
-  }, [home, pageId]);
+    if (!home && inBook && readyToPlay) progress.recordVisit(pageId);
+  }, [home, pageId, inBook, readyToPlay]);
 
   // The sound switch is saved: a player who muted the game finds it muted next time
   const [soundEnabled, setSoundEnabled] = useState(() => progress.soundEnabled());
@@ -43,7 +47,14 @@ export function useGame({ browsing }: { browsing: boolean }) {
     progress.setSoundEnabled(!soundEnabled);
   }, [soundEnabled]);
 
-  return { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome };
+  // The watercolour wash over the pages (a setting, saved like the sound)
+  const [washEnabled, setWashEnabled] = useState(() => progress.washEnabled());
+  const toggleWash = useCallback(() => {
+    setWashEnabled(!washEnabled);
+    progress.setWashEnabled(!washEnabled);
+  }, [washEnabled]);
+
+  return { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome };
 }
 
 export type Game = ReturnType<typeof useGame>;

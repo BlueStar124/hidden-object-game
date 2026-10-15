@@ -1,50 +1,48 @@
-import type { HiddenObject, SpriteType } from './model';
-import { hashString, rng } from './random';
-
-export interface MigrantSpot {
-  pageId: string;
-  spotId: string;
-  x: number;
-  y: number;
-  radius: number;
-  scale?: number;
-  clue: string;
-}
-
-export interface Migrant {
-  id: string;
-  spriteType: SpriteType;
-  name: string;
-  story: string;
-  spots: MigrantSpot[];
-}
+import type { HiddenObject, Migrant, Page } from './model';
+import { draw, hashString, rng } from './random';
 
 /**
- * Computes which migrants are visiting the specified page on a given day.
- * Each migrant picks a spot deterministically based on seed `hashString(id + ':' + day)`.
+ * Travelling creatures: each day, every migrant is on one page of the books — the same page for every
+ * player on that day, drawn from the date. Meeting one everywhere it goes tells its story. Its object on
+ * a page is an optional critter whose id (`migrant-<id>`) stays the same, so finds are saved per page.
  */
-export function migrantsOn(pageId: string, day: string, migrants: readonly Migrant[]): HiddenObject[] {
-  const result: HiddenObject[] = [];
+
+/** The id of a migrant's object, on any page it visits. */
+export const migrantObjectId = (m: Migrant) => `migrant-${m.id}`;
+
+/** Where a migrant is on a day ('2026-10-12'): the index of one of its spots. */
+export const migrantSpot = (m: Migrant, day: string) => draw(rng(hashString(`${m.id}:${day}`)), m.spots.length);
+
+/** The page with the migrants visiting it that day (the page itself when none does). */
+export function withVisitors(page: Page, day: string, migrants: readonly Migrant[]): Page {
+  const visitors: HiddenObject[] = [];
   for (const m of migrants) {
-    if (m.spots.length === 0) continue;
-    const r = rng(hashString(`${m.id}:${day}`));
-    const chosenIndex = Math.floor(r() * m.spots.length);
-    const spot = m.spots[Math.min(chosenIndex, m.spots.length - 1)];
-    if (spot.pageId === pageId) {
-      result.push({
-        id: `${m.id}@${spot.spotId}`,
-        name: m.name,
-        clue: spot.clue,
-        x: spot.x,
-        y: spot.y,
-        radius: spot.radius,
-        scale: spot.scale,
-        spriteType: m.spriteType,
-        score: 150,
-        isBonus: true,
-      });
-    }
+    const spot = m.spots[migrantSpot(m, day)];
+    if (spot.pageId !== page.id) continue;
+    visitors.push({
+      id: migrantObjectId(m),
+      name: m.name,
+      clue: spot.clue,
+      x: spot.x,
+      y: spot.y,
+      radius: spot.radius ?? 0.03,
+      score: 100,
+      isBonus: true,
+      spriteType: m.spriteType,
+      scale: spot.scale ?? 0.5,
+      flip: spot.flip,
+      camo: 'chameleon',
+      foundText: m.greeting,
+    });
   }
-  return result;
+  if (!visitors.length) return page;
+  // A visit of its own: the board's caches must tell it apart (core/layout.layoutKey)
+  return { ...page, objects: [...page.objects, ...visitors], layout: `${page.layout ?? ''}v${visitors.map((v) => v.id).join('+')}` };
 }
 
+/** How many of a migrant's places the player has met it in; `seen` gives the objects found on a page. */
+export function migrantProgress(m: Migrant, seen: (pageId: string) => string[]): { met: number; total: number } {
+  const id = migrantObjectId(m);
+  const pages = [...new Set(m.spots.map((s) => s.pageId))];
+  return { met: pages.filter((p) => seen(p).includes(id)).length, total: pages.length };
+}

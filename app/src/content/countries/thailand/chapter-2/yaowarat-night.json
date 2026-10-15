@@ -4,8 +4,8 @@
   "title": "Yaowarat Phố Đêm Lên Đèn",
   "subtitle": "Trang 5 · Đêm — Kinh đô ánh sáng neon & hương vị khói bếp",
   "art": "yaowarat",
-  "timeLimit": 240,
-  "storyClue": "Khi màn đêm buông xuống, Yaowarat biến thành một biển ánh sáng neon rực rỡ với hàng trăm biển hiệu chữ Hán đỏ rực và vàng óng. Khói bếp bốc lên nghi ngút từ các quầy chảo wok. Hãy dùng đèn pin soi qua bóng tối phố đêm!",
+  "timeLimit": 285,
+  "storyClue": "Khi màn đêm buông xuống, Yaowarat biến thành một biển ánh sáng neon rực rỡ với hàng trăm biển hiệu chữ Hán đỏ rực và vàng óng. Khói bếp bốc lên nghi ngút từ các quầy chảo wok. Hãy dùng đèn pin soi qua bóng tối phố đêm! Kỳ lạ thay, vài món đồ ban ngày đã rời chỗ: thẻ manh mối kể ban ngày chúng ở đâu, hãy tìm xem đêm nay chúng nằm đâu.",
   "nightLights": [
     {
       "x": 0.28,
@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-siamese-cat",
+      "spots": [
+        {
+          "x": 0.39,
+          "y": 0.38,
+          "clue": "Chú mèo Xiêm cuộn mình trên ban công tầng trên bên trái, cạnh biển hiệu vàng dựng dọc."
+        }
+      ],
       "name": "Mèo Xiêm Trên Mui Xe",
       "clue": "Chú mèo Xiêm nằm trên mui chiếc tuk-tuk lớn, đôi mắt xanh lóe sáng dưới đèn lồng.",
       "x": 0.58,
@@ -90,6 +97,13 @@
     },
     {
       "id": "night-noodles",
+      "spots": [
+        {
+          "x": 0.81,
+          "y": 0.49,
+          "clue": "Bát mì được đặt lên mái xe hàng rong ngoài cùng bên phải, dưới chùm đèn lồng đỏ."
+        }
+      ],
       "name": "Bát Mì Đêm",
       "clue": "Bát mì nóng đặt trên quầy xe hàng rong bên phải, dưới dãy đèn lồng đỏ.",
       "x": 0.81,
@@ -103,6 +117,13 @@
     },
     {
       "id": "night-tuktuk",
+      "spots": [
+        {
+          "x": 0.41,
+          "y": 0.67,
+          "clue": "Chiếc tuk-tuk nhỏ nép trên lòng đường bên trái gáy sổ, trước dãy cửa tiệm."
+        }
+      ],
       "name": "Tuk-tuk Chạy Đêm",
       "clue": "Chiếc tuk-tuk nhỏ chạy dưới tấm biển hiệu vàng dọc ở cuối phố bên trái.",
       "x": 0.33,
@@ -116,6 +137,13 @@
     },
     {
       "id": "night-thai-tea",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.35,
+          "clue": "Túi trà sữa treo cạnh khung cửa tầng trên ở phía phải, cao hơn dãy đèn lồng."
+        }
+      ],
       "name": "Túi Trà Sữa Khuya",
       "clue": "Túi trà sữa Thái treo bên hông xe hàng rong đầu tiên, cạnh chiếc tuk-tuk lớn.",
       "x": 0.69,
@@ -184,6 +212,48 @@
       "scale": 0.55,
       "camo": "ink",
       "foundText": "Cá xiêm đực phải nuôi riêng từng hũ, vì gặp nhau là chúng đánh nhau ngay."
+    },
+    {
+      "id": "moved-shop-goldfish",
+      "name": "Bình Cá Lên Ban Công",
+      "clue": "Bình cá vàng được mang lên ban công tầng hai của dãy nhà phố bên phải.",
+      "x": 0.66,
+      "y": 0.45,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "goldfish",
+      "scale": 0.68,
+      "camo": "ink",
+      "dayTwin": "shop-goldfish",
+      "foundText": "Chủ tiệm mang bình cá lên lầu cho cá ngủ yên, tránh xa ồn ào phố đêm."
+    },
+    {
+      "id": "moved-cart-mortar",
+      "name": "Cối Giã Dọn Vào Hiên",
+      "clue": "Chiếc cối giã som tam được dọn vào hiên tiệm bên trái, dưới những tấm biển chữ Hoa.",
+      "x": 0.46,
+      "y": 0.53,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "mortar-pestle",
+      "scale": 0.68,
+      "camo": "ink",
+      "dayTwin": "cart-mortar",
+      "foundText": "Xe đẩy đã về, chiếc cối nghỉ dưới mái hiên chờ phiên chợ sáng mai."
+    },
+    {
+      "id": "moved-stool-mango-rice",
+      "name": "Đĩa Xôi Xoài Bỏ Quên",
+      "clue": "Đĩa xôi xoài ai đó để quên trên vỉa hè lát gạch, ngay trước mũi chiếc tuk-tuk lớn.",
+      "x": 0.54,
+      "y": 0.73,
+      "radius": 0.044,
+      "score": 150,
+      "spriteType": "mango-sticky-rice",
+      "scale": 0.62,
+      "camo": "ink",
+      "dayTwin": "stool-mango-rice",
+      "foundText": "Xôi xoài còn thơm nước cốt dừa: món tráng miệng nửa đêm của bác tài tuk-tuk."
     }
   ]
 }

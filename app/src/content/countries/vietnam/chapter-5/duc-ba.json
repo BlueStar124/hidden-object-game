@@ -16,8 +16,15 @@
       "score": 150,
       "spriteType": "ao-dai",
       "scale": 0.46,
-      "camo": "gouache",
-      "foundText": "Tà áo dài duyên dáng bên tường gạch đỏ trăm năm của vương cung thánh đường."
+      "camo": "ink",
+      "foundText": "Tà áo dài duyên dáng bên tường gạch đỏ trăm năm của vương cung thánh đường.",
+      "spots": [
+        {
+          "x": 0.73,
+          "y": 0.63,
+          "clue": "Tà áo dài duyên dáng dạo trên vỉa hè cạnh chiếc xe buýt, trước hàng rào Bưu điện bên phải."
+        }
+      ]
     },
     {
       "id": "cathedral-cyclo",
@@ -30,7 +37,14 @@
       "spriteType": "vintage-camera",
       "scale": 0.52,
       "camo": "ink",
-      "foundText": "Công trình đối diện là Bưu điện thành phố do kiến trúc sư Gustave Eiffel thiết kế."
+      "foundText": "Công trình đối diện là Bưu điện thành phố do kiến trúc sư Gustave Eiffel thiết kế.",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.52,
+          "clue": "Chiếc máy ảnh cổ nằm trên vỉa hè rợp bóng cây, đối diện mặt bên phải của nhà thờ."
+        }
+      ]
     },
     {
       "id": "wax-seal-letter",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "banh-mi",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Món ăn quen thuộc đồng hành cùng người dân Sài Gòn trên từng góc phố."
+      "camo": "ink",
+      "foundText": "Món ăn quen thuộc đồng hành cùng người dân Sài Gòn trên từng góc phố.",
+      "spots": [
+        {
+          "x": 0.19,
+          "y": 0.535,
+          "clue": "Ổ bánh mì giòn rụm đặt dưới gốc cây lớn bên lối đi trái, cạnh mái ngói đỏ của ngôi nhà nhỏ."
+        }
+      ]
     },
     {
       "id": "bell-tower-key",
@@ -56,7 +77,14 @@
       "spriteType": "coffee-phin",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Cà phê bệt Nhà thờ Đức Bà — nét sinh hoạt độc đáo đầy sức sống của người Sài Gòn."
+      "foundText": "Cà phê bệt Nhà thờ Đức Bà — nét sinh hoạt độc đáo đầy sức sống của người Sài Gòn.",
+      "spots": [
+        {
+          "x": 0.16,
+          "y": 0.705,
+          "clue": "Ly cà phê phin đặt trên sân thượng quán nhỏ của tòa nhà mái xanh xám góc dưới bên trái."
+        }
+      ]
     },
     {
       "id": "calligraphy-quill",
@@ -69,7 +97,14 @@
       "spriteType": "dove",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Đàn bồ câu hiền hòa nhặt thóc quanh tượng Đức Mẹ, biểu tượng hòa bình quen thuộc giữa lòng Sài Gòn."
+      "foundText": "Đàn bồ câu hiền hòa nhặt thóc quanh tượng Đức Mẹ, biểu tượng hòa bình quen thuộc giữa lòng Sài Gòn.",
+      "spots": [
+        {
+          "x": 0.6,
+          "y": 0.355,
+          "clue": "Chú bồ câu đậu trên mái ngói đỏ của dãy nhà dài phía sau, bên phải tháp chuông nhà thờ."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -135,8 +170,23 @@
       "isBonus": true,
       "spriteType": "southern-scarf",
       "scale": 0.42,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Chiếc khăn rằn Nam Bộ kẻ ca-rô mộc mạc theo chân các bạn trẻ dạo bước dưới bóng cây xanh mát."
+    },
+    {
+      "id": "clue-cathedral-kite",
+      "name": "Cánh Diều Trên Mái Phố",
+      "clue": "Cánh diều mắc trên những mái nhà phố cũ ở góc trên bên trái.",
+      "x": 0.22,
+      "y": 0.33,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "kite",
+      "scale": 0.42,
+      "rotation": -8,
+      "camo": "chameleon",
+      "foundText": "Đuôi diều ghi: “Còn một chặng nữa thôi. Ta đợi ở cuối con đường.”"
     }
   ]
 }

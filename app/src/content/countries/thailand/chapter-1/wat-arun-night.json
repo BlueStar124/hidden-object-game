@@ -102,8 +102,8 @@
       "foundText": "Mắt cá sấu phản chiếu ánh đèn pin đỏ rực — mẹo của người đi tìm cá sấu ban đêm!",
       "spots": [
         {
-          "x": 0.45,
-          "y": 0.68,
+          "x": 0.455,
+          "y": 0.7,
           "clue": "Đôi mắt cá sấu lấp lánh sát chân bờ kè cạnh mạn phà ở giữa dòng sông."
         }
       ]
@@ -149,7 +149,7 @@
       "foundText": "Người Thái xưa tin mèo Xiêm mang lại may mắn cho ngôi nhà nuôi nó.",
       "spots": [
         {
-          "x": 0.35,
+          "x": 0.353,
           "y": 0.62,
           "clue": "Chú mèo Xiêm nằm rình chuột trên nóc mái đình bến tàu."
         }
@@ -169,8 +169,8 @@
       "foundText": "Ngọn đèn nhỏ soi lối cho người lái đò cập bến trong đêm.",
       "spots": [
         {
-          "x": 0.72,
-          "y": 0.63,
+          "x": 0.714,
+          "y": 0.631,
           "clue": "Ngọn đèn dầu đất nung leo lét trên gờ đá bờ kè bên phải."
         }
       ]
@@ -189,9 +189,9 @@
       "foundText": "Dù mang tên \"bọ đèn\", cái mõm đỏ của nó chẳng hề phát sáng!",
       "spots": [
         {
-          "x": 0.28,
-          "y": 0.55,
-          "clue": "Chú bọ đèn mõm đỏ đậu trên thân cây râm mát phía bến đò bên trái."
+          "x": 0.445,
+          "y": 0.568,
+          "clue": "Chú bọ đèn mõm đỏ đậu trên lùm cây râm mát giữa mấy mái điện nhỏ, bên trái tháp chính."
         }
       ]
     },

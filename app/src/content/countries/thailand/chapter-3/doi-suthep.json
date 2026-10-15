@@ -17,7 +17,14 @@
       "spriteType": "temple-bell",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Khách hành hương gõ chuông dọc hành lang chùa để cầu may mắn."
+      "foundText": "Khách hành hương gõ chuông dọc hành lang chùa để cầu may mắn.",
+      "spots": [
+        {
+          "x": 0.88,
+          "y": 0.6,
+          "clue": "Một chiếc chuông đồng lạ treo dưới mái hiên ngôi điện ngoài cùng bên phải, sát chiếc chuông lớn."
+        }
+      ]
     },
     {
       "id": "suthep-umbrella",
@@ -30,7 +37,14 @@
       "spriteType": "paper-umbrella",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Trên đỉnh núi nắng gắt, chiếc ô giấy là người bạn đồng hành của khách hành hương."
+      "foundText": "Trên đỉnh núi nắng gắt, chiếc ô giấy là người bạn đồng hành của khách hành hương.",
+      "spots": [
+        {
+          "x": 0.665,
+          "y": 0.66,
+          "clue": "Chiếc ô giấy Bo Sang ai đó để quên trên sân lát gạch bên phải chân tháp vàng, cạnh bệ đá trắng."
+        }
+      ]
     },
     {
       "id": "roof-peacock",
@@ -43,7 +57,14 @@
       "spriteType": "peacock",
       "scale": 0.85,
       "camo": "chameleon",
-      "foundText": "Tính cả bộ lông đuôi, công lục trống có thể dài tới hơn 2 mét."
+      "foundText": "Tính cả bộ lông đuôi, công lục trống có thể dài tới hơn 2 mét.",
+      "spots": [
+        {
+          "x": 0.452,
+          "y": 0.537,
+          "clue": "Chú công lục đậu trên mái ngôi điện vàng nhỏ nằm sát gáy sổ, phía bên trái ngọn tháp."
+        }
+      ]
     },
     {
       "id": "white-elephant",
@@ -56,7 +77,14 @@
       "spriteType": "elephant",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Tương truyền, một con voi trắng chở xá lợi lên núi và dừng lại đúng nơi dựng chùa Doi Suthep."
+      "foundText": "Tương truyền, một con voi trắng chở xá lợi lên núi và dừng lại đúng nơi dựng chùa Doi Suthep.",
+      "spots": [
+        {
+          "x": 0.715,
+          "y": 0.41,
+          "clue": "Chú voi trắng nhỏ đang leo trên sườn núi mờ sương phía sau ngôi điện vàng bên phải."
+        }
+      ]
     },
     {
       "id": "suthep-kratip",
@@ -69,7 +97,14 @@
       "spriteType": "kratip",
       "scale": 0.7,
       "camo": "ink",
-      "foundText": "Người miền Bắc Thái Lan mang xôi lên chùa dâng lễ vào những ngày rằm."
+      "foundText": "Người miền Bắc Thái Lan mang xôi lên chùa dâng lễ vào những ngày rằm.",
+      "spots": [
+        {
+          "x": 0.325,
+          "y": 0.73,
+          "clue": "Giỏ xôi tre nằm cạnh khóm hoa sứ trắng ở góc dưới bên trái, gần lối vào sân chùa."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -137,6 +172,35 @@
       "scale": 0.55,
       "camo": "chameleon",
       "foundText": "Thằn lằn bay chỉ dài cỡ một gang tay nhưng lượn được xa tới vài chục mét."
+    },
+    {
+      "id": "clue-east-compass",
+      "name": "La Bàn Chỉ Hướng Đông",
+      "clue": "Chiếc la bàn vẽ lẫn vào những tầng vàng của bảo tháp trên núi.",
+      "x": 0.6,
+      "y": 0.43,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "compass",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Kim la bàn bị cố định chỉ về hướng đông. Phía bên kia những dãy núi là Việt Nam."
+    },
+    {
+      "id": "prism-sketch-8",
+      "name": "Nét Vẽ Cầu Vồng 8/9",
+      "clue": "Nét vẽ cầu vồng ẩn trên thân bảo tháp vàng, bên phải chiếc lọng.",
+      "x": 0.62,
+      "y": 0.53,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "sky-lantern",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Khi tóc con bạc, hãy về nhà. Cuốn sổ thuộc về nơi nó bắt đầu.” (8/9)"
     }
   ]
 }

@@ -17,7 +17,14 @@
       "spriteType": "coffee-phin",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Thưởng thức ly cà phê phin nóng hổi trong tiết trời se lạnh phố sương mù."
+      "foundText": "Thưởng thức ly cà phê phin nóng hổi trong tiết trời se lạnh phố sương mù.",
+      "spots": [
+        {
+          "x": 0.19,
+          "y": 0.578,
+          "clue": "Phin cà phê nhôm đặt trên bậc thang nhuộm màu cam của quảng trường, cạnh người đi dạo bên trái."
+        }
+      ]
     },
     {
       "id": "pine-squirrel",
@@ -30,7 +37,14 @@
       "spriteType": "squirrel",
       "scale": 0.42,
       "camo": "chameleon",
-      "foundText": "Rừng thông ba lá bạt ngàn tạo nên không khí mát lành đặc trưng của Đà Lạt."
+      "foundText": "Rừng thông ba lá bạt ngàn tạo nên không khí mát lành đặc trưng của Đà Lạt.",
+      "spots": [
+        {
+          "x": 0.45,
+          "y": 0.435,
+          "clue": "Chú sóc đuôi xù nấp giữa rừng thông tối sẫm phía trên hàng cột đèn, sát gáy cuốn sổ."
+        }
+      ]
     },
     {
       "id": "highland-teacup",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "palm-leaf-fan",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Chiếc quạt nan mộc mạc lưu dấu ký ức bình yên bên lò sưởi của những căn biệt thự cổ xưa xứ sở sương mù."
+      "camo": "chameleon",
+      "foundText": "Chiếc quạt nan mộc mạc lưu dấu ký ức bình yên bên lò sưởi của những căn biệt thự cổ xưa xứ sở sương mù.",
+      "spots": [
+        {
+          "x": 0.615,
+          "y": 0.56,
+          "clue": "Chiếc quạt nan lá cọ bỏ quên trên bậc cấp bên phải quảng trường, cạnh người đang bước xuống."
+        }
+      ]
     },
     {
       "id": "pine-owl",
@@ -56,7 +77,14 @@
       "spriteType": "highland-crossbow",
       "scale": 0.5,
       "camo": "ink",
-      "foundText": "Chiếc nỏ săn bằng gỗ cánh cung dẻo dai, biểu tượng cho tinh thần thượng võ và tài săn bắn của các chàng dũng sĩ cao nguyên."
+      "foundText": "Chiếc nỏ săn bằng gỗ cánh cung dẻo dai, biểu tượng cho tinh thần thượng võ và tài săn bắn của các chàng dũng sĩ cao nguyên.",
+      "spots": [
+        {
+          "x": 0.73,
+          "y": 0.425,
+          "clue": "Chiếc nỏ săn gỗ rừng nằm lẫn giữa hàng thông đen sẫm ngay bên trái nụ hoa kính xanh vàng."
+        }
+      ]
     },
     {
       "id": "garden-butterfly",
@@ -69,7 +97,14 @@
       "spriteType": "gong",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Không gian văn hóa cồng chiêng Tây Nguyên là kiệt tác di sản truyền khẩu của nhân loại."
+      "foundText": "Không gian văn hóa cồng chiêng Tây Nguyên là kiệt tác di sản truyền khẩu của nhân loại.",
+      "spots": [
+        {
+          "x": 0.37,
+          "y": 0.48,
+          "clue": "Chiếc cồng đồng treo cạnh những cột đèn sáng ngay bên phải mái vòm hoa vàng khổng lồ."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -137,6 +172,21 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Mặt hồ Xuân Hương êm đềm như vần thơ của nữ sĩ tài hoa."
+    },
+    {
+      "id": "clue-south-kite",
+      "name": "Cánh Diều Bay Về Phương Nam",
+      "clue": "Cánh diều mắc giữa rừng thông tối phía sau tháp sắt.",
+      "x": 0.62,
+      "y": 0.44,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "kite",
+      "scale": 0.45,
+      "rotation": 12,
+      "camo": "chameleon",
+      "foundText": "Đuôi diều ghi: “Đi về phương Nam, tới nơi đất liền kết thúc.”"
     }
   ]
 }

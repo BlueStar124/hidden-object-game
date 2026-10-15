@@ -1,167 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, { cancelAnimation, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import {
-  CircleCheck,
   ChevronDown,
   ChevronUp,
-  Feather,
-  Footprints,
-  Layers,
   Lock,
-  Microscope,
-  Palette,
   PawPrint,
-  ScanEye,
+  ScrollText,
   Search,
   Sparkles,
-  Stamp,
-  Timer,
-  type LucideIcon,
 } from '../../ui/icons';
 import type { HiddenObject } from '../../core/model';
-import { isMainObject } from '../../core/model';
+import { isCritter, isMainObject } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
+import { useStableCallback } from '../../ui/useStableCallback';
 import { SpriteIcon } from '../../ui/SpriteIcon';
+import { byTool, TOOL_MARKS } from '../../ui/toolMarks';
+import { TOOLS } from '../../content/tools';
 import type { HudLayout } from './HUD';
+import { cardName, cardStyles, cardText, QuestCard } from './QuestCard';
 
 interface QuestPanelProps {
   layout: HudLayout;
   objects: HiddenObject[];
   foundIds: string[];
-  revealedTextIds?: string[];
+  revealedTextIds: string[]; // Cards a hint has read (core/hints)
   activeHintId?: string;
-  onHintObject?: (id: string) => void;
+  onHintObject: (id: string) => void; // Reads an unread card, as a hint
   bottomInset: number;
   insetLeft: number;
   insetRight: number;
 }
 
-interface CamoTrait {
-  key: keyof typeof TRAIT_COLOR;
-  icon: LucideIcon;
-  label: string;
-}
-
-const TRAIT_COLOR = {
-  invisible: '#0284c7',
-  roam: '#0f766e',
-  shy: '#b45309',
-  chameleon: '#4d7c0f',
-  peek: '#7c3aed',
-  tiny: '#be185d',
-  ink: colors.inkFaint,
-};
-
-/** How a target is hidden, so players know what kind of searching it takes. */
-function camoTrait(obj: HiddenObject): CamoTrait | null {
-  if (!obj.spriteType || obj.spriteType === 'seal') return null;
-  if (obj.camo === 'invisible') return { key: 'invisible', icon: ScanEye, label: 'Mực tàng hình · chỉ hiện qua kính lúp' };
-  if (obj.roam) return { key: 'roam', icon: Footprints, label: 'Di chuyển liên tục · bắt đúng lúc' };
-  if (obj.shy) return { key: 'shy', icon: Timer, label: 'Nhút nhát · thỉnh thoảng mới ló ra' };
-  if (obj.camo === 'chameleon') return { key: 'chameleon', icon: Palette, label: 'Đổi màu theo nền' };
-  if (obj.occluder) return { key: 'peek', icon: Layers, label: 'Nấp sau vật' };
-  if ((obj.scale ?? 1) <= 0.45) return { key: 'tiny', icon: Microscope, label: 'Tí hon' };
-  return { key: 'ink', icon: Feather, label: 'Hòa vào nét vẽ' };
-}
-
-const QuestCard: React.FC<{
-  obj: HiddenObject;
-  found: boolean;
-  revealed: boolean;
-  hinted: boolean;
-  expanded: boolean;
-  compact: boolean;
-  width: number;
-  onPress: () => void;
-}> = ({ obj, found, revealed, hinted, expanded, compact, width, onPress }) => {
-  const trait = camoTrait(obj);
-  const bounce = useSharedValue(0);
-  useEffect(() => {
-    if (hinted) bounce.value = withRepeat(withTiming(-4, { duration: 1000 }), -1, true);
-    else {
-      cancelAnimation(bounce);
-      bounce.value = withTiming(0, { duration: 150 });
-    }
-  }, [hinted, bounce]);
-  const style = useAnimatedStyle(() => ({ transform: [{ translateY: bounce.value }] }));
-
-  return (
-    <Animated.View style={style}>
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={
-          found
-            ? `${obj.name}. ${obj.foundText ?? 'Đã tìm thấy!'}`
-            : revealed
-            ? `${obj.name}. ${obj.clue}`
-            : 'Manh mối ẩn. Chạm để giải mã tên và manh mối.'
-        }
-        style={[
-          styles.card,
-          { width },
-          compact && styles.cardCompact,
-          !revealed && !found && styles.cardUnrevealed,
-          found && styles.cardFound,
-          hinted && styles.cardHint,
-        ]}
-      >
-        <View style={[styles.thumb, compact && styles.thumbCompact]}>
-          {obj.spriteType && obj.spriteType !== 'seal' ? (
-            // Only the silhouette until found — the colours are part of the surprise
-            <SpriteIcon type={obj.spriteType} size={compact ? 22 : 28} revealed={found} />
-          ) : (
-            <Stamp size={20} color={colors.crimson} opacity={0.75} />
-          )}
-          {found && (
-            <View style={styles.check}>
-              <CircleCheck size={14} color={colors.emerald} />
-            </View>
-          )}
-        </View>
-        <View style={styles.cardInfo}>
-          {trait && !compact && revealed && (
-            <View style={[styles.trait, found && { opacity: 0.6 }]}>
-              <trait.icon size={10} color={TRAIT_COLOR[trait.key]} />
-              <Text style={[styles.traitText, { color: TRAIT_COLOR[trait.key] }]} numberOfLines={1}>
-                {trait.label}
-              </Text>
-            </View>
-          )}
-          <Text
-            style={[
-              styles.name,
-              compact && { fontSize: 13 },
-              found && styles.nameFound,
-              !revealed && !found && styles.nameHidden,
-            ]}
-            numberOfLines={1}
-          >
-            {revealed ? obj.name : '???'}
-          </Text>
-          {(!compact || expanded) && (
-            <Text
-              style={[styles.clue, !revealed && !found && styles.clueHidden]}
-              numberOfLines={expanded ? undefined : 2}
-            >
-              {revealed
-                ? (found ? obj.foundText || 'Đã tìm thấy!' : obj.clue)
-                : 'Chạm thẻ hoặc bấm Gợi Ý để giải mã'}
-            </Text>
-          )}
-        </View>
-      </Pressable>
-    </Animated.View>
-  );
-};
 
 // Memoised: the game re-renders every second for its clock, the clue cards need not follow
 export const QuestPanel = React.memo<QuestPanelProps>(({
   layout,
   objects,
   foundIds,
-  revealedTextIds = [],
+  revealedTextIds: readIds,
   activeHintId,
   onHintObject,
   bottomInset,
@@ -176,13 +52,23 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
 
   const normal = objects.filter(isMainObject);
   const secret = objects.find((o) => o.isSecret);
-  const critters = objects.filter((o) => o.isBonus);
+  const critters = objects.filter(isCritter);
+  const clues = objects.filter((o) => o.isClue);
+  const toolFinds = byTool(objects);
   const normalFound = normal.filter((o) => foundIds.includes(o.id)).length;
   const crittersFound = critters.filter((o) => foundIds.includes(o.id)).length;
+  const cluesFound = clues.filter((o) => foundIds.includes(o.id)).length;
   const secretFound = secret ? foundIds.includes(secret.id) : false;
 
   // Long clues are clipped: tapping a card reveals the whole text
   const toggle = (id: string) => setExpanded((cur) => (cur === id ? null : id));
+  // Tapping a card not read yet reads it (a hint's first step); afterwards a tap only opens and
+  // closes it, so reading a long clue never costs anything
+  // Stable: the memoised cards re-render only when what they show changes
+  const press = useStableCallback((id: string) => {
+    if (!foundIds.includes(id) && !readIds.includes(id)) onHintObject(id);
+    toggle(id);
+  });
   const expandedObj = expanded ? objects.find((o) => o.id === expanded) : undefined;
 
   // The landscape clue bubble closes by itself after a few seconds
@@ -210,11 +96,42 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
           {wide && <Text style={styles.critterLabel}>SINH VẬT ẨN NẤP</Text>}
           <View style={styles.slots}>
             {critters.map((o) => (
-              <SpriteIcon key={o.id} type={o.spriteType} size={17} revealed={foundIds.includes(o.id)} />
+              // A golden critter on this visit: its slot glows, so the player knows to look for it
+              <SpriteIcon key={o.id} type={o.spriteType} size={17} revealed={foundIds.includes(o.id)} glow={o.rare} />
             ))}
           </View>
           <Text style={styles.critterCount}>
             {crittersFound}/{critters.length}
+          </Text>
+        </View>
+      )}
+      {toolFinds.map(([tool, finds]) => {
+        // What the player's tools reveal here (invisible ink, the prism's drawings…)
+        const { icon: Icon, color } = TOOL_MARKS[tool];
+        const spotted = finds.filter((o) => foundIds.includes(o.id)).length;
+        return (
+          <View
+            key={tool}
+            style={[styles.secret, spotted === finds.length ? styles.secretOpen : styles.secretLocked]}
+            accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${finds.length}`}
+          >
+            <Icon size={13} color={color} />
+            {wide && <Text style={[styles.secretText, { color }]}>{TOOLS[tool].badge.toUpperCase()}</Text>}
+            <Text style={[styles.secretText, { color }]}>
+              {spotted}/{finds.length}
+            </Text>
+          </View>
+        );
+      })}
+      {clues.length > 0 && (
+        <View
+          style={[styles.secret, cluesFound === clues.length ? styles.secretOpen : styles.secretLocked]}
+          accessibilityLabel={`Mảnh manh mối của chương: ${cluesFound} trên ${clues.length}`}
+        >
+          <ScrollText size={13} color={cluesFound === clues.length ? '#854d0e' : colors.earth} />
+          {wide && <Text style={[styles.secretText, { color: colors.earth }]}>MẢNH MANH MỐI</Text>}
+          <Text style={[styles.secretText, { color: colors.earth }]}>
+            {cluesFound}/{clues.length}
           </Text>
         </View>
       )}
@@ -240,57 +157,39 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
       contentContainerStyle={styles.cards}
       style={compact && { flex: 1 }}
     >
-      {normal.map((obj) => {
-        const isFound = foundIds.includes(obj.id);
-        const isRevealed = isFound || revealedTextIds.includes(obj.id);
-        return (
-          <QuestCard
-            key={obj.id}
-            obj={obj}
-            found={isFound}
-            revealed={isRevealed}
-            hinted={activeHintId === obj.id}
-            expanded={grows && expanded === obj.id}
-            compact={compact}
-            width={grows && expanded === obj.id ? cardWidth + 90 : cardWidth}
-            onPress={() => {
-              if (!isFound && onHintObject) {
-                onHintObject(obj.id);
-              }
-              toggle(obj.id);
-            }}
-          />
-        );
-      })}
+      {normal.map((obj) => (
+        <QuestCard
+          key={obj.id}
+          obj={obj}
+          found={foundIds.includes(obj.id)}
+          read={readIds.includes(obj.id)}
+          hinted={activeHintId === obj.id}
+          expanded={grows && expanded === obj.id}
+          compact={compact}
+          width={grows && expanded === obj.id ? cardWidth + 90 : cardWidth}
+          onPress={press}
+        />
+      ))}
       {secret && (
         <Pressable
-          onPress={() => {
-            if (!secretFound && onHintObject) {
-              onHintObject(secret.id);
-            }
-            toggle(secret.id);
-          }}
+          onPress={() => press(secret.id)}
           style={[
-            styles.card,
+            cardStyles.card,
             { width: grows && expanded === secret.id ? cardWidth + 90 : cardWidth },
-            compact && styles.cardCompact,
+            compact && cardStyles.cardCompact,
             secretFound ? styles.secretCardFound : styles.secretCard,
-            activeHintId === secret.id && styles.cardHint,
+            activeHintId === secret.id && cardStyles.cardHint,
           ]}
         >
           {secretFound ? <Sparkles size={18} color="#ca8a04" /> : <Lock size={16} color={colors.inkFaint} />}
           {secretFound && secret.spriteType && <SpriteIcon type={secret.spriteType} size={compact ? 22 : 28} glow />}
-          <View style={styles.cardInfo}>
-            <Text style={[styles.name, compact && { fontSize: 13 }]} numberOfLines={1}>
-              {secretFound || revealedTextIds.includes(secret.id) ? secret.name : '??? Vật Phẩm Bí Mật'}
+          <View style={cardStyles.cardInfo}>
+            <Text style={[cardStyles.name, compact && { fontSize: 13 }]} numberOfLines={1}>
+              {cardName(secret, secretFound, readIds.includes(secret.id))}
             </Text>
             {grows && (
-              <Text style={styles.clue} numberOfLines={expanded === secret.id ? undefined : 2}>
-                {secretFound
-                  ? secret.foundText
-                  : revealedTextIds.includes(secret.id)
-                  ? secret.clue
-                  : SECRET_CLUE}
+              <Text style={cardStyles.clue} numberOfLines={expanded === secret.id ? undefined : 2}>
+                {cardText(secret, secretFound, readIds.includes(secret.id))}
               </Text>
             )}
           </View>
@@ -327,22 +226,8 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
         {expandedObj && (
           // Read-only and touch-through: it floats over the sketchbook, whose taps must still land
           <View pointerEvents="none" style={[styles.bubble, { left: insetLeft + 10, right: insetRight + 10 }]}>
-            <Text style={styles.bubbleName}>
-              {expandedObj.isSecret && !found
-                ? (revealedTextIds.includes(expandedObj.id) ? expandedObj.name : '??? Vật Phẩm Bí Mật')
-                : (!found && !revealedTextIds.includes(expandedObj.id))
-                ? '???'
-                : expandedObj.name}
-            </Text>
-            <Text style={styles.bubbleText}>
-              {found
-                ? expandedObj.foundText || 'Đã tìm thấy!'
-                : expandedObj.isSecret
-                ? (revealedTextIds.includes(expandedObj.id) ? expandedObj.clue : SECRET_CLUE)
-                : (!revealedTextIds.includes(expandedObj.id))
-                ? 'Chạm thẻ hoặc bấm Gợi Ý để giải mã manh mối…'
-                : expandedObj.clue}
-            </Text>
+            <Text style={styles.bubbleName}>{cardName(expandedObj, found, readIds.includes(expandedObj.id))}</Text>
+            <Text style={styles.bubbleText}>{cardText(expandedObj, found, readIds.includes(expandedObj.id))}</Text>
           </View>
         )}
         {counter}
@@ -360,7 +245,6 @@ export const QuestPanel = React.memo<QuestPanelProps>(({
   );
 });
 
-const SECRET_CLUE = 'Vật được giấu kỹ nhất trang — hãy rê kính lúp thật chậm.';
 
 const styles = StyleSheet.create({
   shell: {
@@ -460,6 +344,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    // Narrow upright phones: the badges go onto a second line rather than off the screen
+    flexShrink: 1,
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
   },
   critters: {
     flexDirection: 'row',
@@ -517,85 +405,6 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     alignItems: 'stretch',
   },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: 10,
-    minHeight: 58,
-  },
-  cardCompact: {
-    paddingVertical: 4,
-    minHeight: 38,
-  },
-  cardFound: {
-    backgroundColor: '#f8faf8',
-    borderColor: '#bbf7d0',
-    opacity: 0.88,
-  },
-  cardHint: {
-    borderColor: colors.gold,
-    backgroundColor: '#fffdf5',
-    shadowColor: colors.gold,
-    shadowOpacity: 0.45,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 0 },
-    elevation: 4,
-  },
-  thumb: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  thumbCompact: {
-    width: 24,
-    height: 24,
-  },
-  check: {
-    position: 'absolute',
-    right: -5,
-    bottom: -4,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-  },
-  cardInfo: {
-    flex: 1,
-    minWidth: 0,
-    gap: 2,
-  },
-  trait: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-  },
-  traitText: {
-    flexShrink: 1,
-    fontSize: 8.5,
-    fontWeight: '700',
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-  },
-  name: {
-    fontFamily: fonts.displaySemiBold,
-    fontSize: 14,
-    color: colors.ink,
-  },
-  nameFound: {
-    textDecorationLine: 'line-through',
-    color: colors.emerald,
-  },
-  clue: {
-    fontFamily: fonts.body,
-    fontSize: 10.5,
-    lineHeight: 13.5,
-    color: colors.inkSoft,
-  },
   secretCard: {
     backgroundColor: '#faf6f0',
     borderStyle: 'dashed',
@@ -603,19 +412,5 @@ const styles = StyleSheet.create({
   secretCardFound: {
     backgroundColor: '#fefce8',
     borderColor: '#fde047',
-  },
-  nameHidden: {
-    color: colors.inkSoft,
-    letterSpacing: 2,
-    fontWeight: '700',
-  },
-  clueHidden: {
-    color: colors.inkFaint,
-    fontStyle: 'italic',
-    fontSize: 9.5,
-  },
-  cardUnrevealed: {
-    backgroundColor: '#faf8f5',
-    borderColor: '#e7e0d5',
   },
 });

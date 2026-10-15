@@ -22,7 +22,7 @@
         {
           "x": 0.48,
           "y": 0.47,
-          "clue": "Chú sóc lông xù nhảy sang nhánh cây trung tâm vươn bóng mát."
+          "clue": "Chú sóc lông xù nhảy sang nhánh ngoài cùng bên phải của tán cây Rain Tree."
         }
       ]
     },
@@ -62,7 +62,7 @@
         {
           "x": 0.62,
           "y": 0.66,
-          "clue": "Bình mực và bút lông ngỗng đặt bên mép trang sổ phía dưới gốc cây."
+          "clue": "Bình mực và bút lông ngỗng nằm ngay đầu dòng nhật ký viết tay ở trang bên phải."
         }
       ]
     },
@@ -102,10 +102,10 @@
       "foundText": "Bậc thầy ngụy trang số một: loài bướm đêm có đôi cánh giống hệt lá khô, kể cả những đường gân lá!",
       "spots": [
         {
-          "x": 0.68,
-          "y": 0.52,
+          "x": 0.712,
+          "y": 0.548,
           "rotation": -25,
-          "clue": "Bướm đêm giả lá bám trên cành nhánh ngả về phía cuốn sổ."
+          "clue": "Chiếc \"lá\" biết chớp mắt giờ đậu ngay cuống chiếc lá khô, dưới miếng băng keo."
         }
       ]
     },
@@ -192,6 +192,36 @@
       "rotation": 70,
       "camo": "ink",
       "foundText": "Các hồ nước trong vườn bách thảo là nhà của nhiều chú rùa."
+    },
+    {
+      "id": "clue-palm-leaf-book",
+      "name": "Sách Lá Buông",
+      "clue": "Cuốn sách lá buông vẽ phác trên trang giấy trống, bên trái chiếc lá khô dán băng keo.",
+      "x": 0.62,
+      "y": 0.48,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "palm-leaf-book",
+      "scale": 0.5,
+      "rotation": -8,
+      "camo": "ink",
+      "foundText": "Dòng chữ Thái khắc trên lá buông: “Chùa Bình Minh”, tên gọi của Wat Arun ở Bangkok."
+    },
+    {
+      "id": "uv-note-9",
+      "name": "Lời Nhắn Mực Tàng Hình 9/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống phía trên bên phải.",
+      "x": 0.885,
+      "y": 0.3,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "scroll",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(9/9) Hẹn con ở nơi đất liền kết thúc. Ta sẽ đợi, dù phải đợi bao lâu.” Ký tên: người giữ sổ thứ ba."
     }
   ]
 }

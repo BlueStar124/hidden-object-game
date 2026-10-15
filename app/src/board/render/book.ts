@@ -1,16 +1,27 @@
-import { ClipOp, FilterMode, MipmapMode, type SkCanvas } from '@shopify/react-native-skia';
-import { bloom, clamp01, EASE_IN_OUT, loop, track } from '../anim';
+import { ClipOp, FilterMode, MipmapMode, Skia, type SkCanvas } from '@shopify/react-native-skia';
+import { bloom, clamp01, ease, EASE_IN_OUT, EASE_OUT, loop, track } from '../anim';
 import { drawSprite } from './sprites';
 import {
   CAMO_CHAMELEON,
   CAMO_INVISIBLE,
+  DAY_TRAIL_MS,
   FOUND_FADE_MS,
+  LENS_PRISM,
+  LENS_TINY,
+  PRISM_ANGLE,
+  PRISM_BAND,
+  REVEAL_MS,
+  TINY_ZOOM_FROM,
+  TINY_ZOOM_FULL,
+  WASH_ALPHA,
+  WASH_FADE_MS,
   type FrameState,
   type Pose,
   type SceneData,
   type SceneSprite,
 } from './types';
 import type { AtlasCell } from '../scene/spriteAtlas';
+import type { Part } from '../scene/spriteParts';
 
 /** The painted spread: artwork, camouflaged sprites, the scraps of painting over them, night. */
 
@@ -30,11 +41,10 @@ function inView(view: View | null, x: number, y: number, reach: number): boolean
 // Sheet cells are drawn up to this much larger than they were drawn at before shapes take over
 const SHEET_STRETCH = 1.15;
 
-function drawImage(c: SkCanvas, S: SceneData, magnified: boolean, washed = false) {
+function drawImage(c: SkCanvas, S: SceneData, magnified: boolean) {
   'worklet';
-  const p = washed ? S.paints.washed : S.paints.image;
-  if (magnified) c.drawImageRectCubic(S.image, S.imageRect, S.pageRect, 1 / 3, 1 / 3, p);
-  else c.drawImageRectOptions(S.image, S.imageRect, S.pageRect, FilterMode.Linear, MipmapMode.Linear, p);
+  if (magnified) c.drawImageRectCubic(S.image, S.imageRect, S.pageRect, 1 / 3, 1 / 3, S.paints.image);
+  else c.drawImageRectOptions(S.image, S.imageRect, S.pageRect, FilterMode.Linear, MipmapMode.Linear, S.paints.image);
 }
 
 function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
@@ -87,6 +97,99 @@ function drawNight(c: SkCanvas, S: SceneData, F: FrameState) {
   }
 }
 
+// Where the two glints of a golden critter sit (fractions of its box) and how long one twinkle lasts (ms)
+const GLINTS = [
+  { dx: 0.34, dy: -0.3, r: 0.3, delay: 0 },
+  { dx: -0.3, dy: 0.24, r: 0.22, delay: 900 },
+];
+const GLINT_MS = 1800;
+
+/** A golden critter still hiding: two small glints come and go on it. */
+function drawGlints(c: SkCanvas, S: SceneData, sp: SceneSprite, pose: Pose, now: number, fade: number) {
+  'worklet';
+  const glint = S.paints.goldGlint;
+  for (let i = 0; i < GLINTS.length; i++) {
+    const g = GLINTS[i];
+    const twinkle = track([0, 0.15, 0.3, 1], [0, 1, 0, 0], EASE_IN_OUT, loop(now, GLINT_MS, g.delay));
+    if (twinkle <= 0) continue;
+    glint.setAlphaf(twinkle * fade);
+    c.save();
+    c.translate(pose.x + g.dx * sp.w, pose.y + g.dy * sp.w);
+    c.scale(g.r * sp.w, g.r * sp.w);
+    c.drawCircle(0, 0, 1, glint);
+    c.restore();
+  }
+}
+
+// The prism's drawings change colour this often (ms), each a step behind the one before
+const PRISM_STEP_MS = 220;
+
+/**
+ * A drawing in light (LENS_PRISM), seen through the loupe: only inside the rainbow band the prism
+ * casts across the lens (loupe.ts draws the band), its glow running through the rainbow.
+ */
+function drawInPrism(c: SkCanvas, S: SceneData, sp: SceneSprite, pose: Pose, parts: Part[], index: number, alpha: number, now: number, view: View) {
+  'worklet';
+  // The loupe is centred on the middle of what it shows (page units)
+  const cx = (view.x0 + view.x1) / 2;
+  const cy = (view.y0 + view.y1) / 2;
+  const seen = (view.x1 - view.x0) / 2;
+  const half = PRISM_BAND * seen;
+  const colours = S.paints.prism;
+  c.save();
+  // The band's own rectangle (loupe paints), as loupe.ts lays it over the lens
+  c.translate(cx, cy);
+  c.rotate(PRISM_ANGLE, 0, 0);
+  c.scale(seen, half);
+  c.clipRect(S.loupe.prismRect, ClipOp.Intersect, true);
+  c.scale(1 / seen, 1 / half);
+  c.rotate(-PRISM_ANGLE, 0, 0);
+  c.translate(-cx, -cy);
+  drawSprite(c, sp, pose, parts, colours[(Math.floor(now / PRISM_STEP_MS) + index) % colours.length], alpha, false, S.paints.glowSpot);
+  c.restore();
+}
+
+/**
+ * The watercolour wash (see WASH_ALPHA): one layer over what is seen of the page, with a soft patch
+ * cleared around every find. Day pages only, never in the loupe.
+ */
+function drawWash(c: SkCanvas, S: SceneData, F: FrameState, view: View | null) {
+  'worklet';
+  if (S.night || F.reveal < 0) return;
+  const fade = F.reveal > 0 ? 1 - clamp01((F.now - F.reveal) / WASH_FADE_MS) : 1;
+  if (fade <= 0) return;
+  const P = S.paints;
+  const page = S.pageRect;
+  // Only what is on screen: the layer costs in proportion to its area
+  const x0 = view ? Math.max(page.x, view.x0) : page.x;
+  const y0 = view ? Math.max(page.y, view.y0) : page.y;
+  const x1 = view ? Math.min(page.x + page.width, view.x1) : page.x + page.width;
+  const y1 = view ? Math.min(page.y + page.height, view.y1) : page.y + page.height;
+  if (x1 <= x0 || y1 <= y0) return;
+  const bounds = Skia.XYWHRect(x0, y0, x1 - x0, y1 - y0);
+  c.saveLayer(undefined, bounds);
+  P.wash.setAlphaf(WASH_ALPHA * fade);
+  c.drawRect(bounds, P.wash);
+  for (let i = 0; i < S.marks.length; i++) {
+    const m = S.marks[i];
+    const f = F.found[m.id];
+    if (!f) continue;
+    const grow = ease(EASE_OUT, clamp01((F.now - f.t) / REVEAL_MS));
+    if (grow <= 0) continue;
+    for (let j = 0; j < m.reveal.length; j++) {
+      const b = m.reveal[j];
+      const r = b.r * grow;
+      if (!inView(view, f.x + b.dx, f.y + b.dy, r)) continue;
+      c.save();
+      c.translate(f.x + b.dx, f.y + b.dy);
+      c.scale(r, r);
+      c.drawCircle(0, 0, 1, P.washHole);
+      c.restore();
+    }
+  }
+  c.restore();
+}
+
 /**
  * The spread itself: artwork, camouflaged sprites, occluders, night, found sprites, glowing eyes.
  * `view`: the part of the spread that is seen (null: all of it).
@@ -95,16 +198,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
   'worklet';
   const P = S.paints;
   const now = F.now;
-
-  // Watercolor bloom effect: enabled on day pages when reveal is active and not inside loupe
-  let countFound = 0;
-  for (let i = 0; i < poses.length; i++) {
-    if (poses[i].found) countFound++;
-  }
-  const allFound = poses.length > 0 && countFound >= S.sprites.length;
-  const washed = !inLoupe && !S.night && !!F.reveal && !allFound;
-
-  drawImage(c, S, inLoupe, washed);
+  drawImage(c, S, inLoupe);
 
   // Sprites at rest come from the sheet while it is sharp enough at this zoom (never in the loupe)
   const atlas = S.atlas;
@@ -126,12 +220,20 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (sp.camo === CAMO_CHAMELEON) {
       drawSprite(c, sp, pose, parts, P.chameleon, 0.95 * fade, false, P.glowSpot, atlas, cell, P.chameleonModulate, 0.95);
     } else if (sp.camo === CAMO_INVISIBLE) {
+      // (Invisible ink has no page drawing: this is always the loupe)
       const glow = track([0, 0.5, 1], [0.7, 1, 0.7], EASE_IN_OUT, loop(now, 2400));
-      const invisPaint = sp.requires === 'uv-lens' ? P.uv : P.invisible;
-      drawSprite(c, sp, pose, parts, invisPaint, glow * fade, false, P.glowSpot, atlas, cell);
+      if (sp.lens === LENS_PRISM) {
+        if (view) drawInPrism(c, S, sp, pose, parts, i, glow * fade, now, view);
+      } else if (sp.lens === LENS_TINY) {
+        const seen = clamp01((F.zoom - TINY_ZOOM_FROM) / (TINY_ZOOM_FULL - TINY_ZOOM_FROM));
+        if (seen > 0) drawSprite(c, sp, pose, parts, P.tiny, seen * fade, false, P.glowSpot, atlas, cell);
+      } else {
+        drawSprite(c, sp, pose, parts, P.invisible, glow * fade, false, P.glowSpot, atlas, cell);
+      }
     } else {
       drawSprite(c, sp, pose, parts, P.ink, 0.8 * fade, false, P.glowSpot, atlas, cell, P.inkModulate, 0.8);
     }
+    if (sp.gold) drawGlints(c, S, sp, pose, now, fade);
   }
 
   // Scraps of painting over tucked-away sprites (z 16)
@@ -141,11 +243,25 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (!occ || (ob && !inView(view, ob.x + ob.width / 2, ob.y + ob.height / 2, Math.max(ob.width, ob.height) / 2))) continue;
     c.save();
     c.clipPath(occ, ClipOp.Intersect, true);
-    drawImage(c, S, inLoupe, washed);
+    drawImage(c, S, inLoupe);
     c.restore();
   }
 
+  // The loupe shows the true colours: the wash is for the page seen by eye (z 16.5)
+  if (!inLoupe) drawWash(c, S, F, view);
+
   if (!inLoupe) drawNight(c, S, F);
+
+  // Day and night: the ways found things went since the day, under them (z 18.5)
+  for (let i = 0; i < S.sprites.length; i++) {
+    const sp = S.sprites[i];
+    if (!sp.dayTrail || !poses[i].found) continue;
+    const a = 0.85 * clamp01(poses[i].age / DAY_TRAIL_MS);
+    P.dayTrail.setAlphaf(a);
+    c.drawPath(sp.dayTrail, P.dayTrail);
+    P.dayRing.setAlphaf(a);
+    c.drawCircle(sp.dayX, sp.dayY, 0.45 * sp.w, P.dayRing);
+  }
 
   // Found: blooming back into colour (z 19)
   for (let i = 0; i < S.sprites.length; i++) {
@@ -155,7 +271,7 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
     if (!inView(view, pose.x, pose.y, 2.2 * sp.w * Math.max(1, pose.bs))) continue;
     if (pose.age < 1100) {
       const b = bloom(pose.age / 1100);
-      const reach = 2.4 * sp.w * Math.SQRT1_2 * b.scale;
+      const reach = 1.9 * sp.w * Math.SQRT1_2 * b.scale;
       P.bloom.setAlphaf(b.opacity);
       c.save();
       c.translate(pose.x, pose.y);
@@ -163,23 +279,25 @@ export function drawBook(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[]
       c.drawCircle(0, 0, Math.SQRT1_2, P.bloom);
       c.restore();
     }
-    const foundPaint = sp.rare
-      ? P.golden
-      : inLoupe
-      ? P.foundLoupe
-      : P.foundPage;
     drawSprite(
       c,
       sp,
       pose,
       sp.found,
-      foundPaint,
+      sp.gold ? (inLoupe ? P.foundGoldLoupe : P.foundGoldPage) : inLoupe ? P.foundLoupe : P.foundPage,
       0.9 * clamp01(pose.age / FOUND_FADE_MS + 0.15),
       false,
       P.glowSpot,
       atlas,
       fromSheet(sp, sp.foundCell, pose)
     );
+  }
+
+  // Daily page: the spread around the corner in play is washed over (z 19.5, under glowing eyes,
+  // which a daily page never has)
+  if (S.focus) {
+    for (let i = 0; i < S.focusVeil.length; i++) c.drawRect(S.focusVeil[i], P.focusVeil);
+    c.drawRect(S.focus, P.focusEdge);
   }
 
   // Night: only the eyes of creatures still hiding shine above the darkness (z 20)

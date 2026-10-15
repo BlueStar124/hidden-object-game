@@ -1,5 +1,5 @@
 import type { HintResult } from './hints';
-import { isMainObject, type CaseState, type HiddenObject, type Page } from './model';
+import { isMainObject, isOptionalObject, type CaseState, type HiddenObject, type Page } from './model';
 import { completionBonus, foundScore, hintPenalty, mistakePenalty } from './scoring';
 
 /**
@@ -53,6 +53,8 @@ export interface FindResult {
   solved: { timeBonus: number; stars: number; score: number } | null;
 }
 
+const withId = (ids: string[], id: string) => (ids.includes(id) ? ids : [...ids, id]);
+
 /** Something was found during the investigation. */
 export function recordFind(
   c: CaseState,
@@ -68,11 +70,6 @@ export function recordFind(
   const bonus = solved ? completionBonus(c.remainingTime, c.mistakes, c.hintsUsed) : null;
   const score = bonus ? newScore + bonus.timeBonus : newScore;
 
-  const currentRevealed = c.revealedTextIds ?? [];
-  const revealedTextIds = currentRevealed.includes(object.id)
-    ? currentRevealed
-    : [...currentRevealed, object.id];
-
   const changes: Partial<CaseState> = {
     foundItems,
     foundAt,
@@ -80,14 +77,14 @@ export function recordFind(
     combo: combo + 1,
     comboTimer: COMBO_WINDOW,
     activeHint: null,
-    revealedTextIds,
+    revealedTextIds: withId(c.revealedTextIds, object.id),
   };
   if (object.isSecret) changes.secretFound = true;
   if (solved) changes.isCompleted = true;
   return { changes, earned: earnedScore, combo, solved: bonus ? { ...bonus, score } : null };
 }
 
-/** After the case is closed: a critter or the secret still found for the album (no score). */
+/** After the case is closed: a critter, a clue or the secret still found for the album (no score). */
 export function recordExploreFind(c: CaseState, object: HiddenObject, position: { x: number; y: number } | undefined): CaseState {
   return {
     ...c,
@@ -102,17 +99,13 @@ export function recordMiss(c: CaseState): CaseState {
   return { ...c, mistakes: c.mistakes + 1, combo: 1, comboTimer: 0, score: mistakePenalty(c.score) };
 }
 
+/** A hint taken: it costs points, and the target's card shows its name and clue from now on. */
 export function recordHint(c: CaseState, hint: HintResult): CaseState {
-  const currentRevealed = c.revealedTextIds ?? [];
-  const revealedTextIds = currentRevealed.includes(hint.targetObject.id)
-    ? currentRevealed
-    : [...currentRevealed, hint.targetObject.id];
-
   return {
     ...c,
     hintsUsed: c.hintsUsed + 1,
     score: hintPenalty(c.score, hint.level),
-    revealedTextIds,
+    revealedTextIds: withId(c.revealedTextIds, hint.targetObject.id),
     activeHint: {
       level: hint.level,
       objectId: hint.targetObject.id,
@@ -122,7 +115,7 @@ export function recordHint(c: CaseState, hint: HintResult): CaseState {
   };
 }
 
-/** Optional critters & the secret still hiding (what "explore" mode is for). */
+/** Optional critters, clues & the secret still hiding (what "explore" mode is for). */
 export function leftovers(c: CaseState, page: Page): HiddenObject[] {
-  return page.objects.filter((o) => (o.isBonus || o.isSecret) && !c.foundItems.includes(o.id));
+  return page.objects.filter((o) => isOptionalObject(o) && !c.foundItems.includes(o.id));
 }

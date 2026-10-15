@@ -3,7 +3,7 @@ import { alternate, EASE_IN, EASE_IN_OUT, track } from '../anim';
 import { LOUPE_ZOOM } from '../constants';
 import { drawLoupeBody } from '../scene/loupeBody';
 import { drawBook } from './book';
-import type { FrameState, Pose, SceneData } from './types';
+import { PRISM_ANGLE, PRISM_BAND, type FrameState, type Pose, type SceneData } from './types';
 
 /** The brass loupe (a flashlight on night pages), magnifying whatever is under it. */
 export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[], leaf: SkPicture | null) {
@@ -62,6 +62,14 @@ export function drawLoupe(c: SkCanvas, S: SceneData, F: FrameState, poses: Pose[
   if (leaf) c.drawPicture(leaf);
   else drawBook(c, S, F, poses, true, { x0: px - seen, y0: py - seen, x1: px + seen, y1: py + seen });
   c.restore();
+  if (S.prism) {
+    // The prism's rainbow band across the lens: what it shows is drawn inside it (book.ts)
+    c.save();
+    c.rotate(PRISM_ANGLE, 0, 0);
+    c.scale(lensR, PRISM_BAND * lensR); // book.ts clips the band's drawings to the same rectangle
+    c.drawRect(L.prismRect, L.prismBand);
+    c.restore();
+  }
   if (fogged) c.restore();
 
   if (S.night) c.drawCircle(0, 0, lensR, L.vignette);

@@ -20,9 +20,9 @@
       "foundText": "Bóc măng cụt đúng cách: ấn nhẹ hai tay lên vỏ cho quả tự nứt ra!",
       "spots": [
         {
-          "x": 0.25,
-          "y": 0.65,
-          "clue": "Quả măng cụt tím nằm trong rổ trái cây trên chiếc thuyền bên trái."
+          "x": 0.216,
+          "y": 0.567,
+          "clue": "Quả măng cụt tím lăn bên chiếc rổ mây của bà bán hàng ngồi trên bến gỗ bên trái."
         }
       ]
     },
@@ -40,8 +40,8 @@
       "foundText": "Mì thuyền múc ngay trên ghe, mỗi bát chỉ vài gắp nên khách thường ăn liền mấy bát!",
       "spots": [
         {
-          "x": 0.62,
-          "y": 0.64,
+          "x": 0.625,
+          "y": 0.597,
           "clue": "Bát mì thuyền nóng hổi đặt trên mạn ghe chở hoa quả bên phải."
         }
       ]
@@ -86,7 +86,14 @@
       "scale": 0.85,
       "camo": "chameleon",
       "waterline": 0.75,
-      "foundText": "Thuyền đuôi dài chạy rất nhanh nhờ chân vịt gắn ở cuối một trục dài."
+      "foundText": "Thuyền đuôi dài chạy rất nhanh nhờ chân vịt gắn ở cuối một trục dài.",
+      "spots": [
+        {
+          "x": 0.388,
+          "y": 0.75,
+          "clue": "Một chiếc thuyền đuôi dài nhỏ rẽ nước ngay dưới mạn chiếc thuyền chở xoài, sát mép dưới trang trái."
+        }
+      ]
     },
     {
       "id": "vendor-coconut",
@@ -102,9 +109,9 @@
       "foundText": "Tỉnh Ratchaburi quanh chợ nổi có rất nhiều vườn dừa, nổi tiếng với dừa xiêm thơm ngọt.",
       "spots": [
         {
-          "x": 0.42,
-          "y": 0.62,
-          "clue": "Trái dừa xiêm cắm ống hút để trên mũi chiếc thuyền mộc giữa kênh."
+          "x": 0.35,
+          "y": 0.52,
+          "clue": "Trái dừa xiêm cắm ống hút để trên lan can ban công ngôi nhà sàn bên trái."
         }
       ]
     },
@@ -181,6 +188,36 @@
       "scale": 0.55,
       "camo": "chameleon",
       "foundText": "Gần cửa sông Mae Klong, những bãi bùn là nhà của rất nhiều cá thòi lòi."
+    },
+    {
+      "id": "clue-paper-umbrella",
+      "name": "Chiếc Ô Giấy Vẽ Tay",
+      "clue": "Chiếc ô giấy dựng trên ban công nhà sàn bên phải con kênh.",
+      "x": 0.8,
+      "y": 0.465,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "paper-umbrella",
+      "scale": 0.5,
+      "rotation": 10,
+      "camo": "ink",
+      "foundText": "Trên ô vẽ cảnh chợ nổi và hai bóng người, một già một trẻ, cùng cầm chung một cuốn sổ."
+    },
+    {
+      "id": "prism-sketch-2",
+      "name": "Nét Vẽ Cầu Vồng 2/9",
+      "clue": "Nét vẽ cầu vồng vắt trên lan can cây cầu gỗ bắc ngang kênh.",
+      "x": 0.54,
+      "y": 0.49,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "prism",
+      "spriteType": "mango-sticky-rice",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Thầy sinh ra ở phố Hội, lớn lên giữa tiếng thuyền buôn trên sông Hoài.” (2/9)"
     }
   ]
 }

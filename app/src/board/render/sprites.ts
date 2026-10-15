@@ -1,6 +1,6 @@
 import { ClipOp, FilterMode, MipmapMode, type SkCanvas, type SkPaint, type SkPicture } from '@shopify/react-native-skia';
 import { roamState, shyPhase } from '../../core/motion';
-import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, track } from '../anim';
+import { alternate, blinkScale, EASE, EASE_IN_OUT, foundBounce, lerp, loop, shyJump, shyPeek, startle, STARTLE_MS, track } from '../anim';
 import { PAGE_H, PAGE_W } from '../constants';
 import type { AtlasCell, SpriteAtlas } from '../scene/spriteAtlas';
 import { ANIM_BLINK, ANIM_GLOW_SPOT, ANIM_TAIL, ANIM_WAVE, ANIM_WING, type Part } from '../scene/spriteParts';
@@ -56,39 +56,17 @@ function spritePose(sp: SceneSprite, now: number, f: FoundInfo | undefined, pose
   const age = f ? now - f.t : 0;
   if (f) {
     if (age < 600) {
-      const p = age / 600;
-      if (sp.reaction === 'hop') {
-        // Hops upward in an arc and lands back
-        const hopY = -Math.sin(p * Math.PI) * 0.45 * sp.w;
-        dy += hopY;
-        const b = foundBounce(p);
-        bs = b.scale;
-        br = b.rotate;
-      } else if (sp.reaction === 'flutter') {
-        // Quick rapid flutter and bob
-        dy += Math.sin(p * Math.PI * 4) * 0.15 * sp.w;
-        rot += Math.sin(p * Math.PI * 3) * 8;
-        bs = 1 + Math.sin(p * Math.PI * 2) * 0.15;
-      } else if (sp.reaction === 'scurry') {
-        // Quick sideways scurry step and return
-        dx += Math.sin(p * Math.PI * 2) * 0.25 * sp.w * sp.flip;
-        bs = 1 + Math.sin(p * Math.PI) * 0.1;
-      } else if (sp.reaction === 'splash') {
-        // Splash wobble and squash
-        dy += -Math.sin(p * Math.PI) * 0.25 * sp.w;
-        rot += Math.sin(p * Math.PI * 2) * 10;
-        bs = 1 + Math.sin(p * Math.PI * 2) * 0.2;
-      } else if (sp.reaction === 'spin') {
-        rot += p * 360;
-        bs = 1 + Math.sin(p * Math.PI) * 0.2;
-      } else {
-        // Inanimate objects: gentle bounce (~250ms squash & stretch)
-        if (age < 250) {
-          const q = age / 250;
-          bs = 1 + Math.sin(q * Math.PI) * 0.15;
-          br = Math.sin(q * Math.PI) * 4;
-        }
-      }
+      const b = foundBounce(age / 600);
+      bs = b.scale;
+      br = b.rotate;
+    }
+    // A creature startles at its capture (it ends back where it was caught). Offsets apply after the
+    // sprite is mirrored (drawSprite): a dash aside is always towards where it faces
+    if (sp.startle && age < STARTLE_MS) {
+      const r = startle(sp.startle, age / STARTLE_MS);
+      dx = r.dx;
+      dy = r.dy;
+      rot = r.rot;
     }
     wing = lerp(1, 0.72, alternate(age, 900, EASE_IN_OUT));
     tail = lerp(-4, 5, alternate(age, 1600, EASE_IN_OUT));

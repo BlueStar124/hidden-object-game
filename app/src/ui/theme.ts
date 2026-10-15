@@ -48,3 +48,11 @@ export const shadow = (radius: number, opacity: number, y = Math.round(radius / 
   shadowOffset: { width: 0, height: y },
   elevation: Math.max(1, Math.round(radius / 2)),
 });
+
+/**
+ * The icons of controls (home screen, HUD): one size, one ink, so rows of buttons read as one set.
+ * Only a button that asks for attention (the hint, today's page) is tinted, never its icon alone.
+ */
+export const controlIcon = { size: 17, color: colors.earth, small: 15 };
+/** A control asking for attention: the same button, washed in the earth colour. */
+export const accentControl = { backgroundColor: 'rgba(154, 106, 62, 0.12)', borderColor: 'rgba(154, 106, 62, 0.45)' };

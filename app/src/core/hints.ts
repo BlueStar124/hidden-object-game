@@ -1,129 +1,60 @@
+import { nextInSequence, waitsInSequence } from './detection';
 import type { ActiveHint, HiddenObject } from './model';
 
 /**
- * Two-step progressive hints per object (costing more per tier, see scoring.hintPenalty):
- * Tier 1: Reveals the hidden object's text and clue description on its card.
- * Tier 2: Reveals the object's exact position with radar ping and loupe nudge.
+ * Two steps of help per object, the second costing more (see scoring.hintPenalty). Clue cards start
+ * with only the silhouette:
+ * 1. the card shows the object's name and clue · 2. the loupe tugs towards it and a radar pulses on it.
  */
 export interface HintResult {
-  level: 1 | 2 | 3;
+  level: 1 | 2;
   targetObject: HiddenObject;
   clueText: string;
   nudgeDirection?: { x: number; y: number }; // Unit vector pointing toward target
   radarPoint?: { x: number; y: number };
 }
 
+/**
+ * The next hint: for the object whose card was tapped (`targetId`), or — from the hint button —
+ * the step after the active hint, else the first card still unread.
+ */
 export function nextHint(
   activeHint: ActiveHint | null,
-  revealedTextIds: string[],
+  revealedIds: readonly string[],
   objects: HiddenObject[],
   foundIds: string[],
   currentLoupePos: { nx: number; ny: number },
-  targetObjectId?: string
-): HintResult | null;
-export function nextHint(
-  currentHintLevel: number,
-  objects: HiddenObject[],
-  foundIds: string[],
-  currentLoupePos: { nx: number; ny: number }
-): HintResult | null;
-export function nextHint(
-  arg1: ActiveHint | null | number,
-  arg2: string[] | HiddenObject[],
-  arg3: HiddenObject[] | string[],
-  arg4: string[] | { nx: number; ny: number },
-  arg5?: { nx: number; ny: number } | string,
-  arg6?: string
+  targetId?: string
 ): HintResult | null {
-  // Legacy signature: (number, HiddenObject[], string[], { nx, ny })
-  if (typeof arg1 === 'number') {
-    const currentHintLevel = arg1;
-    const objects = arg2 as HiddenObject[];
-    const foundIds = arg3 as string[];
-    const currentLoupePos = arg4 as { nx: number; ny: number };
-
-    const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus);
-    if (unfound.length === 0) return null;
-
-    const normalUnfound = unfound.filter((o) => !o.isSecret);
-    const target = normalUnfound.length > 0 ? normalUnfound[0] : unfound[0];
-    const nextLevel = Math.min(3, Math.max(1, currentHintLevel + 1)) as 1 | 2 | 3;
-
-    const dx = target.x - currentLoupePos.nx;
-    const dy = target.y - currentLoupePos.ny;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const nudgeDirection = dist > 0.001 ? { x: dx / dist, y: dy / dist } : { x: 0, y: 0 };
-
-    return {
-      level: nextLevel,
-      targetObject: target,
-      clueText: target.clue,
-      nudgeDirection: nextLevel >= 2 ? nudgeDirection : undefined,
-      radarPoint: nextLevel >= 3 ? { x: target.x, y: target.y } : undefined,
-    };
-  }
-
-  // Modern 2-step per-object signature:
-  const activeHint = arg1 as ActiveHint | null;
-  const revealedTextIds = (arg2 as string[]) ?? [];
-  const objects = arg3 as HiddenObject[];
-  const foundIds = arg4 as string[];
-  const currentLoupePos = (arg5 as { nx: number; ny: number }) ?? { nx: 0.5, ny: 0.5 };
-  const targetObjectId = arg6;
-
-  // Filter unfound objects; bonus critters are never hinted
-  const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus);
+  // Main objects first, then the secret. Optional critters and mystery clues are for the
+  // sharp-eyed only — never hinted; in a sequence hunt, only the object whose turn it is.
+  const next = nextInSequence(objects, foundIds);
+  const unfound = objects.filter((o) => !foundIds.includes(o.id) && !o.isBonus && !o.isClue && !waitsInSequence(o, next));
   if (unfound.length === 0) return null;
-
-  const normalUnfound = unfound.filter((o) => !o.isSecret);
-  const pool = normalUnfound.length > 0 ? normalUnfound : unfound;
+  const normal = unfound.filter((o) => !o.isSecret);
+  const pool = normal.length > 0 ? normal : unfound;
+  const unread = pool.find((o) => !revealedIds.includes(o.id));
 
   let target: HiddenObject | undefined;
-  let targetLevel: 1 | 2 = 1;
-
-  if (targetObjectId) {
-    // Specific object requested (e.g. card tap)
-    target = pool.find((o) => o.id === targetObjectId);
+  let level: 1 | 2;
+  if (targetId) {
+    // A card tapped: read it first, then point at it
+    target = pool.find((o) => o.id === targetId);
     if (!target) return null;
-
-    if (!revealedTextIds.includes(target.id)) {
-      targetLevel = 1;
-    } else {
-      targetLevel = 2;
-    }
+    level = revealedIds.includes(target.id) ? 2 : 1;
   } else {
-    // General hint via HUD button:
-    // If there is currently an active hint for an unfound item in the pool:
-    if (activeHint && pool.some((o) => o.id === activeHint.objectId)) {
-      const activeTarget = pool.find((o) => o.id === activeHint.objectId)!;
-      if (activeHint.level === 1) {
-        // Step 2: reveal position for this object
-        target = activeTarget;
-        targetLevel = 2;
-      } else {
-        // Step 2 was already active on this object.
-        // Check if there are other unrevealed objects in the pool
-        const nextUnrevealed = pool.find((o) => !revealedTextIds.includes(o.id));
-        if (nextUnrevealed) {
-          target = nextUnrevealed;
-          targetLevel = 1;
-        } else {
-          // Keep/refresh position for current target
-          target = activeTarget;
-          targetLevel = 2;
-        }
-      }
+    const active = activeHint ? pool.find((o) => o.id === activeHint.objectId) : undefined;
+    if (active && activeHint?.level === 1) {
+      // The card was just read: now show where it is
+      target = active;
+      level = 2;
+    } else if (unread) {
+      target = unread;
+      level = 1;
     } else {
-      // Pick first object whose text is not revealed yet -> Step 1
-      const unrevealed = pool.find((o) => !revealedTextIds.includes(o.id));
-      if (unrevealed) {
-        target = unrevealed;
-        targetLevel = 1;
-      } else {
-        // All objects already have text revealed -> pick first unfound to show position
-        target = pool[0];
-        targetLevel = 2;
-      }
+      // Every card read: point at the one already pointed at, or the first left
+      target = active ?? pool[0];
+      level = 2;
     }
   }
 
@@ -133,10 +64,10 @@ export function nextHint(
   const nudgeDirection = dist > 0.001 ? { x: dx / dist, y: dy / dist } : { x: 0, y: 0 };
 
   return {
-    level: targetLevel,
+    level,
     targetObject: target,
     clueText: target.clue,
-    nudgeDirection: targetLevel >= 2 ? nudgeDirection : undefined,
-    radarPoint: targetLevel >= 2 ? { x: target.x, y: target.y } : undefined,
+    nudgeDirection: level === 2 ? nudgeDirection : undefined,
+    radarPoint: level === 2 ? { x: target.x, y: target.y } : undefined,
   };
 }

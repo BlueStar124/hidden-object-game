@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-neon-cyclo",
+      "spots": [
+        {
+          "x": 0.67,
+          "y": 0.63,
+          "clue": "Chiếc máy ảnh nằm cạnh chiếc xe trên lòng đường phía phải chợ, trước bồn cây nhỏ."
+        }
+      ],
       "name": "Máy Ảnh Du Khách Chợ Đêm",
       "clue": "Chiếc máy ảnh cơ ghi lại ánh đèn neon rực rỡ phố đêm Bến Thành.",
       "x": 0.84,
@@ -90,6 +97,13 @@
     },
     {
       "id": "night-food-lantern",
+      "spots": [
+        {
+          "x": 0.28,
+          "y": 0.49,
+          "clue": "Chiếc đèn lồng đỏ treo dưới mái nhà bên trái chợ, cạnh lối phố chạy vào hàng cây."
+        }
+      ],
       "name": "Đèn Lồng Phố Ẩm Thực Chợ Đêm",
       "clue": "Ngọn đèn lồng giấy đỏ thắp sáng quầy chè khuya nghi ngút khói.",
       "x": 0.18,
@@ -98,11 +112,18 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.46,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Hương vị ẩm thực đường phố Sài Gòn làm say lòng bất kỳ ai ghé chân."
     },
     {
       "id": "night-market-cat",
+      "spots": [
+        {
+          "x": 0.45,
+          "y": 0.54,
+          "clue": "Chú mèo mướp nép dưới mái hiên gian hàng sát bên trái cổng chính chợ Bến Thành."
+        }
+      ],
       "name": "Mèo Mướp Chợ Đêm Sài Gòn",
       "clue": "Chú mèo mướp nằm cuộn tròn ngủ say trên mái hiên sạp chợ Bến Thành.",
       "x": 0.38,
@@ -111,11 +132,18 @@
       "score": 120,
       "spriteType": "cat",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Chú mèo mướp lười biếng sưởi ấm bên mái hiên, ngắm nhìn dòng người tấp nập của phố đêm Sài Gòn."
     },
     {
       "id": "night-owl-spire",
+      "spots": [
+        {
+          "x": 0.35,
+          "y": 0.4,
+          "clue": "Chú cú đậu trên mái ngói đỏ bên trái tháp đồng hồ, phía sau lớp mái thấp phía trước."
+        }
+      ],
       "name": "Cú Đêm Tháp Chuông Đồng Hồ",
       "clue": "Cú đêm đậu trên chóp tháp đồng hồ ngắm phố phường không ngủ.",
       "x": 0.62,
@@ -129,6 +157,13 @@
     },
     {
       "id": "night-faithful-dog",
+      "spots": [
+        {
+          "x": 0.78,
+          "y": 0.46,
+          "clue": "Chú thạch sùng bám mặt tiền dãy nhà bên phải chợ, gần những chiếc đèn lồng ven phố."
+        }
+      ],
       "name": "Thạch Sùng Cửa Nam Chợ Đêm",
       "clue": "Chú thạch sùng rình mồi cạnh bóng đèn cao áp cửa Nam sáng trưng.",
       "x": 0.72,
@@ -137,7 +172,7 @@
       "score": 100,
       "spriteType": "gecko",
       "scale": 0.44,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Thạch sùng thoăn thoắt săn muỗi dưới ánh đèn cao áp cửa Nam chợ Bến Thành rực sáng."
     },
     {
@@ -190,7 +225,7 @@
       "isBonus": true,
       "spriteType": "mouse",
       "scale": 0.36,
-      "camo": "shadow",
+      "camo": "ink",
       "shy": {
         "period": 6.5,
         "offset": 1,

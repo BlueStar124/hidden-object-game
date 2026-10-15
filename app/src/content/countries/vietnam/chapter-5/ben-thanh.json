@@ -17,7 +17,14 @@
       "spriteType": "cyclo",
       "scale": 0.52,
       "camo": "ink",
-      "foundText": "Bác tài xích lô vui tính chỉ đường vào quầy chè sương sa hạt lựu nức tiếng."
+      "foundText": "Bác tài xích lô vui tính chỉ đường vào quầy chè sương sa hạt lựu nức tiếng.",
+      "spots": [
+        {
+          "x": 0.595,
+          "y": 0.7,
+          "clue": "Chiếc xích lô chen giữa dòng xe máy đông nghịt ngay bên phải bồn cỏ vòng xoay trước chợ."
+        }
+      ]
     },
     {
       "id": "market-conical-hat",
@@ -29,8 +36,15 @@
       "score": 120,
       "spriteType": "tiffin",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Chiếc cà mèn ba tầng quen thuộc chứa đầy tình cảm và bữa cơm ấm nóng của các cô chú tiểu thương chợ Bến Thành."
+      "camo": "chameleon",
+      "foundText": "Chiếc cà mèn ba tầng quen thuộc chứa đầy tình cảm và bữa cơm ấm nóng của các cô chú tiểu thương chợ Bến Thành.",
+      "spots": [
+        {
+          "x": 0.825,
+          "y": 0.575,
+          "clue": "Cà mèn inox ba tầng đặt cạnh mấy người ngồi trên vỉa hè đầu con phố bên phải chợ."
+        }
+      ]
     },
     {
       "id": "street-camera",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "banh-mi",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Món ăn đường phố trứ danh của Sài Gòn với vỏ bánh giòn rụm và nhân đậm đà nức tiếng năm châu."
+      "camo": "ink",
+      "foundText": "Món ăn đường phố trứ danh của Sài Gòn với vỏ bánh giòn rụm và nhân đậm đà nức tiếng năm châu.",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.73,
+          "clue": "Ổ bánh mì giòn rụm nằm trên chiếc xe đẩy mái vàng ở góc phố phía dưới bên phải."
+        }
+      ]
     },
     {
       "id": "pocket-watch-clock",
@@ -56,7 +77,14 @@
       "spriteType": "coffee-phin",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Cà phê sữa đá Sài Gòn — nét văn hóa ẩm thực bình dân tràn đầy năng lượng mỗi sớm mai."
+      "foundText": "Cà phê sữa đá Sài Gòn — nét văn hóa ẩm thực bình dân tràn đầy năng lượng mỗi sớm mai.",
+      "spots": [
+        {
+          "x": 0.18,
+          "y": 0.47,
+          "clue": "Ly cà phê phin sữa đá đặt dưới mái hiên quán nhỏ trong dãy phố nhiều màu bên trái."
+        }
+      ]
     },
     {
       "id": "market-cat",
@@ -68,8 +96,15 @@
       "score": 100,
       "spriteType": "clay-piggy",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Chú heo đất Lái Thiêu vẽ màu thủ công sặc sỡ, món đồ chơi tuổi thơ gắn liền với bao thế hệ."
+      "camo": "ink",
+      "foundText": "Chú heo đất Lái Thiêu vẽ màu thủ công sặc sỡ, món đồ chơi tuổi thơ gắn liền với bao thế hệ.",
+      "spots": [
+        {
+          "x": 0.25,
+          "y": 0.535,
+          "clue": "Chú heo đất nằm trong ô cửa trưng bày dưới hàng vòm cuốn ở đầu hồi bên trái của chợ."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -121,7 +156,7 @@
       "isBonus": true,
       "spriteType": "southern-scarf",
       "scale": 0.38,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Chiếc khăn rằn mộc mạc vắt vai áo bà ba, biểu tượng dịu dàng và chịu thương chịu khó của phụ nữ phương Nam."
     },
     {
@@ -137,6 +172,20 @@
       "scale": 0.38,
       "camo": "chameleon",
       "foundText": "Tiếng chim lích chích vui tai giữa nhịp sống đô thị hối hả."
+    },
+    {
+      "id": "clue-noodle-bowl",
+      "name": "Tô Hủ Tiếu Còn Nóng",
+      "clue": "Tô hủ tiếu vẽ lẫn vào những dãy nhà cao tầng nhiều màu phía xa bên phải.",
+      "x": 0.7,
+      "y": 0.31,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "noodle-bowl",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Bà chủ quán kể có một cụ già vừa ăn ở đây và hỏi thăm “cô cậu thám tử”."
     }
   ]
 }

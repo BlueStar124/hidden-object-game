@@ -17,15 +17,14 @@
       "spriteType": "cat",
       "scale": 0.8,
       "camo": "ink",
+      "foundText": "Chú mèo tam thể vẫy đuôi làm quen, mang theo mảnh giấy cuộn tròn dưới vòng cổ!",
       "spots": [
         {
-          "x": 0.45,
-          "y": 0.63,
-          "radius": 0.04,
-          "clue": "Một chú mèo tam thể đang nằm cuộn tròn sưởi nắng trên bậc thềm ven hồ trung tâm."
+          "x": 0.585,
+          "y": 0.625,
+          "clue": "Chú mèo tam thể ngồi thu lu giữa hàng cây ven vịnh, ngay dưới chân tòa tháp thứ ba."
         }
-      ],
-      "foundText": "Chú mèo tam thể vẫy đuôi làm quen, mang theo mảnh giấy cuộn tròn dưới vòng cổ!"
+      ]
     },
     {
       "id": "glass-hourglass",
@@ -39,7 +38,14 @@
       "scale": 0.55,
       "rotation": -8,
       "camo": "chameleon",
-      "foundText": "Thủy tinh giữa thủy tinh — kiến trúc sư muốn nhắn rằng thời gian đang cạn dần…"
+      "foundText": "Thủy tinh giữa thủy tinh — kiến trúc sư muốn nhắn rằng thời gian đang cạn dần…",
+      "spots": [
+        {
+          "x": 0.36,
+          "y": 0.48,
+          "clue": "Chiếc đồng hồ cát thủy tinh nằm lẫn giữa những ô kính trên mặt tiền tòa tháp thứ nhất, bên trái."
+        }
+      ]
     },
     {
       "id": "wax-letter",
@@ -53,7 +59,14 @@
       "scale": 0.6,
       "rotation": -10,
       "camo": "ink",
-      "foundText": "Bức thư mật chứa tọa độ hành trình tiếp theo của kiến trúc sư!"
+      "foundText": "Bức thư mật chứa tọa độ hành trình tiếp theo của kiến trúc sư!",
+      "spots": [
+        {
+          "x": 0.47,
+          "y": 0.585,
+          "clue": "Bức thư mật nằm lẫn trên mái vòm của khu thương mại, khoảng giữa hai tòa tháp."
+        }
+      ]
     },
     {
       "id": "tourist-camera",
@@ -66,30 +79,14 @@
       "spriteType": "vintage-camera",
       "scale": 0.5,
       "camo": "chameleon",
+      "foundText": "Tấm ảnh cuối cùng trong máy chụp hoàng hôn trên vịnh — và một bóng người đội mũ thám tử!",
       "spots": [
         {
-          "x": 0.76,
-          "y": 0.65,
-          "radius": 0.032,
-          "clue": "Chiếc máy ảnh cổ của du khách bỏ quên trên ghế đá phía bên phải bờ vịnh."
+          "x": 0.87,
+          "y": 0.585,
+          "clue": "Chiếc máy ảnh cổ bị bỏ quên trên mép mái tòa nhà ngoài cùng bên phải."
         }
-      ],
-      "foundText": "Tấm ảnh cuối cùng trong máy chụp hoàng hôn trên vịnh — và một bóng người đội mũ thám tử!"
-    },
-    {
-      "id": "uv-secret-sigil",
-      "name": "Ký Hiệu Huỳnh Quang",
-      "clue": "[BÍ MẬT] Ký hiệu cổ bằng mực huỳnh quang chỉ hiện lên dưới ánh kính tia tím.",
-      "x": 0.52,
-      "y": 0.61,
-      "radius": 0.035,
-      "score": 150,
-      "spriteType": "seal",
-      "scale": 0.6,
-      "camo": "invisible",
-      "requires": "uv-lens",
-      "isBonus": true,
-      "foundText": "Dấu triện huỳnh quang của kiến trúc sư phát sáng rực rỡ dưới tia cực tím!"
+      ]
     },
     {
       "id": "shy-otter",
@@ -195,6 +192,36 @@
       "rotation": -15,
       "camo": "chameleon",
       "foundText": "Chú ốc sên nghệ sĩ đang thưởng lãm bảo tàng nghệ thuật — dù phải mất cả tuần mới đi hết một gian!"
+    },
+    {
+      "id": "clue-torn-map",
+      "name": "Nửa Tấm Bản Đồ",
+      "clue": "Nửa tấm bản đồ xé vội, vẽ lẫn vào những ô cửa kính của tòa tháp bên phải.",
+      "x": 0.606,
+      "y": 0.47,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "treasure-map",
+      "scale": 0.5,
+      "rotation": 8,
+      "camo": "ink",
+      "foundText": "Nửa tấm bản đồ xé vội: một con đường nhỏ chạy về phía những mái ngói cong màu đỏ."
+    },
+    {
+      "id": "uv-note-1",
+      "name": "Lời Nhắn Mực Tàng Hình 1/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng trời trống phía trên bên phải.",
+      "x": 0.8,
+      "y": 0.33,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "letter",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“Gửi người giữ sổ thứ tư. (1/9) Nếu con đọc được dòng này, con đã có chiếc kính của ta.”"
     }
   ]
 }

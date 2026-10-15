@@ -35,7 +35,14 @@
           0.6772
         ]
       ],
-      "foundText": "Chú mèo khẽ ngáp dài và để lộ một đồng xu cổ giấu dưới đáy giỏ xe!"
+      "foundText": "Chú mèo khẽ ngáp dài và để lộ một đồng xu cổ giấu dưới đáy giỏ xe!",
+      "spots": [
+        {
+          "x": 0.22,
+          "y": 0.37,
+          "clue": "Chú mèo mướp cuộn tròn sưởi nắng trên mái ngói của ngôi nhà hồng ngoài cùng bên trái."
+        }
+      ]
     },
     {
       "id": "porcelain-teacup",
@@ -51,8 +58,8 @@
       "foundText": "Hương vị trà ô long hoa cúc thơm ngát của văn hóa ẩm thực Nyonya.",
       "spots": [
         {
-          "x": 0.61,
-          "y": 0.525,
+          "x": 0.625,
+          "y": 0.537,
           "clue": "Tách trà sứ hoa văn đặt trên lan can bậu cửa sổ của ngôi nhà bên cạnh."
         }
       ]
@@ -93,7 +100,7 @@
         {
           "x": 0.55,
           "y": 0.34,
-          "clue": "Chiếc la bàn đồng nhỏ gài trên viền mái ngói dốc giữa hai ngôi nhà."
+          "clue": "Chiếc la bàn đồng nhỏ gài trên ô cửa thông gió thứ hai nhô lên khỏi mái, ngay bên phải gáy sổ."
         }
       ]
     },
@@ -112,10 +119,10 @@
       "foundText": "Cicak — người bạn tặc lưỡi \"chắc chắc\" quen thuộc của mọi ngôi nhà Singapore!",
       "spots": [
         {
-          "x": 0.76,
-          "y": 0.61,
+          "x": 0.741,
+          "y": 0.6,
           "rotation": -10,
-          "clue": "Chú thạch sùng khoác màu xanh ngọc, bò trên cột trụ hiên nhà bên phải."
+          "clue": "Chú thạch sùng khoác màu xanh ngọc, bò trên tường hiên của ngôi nhà xanh bên phải."
         }
       ]
     },
@@ -196,6 +203,36 @@
       "rotation": -80,
       "camo": "chameleon",
       "foundText": "Chú ốc sên đang leo lên tầng hai để thăm bạn tắc kè."
+    },
+    {
+      "id": "clue-unsent-letter",
+      "name": "Bức Thư Chưa Gửi",
+      "clue": "Bức thư kẹp giữa những cánh cửa chớp tầng trên của dãy nhà ngoài cùng bên phải.",
+      "x": 0.865,
+      "y": 0.51,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "letter",
+      "scale": 0.5,
+      "rotation": 6,
+      "camo": "ink",
+      "foundText": "“Gửi người sẽ nhận cuốn sổ: nếu bạn đọc được dòng này, bạn đã đi đúng đường.”"
+    },
+    {
+      "id": "uv-note-5",
+      "name": "Lời Nhắn Mực Tàng Hình 5/9",
+      "clue": "Lời nhắn mực tàng hình ở khoảng giấy trống góc trên bên trái.",
+      "x": 0.13,
+      "y": 0.31,
+      "radius": 0.03,
+      "score": 100,
+      "isBonus": true,
+      "requires": "uv-lens",
+      "spriteType": "quill",
+      "scale": 0.5,
+      "camo": "invisible",
+      "foundText": "“(5/9) Mỗi ô cửa sổ là một câu chuyện. Con không cần vẽ hết, chỉ cần nhìn hết.”"
     }
   ]
 }
