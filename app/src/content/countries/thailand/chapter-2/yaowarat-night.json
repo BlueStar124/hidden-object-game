@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-siamese-cat",
+      "spots": [
+        {
+          "x": 0.39,
+          "y": 0.38,
+          "clue": "Chú mèo Xiêm cuộn mình trên ban công tầng trên bên trái, cạnh biển hiệu vàng dựng dọc."
+        }
+      ],
       "name": "Mèo Xiêm Trên Mui Xe",
       "clue": "Chú mèo Xiêm nằm trên mui chiếc tuk-tuk lớn, đôi mắt xanh lóe sáng dưới đèn lồng.",
       "x": 0.58,
@@ -90,6 +97,13 @@
     },
     {
       "id": "night-noodles",
+      "spots": [
+        {
+          "x": 0.81,
+          "y": 0.49,
+          "clue": "Bát mì được đặt lên mái xe hàng rong ngoài cùng bên phải, dưới chùm đèn lồng đỏ."
+        }
+      ],
       "name": "Bát Mì Đêm",
       "clue": "Bát mì nóng đặt trên quầy xe hàng rong bên phải, dưới dãy đèn lồng đỏ.",
       "x": 0.81,
@@ -103,6 +117,13 @@
     },
     {
       "id": "night-tuktuk",
+      "spots": [
+        {
+          "x": 0.41,
+          "y": 0.67,
+          "clue": "Chiếc tuk-tuk nhỏ nép trên lòng đường bên trái gáy sổ, trước dãy cửa tiệm."
+        }
+      ],
       "name": "Tuk-tuk Chạy Đêm",
       "clue": "Chiếc tuk-tuk nhỏ chạy dưới tấm biển hiệu vàng dọc ở cuối phố bên trái.",
       "x": 0.33,
@@ -116,6 +137,13 @@
     },
     {
       "id": "night-thai-tea",
+      "spots": [
+        {
+          "x": 0.8,
+          "y": 0.35,
+          "clue": "Túi trà sữa treo cạnh khung cửa tầng trên ở phía phải, cao hơn dãy đèn lồng."
+        }
+      ],
       "name": "Túi Trà Sữa Khuya",
       "clue": "Túi trà sữa Thái treo bên hông xe hàng rong đầu tiên, cạnh chiếc tuk-tuk lớn.",
       "x": 0.69,

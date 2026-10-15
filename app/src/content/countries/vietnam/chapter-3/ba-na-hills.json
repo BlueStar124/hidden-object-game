@@ -16,8 +16,15 @@
       "score": 150,
       "spriteType": "green-peafowl",
       "scale": 0.48,
-      "camo": "gouache",
-      "foundText": "Chim công má vàng với bộ lông lộng lẫy kiêu hãnh sải bước bên lan can Cầu Vàng bồng bềnh mây trắng."
+      "camo": "ink",
+      "foundText": "Chim công má vàng với bộ lông lộng lẫy kiêu hãnh sải bước bên lan can Cầu Vàng bồng bềnh mây trắng.",
+      "spots": [
+        {
+          "x": 0.6,
+          "y": 0.48,
+          "clue": "Chú chim công má vàng dạo bước trên đoạn Cầu Vàng cong vút ngay bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "sunbird-clouds",
@@ -30,7 +37,14 @@
       "spriteType": "gray-shanked-douc",
       "scale": 0.38,
       "camo": "chameleon",
-      "foundText": "Voọc chà vá chân xám — nữ hoàng linh trưởng quý hiếm đặc hữu của dải rừng nguyên sinh Núi Chúa."
+      "foundText": "Voọc chà vá chân xám — nữ hoàng linh trưởng quý hiếm đặc hữu của dải rừng nguyên sinh Núi Chúa.",
+      "spots": [
+        {
+          "x": 0.69,
+          "y": 0.7,
+          "clue": "Nữ hoàng linh trưởng miền Trung chuyền cành trong vạt rừng rậm phía dưới, bên trái lối đi lát đá."
+        }
+      ]
     },
     {
       "id": "vintage-hourglass",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "hourglass",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Chiếc đồng hồ cát thủy tinh lưu giữ từng hạt bụi thời gian của ngôi làng Pháp cổ kính trên đỉnh mây."
+      "camo": "chameleon",
+      "foundText": "Chiếc đồng hồ cát thủy tinh lưu giữ từng hạt bụi thời gian của ngôi làng Pháp cổ kính trên đỉnh mây.",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.58,
+          "clue": "Đồng hồ cát cổ kính đặt trên đống đá tảng dưới lòng bàn tay khổng lồ bên phải."
+        }
+      ]
     },
     {
       "id": "sky-dove",
@@ -55,8 +76,15 @@
       "score": 100,
       "spriteType": "parakeet",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Chú vẹt núi rực rỡ sắc màu líu lo chuyền cành trong làn sương mây bồng bềnh đỉnh núi Chúa."
+      "camo": "ink",
+      "foundText": "Chú vẹt núi rực rỡ sắc màu líu lo chuyền cành trong làn sương mây bồng bềnh đỉnh núi Chúa.",
+      "spots": [
+        {
+          "x": 0.83,
+          "y": 0.5,
+          "clue": "Chú vẹt rực rỡ sắc màu ẩn trong tán rừng ngay bên phải ngón cái của bàn tay đá, dưới thành cầu."
+        }
+      ]
     },
     {
       "id": "tourist-spyglass",
@@ -69,7 +97,14 @@
       "spriteType": "peacock",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Bộ lông đuôi công xòe rộng như quạt gấm ngàn mắt, tôn thêm nét lộng lẫy cho kiệt tác Cầu Vàng."
+      "foundText": "Bộ lông đuôi công xòe rộng như quạt gấm ngàn mắt, tôn thêm nét lộng lẫy cho kiệt tác Cầu Vàng.",
+      "spots": [
+        {
+          "x": 0.785,
+          "y": 0.755,
+          "clue": "Bộ lông đuôi xòe lộng lẫy nép sau bụi cây ven lối đi lát đá, sát mép dưới bên phải trang."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -137,6 +172,21 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Đôi cánh chuồn chuồn giữ thăng bằng tuyệt đỉnh trong gió núi."
+    },
+    {
+      "id": "clue-older-deerstalker",
+      "name": "Chiếc Mũ Thám Tử Cũ Hơn",
+      "clue": "Chiếc mũ thám tử vẽ lẫn vào những ngón tay đá khổng lồ bên trái.",
+      "x": 0.22,
+      "y": 0.43,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "deerstalker",
+      "scale": 0.45,
+      "rotation": 10,
+      "camo": "chameleon",
+      "foundText": "Còn cũ hơn chiếc mũ ở Bangkok: người giữ sổ nào cũng từng là một thám tử như bạn."
     }
   ]
 }

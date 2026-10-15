@@ -18,7 +18,14 @@
       "scale": 0.65,
       "camo": "chameleon",
       "foundText": "Tuk-tuk Bangkok sơn đủ màu sặc sỡ, ồn ào nhưng len lỏi phố đông rất tài.",
-      "riddle": "Ba bánh chạy rong, kêu “tục tục” mãi; chở khách khắp phố, Bangkok ai cũng hay. Là gì?"
+      "riddle": "Ba bánh chạy rong, kêu “tục tục” mãi; chở khách khắp phố, Bangkok ai cũng hay. Là gì?",
+      "spots": [
+        {
+          "x": 0.56,
+          "y": 0.74,
+          "clue": "Một chiếc tuk-tuk nhỏ xíu đang chạy trên mặt đường lát gạch, ngay dưới đuôi chiếc tuk-tuk lớn."
+        }
+      ]
     },
     {
       "id": "shop-goldfish",
@@ -32,7 +39,14 @@
       "scale": 0.68,
       "camo": "ink",
       "foundText": "Chủ tiệm người Hoa nuôi cá vàng để cầu buôn may bán đắt.",
-      "riddle": "Nhà bằng thủy tinh, áo vàng óng ả; bơi vòng quanh mãi, mang lộc cho nhà. Là con gì?"
+      "riddle": "Nhà bằng thủy tinh, áo vàng óng ả; bơi vòng quanh mãi, mang lộc cho nhà. Là con gì?",
+      "spots": [
+        {
+          "x": 0.675,
+          "y": 0.425,
+          "clue": "Bình cá vàng đặt trên lan can ban công tầng hai của dãy nhà phố bên phải, cạnh tấm biển chữ Hoa đỏ."
+        }
+      ]
     },
     {
       "id": "cart-mortar",
@@ -46,7 +60,14 @@
       "scale": 0.68,
       "camo": "ink",
       "foundText": "Som tam chua, cay, mặn, ngọt hòa quyện — món gỏi đu đủ quốc dân của Thái Lan.",
-      "riddle": "Một kẻ nằm yên, một kẻ giã mãi; đu đủ, ớt, chanh hóa món som tam. Là cái gì?"
+      "riddle": "Một kẻ nằm yên, một kẻ giã mãi; đu đủ, ớt, chanh hóa món som tam. Là cái gì?",
+      "spots": [
+        {
+          "x": 0.755,
+          "y": 0.37,
+          "clue": "Chiếc cối đất nung đặt trên bậu cửa sổ tầng trên cùng của ngôi nhà bên phải, phía trên mấy sợi dây điện."
+        }
+      ]
     },
     {
       "id": "bag-thai-tea",
@@ -60,7 +81,14 @@
       "scale": 0.68,
       "camo": "chameleon",
       "foundText": "Trà sữa Thái đựng túi nhựa buộc dây, xách tay vừa đi vừa uống!",
-      "riddle": "Màu cam như nắng, ngọt béo mát lành; treo trong túi nhỏ, uống cùng đá lạnh. Là gì?"
+      "riddle": "Màu cam như nắng, ngọt béo mát lành; treo trong túi nhỏ, uống cùng đá lạnh. Là gì?",
+      "spots": [
+        {
+          "x": 0.855,
+          "y": 0.465,
+          "clue": "Túi trà sữa Thái màu cam treo lủng lẳng cạnh chiếc lồng đèn đỏ ngoài cùng bên phải."
+        }
+      ]
     },
     {
       "id": "stool-mango-rice",
@@ -74,7 +102,14 @@
       "scale": 0.62,
       "camo": "ink",
       "foundText": "Xôi nếp rưới nước cốt dừa ăn cùng xoài chín là món tráng miệng được yêu thích bậc nhất Thái Lan.",
-      "riddle": "Vàng ươm quả chín, trắng dẻo hạt nếp; rưới thêm nước cốt, ngọt thơm xứ Chùa Vàng. Là món gì?"
+      "riddle": "Vàng ươm quả chín, trắng dẻo hạt nếp; rưới thêm nước cốt, ngọt thơm xứ Chùa Vàng. Là món gì?",
+      "spots": [
+        {
+          "x": 0.41,
+          "y": 0.395,
+          "clue": "Đĩa xôi xoài vàng ươm đặt trên ban công nhỏ của ngôi nhà bên trái, ngay phía trên tấm biển chữ Thái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

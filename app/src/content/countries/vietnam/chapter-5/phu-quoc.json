@@ -32,7 +32,14 @@
       "spriteType": "tiger-prawn",
       "scale": 0.38,
       "camo": "ink",
-      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà danh bất hư truyền."
+      "foundText": "Đặc sản biển Phú Quốc thơm ngon với lớp thịt ngọt đậm đà danh bất hư truyền.",
+      "spots": [
+        {
+          "x": 0.76,
+          "y": 0.49,
+          "clue": "Tôm sú vằn bơi trong vũng nước nông nơi bờ cát uốn cong, ngay dưới chân cây cầu bên phải."
+        }
+      ]
     },
     {
       "id": "coral-seahorse",
@@ -45,7 +52,14 @@
       "spriteType": "seahorse",
       "scale": 0.4,
       "camo": "chameleon",
-      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương."
+      "foundText": "Cá ngựa sống theo từng cặp chung thủy giữa lòng đại dương.",
+      "spots": [
+        {
+          "x": 0.44,
+          "y": 0.435,
+          "clue": "Cá ngựa đuôi xoắn quấn quanh chân trụ cây cầu vượt biển, ngay bên trái gáy cuốn sổ."
+        }
+      ]
     },
     {
       "id": "squid-boat",
@@ -146,9 +160,9 @@
     {
       "id": "clue-keeper-lantern",
       "name": "Đèn Lồng Người Canh Biển",
-      "clue": "Chiếc đèn lồng vẽ lẫn vào những mái nhà phía bên phải bờ biển.",
-      "x": 0.74,
-      "y": 0.66,
+      "clue": "Chiếc đèn lồng treo lẫn trên đường cáp treo vượt biển.",
+      "x": 0.65,
+      "y": 0.43,
       "radius": 0.028,
       "score": 150,
       "isClue": true,

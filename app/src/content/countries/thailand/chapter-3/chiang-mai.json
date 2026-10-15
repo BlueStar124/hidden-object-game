@@ -17,7 +17,14 @@
       "spriteType": "elephant",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Chân tháp Wat Chedi Luang có những tượng voi đá như đang gánh đỡ cả ngọn tháp."
+      "foundText": "Chân tháp Wat Chedi Luang có những tượng voi đá như đang gánh đỡ cả ngọn tháp.",
+      "spots": [
+        {
+          "x": 0.455,
+          "y": 0.575,
+          "clue": "Lẫn giữa hàng tượng voi quanh chân tháp có một chú voi nhỏ hơn hẳn, ở phía bên trái gáy sổ."
+        }
+      ]
     },
     {
       "id": "stair-naga",
@@ -30,7 +37,14 @@
       "spriteType": "naga-head",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Rắn thần Naga uốn dọc cầu thang để dẫn lối người hành hương lên tháp."
+      "foundText": "Rắn thần Naga uốn dọc cầu thang để dẫn lối người hành hương lên tháp.",
+      "spots": [
+        {
+          "x": 0.827,
+          "y": 0.512,
+          "clue": "Một đầu rắn thần Naga nhỏ trên đầu đao cong của đầu hồi ngôi chùa gỗ chạm vàng bên phải."
+        }
+      ]
     },
     {
       "id": "bo-sang-umbrella",
@@ -43,7 +57,14 @@
       "spriteType": "paper-umbrella",
       "scale": 0.78,
       "camo": "chameleon",
-      "foundText": "Ô Bo Sang làm từ giấy sa và tre, vẽ hoa bằng tay rồi quét dầu cho khỏi thấm nước."
+      "foundText": "Ô Bo Sang làm từ giấy sa và tre, vẽ hoa bằng tay rồi quét dầu cho khỏi thấm nước.",
+      "spots": [
+        {
+          "x": 0.79,
+          "y": 0.635,
+          "clue": "Chiếc ô giấy vẽ hoa dựng trong ô cửa vòm chạm vàng của ngôi chùa gỗ bên phải."
+        }
+      ]
     },
     {
       "id": "lanna-drum",
@@ -56,7 +77,14 @@
       "spriteType": "long-drum",
       "scale": 0.78,
       "camo": "chameleon",
-      "foundText": "Tiếng trống klong yao rộn ràng dẫn đầu đoàn rước trong những ngày lễ ở Chiang Mai."
+      "foundText": "Tiếng trống klong yao rộn ràng dẫn đầu đoàn rước trong những ngày lễ ở Chiang Mai.",
+      "spots": [
+        {
+          "x": 0.31,
+          "y": 0.73,
+          "clue": "Chiếc trống dài dựng cạnh hàng rào thấp dưới chân cầu thang rắn Naga bên trái."
+        }
+      ]
     },
     {
       "id": "kratip-basket",
@@ -69,7 +97,14 @@
       "spriteType": "kratip",
       "scale": 0.7,
       "camo": "ink",
-      "foundText": "Xôi nếp được ăn bằng tay: vo thành viên nhỏ rồi chấm cùng nước sốt."
+      "foundText": "Xôi nếp được ăn bằng tay: vo thành viên nhỏ rồi chấm cùng nước sốt.",
+      "spots": [
+        {
+          "x": 0.245,
+          "y": 0.4,
+          "clue": "Giỏ xôi tre đan treo lẫn giữa những chậu cây treo lủng lẳng ở góc trên bên trái, cạnh tấm vé xe."
+        }
+      ]
     },
     {
       "id": "artist-seal",

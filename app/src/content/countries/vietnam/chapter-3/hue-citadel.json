@@ -17,7 +17,14 @@
       "spriteType": "cyclo",
       "scale": 0.52,
       "camo": "ink",
-      "foundText": "Chiếc xích lô đưa thám tử dạo qua những bức tường thành rêu phong trăm năm."
+      "foundText": "Chiếc xích lô đưa thám tử dạo qua những bức tường thành rêu phong trăm năm.",
+      "spots": [
+        {
+          "x": 0.705,
+          "y": 0.73,
+          "clue": "Chiếc xích lô cổ kính thong thả lăn bánh trên lối gạch dẫn ra từ cổng tam quan bên phải."
+        }
+      ]
     },
     {
       "id": "blue-porcelain-vase",
@@ -29,8 +36,15 @@
       "score": 120,
       "spriteType": "ao-dai",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Chiếc áo dài tím duyên dáng tôn vinh vẻ đẹp kín đáo thanh tao của người con gái xứ Huế."
+      "camo": "ink",
+      "foundText": "Chiếc áo dài tím duyên dáng tôn vinh vẻ đẹp kín đáo thanh tao của người con gái xứ Huế.",
+      "spots": [
+        {
+          "x": 0.135,
+          "y": 0.54,
+          "clue": "Tà áo dài tím thướt tha dạo bước bên khóm chuối cạnh bức tường thành, phía bên trái trang."
+        }
+      ]
     },
     {
       "id": "poem-hat",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "conical-hat",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Soi nón lên ánh nắng, hai câu thơ lục bát hiện lên mềm mại giữa hai lớp lá."
+      "camo": "chameleon",
+      "foundText": "Soi nón lên ánh nắng, hai câu thơ lục bát hiện lên mềm mại giữa hai lớp lá.",
+      "spots": [
+        {
+          "x": 0.6,
+          "y": 0.715,
+          "clue": "Chiếc nón bài thơ nằm trên sân đá xám cạnh mái điện phía dưới, ngay bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "royal-scroll",
@@ -56,7 +77,14 @@
       "spriteType": "dan-bau",
       "scale": 0.44,
       "camo": "ink",
-      "foundText": "Thanh âm đàn bầu ngân nga lắng đọng trong không gian Nhã nhạc cung đình Huế UNESCO."
+      "foundText": "Thanh âm đàn bầu ngân nga lắng đọng trong không gian Nhã nhạc cung đình Huế UNESCO.",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.33,
+          "clue": "Cây đàn bầu tựa bên vách ngôi đình mái vàng nhỏ ở phía trên bên trái, sau hàng cây xanh."
+        }
+      ]
     },
     {
       "id": "lotus-teacup",
@@ -68,8 +96,15 @@
       "score": 100,
       "spriteType": "royal-umbrella",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Chiếc lọng vàng thêu rồng phượng kim tuyến tôn nghiêm, vật phẩm nghi trượng cao quý chốn hoàng cung triều Nguyễn."
+      "camo": "chameleon",
+      "foundText": "Chiếc lọng vàng thêu rồng phượng kim tuyến tôn nghiêm, vật phẩm nghi trượng cao quý chốn hoàng cung triều Nguyễn.",
+      "spots": [
+        {
+          "x": 0.665,
+          "y": 0.41,
+          "clue": "Lọng vàng thêu kim tuyến dựng bên hồ nước vuông trước cổng nhỏ, phía trên bên phải điện chính."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -122,7 +157,7 @@
       "isBonus": true,
       "spriteType": "hue-kite",
       "scale": 0.4,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Cánh diều rồng ngũ sắc lộng lẫy chao lượn trên nền trời Kỳ Đài, biểu tượng nghệ thuật thủ công tinh xảo của đất Cố đô."
     },
     {
@@ -136,8 +171,22 @@
       "isBonus": true,
       "spriteType": "lotus-flower",
       "scale": 0.36,
-      "camo": "tint",
+      "camo": "chameleon",
       "foundText": "Vườn hoa ngự uyển ngạt ngào hương sắc bốn mùa."
+    },
+    {
+      "id": "clue-dried-lotus",
+      "name": "Nụ Sen Ép Khô",
+      "clue": "Nụ sen ép khô vẽ lẫn vào mái điện xa nhất, ở giữa trang.",
+      "x": 0.51,
+      "y": 0.3,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "lotus-bud",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Nụ sen kẹp trong lá thư: “Người giữ sổ đầu tiên là một họa sĩ cung đình Huế.”"
     }
   ]
 }

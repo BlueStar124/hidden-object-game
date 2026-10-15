@@ -16,9 +16,18 @@
       "score": 150,
       "spriteType": "sampan",
       "scale": 0.48,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Ngước nhìn lên, hai vách đá Tu Sản sừng sững cao cả ngàn mét che khuất mặt trời.",
-      "waterline": 0.65
+      "waterline": 0.65,
+      "spots": [
+        {
+          "x": 0.567,
+          "y": 0.46,
+          "radius": 0.037,
+          "scale": 0.4,
+          "clue": "Chiếc xuồng nan nhỏ xíu vừa ra khỏi khe hẹp giữa hai vách đá xám, nơi dòng sông bắt đầu."
+        }
+      ]
     },
     {
       "id": "canyon-kingfisher",
@@ -31,7 +40,14 @@
       "spriteType": "white-cheeked-gibbon",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Loài linh trưởng quý báu thích nghi trên các vách núi đá vôi hiểm trở."
+      "foundText": "Loài linh trưởng quý báu thích nghi trên các vách núi đá vôi hiểm trở.",
+      "spots": [
+        {
+          "x": 0.1,
+          "y": 0.5,
+          "clue": "Vượn má trắng đu cành trong vạt rừng rậm rạp sát mép trái trang, phía trên ruộng bậc thang."
+        }
+      ]
     },
     {
       "id": "pass-spyglass",
@@ -45,7 +61,14 @@
       "scale": 0.44,
       "rotation": 15,
       "camo": "ink",
-      "foundText": "Tiếng khèn réo rắt xua tan mây mù đỉnh đèo hiểm trở bậc nhất Việt Nam."
+      "foundText": "Tiếng khèn réo rắt xua tan mây mù đỉnh đèo hiểm trở bậc nhất Việt Nam.",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.7,
+          "clue": "Cây khèn bè dựng cạnh bụi cây nhỏ trên sườn ruộng bậc thang phía dưới bên trái."
+        }
+      ]
     },
     {
       "id": "saola-pass",
@@ -57,7 +80,7 @@
       "score": 150,
       "spriteType": "indochinese-tiger",
       "scale": 0.5,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Chúa sơn lâm hổ Đông Dương uy phong lẫm liệt, linh thú huyền thoại của núi rừng biên cương."
     },
     {
@@ -71,7 +94,14 @@
       "spriteType": "dove",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Cánh bồ câu trắng chao liệng thanh bình giữa hai vách đá kỳ vĩ của hẻm vực sâu nhất Đông Nam Á."
+      "foundText": "Cánh bồ câu trắng chao liệng thanh bình giữa hai vách đá kỳ vĩ của hẻm vực sâu nhất Đông Nam Á.",
+      "spots": [
+        {
+          "x": 0.645,
+          "y": 0.505,
+          "clue": "Cánh bồ câu trắng sà xuống sườn đá xanh rêu dốc đứng ngay bên phải dòng sông."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -141,6 +171,20 @@
       "camo": "chameleon",
       "waterline": 0.6,
       "foundText": "Rái cá tinh nghịch bơi lội trong dòng nước lạnh như băng."
+    },
+    {
+      "id": "clue-oil-lamp",
+      "name": "Ngọn Đèn Dầu Nhỏ",
+      "clue": "Ngọn đèn dầu nhỏ vẽ lẫn vào vách đá hẻm vực bên phải, phía trên dòng sông.",
+      "x": 0.63,
+      "y": 0.37,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "clay-lamp",
+      "scale": 0.42,
+      "camo": "chameleon",
+      "foundText": "Kèm theo là mẩu giấy: “Vẽ cả khi trời tối, vì vẻ đẹp không chờ ai.”"
     }
   ]
 }

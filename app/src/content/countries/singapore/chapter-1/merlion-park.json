@@ -18,7 +18,14 @@
       "scale": 0.6,
       "camo": "ink",
       "foundText": "Sứ giả hòa bình mang theo lời chúc tốt lành cho cảng biển Singapore.",
-      "riddle": "Mình trắng như bông, bay khắp quảng trường; ai cho hạt thóc, gật gù cảm ơn. Là con gì?"
+      "riddle": "Mình trắng như bông, bay khắp quảng trường; ai cho hạt thóc, gật gù cảm ơn. Là con gì?",
+      "spots": [
+        {
+          "x": 0.803,
+          "y": 0.318,
+          "clue": "Chú bồ câu trắng muốt đậu ngay trên đỉnh đầu tượng Merlion, trắng lẫn vào bờm sư tử bằng đá."
+        }
+      ]
     },
     {
       "id": "pond-turtle",
@@ -34,7 +41,14 @@
       "camo": "chameleon",
       "waterline": 0.62,
       "foundText": "Chú rùa thọ ngàn năm bảo hộ nguồn nước trong lành của đảo quốc.",
-      "riddle": "Lưng đội nhà cứng, đi chậm từng bước; xuống nước thì bơi, lên bờ thì rụt. Là con gì?"
+      "riddle": "Lưng đội nhà cứng, đi chậm từng bước; xuống nước thì bơi, lên bờ thì rụt. Là con gì?",
+      "spots": [
+        {
+          "x": 0.658,
+          "y": 0.573,
+          "clue": "Chú rùa mai đốm ngoi lên giữa mặt nước loang bóng các tòa nhà, ngay bên phải dòng nước phun."
+        }
+      ]
     },
     {
       "id": "golden-key",

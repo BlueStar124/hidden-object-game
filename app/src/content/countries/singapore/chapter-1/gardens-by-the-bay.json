@@ -17,7 +17,14 @@
       "spriteType": "hornbill",
       "scale": 0.65,
       "camo": "chameleon",
-      "foundText": "Chim mỏ sừng Phương Đông đã tự quay về Singapore sau hàng chục năm vắng bóng!"
+      "foundText": "Chim mỏ sừng Phương Đông đã tự quay về Singapore sau hàng chục năm vắng bóng!",
+      "spots": [
+        {
+          "x": 0.575,
+          "y": 0.33,
+          "clue": "Chú chim mỏ sừng khoác màu nhánh thép, đậu trên tán siêu cây cao nhất ngay bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "canopy-sunbird",
@@ -30,7 +37,14 @@
       "spriteType": "sunbird",
       "scale": 0.6,
       "camo": "ink",
-      "foundText": "Chim hút mật lưng ô liu — một trong những loài chim quen thuộc nhất của các khu vườn Singapore."
+      "foundText": "Chim hút mật lưng ô liu — một trong những loài chim quen thuộc nhất của các khu vườn Singapore.",
+      "spots": [
+        {
+          "x": 0.22,
+          "y": 0.39,
+          "clue": "Chú chim hút mật mỏ cong đậu giữa những nhánh thép trên tán siêu cây thấp ngoài cùng bên trái."
+        }
+      ]
     },
     {
       "id": "spyglass",
@@ -85,7 +99,14 @@
       "scale": 0.8,
       "rotation": -70,
       "camo": "chameleon",
-      "foundText": "Bậc thầy ngụy trang của rừng nhiệt đới — đôi mắt xoay 360° của nó đã nhìn thấy bạn từ lâu!"
+      "foundText": "Bậc thầy ngụy trang của rừng nhiệt đới — đôi mắt xoay 360° của nó đã nhìn thấy bạn từ lâu!",
+      "spots": [
+        {
+          "x": 0.655,
+          "y": 0.6,
+          "clue": "Chú tắc kè hoa đổi màu y hệt lớp dây leo, đang bám trên thân siêu cây to nhất ở trang phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",

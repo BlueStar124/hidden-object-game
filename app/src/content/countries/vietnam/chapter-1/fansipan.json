@@ -17,7 +17,14 @@
       "spriteType": "saola",
       "scale": 0.52,
       "camo": "chameleon",
-      "foundText": "Kỳ lân châu Á xuất hiện giữa mây ngàn Fansipan — dấu ấn huyền thoại của chuyến đi!"
+      "foundText": "Kỳ lân châu Á xuất hiện giữa mây ngàn Fansipan — dấu ấn huyền thoại của chuyến đi!",
+      "spots": [
+        {
+          "x": 0.56,
+          "y": 0.75,
+          "clue": "Bóng dáng sao la lấp ló trong lùm cây xanh dưới chân sàn gỗ ngắm cảnh, bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "summit-compass",
@@ -30,7 +37,14 @@
       "spriteType": "h-mong-flute",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Tiếng sáo Mèo véo von réo rắt gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn."
+      "foundText": "Tiếng sáo Mèo véo von réo rắt gọi bạn vang vọng giữa biển mây Hoàng Liên Sơn.",
+      "spots": [
+        {
+          "x": 0.57,
+          "y": 0.51,
+          "clue": "Cây sáo Mèo bằng gỗ quý dựng nghiêng bên lan can đài ngắm cảnh nhỏ trên cao, cạnh chóp đá."
+        }
+      ]
     },
     {
       "id": "altimeter-watch",
@@ -42,8 +56,15 @@
       "score": 120,
       "spriteType": "silver-pheasant",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Gà lôi trắng quý hiếm với bộ lông bạc kiêu hãnh ẩn hiện giữa rừng đỗ quyên Fansipan."
+      "camo": "ink",
+      "foundText": "Gà lôi trắng quý hiếm với bộ lông bạc kiêu hãnh ẩn hiện giữa rừng đỗ quyên Fansipan.",
+      "spots": [
+        {
+          "x": 0.1,
+          "y": 0.525,
+          "clue": "Chú gà lôi bộ lông bạc kiêu hãnh dạo bước trên sườn đồi bên trái, phía trên tán cọ xanh."
+        }
+      ]
     },
     {
       "id": "wind-kite",
@@ -56,7 +77,14 @@
       "spriteType": "hmong-dog",
       "scale": 0.46,
       "camo": "ink",
-      "foundText": "Quốc khuyển vùng cao với đôi tai vểnh và chiếc đuôi cộc tròn trứ danh."
+      "foundText": "Quốc khuyển vùng cao với đôi tai vểnh và chiếc đuôi cộc tròn trứ danh.",
+      "spots": [
+        {
+          "x": 0.225,
+          "y": 0.515,
+          "clue": "Chú chó H'Mông lông dày đuôi cộc đứng gác trên sàn gỗ ngắm cảnh bên trái, sát hàng lan can."
+        }
+      ]
     },
     {
       "id": "mist-dove",
@@ -69,7 +97,14 @@
       "spriteType": "pho-bowl",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Hương vị phở bò nóng hổi nghi ngút sưởi ấm lòng người lữ khách nơi đỉnh cao 3.143 mét."
+      "foundText": "Hương vị phở bò nóng hổi nghi ngút sưởi ấm lòng người lữ khách nơi đỉnh cao 3.143 mét.",
+      "spots": [
+        {
+          "x": 0.695,
+          "y": 0.72,
+          "clue": "Bát phở bốc khói nghi ngút đặt cạnh chân chóp đá mốc đỉnh trên sàn gỗ phía dưới bên phải."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -121,7 +156,7 @@
       "isBonus": true,
       "spriteType": "flying-squirrel",
       "scale": 0.38,
-      "camo": "gouache",
+      "camo": "ink",
       "foundText": "Chú sóc nhanh nhẹn gặm một quả thông rừng tươi rói."
     },
     {
@@ -137,6 +172,21 @@
       "scale": 0.36,
       "camo": "chameleon",
       "foundText": "Loài bướm núi thích nghi kỳ diệu với cái lạnh khắc nghiệt đỉnh trời."
+    },
+    {
+      "id": "clue-summit-crane",
+      "name": "Hạc Giấy Trên Đỉnh Núi",
+      "clue": "Chiếc hạc giấy đậu trên lan can của sàn gỗ ngắm cảnh bên phải.",
+      "x": 0.79,
+      "y": 0.71,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "paper-crane",
+      "scale": 0.42,
+      "rotation": 6,
+      "camo": "chameleon",
+      "foundText": "Trong cánh hạc có dòng chữ: “Ta chưa đi xa đâu. Hãy đi tiếp về phía Nam.”"
     }
   ]
 }

@@ -17,7 +17,14 @@
       "spriteType": "ca-mau-crab",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Cột đá hình thành từ dòng nham thạch núi lửa nguội đi hàng triệu năm trước."
+      "foundText": "Cột đá hình thành từ dòng nham thạch núi lửa nguội đi hàng triệu năm trước.",
+      "spots": [
+        {
+          "x": 0.385,
+          "y": 0.53,
+          "clue": "Cua biển càng chắc nép dưới mỏm đá bazan nhô ra dòng nước trắng xóa, giữa trang bên trái."
+        }
+      ]
     },
     {
       "id": "ocean-turtle",
@@ -48,8 +55,15 @@
       "score": 120,
       "spriteType": "sea-shell-curtain",
       "scale": 0.46,
-      "camo": "tint",
-      "foundText": "Rèm vỏ ốc biển thủ công khua lách cách trong gió biển mặn mòi xứ Nẫu Phú Yên."
+      "camo": "chameleon",
+      "foundText": "Rèm vỏ ốc biển thủ công khua lách cách trong gió biển mặn mòi xứ Nẫu Phú Yên.",
+      "spots": [
+        {
+          "x": 0.78,
+          "y": 0.3,
+          "clue": "Dải chuông gió vỏ ốc treo lủng lẳng trên tán cây xanh phía trên vách đá, góc trên bên phải."
+        }
+      ]
     },
     {
       "id": "seabird-kingfisher",
@@ -61,8 +75,15 @@
       "score": 120,
       "spriteType": "champa-relief",
       "scale": 0.44,
-      "camo": "tint",
-      "foundText": "Dải đất duyên hải miền Trung lưu giữ những dấu tích kiến trúc điêu khắc Chăm Pa rực rỡ."
+      "camo": "chameleon",
+      "foundText": "Dải đất duyên hải miền Trung lưu giữ những dấu tích kiến trúc điêu khắc Chăm Pa rực rỡ.",
+      "spots": [
+        {
+          "x": 0.7,
+          "y": 0.395,
+          "clue": "Mảnh phù điêu Champa nằm lẫn giữa những cột đá lục giác, ngay dưới vạt đá xám xếp nghiêng bên phải."
+        }
+      ]
     },
     {
       "id": "bottle-letter",
@@ -75,7 +96,14 @@
       "spriteType": "dugong",
       "scale": 0.42,
       "camo": "ink",
-      "foundText": "Nàng tiên cá dugong hiền lành lướt qua những khối đá bazan tổ ong triệu năm kỳ vĩ."
+      "foundText": "Nàng tiên cá dugong hiền lành lướt qua những khối đá bazan tổ ong triệu năm kỳ vĩ.",
+      "spots": [
+        {
+          "x": 0.13,
+          "y": 0.66,
+          "clue": "Nàng tiên cá Dugong bơi giữa làn nước xanh xám của biển, phía dưới bên trái trang."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -144,6 +172,21 @@
       "scale": 0.4,
       "camo": "ink",
       "foundText": "Bóng diệc cô đơn kiêu hãnh giữa sóng gầm gió lộng."
+    },
+    {
+      "id": "clue-keeper-notes",
+      "name": "Sổ Chép Tay Của Người Giữ Sổ",
+      "clue": "Cuốn sổ chép tay vẽ lẫn vào những cột đá bazan cao nhất trên vách.",
+      "x": 0.56,
+      "y": 0.34,
+      "radius": 0.028,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "palm-leaf-book",
+      "scale": 0.45,
+      "rotation": -6,
+      "camo": "chameleon",
+      "foundText": "“Ba người đã giữ cuốn sổ. Người thứ tư đang đọc những dòng này.”"
     }
   ]
 }

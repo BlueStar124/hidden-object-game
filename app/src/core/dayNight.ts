@@ -25,7 +25,8 @@ export function withDayTwins(night: Page, day: Page): Page {
         return twin ? { ...o, dayAt: { x: twin.x, y: twin.y, clue: twin.clue } } : o;
       }),
       // Drawn with the ways they went: the board's caches must tell it apart (core/layout.layoutKey)
-      layout: `${night.layout ?? ''}d`,
+      // ('n', not 'd': that letter marks a daily page, core/daily)
+      layout: `${night.layout ?? ''}n`,
     };
     twinned.set(night, out);
   }

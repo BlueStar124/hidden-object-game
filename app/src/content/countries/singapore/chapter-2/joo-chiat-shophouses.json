@@ -35,7 +35,14 @@
           0.6772
         ]
       ],
-      "foundText": "Chú mèo khẽ ngáp dài và để lộ một đồng xu cổ giấu dưới đáy giỏ xe!"
+      "foundText": "Chú mèo khẽ ngáp dài và để lộ một đồng xu cổ giấu dưới đáy giỏ xe!",
+      "spots": [
+        {
+          "x": 0.22,
+          "y": 0.37,
+          "clue": "Chú mèo mướp cuộn tròn sưởi nắng trên mái ngói của ngôi nhà hồng ngoài cùng bên trái."
+        }
+      ]
     },
     {
       "id": "porcelain-teacup",

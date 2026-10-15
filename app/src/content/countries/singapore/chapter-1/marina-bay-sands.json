@@ -38,7 +38,14 @@
       "scale": 0.55,
       "rotation": -8,
       "camo": "chameleon",
-      "foundText": "Thủy tinh giữa thủy tinh — kiến trúc sư muốn nhắn rằng thời gian đang cạn dần…"
+      "foundText": "Thủy tinh giữa thủy tinh — kiến trúc sư muốn nhắn rằng thời gian đang cạn dần…",
+      "spots": [
+        {
+          "x": 0.36,
+          "y": 0.48,
+          "clue": "Chiếc đồng hồ cát thủy tinh nằm lẫn giữa những ô kính trên mặt tiền tòa tháp thứ nhất, bên trái."
+        }
+      ]
     },
     {
       "id": "wax-letter",

@@ -29,7 +29,7 @@ export const MIGRANTS: Migrant[] = [
     spots: [
       { pageId: 'gardens-by-the-bay', x: 0.235, y: 0.715, clue: 'Hôm nay chú mèo nằm bên mép nước, dưới chân siêu cây ngoài cùng bên trái.' },
       { pageId: 'damnoen-saduak', x: 0.43, y: 0.6, clue: 'Hôm nay chú mèo ngồi trên chiếc thuyền chở xoài giữa kênh.', flip: true },
-      { pageId: 'ho-hoan-kiem', x: 0.37, y: 0.45, clue: 'Hôm nay chú mèo đi dạo trên con đường ven hồ bên trái.' },
+      { pageId: 'ho-hoan-kiem', x: 0.3, y: 0.41, clue: 'Hôm nay chú mèo nằm trên bãi cỏ dưới hàng cây ven hồ, phía bên trái.' },
       { pageId: 'duc-ba', x: 0.735, y: 0.735, clue: 'Hôm nay chú mèo ngồi trên bãi cỏ ở góc phải quảng trường trước nhà thờ.' },
     ],
   },

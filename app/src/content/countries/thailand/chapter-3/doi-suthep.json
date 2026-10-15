@@ -17,7 +17,14 @@
       "spriteType": "temple-bell",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Khách hành hương gõ chuông dọc hành lang chùa để cầu may mắn."
+      "foundText": "Khách hành hương gõ chuông dọc hành lang chùa để cầu may mắn.",
+      "spots": [
+        {
+          "x": 0.88,
+          "y": 0.6,
+          "clue": "Một chiếc chuông đồng lạ treo dưới mái hiên ngôi điện ngoài cùng bên phải, sát chiếc chuông lớn."
+        }
+      ]
     },
     {
       "id": "suthep-umbrella",
@@ -30,7 +37,14 @@
       "spriteType": "paper-umbrella",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Trên đỉnh núi nắng gắt, chiếc ô giấy là người bạn đồng hành của khách hành hương."
+      "foundText": "Trên đỉnh núi nắng gắt, chiếc ô giấy là người bạn đồng hành của khách hành hương.",
+      "spots": [
+        {
+          "x": 0.665,
+          "y": 0.66,
+          "clue": "Chiếc ô giấy Bo Sang ai đó để quên trên sân lát gạch bên phải chân tháp vàng, cạnh bệ đá trắng."
+        }
+      ]
     },
     {
       "id": "roof-peacock",
@@ -43,7 +57,14 @@
       "spriteType": "peacock",
       "scale": 0.85,
       "camo": "chameleon",
-      "foundText": "Tính cả bộ lông đuôi, công lục trống có thể dài tới hơn 2 mét."
+      "foundText": "Tính cả bộ lông đuôi, công lục trống có thể dài tới hơn 2 mét.",
+      "spots": [
+        {
+          "x": 0.452,
+          "y": 0.537,
+          "clue": "Chú công lục đậu trên mái ngôi điện vàng nhỏ nằm sát gáy sổ, phía bên trái ngọn tháp."
+        }
+      ]
     },
     {
       "id": "white-elephant",
@@ -56,7 +77,14 @@
       "spriteType": "elephant",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Tương truyền, một con voi trắng chở xá lợi lên núi và dừng lại đúng nơi dựng chùa Doi Suthep."
+      "foundText": "Tương truyền, một con voi trắng chở xá lợi lên núi và dừng lại đúng nơi dựng chùa Doi Suthep.",
+      "spots": [
+        {
+          "x": 0.715,
+          "y": 0.41,
+          "clue": "Chú voi trắng nhỏ đang leo trên sườn núi mờ sương phía sau ngôi điện vàng bên phải."
+        }
+      ]
     },
     {
       "id": "suthep-kratip",
@@ -69,7 +97,14 @@
       "spriteType": "kratip",
       "scale": 0.7,
       "camo": "ink",
-      "foundText": "Người miền Bắc Thái Lan mang xôi lên chùa dâng lễ vào những ngày rằm."
+      "foundText": "Người miền Bắc Thái Lan mang xôi lên chùa dâng lễ vào những ngày rằm.",
+      "spots": [
+        {
+          "x": 0.325,
+          "y": 0.73,
+          "clue": "Giỏ xôi tre nằm cạnh khóm hoa sứ trắng ở góc dưới bên trái, gần lối vào sân chùa."
+        }
+      ]
     },
     {
       "id": "artist-seal",

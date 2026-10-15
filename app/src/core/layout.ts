@@ -38,7 +38,4 @@ function placedAt(o: HiddenObject, spot: ObjectSpot): HiddenObject {
 }
 
 /** Tells layouts of the same page apart, for caches keyed by page (the board's scenes). */
-export const layoutKey = (page: Page) => {
-  const base = page.variantKey ?? page.id;
-  return page.layout ? `${base}#${page.layout}` : base;
-};
+export const layoutKey = (page: Page) => (page.layout ? `${page.id}#${page.layout}` : page.id);

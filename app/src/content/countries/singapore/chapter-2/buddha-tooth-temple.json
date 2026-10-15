@@ -37,7 +37,14 @@
       "spriteType": "bat",
       "scale": 0.55,
       "camo": "ink",
-      "foundText": "Dơi là biểu tượng của phúc lộc trong văn hóa Á Đông — chú dơi này mang đến vận may cho thám tử!"
+      "foundText": "Dơi là biểu tượng của phúc lộc trong văn hóa Á Đông — chú dơi này mang đến vận may cho thám tử!",
+      "spots": [
+        {
+          "x": 0.432,
+          "y": 0.542,
+          "clue": "Chú dơi quả treo ngược giữa hàng lồng đèn đỏ dưới mái hiên gian tiền điện, xếp cánh như một chiếc đèn."
+        }
+      ]
     },
     {
       "id": "porcelain-vase",

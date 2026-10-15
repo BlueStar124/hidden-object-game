@@ -16,9 +16,16 @@
       "score": 150,
       "spriteType": "dragon-boat",
       "scale": 0.5,
-      "camo": "gouache",
+      "camo": "ink",
       "waterline": 0.65,
-      "foundText": "Thuyền rồng truyền thuyết đưa thám tử chiêm ngưỡng kỳ quan non nước rồng thiêng."
+      "foundText": "Thuyền rồng truyền thuyết đưa thám tử chiêm ngưỡng kỳ quan non nước rồng thiêng.",
+      "spots": [
+        {
+          "x": 0.62,
+          "y": 0.42,
+          "clue": "Cánh buồm rồng lướt trên vùng nước rộng phía xa, giữa những chiếc tàu du lịch trắng bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "cliff-kingfisher",
@@ -31,7 +38,14 @@
       "spriteType": "langur",
       "scale": 0.46,
       "camo": "chameleon",
-      "foundText": "Voọc đầu vàng Cát Bà là loài linh trưởng đặc hữu cực kỳ quý hiếm của quần đảo Hạ Long."
+      "foundText": "Voọc đầu vàng Cát Bà là loài linh trưởng đặc hữu cực kỳ quý hiếm của quần đảo Hạ Long.",
+      "spots": [
+        {
+          "x": 0.57,
+          "y": 0.54,
+          "clue": "Chú voọc đầu vàng bám trên vách đá phủ cây xanh của hòn đảo lớn ngay bên phải gáy sổ."
+        }
+      ]
     },
     {
       "id": "rock-crab",
@@ -43,8 +57,15 @@
       "score": 120,
       "spriteType": "basket-boat",
       "scale": 0.42,
-      "camo": "gouache",
-      "foundText": "Thuyền thúng tre nan mộc mạc gắn liền với nếp sống ngàn đời của ngư dân làng chài Cửa Vạn."
+      "camo": "ink",
+      "foundText": "Thuyền thúng tre nan mộc mạc gắn liền với nếp sống ngàn đời của ngư dân làng chài Cửa Vạn.",
+      "spots": [
+        {
+          "x": 0.36,
+          "y": 0.635,
+          "clue": "Thuyền thúng tròn bằng tre nan neo sát doi cát nối hai hòn đảo nhỏ ở giữa trang bên trái."
+        }
+      ]
     },
     {
       "id": "brass-compass",
@@ -56,7 +77,7 @@
       "score": 120,
       "spriteType": "pearl-oyster",
       "scale": 0.46,
-      "camo": "tint",
+      "camo": "chameleon",
       "waterline": 0.6,
       "shy": {
         "period": 7.5,
@@ -75,8 +96,15 @@
       "score": 100,
       "spriteType": "water-puppet",
       "scale": 0.44,
-      "camo": "gouache",
-      "foundText": "Điệu múa rối nước dân gian tái hiện truyền thuyết rồng mẹ hạ thế cứu nước."
+      "camo": "ink",
+      "foundText": "Điệu múa rối nước dân gian tái hiện truyền thuyết rồng mẹ hạ thế cứu nước.",
+      "spots": [
+        {
+          "x": 0.565,
+          "y": 0.665,
+          "clue": "Chú Tễu tươi cười cưỡi sóng ngay dưới hai chiếc tàu du lịch neo bên chân hòn đảo lớn giữa vịnh."
+        }
+      ]
     },
     {
       "id": "artist-seal",
@@ -167,6 +195,21 @@
       "scale": 0.45,
       "camo": "chameleon",
       "foundText": "Cá ngựa hiền hòa nép mình tránh dòng hải lưu xiết."
+    },
+    {
+      "id": "clue-indochina-map",
+      "name": "Bản Đồ Đông Dương Cũ",
+      "clue": "Tấm bản đồ cũ vẽ lẫn vào vách núi đá vôi lớn phía xa bên trái.",
+      "x": 0.25,
+      "y": 0.34,
+      "radius": 0.03,
+      "score": 150,
+      "isClue": true,
+      "spriteType": "treasure-map",
+      "scale": 0.5,
+      "rotation": 8,
+      "camo": "chameleon",
+      "foundText": "Một đường mực nối Hà Nội, Singapore, Bangkok rồi vòng về phía Nam: cả hành trình đã được vẽ sẵn."
     }
   ]
 }

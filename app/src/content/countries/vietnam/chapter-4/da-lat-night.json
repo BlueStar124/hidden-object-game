@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-villa-lantern",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.49,
+          "clue": "Ngọn đèn dầu nép cạnh chân mái vòm vàng bên trái quảng trường, phía trên các bậc thang."
+        }
+      ],
       "name": "Đèn Bão Biệt Thự Cổ",
       "clue": "Ngọn đèn dầu leo lét sau khung cửa kính mờ sương đêm phố núi.",
       "x": 0.68,
@@ -85,11 +92,18 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.46,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Ánh đèn xua tan cái lạnh buốt của đêm đông phố núi."
     },
     {
       "id": "night-owl-pine",
+      "spots": [
+        {
+          "x": 0.87,
+          "y": 0.39,
+          "clue": "Chú cú đậu trên cây thông cao ngoài cùng bên phải, phía trên mái vòm xanh."
+        }
+      ],
       "name": "Cú Rừng Đồi Thông",
       "clue": "Đôi mắt tròn vạch lối sương mờ trên cành thông già tĩnh lặng.",
       "x": 0.82,
@@ -103,6 +117,13 @@
     },
     {
       "id": "night-civet-coffee",
+      "spots": [
+        {
+          "x": 0.6,
+          "y": 0.52,
+          "clue": "Chú cầy hương nép cạnh dải cây thấp bên phải gáy sổ, giữa lối bậc thang và quảng trường."
+        }
+      ],
       "name": "Cầy Hương Rừng Thông Đêm",
       "clue": "Chú cầy hương thoăn thoắt chuyền cành trong đêm lạnh xứ hoa.",
       "x": 0.52,
@@ -111,7 +132,7 @@
       "score": 150,
       "spriteType": "civet",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Chú cầy hương hoang dã thoăn thoắt săn quả chín trong màn sương đêm lạnh giá của rừng thông Đà Lạt."
     },
     {
@@ -124,7 +145,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "luminous",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -152,6 +173,13 @@
     },
     {
       "id": "night-bat-roof",
+      "spots": [
+        {
+          "x": 0.54,
+          "y": 0.38,
+          "clue": "Đôi cánh dơi lẫn vào hàng cây dưới chân tháp cao, ngay bên phải gáy cuốn sổ."
+        }
+      ],
       "name": "Dơi Đêm Mái Ngói",
       "clue": "Đôi cánh dơi lướt êm ru qua chóp tháp biệt thự Pháp cổ kính.",
       "x": 0.35,
@@ -160,7 +188,7 @@
       "score": 100,
       "spriteType": "bat",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Dơi đêm chao lượn quanh những bóng đèn đường vàng vọt."
     },
     {
@@ -213,7 +241,7 @@
       "isBonus": true,
       "spriteType": "cat",
       "scale": 0.4,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Chú mèo tận hưởng hơi ấm ngọt ngào từ lò sưởi bên trong."
     }
   ]

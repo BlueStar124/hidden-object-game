@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-sun-bear",
+      "spots": [
+        {
+          "x": 0.34,
+          "y": 0.7,
+          "clue": "Chú gấu chó nép bên bụi hoa sứ phía trái sân chùa, ngay dưới chiếc lọng nhỏ."
+        }
+      ],
       "name": "Gấu Chó Tìm Mật",
       "clue": "Chú gấu chó lần mò bên chân ngôi điện bên trái, ngay sau lưng mấy người đang ngồi nghỉ.",
       "x": 0.4,
@@ -140,6 +147,13 @@
     },
     {
       "id": "night-clay-lamp",
+      "spots": [
+        {
+          "x": 0.67,
+          "y": 0.67,
+          "clue": "Ngọn đèn dầu đặt trên bậc đá phía phải bảo tháp vàng, cạnh lối vào ngôi điện nhỏ."
+        }
+      ],
       "name": "Đèn Dầu Bên Tháp",
       "clue": "Ngọn đèn dầu đất nung leo lét trên bệ đá dưới chân chiếc lọng vàng lớn.",
       "x": 0.555,

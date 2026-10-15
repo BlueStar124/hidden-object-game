@@ -77,6 +77,13 @@
   "objects": [
     {
       "id": "night-lantern-boat",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.745,
+          "clue": "Ngọn đèn bão hắt ánh vàng trên khúc sông sát mép dưới trang sổ, bên phải gáy sổ."
+        }
+      ],
       "name": "Đèn Bão Thuyền Gỗ",
       "clue": "Ngọn đèn bão treo mạn thuyền hắt ánh vàng ấm áp lên mặt sông đêm.",
       "x": 0.4,
@@ -85,11 +92,18 @@
       "score": 150,
       "spriteType": "lantern",
       "scale": 0.48,
-      "camo": "luminous",
+      "camo": "ink",
       "foundText": "Ngọn đèn giữ ấm cho người lái đò giữa đêm sương lạnh giá."
     },
     {
       "id": "night-owl-cliff",
+      "spots": [
+        {
+          "x": 0.74,
+          "y": 0.37,
+          "clue": "Chú cú nép trong mảng rừng trên sườn núi bên phải, phía trên những vách đá dựng đứng."
+        }
+      ],
       "name": "Cú Vọ Rừng Đêm Mã Pí Lèng",
       "clue": "Cú vọ mắt sáng quắc chăm chú dõi theo màn sương dày hẻm vực.",
       "x": 0.85,
@@ -103,6 +117,13 @@
     },
     {
       "id": "night-bat-cave",
+      "spots": [
+        {
+          "x": 0.43,
+          "y": 0.48,
+          "clue": "Đôi cánh dơi lẫn vào khe vách đá lớn bên trái hẻm vực, gần gáy cuốn sổ."
+        }
+      ],
       "name": "Dơi Đêm Vòm Hẻm",
       "clue": "Cánh dơi liệng êm ru qua khe đá tai mèo Mã Pí Lèng.",
       "x": 0.24,
@@ -111,7 +132,7 @@
       "score": 150,
       "spriteType": "bat",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Dơi đêm săn côn trùng bay là là trên mặt nước dòng sông."
     },
     {
@@ -124,7 +145,7 @@
       "score": 120,
       "spriteType": "firefly",
       "scale": 0.4,
-      "camo": "luminous",
+      "camo": "ink",
       "roam": {
         "path": [
           [
@@ -152,6 +173,13 @@
     },
     {
       "id": "night-civet-rock",
+      "spots": [
+        {
+          "x": 0.2,
+          "y": 0.53,
+          "clue": "Chú cầy mực nép trong lùm cây trên sườn dốc trái, cạnh những thửa ruộng bậc thang."
+        }
+      ],
       "name": "Cầy Mực Vách Đá Đêm",
       "clue": "Chú cầy mực đuôi rậm thoăn thoắt leo mỏm đá ngửi hương rừng khuya.",
       "x": 0.68,
@@ -160,7 +188,7 @@
       "score": 120,
       "spriteType": "binturong",
       "scale": 0.44,
-      "camo": "shadow",
+      "camo": "ink",
       "foundText": "Cầy mực binturong với chiếc đuôi rậm dài khéo léo bám vách đá tai mèo tĩnh mịch."
     },
     {

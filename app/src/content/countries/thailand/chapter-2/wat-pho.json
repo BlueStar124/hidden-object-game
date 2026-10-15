@@ -17,7 +17,14 @@
       "spriteType": "siamese-cat",
       "scale": 0.85,
       "camo": "ink",
-      "foundText": "Mèo chùa ở Thái Lan được các nhà sư cho ăn và sống thong dong khắp sân."
+      "foundText": "Mèo chùa ở Thái Lan được các nhà sư cho ăn và sống thong dong khắp sân.",
+      "spots": [
+        {
+          "x": 0.43,
+          "y": 0.75,
+          "clue": "Chú mèo Xiêm nằm dài trên nền sân lát đá trước dãy hành lang cột trắng giữa trang, gần mấy du khách."
+        }
+      ]
     },
     {
       "id": "eave-bell",
@@ -30,7 +37,14 @@
       "spriteType": "temple-bell",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Mỗi khi gió thổi, hàng trăm chiếc chuông nhỏ dưới mái chùa ngân lên leng keng."
+      "foundText": "Mỗi khi gió thổi, hàng trăm chiếc chuông nhỏ dưới mái chùa ngân lên leng keng.",
+      "spots": [
+        {
+          "x": 0.455,
+          "y": 0.625,
+          "clue": "Chiếc chuông đồng nhỏ treo dưới mái hiên dãy hành lang giữa trang, ngay sát gáy sổ."
+        }
+      ]
     },
     {
       "id": "guardian-lotus",
@@ -43,7 +57,14 @@
       "spriteType": "lotus-bud",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Tượng đá canh cửa Wat Pho từng là đá dằn khoang những thuyền buôn từ Trung Hoa sang."
+      "foundText": "Tượng đá canh cửa Wat Pho từng là đá dằn khoang những thuyền buôn từ Trung Hoa sang.",
+      "spots": [
+        {
+          "x": 0.645,
+          "y": 0.725,
+          "clue": "Búp sen hồng đặt dưới chân pho tượng đá canh cửa ở giữa trang bên phải, cạnh chậu cây kiểng."
+        }
+      ]
     },
     {
       "id": "ramakien-mask",
@@ -56,7 +77,14 @@
       "spriteType": "khon-mask",
       "scale": 0.72,
       "camo": "chameleon",
-      "foundText": "Chân điện chính Wat Pho có hàng trăm phù điêu đá tạc cảnh sử thi Ramakien."
+      "foundText": "Chân điện chính Wat Pho có hàng trăm phù điêu đá tạc cảnh sử thi Ramakien.",
+      "spots": [
+        {
+          "x": 0.78,
+          "y": 0.535,
+          "clue": "Chiếc mặt nạ Hanuman ẩn trên đầu hồi chạm vàng của ngôi điện mái cam bên phải, cạnh tháp nhọn."
+        }
+      ]
     },
     {
       "id": "chedi-parakeet",
@@ -69,7 +97,14 @@
       "spriteType": "parakeet",
       "scale": 0.75,
       "camo": "chameleon",
-      "foundText": "Bốn ngọn tháp lớn của Wat Pho khảm gốm bốn màu: xanh lá, trắng, vàng và xanh dương."
+      "foundText": "Bốn ngọn tháp lớn của Wat Pho khảm gốm bốn màu: xanh lá, trắng, vàng và xanh dương.",
+      "spots": [
+        {
+          "x": 0.165,
+          "y": 0.595,
+          "clue": "Chú vẹt ngực đỏ đậu lẫn giữa những chùm hoa sứ trắng trên tán cây ở góc trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

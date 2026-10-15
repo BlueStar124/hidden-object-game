@@ -122,7 +122,14 @@
       "scale": 0.5,
       "camo": "chameleon",
       "waterline": 0.8,
-      "foundText": "Trên cánh buồm giấy có dòng chữ nguệch ngoạc: \"Hẹn gặp dưới gốc cây cổ thụ\"."
+      "foundText": "Trên cánh buồm giấy có dòng chữ nguệch ngoạc: \"Hẹn gặp dưới gốc cây cổ thụ\".",
+      "spots": [
+        {
+          "x": 0.74,
+          "y": 0.69,
+          "clue": "Chiếc thuyền gấp từ trang báo cũ trôi sát mạn chiếc bumboat phía đông, lẫn vào bóng thuyền in trên mặt sông."
+        }
+      ]
     },
     {
       "id": "artist-seal",

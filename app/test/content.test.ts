@@ -106,6 +106,39 @@ describe('night pages', () => {
     for (const ref of pairs) if (ref.night) expect(ref.night.art).toBe(ref.day.art);
   });
 
+  test('every stationary main sprite can hide elsewhere on a replay, except day twins', () => {
+    for (const ref of pairs) {
+      const fixed = ref.night?.objects.filter((o) => isMainObject(o) && o.spriteType !== 'seal' && !o.roam && !o.shy && !o.dayTwin) ?? [];
+      expect({ page: ref.night?.id, missing: fixed.filter((o) => !o.spots?.length).map((o) => o.id) })
+        .toEqual({ page: ref.night?.id, missing: [] });
+    }
+  });
+
+  test('alternate hiding places stay clear of every segment of roaming creatures at night', () => {
+    for (const ref of pairs) {
+      const objects = ref.night?.objects ?? [];
+      for (const o of objects) for (const s of o.spots ?? []) {
+        for (const other of objects) {
+          if (!other.roam) continue;
+          const { path, loop } = other.roam;
+          const segments = loop ? path.length : path.length - 1;
+          for (let i = 0; i < segments; i++) {
+            const a = path[i];
+            const b = path[(i + 1) % path.length];
+            // Project in spread-width units, as hit detection does, including the loop's closing leg.
+            const dx = b[0] - a[0];
+            const dy = (b[1] - a[1]) / ASPECT;
+            const lengthSquared = dx * dx + dy * dy;
+            const t = lengthSquared ? Math.max(0, Math.min(1, ((s.x - a[0]) * dx + (s.y - a[1]) / ASPECT * dy) / lengthSquared)) : 0;
+            const distance = Math.hypot(s.x - a[0] - t * dx, (s.y - a[1]) / ASPECT - t * dy);
+            expect({ page: ref.night?.id, object: o.id, roaming: other.id, segment: i, clear: distance > (s.radius ?? o.radius) + other.radius })
+              .toEqual({ page: ref.night?.id, object: o.id, roaming: other.id, segment: i, clear: true });
+          }
+        }
+      }
+    }
+  });
+
   test('what moved since the day is the same thing as on the day page, somewhere else, found as it is', () => {
     for (const ref of pairs) {
       expect(ref.day.objects.filter((o) => o.dayTwin)).toEqual([]);

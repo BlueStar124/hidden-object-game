@@ -97,7 +97,14 @@
       "spriteType": "lotus-bud",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Trước khi vào chùa Phật Ngọc, khách viếng thường dâng sen, nến và nhang."
+      "foundText": "Trước khi vào chùa Phật Ngọc, khách viếng thường dâng sen, nến và nhang.",
+      "spots": [
+        {
+          "x": 0.38,
+          "y": 0.695,
+          "clue": "Búp sen hồng ai đó đặt trên nền sân lát đá, ngay trước bậc thềm ngôi đình nhỏ bên trái."
+        }
+      ]
     },
     {
       "id": "artist-seal",

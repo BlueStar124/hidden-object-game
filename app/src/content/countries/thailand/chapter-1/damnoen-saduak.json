@@ -86,7 +86,14 @@
       "scale": 0.85,
       "camo": "chameleon",
       "waterline": 0.75,
-      "foundText": "Thuyền đuôi dài chạy rất nhanh nhờ chân vịt gắn ở cuối một trục dài."
+      "foundText": "Thuyền đuôi dài chạy rất nhanh nhờ chân vịt gắn ở cuối một trục dài.",
+      "spots": [
+        {
+          "x": 0.388,
+          "y": 0.75,
+          "clue": "Một chiếc thuyền đuôi dài nhỏ rẽ nước ngay dưới mạn chiếc thuyền chở xoài, sát mép dưới trang trái."
+        }
+      ]
     },
     {
       "id": "vendor-coconut",

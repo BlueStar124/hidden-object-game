@@ -17,7 +17,14 @@
       "spriteType": "elephant",
       "scale": 0.85,
       "camo": "chameleon",
-      "foundText": "Thời Ayutthaya, voi chiến là niềm tự hào của các vị vua Xiêm."
+      "foundText": "Thời Ayutthaya, voi chiến là niềm tự hào của các vị vua Xiêm.",
+      "spots": [
+        {
+          "x": 0.635,
+          "y": 0.69,
+          "clue": "Chú voi xám thong thả trên nền gạch cổ phía trước gốc cây đa ôm đầu tượng Phật, bên trang phải."
+        }
+      ]
     },
     {
       "id": "nai-khanom-gloves",
@@ -30,7 +37,14 @@
       "spriteType": "boxing-gloves",
       "scale": 0.72,
       "camo": "ink",
-      "foundText": "Tương truyền, võ sĩ Nai Khanom Tom thời Ayutthaya một mình hạ liên tiếp nhiều võ sĩ Miến Điện."
+      "foundText": "Tương truyền, võ sĩ Nai Khanom Tom thời Ayutthaya một mình hạ liên tiếp nhiều võ sĩ Miến Điện.",
+      "spots": [
+        {
+          "x": 0.3,
+          "y": 0.585,
+          "clue": "Đôi găng Muay Thái đỏ ai bỏ quên trên lối đi lát đá dẫn vào khu tháp cổ bên trái."
+        }
+      ]
     },
     {
       "id": "naresuan-rooster",
@@ -43,7 +57,14 @@
       "spriteType": "rooster",
       "scale": 0.78,
       "camo": "chameleon",
-      "foundText": "Tương truyền gà chọi của vua Naresuan thắng cả gà của hoàng tử Miến Điện."
+      "foundText": "Tương truyền gà chọi của vua Naresuan thắng cả gà của hoàng tử Miến Điện.",
+      "spots": [
+        {
+          "x": 0.877,
+          "y": 0.552,
+          "clue": "Chú gà chọi oai vệ đứng trên bức tường gạch đổ bên phải, ngay dưới ngọn tháp chuông nhỏ."
+        }
+      ]
     },
     {
       "id": "banyan-snake",
@@ -57,7 +78,14 @@
       "scale": 0.8,
       "rotation": 20,
       "camo": "chameleon",
-      "foundText": "Thân rắn mảnh mai lẫn vào những rễ đa vặn xoắn như một sợi dây leo."
+      "foundText": "Thân rắn mảnh mai lẫn vào những rễ đa vặn xoắn như một sợi dây leo.",
+      "spots": [
+        {
+          "x": 0.58,
+          "y": 0.565,
+          "clue": "Chú rắn bay uốn mình giữa chằng chịt rễ đa, ngay bên trái đầu tượng Phật nằm lọt trong gốc cây."
+        }
+      ]
     },
     {
       "id": "brick-scorpion",
