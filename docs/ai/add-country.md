@@ -26,6 +26,9 @@ Ví dụ thêm Việt Nam, id nước `vietnam`:
 - [ ] `app/src/content/countries/vietnam/index.ts` export `vietnam: Country` (§3)
 - [ ] Thêm vào **cuối** `COUNTRIES` trong `app/src/content/index.ts` (`COUNTRIES[0]` là cuốn mở đầu của người chơi mới)
 - [ ] Sprite mới, nếu có (§5) → `npm run generate` ở gốc repo
+- [ ] Một migration mới trong `supabase/migrations/` thêm id các trang mới vào `challenge_pages` (và sprite mới vào
+      `challenge_sprites`, kèm tăng `FRIEND_CONTENT_VERSION` trong `core/challenge.ts`): thiếu là
+      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè
 - [ ] `cd app && npm run check && npm run test:screens`, rồi chơi thử `npm run web` (§8)
 - [ ] Cập nhật `README.md` (danh sách nước/trang) nếu cần
 
@@ -134,7 +137,7 @@ sau khi phát hành**. Vật ở trang đêm dùng tiền tố `night-`.
 | `waterline` | phần chiều cao sprite nằm dưới mặt nước (0–1) | 0.55–0.8, cho vật bơi/thuyền |
 | `glow` | trang đêm: `false` để tắt mắt phát sáng | mặc định là phát sáng |
 | `isSecret`, `isBonus`, `isClue` | xem ở trên | |
-| `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`** (test). Vẽ thử trên tranh trước khi ghi |
+| `spots` | chỗ nấp khác cho lần chơi lại, trang của ngày, mã thử thách: `[{x, y, clue, radius?, scale?, rotation?, flip?, occluder?}]`. Mỗi chỗ **phải có `clue` riêng** (clue tả vị trí) | 0–3 chỗ mỗi vật, trên giấy, không đè vật khác. **Không dùng cho `roam`/`shy`/`dayTwin` hay dấu triện vẽ sẵn**. Mọi vật chính đứng yên trên 11 trang đêm hiện có đều có ít nhất 1 chỗ (test, trừ `dayTwin` và dấu triện). Vẽ thử trên tranh trước khi ghi |
 | `riddle` | câu đố hiện trên thẻ thay cho tên và clue tới khi tìm thấy hoặc đọc bằng gợi ý (ẩn cả hình bóng) | tùy chọn; viết cho đúng vật (đổi `spriteType` thì sửa câu đố) |
 | `requires` | chỉ hiện khi người chơi có dụng cụ: `'uv-lens'` (lời nhắn mực tàng hình, đặt trên vùng giấy sáng), `'prism'` (nét vẽ cầu vồng), `'twin-lens'` (nét vẽ tí hon: `scale` ≤ 0.3, `radius` ~0.016). Luôn kèm `isBonus` và `camo: invisible`; phải có chương trao dụng cụ đó (`Mystery.reward`). Test soát cả ba điều | id `uv-note-<n>`, `prism-sketch-<n>`, `tiny-sketch-<n>` |
 | `order` | trang theo dấu: 1, 2, 3… chỉ bắt được vật tới lượt; chạm vật sau không bị tính sai | chỉ vật chính, đủ 1…n liên tục (test) |
@@ -215,3 +218,6 @@ npm run test:screens # Mục Lục có thêm tab nước: kiểm tra trên 13 c�
 
 Mẹo đặt tọa độ: mở tranh bằng trình xem ảnh có hiện tọa độ pixel, lấy `x = px / 1760`, `y = py / 1240` (làm tròn 3 chữ
 số thập phân). Test chỉ bắt lỗi dữ liệu, không bắt được vật đặt sai chỗ trong tranh: luôn chơi thử.
+
+`camo` chỉ nhận `ink`, `chameleon`, `invisible` (test chặn giá trị khác, vì game sẽ lặng lẽ vẽ chúng thành `ink`). Khi
+gộp nhánh nội dung, kiểm tra cả các vật `isClue` (mảnh manh mối của bí ẩn chương), `riddle`, `spots` không bị mất.

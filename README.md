@@ -142,7 +142,7 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Bí ẩn chương:** mỗi trang ngày giấu thêm một **mảnh manh mối** (không bắt buộc để qua màn). Đủ mảnh của chương thì
   mở **Bảng Suy Luận** trong Mục Lục: chọn đáp án đúng để đọc đoạn kết. Chọn sai không bị phạt, chỉ được nhắc lại manh
   mối. Cả 11 chương của Singapore, Thái Lan và Việt Nam đều có bí ẩn (37 mảnh manh mối), nối thành một câu chuyện: ai đã để lại cuốn sổ, và vì sao nó đến tay bạn.
-- **Chơi lại không nhàm:** trang đã giải có thể đặt vật ở chỗ nấp khác (kèm gợi ý mới) mỗi lần chơi lại.
+- **Chơi lại không nhàm:** trang đã giải có thể đặt vật ở chỗ nấp khác (kèm gợi ý mới) mỗi lần chơi lại, trên cả trang ngày và 11 trang đêm. Dấu triện và các món thuộc nhiệm vụ ngày và đêm giữ chỗ cố định.
 - **Trang của ngày:** mỗi ngày một góc tranh với 3–5 vật, giống nhau cho mọi người chơi (không cần server). Xong thì
   được đóng **dấu Hộ Chiếu**; đủ 7 dấu một nước thì được tem vàng. Lỡ ngày không mất gì.
 - **Trang Bìa:** dán sinh vật và đồ vật đã tìm thấy thành sticker, kéo, xoay, đổi cỡ tùy thích.
@@ -170,8 +170,10 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Sinh vật giật mình:** bị bắt, mèo nhảy lên, cua bò ngang, cá quẫy đuôi, chim vỗ cánh bay lên rồi đậu lại.
 - **Sao lưu tiến độ:** nút 💾 ở trang chủ lưu tiến độ ra một tệp; khôi phục (từ tệp hoặc dán nội dung) sẽ gộp với tiến
   độ đang có, không mất gì. Bản web xin trình duyệt giữ dữ liệu lâu dài.
-- **Thử thách bạn bè:** mỗi lần thắng có một mã như `SG3-7K2P-142` (trang, cách đặt vật, thời gian). Bạn bè nhập mã ở
-  trang chủ (hoặc mở link `…/?c=SG3-7K2P-142` trên web) để chơi đúng ván đó và so thời gian.
+- **Thử thách bạn bè:** trang chủ → Thử thách → Tạo thử thách cho chọn màn đã chơi, tạo mã và gửi cho bạn bè,
+  hoặc chơi trước để lập kỷ lục. Sau khi thắng, mã như `SG3-7K2P-142` kèm thời gian của bạn. Cả người tạo và người
+  nhận đều phải từng vào chơi đúng màn đó trong sổ (ngày/đêm tính riêng, không bắt buộc thắng); nhập mã hoặc mở link
+  `…/?c=SG3-7K2P-142` đều kiểm tra điều kiện này. Lịch sử được giữ trong bản lưu và sao lưu.
 
 ### Trường mới trong file màn chơi
 
