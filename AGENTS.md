@@ -29,7 +29,7 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 | `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices`; `ownedTools` | `core`, `content`, `platform`, `game` |
 | `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
 | `screens/` | `GameScreen`, `useChallenges` (mã, thử thách bạn bè, link), `ErrorBoundary`, `Desk`, `auth/` (cổng tài khoản), `hud/` (`QuestPanel` + `QuestCard`), `dialogs/`, `share/` (bưu thiếp, lời nhắn) | mọi thứ |
-| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)`, `backupFile.native/.web`, `keepStorage(.web)`, `supabase` + `supabaseStorage` (client), `cloudProgress` (đồng bộ), `friendChallenges`, `accountPrefs`, `googleSignIn(.web)` | `core`, `platform`, `generated` |
+| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)`, `backupFile.native/.web`, `keepStorage(.web)`, `supabase` + `supabaseStorage` (client), `cloudProgress` (đồng bộ), `friendChallenges`, `accountPrefs`, `googleSignIn(.web)`, `displayDensity(.web)` (độ phân giải canvas trên web) | `core`, `platform`, `generated` |
 | `ui/` | Dùng chung: `theme`, `ModalShell`, `DialogHeader`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
 | `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động, **không sửa tay** | `core`, `board`, `generated` |
 

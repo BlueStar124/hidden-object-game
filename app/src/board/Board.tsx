@@ -14,6 +14,7 @@ import { renderFrame } from './render';
 import { createLoupePaints } from './scene/paints';
 import { atlasDensity } from './scene/spriteAtlas';
 import { useBoardGestures } from './useBoardGestures';
+import { IDLE_FRAME_STRIDE } from '../platform/displayDensity';
 import { fittedScale, loupeDiameter, useCamera } from './useCamera';
 import { useCaseMarks } from './useCaseMarks';
 import { usePageTurn } from './usePageTurn';
@@ -112,15 +113,22 @@ export const Board = React.memo<BoardProps>(function Board({
   /* --------------------------------- Frame --------------------------------- */
 
   const clock = useSharedValue(motionNow());
+  // Phones in a browser: with nothing but creatures moving, every other frame is drawn (platform/
+  // displayDensity). A turn or warm-up keeps every frame; the camera and loupe redraw on their own
+  const fullRate = useSharedValue(true);
+  const frameCount = useSharedValue(0);
   const tickFrame = useCallback(() => {
     'worklet';
+    frameCount.value = (frameCount.value + 1) % IDLE_FRAME_STRIDE;
+    if (frameCount.value !== 0 && !fullRate.value) return;
     clock.value = motionNow();
-  }, [clock]);
+  }, [clock, frameCount, fullRate]);
   const frameClock = useFrameCallback(tickFrame, false);
   useEffect(() => {
     // Warm-up and turns still need frames under overlays; an otherwise covered board is static.
     frameClock.setActive((active && turn === null) || pageTurn.flip !== null || warmUp !== null);
-  }, [active, turn, pageTurn.flip, warmUp, frameClock]);
+    fullRate.value = pageTurn.flip !== null || warmUp !== null;
+  }, [active, turn, pageTurn.flip, warmUp, frameClock, fullRate]);
   const { shown } = library;
   const { flip, flipStart } = pageTurn;
   const { s, tx, ty, lx, ly, dims } = camera;

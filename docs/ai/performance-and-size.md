@@ -63,6 +63,11 @@ mỗi giây, mở hộp thoại.
    `usePagesAround` ưu tiên dựng đích chưa có cache trong lúc giữ trang cũ đứng yên, thử lại khi ảnh tới (`version`).
    `usePageTurn` chỉ đọc scene đã dựng; bắt đầu đồng hồ 900 ms khi đích sẵn sàng rồi gọi `completeTurn`.
    Trang lân cận hẹn sau khi ổn định (`PREPARE_MS = 120`), mỗi lần một trang; đồng hồ vụ án dừng khi chờ/lật.
+1b. **Web trên điện thoại:** canvas của Skia (CanvasKit) vẽ theo `devicePixelRatio`; ở 3× là ~3 triệu điểm ảnh mỗi
+   khung, quá sức GPU điện thoại. `platform/displayDensity.web.ts` (import đầu tiên trong `index.web.ts`, **trước Skia**)
+   giới hạn tỉ lệ này ở 1,5 cho điện thoại (cảm ứng, cạnh ngắn < 600 px) và 2 cho máy khác; HTML quanh bàn chơi không
+   đổi. Trên điện thoại, lúc chỉ có sinh vật chuyển động thì vẽ cách một khung (`IDLE_FRAME_STRIDE`, 30 khung/giây);
+   lật trang, warm-up, kéo kính lúp vẫn đủ khung. App iOS/Android vẽ native, không đổi.
 2. Cache có sẵn, hãy dùng, đừng tạo cache song song:
    - tranh đã giải mã: `images` (module-level, khóa `artIdOf`, tối đa `MAX_IMAGES = 5`);
    - phân tích tranh: `analyses` (khóa `layoutKey`, đọc pixel một lần mỗi cách sắp đặt);
