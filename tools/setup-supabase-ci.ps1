@@ -79,9 +79,10 @@ $password = Secret 'Gõ mật khẩu database, hoặc copy nó rồi bấm Enter
 if (-not $password) { throw 'Chưa có mật khẩu' }
 
 Step 'Lưu secrets vào GitHub'
-$token | gh secret set SUPABASE_ACCESS_TOKEN; Must 'lưu SUPABASE_ACCESS_TOKEN'
-$password | gh secret set SUPABASE_DB_PASSWORD; Must 'lưu SUPABASE_DB_PASSWORD'
-$projectRef | gh secret set SUPABASE_PROJECT_ID; Must 'lưu SUPABASE_PROJECT_ID'
+# --body, not a pipe: Windows PowerShell adds a line break to piped text, which would be stored too
+gh secret set SUPABASE_ACCESS_TOKEN --body $token; Must 'lưu SUPABASE_ACCESS_TOKEN'
+gh secret set SUPABASE_DB_PASSWORD --body $password; Must 'lưu SUPABASE_DB_PASSWORD'
+gh secret set SUPABASE_PROJECT_ID --body $projectRef; Must 'lưu SUPABASE_PROJECT_ID'
 gh secret list
 
 Step 'Kiểm tra migration trên dự án'

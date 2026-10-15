@@ -52,3 +52,15 @@ const sql = fs.readdirSync(migrations)
 
 assertEqual('Challenge pages', pageIds(path.join(root, 'app', 'src', 'content', 'countries')), catalogIds(sql, 'challenge_pages'));
 assertEqual('Challenge sprites', spriteIds(), catalogIds(sql, 'challenge_sprites'));
+
+// The web app's Content-Security-Policy (vercel.json) must let it reach the Supabase project of
+// app/.env: otherwise the browser blocks sign-in and sync on the deployed site, while the game still runs
+const supabaseUrl = /EXPO_PUBLIC_SUPABASE_URL=(\S+)/.exec(fs.readFileSync(path.join(root, 'app', '.env'), 'utf8'))?.[1];
+if (supabaseUrl) {
+  const origin = new URL(supabaseUrl).origin;
+  const csp = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'))
+    .headers.flatMap((h) => h.headers).find((h) => h.key === 'Content-Security-Policy')?.value ?? '';
+  const connect = /connect-src ([^;]*)/.exec(csp)?.[1].split(/\s+/) ?? [];
+  if (csp && !connect.includes(origin)) throw new Error(`vercel.json: connect-src does not allow ${origin} (sign-in and sync would be blocked on the web)`);
+  console.log(`Web CSP allows ${origin}`);
+}
