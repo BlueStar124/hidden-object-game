@@ -1,9 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import ts from 'typescript';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// TypeScript from the app's own install: this check runs in app/ (`npm run check`, CI) before the
+// repo root's packages are installed
+const ts = createRequire(path.join(root, 'app', 'package.json'))('typescript');
 const migrations = path.join(root, 'supabase', 'migrations');
 
 function pageIds(dir) {
