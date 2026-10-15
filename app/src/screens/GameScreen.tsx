@@ -49,7 +49,7 @@ type Sheet = 'passport' | 'cover' | 'challenge' | 'backup' | null;
  * victory, index, album) over everything.
  */
 export const GameScreen: React.FC = () => {
-  const { email: accountEmail, openAccount, signOut } = useAuth();
+  const { email: accountEmail, name: accountName, editName, openAccount, signOut } = useAuth();
   const [showIndex, setShowIndex] = useState(false);
   const [showAlbum, setShowAlbum] = useState(false);
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -319,6 +319,8 @@ export const GameScreen: React.FC = () => {
           onEnterChallenge={enterChallenge}
           onOpenBackup={openBackup}
           accountEmail={accountEmail}
+          accountName={accountName}
+          onEditName={editName}
           onSignIn={openAccount}
           onSignOut={onSignOut}
         />

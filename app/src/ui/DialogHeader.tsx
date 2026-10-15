@@ -8,7 +8,8 @@ interface DialogHeaderProps {
   icon: React.ReactNode;
   title: string;
   description?: string;
-  onClose: () => void;
+  /** The close button (none: a dialog that must be answered) */
+  onClose?: () => void;
   children?: React.ReactNode; // under the title (tabs…)
 }
 
@@ -23,9 +24,11 @@ export const DialogHeader: React.FC<DialogHeaderProps> = ({ icon, title, descrip
         {children}
       </View>
     </View>
-    <RoundIconButton onPress={onClose} accessibilityLabel="Đóng">
-      <X size={20} color={colors.ink} />
-    </RoundIconButton>
+    {onClose && (
+      <RoundIconButton onPress={onClose} accessibilityLabel="Đóng">
+        <X size={20} color={colors.ink} />
+      </RoundIconButton>
+    )}
   </View>
 );
 

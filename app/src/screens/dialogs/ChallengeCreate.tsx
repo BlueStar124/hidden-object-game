@@ -16,6 +16,7 @@ import { friendChallengeMessage } from '../share/messages';
 import { useShare } from '../share/useShare';
 import { ShareNote } from '../share/ShareRow';
 import { ScrollStrip } from '../../ui/ScrollStrip';
+import { useAuth } from '../auth/AuthContext';
 
 interface ChallengeCreateProps {
   header: React.ReactNode;
@@ -55,6 +56,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
   const [published, setPublished] = useState<{ code: string; text: string } | null>(null);
   const request = useRef<{ draft: string; id: string } | null>(null);
   const share = useShare();
+  const { name: playerName } = useAuth();
   const { width } = useWindowDimensions();
   const previewWidth = Math.min(460, Math.max(240, width - 88));
   const previewHeight = previewWidth * 9 / 16;
@@ -195,7 +197,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
       const draft = JSON.stringify([selectedPage.id, title.trim(), objects]);
       if (request.current?.draft !== draft) request.current = { draft, id: newRequestId() };
       const code = await publishFriendChallenge(request.current.id, selectedPage.id, title.trim(), objects);
-      setPublished({ code, text: friendChallengeMessage(code, selectedPage.title, objects.length) });
+      setPublished({ code, text: friendChallengeMessage(code, selectedPage.title, objects.length, playerName) });
     } catch {
       setError('Chưa thể xuất bản. Hãy đăng nhập, chơi trang này trên tài khoản của bạn rồi thử lại.');
     } finally {

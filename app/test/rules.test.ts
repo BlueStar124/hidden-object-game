@@ -22,6 +22,7 @@ import { isShyVisible, objectPosition, roamState, shyPhase } from '../src/core/m
 import { isMainObject, type Chapter, type HiddenObject, type Page, type RoamBehavior, type ShyBehavior } from '../src/core/model';
 import { canDeduce, cluesOf, hasMystery, isRightAnswer, mysteryProgress } from '../src/core/mystery';
 import { hashString, localDay, rng, SEED_COUNT, shuffled } from '../src/core/random';
+import { cleanDisplayName, displayNameOf, NAME_MAX } from '../src/core/profile';
 import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
 import { chapterGiving, toolsOwned, withTools } from '../src/core/tools';
 import { migrantObjectId, migrantProgress, migrantSpot, withVisitors } from '../src/core/migrants';
@@ -706,5 +707,26 @@ describe("a friend's hunt", () => {
     expect(page.title).toBe('Thử thách');
     expect(layoutKey(page)).toBe('merlion-park#friend-f1');
     expect(isFriendChallenge({ country: 'SG', page: 1, night: false, seed: 1 })).toBe(false);
+  });
+});
+
+describe('the name in the game', () => {
+  test('a typed name is tidied, and must be 2 to 24 characters', () => {
+    expect(cleanDisplayName('  Thám   tử\tLan ')).toBe('Thám tử Lan');
+    expect(cleanDisplayName('A')).toBeNull();
+    expect(cleanDisplayName('   ')).toBeNull();
+    expect(cleanDisplayName('x'.repeat(NAME_MAX + 1))).toBeNull();
+    expect(cleanDisplayName('Lan\u0007')).toBe('Lan');
+    // Counted in characters, not code units: a name with emoji is not cut short
+    expect(cleanDisplayName('🦊'.repeat(NAME_MAX))).toBe('🦊'.repeat(NAME_MAX));
+  });
+
+  test("the chosen name comes first, then the provider's (cut to fit), else none", () => {
+    expect(displayNameOf({ display_name: 'Lan', full_name: 'Nguyễn Thị Lan' })).toBe('Lan');
+    expect(displayNameOf({ full_name: 'Nguyễn Thị Lan' })).toBe('Nguyễn Thị Lan');
+    expect(displayNameOf({ name: 'A Very Long Google Account Name Indeed' })).toHaveLength(NAME_MAX);
+    expect(displayNameOf({ display_name: ' ', name: 'Lan' })).toBe('Lan');
+    expect(displayNameOf({})).toBeNull();
+    expect(displayNameOf(null)).toBeNull();
   });
 });

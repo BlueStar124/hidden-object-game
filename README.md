@@ -192,6 +192,16 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 Câu hỏi của bí ẩn chương nằm trong `countries/<nước>/mysteries.ts` (trường `mystery` của chương). Mỗi nước có thêm
 `code` (2 chữ in hoa) dùng trong mã thử thách.
 
+## 🔐 Tài Khoản (Supabase, Tùy Chọn)
+
+Game chơi trọn vẹn không cần tài khoản. Có tài khoản thì tiến độ đồng bộ giữa các máy và tạo được thử thách bạn bè.
+
+- Đăng nhập bằng **Google** hoặc **email** (đăng ký email có thêm **tên trong game**; tài khoản Google lấy sẵn tên Google, đổi được ở trang chủ). Tài khoản chưa có tên được hỏi một lần, bấm "Để sau" vẫn chơi tiếp.
+- Bật đăng nhập Google (một lần, trên dashboard):
+  1. Google Cloud Console → APIs & Services → Credentials → **Create OAuth client ID** (Web application). Authorized redirect URI: `https://<mã-dự-án>.supabase.co/auth/v1/callback`.
+  2. Supabase → Authentication → Sign In / Providers → **Google**: bật, dán Client ID và Client Secret.
+  3. Supabase → Authentication → URL Configuration: **Site URL** là địa chỉ bản web; **Redirect URLs** thêm `https://<tên-miền-web>/**`, `http://localhost:8081/**`, `lostsketchbook://**` (app) và `exp://**` (Expo Go).
+
 ## 🛠️ Cài Đặt & Chạy Game
 
 Game chạy bằng bản app trong [`app/`](app/README.md) (iOS · Android · web):

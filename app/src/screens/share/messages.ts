@@ -98,10 +98,10 @@ export function dailyShare(page: Page, day: string, time: number): { postcard: P
   };
 }
 
-/** The message of a friend's hunt just published (`count` objects hidden on `pageTitle`). */
-export function friendChallengeMessage(code: string, pageTitle: string, count: number): string {
+/** The message of a friend's hunt just published (`count` objects hidden on `pageTitle`), signed with the name in the game. */
+export function friendChallengeMessage(code: string, pageTitle: string, count: number, name?: string | null): string {
   const link = challengeLink(code);
-  return `Mình đã giấu ${count} vật trong trang “${pageTitle}” của ${GAME}. Hãy đăng nhập, chơi trang này rồi nhập mã ${code}${link ? ` hoặc mở ${link}` : ''}.`;
+  return `${name ? `${name} đã giấu` : 'Mình đã giấu'} ${count} vật trong trang “${pageTitle}” của ${GAME}. Hãy đăng nhập, chơi trang này rồi nhập mã ${code}${link ? ` hoặc mở ${link}` : ''}.`;
 }
 
 /** The message after finishing a friend's hunt. */

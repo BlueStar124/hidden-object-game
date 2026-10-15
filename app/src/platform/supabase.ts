@@ -13,7 +13,10 @@ export const supabase =
           storage: supabaseStorage,
           autoRefreshToken: true,
           persistSession: true,
-          detectSessionInUrl: false,
+          // PKCE: a sign-in page (Google, an email link) comes back with a one-time code. On the web the
+          // client reads it from the address as it starts; the apps exchange it (platform/googleSignIn)
+          flowType: 'pkce',
+          detectSessionInUrl: Platform.OS === 'web',
         },
       })
     : null;
