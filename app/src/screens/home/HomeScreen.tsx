@@ -24,11 +24,12 @@ import {
   Sticker,
   Swords,
   Trophy,
+  UserRound,
   Volume2,
   VolumeX,
 } from '../../ui/icons';
 import { SpriteIcon } from '../../ui/SpriteIcon';
-import { colors, fonts, shadow } from '../../ui/theme';
+import { accentControl, colors, controlIcon, fonts, shadow } from '../../ui/theme';
 import { BookThumb } from '../BookThumb';
 import { albumProgress, bookSummary, type BookSummary } from './summary';
 
@@ -53,6 +54,7 @@ interface HomeScreenProps {
   onEnterChallenge: () => void;
   onOpenBackup: () => void;
   accountEmail: string;
+  onSignIn: () => void;
   onSignOut: () => void;
 }
 
@@ -79,6 +81,7 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     onEnterChallenge,
     onOpenBackup,
     accountEmail,
+    onSignIn,
     onSignOut,
   }) => {
     const { width, height } = useWindowDimensions();
@@ -125,15 +128,15 @@ export const HomeScreen = React.memo<HomeScreenProps>(
           </Text>
         </View>
         <View style={[styles.row, tight && styles.rowTight]}>
-          <SecondaryButton label="Mục Lục" icon={<BookOpen size={17} color={colors.ink} />} onPress={onOpenIndex} />
-          <SecondaryButton label="Sổ Tay" icon={<BookHeart size={17} color={colors.emerald} />} onPress={onOpenAlbum} />
+          <SecondaryButton label="Mục Lục" icon={<BookOpen size={controlIcon.size} color={controlIcon.color} />} onPress={onOpenIndex} />
+          <SecondaryButton label="Sổ Tay" icon={<BookHeart size={controlIcon.size} color={controlIcon.color} />} onPress={onOpenAlbum} />
           <Pressable
             onPress={onOpenBackup}
             accessibilityRole="button"
             accessibilityLabel="Sao lưu tiến độ"
             style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
           >
-            <Save size={18} color={colors.emerald} />
+            <Save size={controlIcon.size} color={controlIcon.color} />
           </Pressable>
           <Pressable
             onPress={onToggleSound}
@@ -141,7 +144,7 @@ export const HomeScreen = React.memo<HomeScreenProps>(
             accessibilityLabel={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
             style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
           >
-            {soundEnabled ? <Volume2 size={18} color={colors.ink} /> : <VolumeX size={18} color={colors.inkSoft} />}
+            {soundEnabled ? <Volume2 size={controlIcon.size} color={controlIcon.color} /> : <VolumeX size={controlIcon.size} color={controlIcon.color} />}
           </Pressable>
         </View>
         {/* Little height: icons only, on one row */}
@@ -149,27 +152,49 @@ export const HomeScreen = React.memo<HomeScreenProps>(
           {daily !== 'none' && (
             <Chip
               label={daily === 'done' ? 'Đã xong hôm nay' : 'Trang của ngày'}
-              icon={daily === 'done' ? <Check size={15} color={colors.emerald} /> : <CalendarDays size={15} color={colors.crimson} />}
+              icon={daily === 'done' ? <Check size={controlIcon.small} color={controlIcon.color} /> : <CalendarDays size={controlIcon.small} color={controlIcon.color} />}
               onPress={daily === 'done' ? onOpenPassport : onOpenDaily}
               highlight={daily === 'open'}
               iconOnly={tight}
             />
           )}
-          <Chip label="Hộ chiếu" icon={<Stamp size={15} color={colors.crimson} />} onPress={onOpenPassport} iconOnly={tight} />
-          <Chip label="Trang bìa" icon={<Sticker size={15} color={colors.earth} />} onPress={onOpenCover} iconOnly={tight} />
-          <Chip label="Mã thử thách" icon={<Swords size={15} color={colors.earth} />} onPress={onEnterChallenge} iconOnly={tight} />
+          <Chip label="Hộ chiếu" icon={<Stamp size={controlIcon.small} color={controlIcon.color} />} onPress={onOpenPassport} iconOnly={tight} />
+          <Chip label="Trang bìa" icon={<Sticker size={controlIcon.small} color={controlIcon.color} />} onPress={onOpenCover} iconOnly={tight} />
+          <Chip label="Thử thách" icon={<Swords size={controlIcon.small} color={controlIcon.color} />} onPress={onEnterChallenge} iconOnly={tight} />
+          {tight && (
+            <Chip
+              label={accountEmail ? `Đăng xuất (${accountEmail})` : 'Đăng nhập để đồng bộ tiến độ'}
+              icon={<UserRound size={controlIcon.small} color={controlIcon.color} />}
+              onPress={accountEmail ? onSignOut : onSignIn}
+              iconOnly
+            />
+          )}
         </View>
         <View style={[styles.stats, tight && styles.statsTight, !columns && styles.centredRow]}>
-          <Stat icon={<Trophy size={13} color={colors.gold} />} text={`${formatNumber(score)} điểm`} />
-          <Stat icon={<CircleCheckBig size={13} color={colors.emerald} />} text={`${cleared}/${pageCount} trang`} />
+          <Stat icon={<Trophy size={13} color={controlIcon.color} />} text={`${formatNumber(score)} điểm`} />
+          <Stat icon={<CircleCheckBig size={13} color={controlIcon.color} />} text={`${cleared}/${pageCount} trang`} />
           <Stat icon={<PawPrint size={13} color={colors.earth} />} text={`${album.found}/${album.total} loài`} />
         </View>
-        <View style={[styles.account, !columns && styles.centredRow]}>
-          <Text style={styles.accountEmail} numberOfLines={1}>{accountEmail}</Text>
-          <Pressable onPress={onSignOut} accessibilityRole="button" accessibilityLabel="Đăng xuất khỏi tài khoản">
-            <Text style={styles.signOut}>Đăng xuất</Text>
+        {/* Little height: the account is one more icon on the desk row */}
+        {!tight && (accountEmail ? (
+          <View style={[styles.account, !columns && styles.centredRow]}>
+            <UserRound size={13} color={controlIcon.color} />
+            <Text style={styles.accountEmail} numberOfLines={1}>{accountEmail}</Text>
+            <Pressable onPress={onSignOut} accessibilityRole="button" accessibilityLabel="Đăng xuất khỏi tài khoản">
+              <Text style={styles.signOut}>Đăng xuất</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <Pressable
+            onPress={onSignIn}
+            accessibilityRole="button"
+            accessibilityLabel="Đăng nhập để đồng bộ tiến độ và tạo thử thách"
+            style={({ pressed }) => [styles.account, !columns && styles.centredRow, pressed && { opacity: 0.6 }]}
+          >
+            <UserRound size={13} color={controlIcon.color} />
+            <Text style={styles.signIn}>Đăng nhập để đồng bộ tiến độ</Text>
           </Pressable>
-        </View>
+        ))}
       </View>
     );
 
@@ -444,32 +469,37 @@ const styles = StyleSheet.create({
   desk: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
+    gap: 8,
+    marginTop: 8,
   },
+  // The same button as the row above (ui/Buttons' secondary), a little lower: the rows read as one set
   chip: {
+    // Two per row: four of them make an even grid, never three and an orphan
+    flexGrow: 1,
+    flexBasis: '40%',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    minHeight: 36,
-    paddingHorizontal: 10,
-    borderRadius: 999,
+    justifyContent: 'center',
+    gap: 6,
+    minHeight: 40,
+    paddingHorizontal: 12,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.hairline,
     backgroundColor: colors.paper,
   },
+  // Little height: icons only, as low as the row allows
   chipIcon: {
-    width: 40,
+    flexGrow: 0,
+    flexBasis: 'auto',
+    width: 42,
+    minHeight: 36,
     paddingHorizontal: 0,
-    justifyContent: 'center',
   },
-  chipHighlight: {
-    borderColor: 'rgba(166, 50, 50, 0.4)',
-    backgroundColor: 'rgba(166, 50, 50, 0.07)',
-  },
+  chipHighlight: accentControl,
   chipText: {
-    fontSize: 12,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
     color: colors.ink,
   },
   stats: {
@@ -482,24 +512,32 @@ const styles = StyleSheet.create({
   statsTight: {
     marginTop: 7,
   },
+  // The account: one quiet line under the stats, in their size and colours
   account: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    marginTop: 2,
+    gap: 6,
+    marginTop: 8,
   },
   accountEmail: {
+    flexShrink: 1,
     maxWidth: 220,
-    color: colors.inkFaint,
-    fontSize: 10,
+    color: colors.inkSoft,
+    fontSize: 12,
   },
   signOut: {
-    color: colors.crimson,
-    fontSize: 10,
+    color: colors.earth,
+    fontSize: 12,
     fontWeight: '700',
     paddingVertical: 4,
-    paddingHorizontal: 3,
+    paddingHorizontal: 4,
+    textDecorationLine: 'underline',
+  },
+  signIn: {
+    color: colors.earth,
+    fontSize: 12,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
   stat: {
     flexDirection: 'row',
@@ -509,7 +547,7 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.earth,
+    color: colors.inkSoft,
   },
 
   /* Sketchbooks */
