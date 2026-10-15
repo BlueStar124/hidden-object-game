@@ -69,6 +69,23 @@ export const FRIEND_MAX_OBJECTS = 20;
 /** Points per object found in a friend's hunt (it counts for nothing in the books). */
 export const FRIEND_OBJECT_SCORE = 100;
 
+/** The sizes a friend's object can have: how big it is drawn (scale) with the touch area that fits it (radius). */
+export type FriendSize = 'small' | 'medium' | 'large' | 'huge';
+export const FRIEND_SIZES: Record<FriendSize, { scale: number; radius: number }> = {
+  small: { scale: 0.6, radius: 0.022 },
+  medium: { scale: 0.9, radius: 0.03 },
+  large: { scale: 1.3, radius: 0.042 },
+  huge: { scale: 1.8, radius: 0.055 },
+};
+
+/** The size an object was given (the nearest, for an object from an older app). */
+export function friendSizeOf(object: Pick<FriendChallengeObject, 'scale'>): FriendSize {
+  const scale = object.scale ?? FRIEND_SIZES.medium.scale;
+  return (Object.keys(FRIEND_SIZES) as FriendSize[]).reduce((best, size) =>
+    Math.abs(FRIEND_SIZES[size].scale - scale) < Math.abs(FRIEND_SIZES[best].scale - scale) ? size : best
+  );
+}
+
 const FRIEND_CODE = /\bH-[0-9A-F]{12}\b/i;
 const FRIEND_CAMO: readonly CamoStyle[] = ['ink', 'chameleon', 'invisible'];
 

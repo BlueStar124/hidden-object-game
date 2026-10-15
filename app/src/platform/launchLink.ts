@@ -14,3 +14,8 @@ export function takeLaunchCode(): string | null {
 export function challengeLink(code: string): string | null {
   return WEB_URL ? `${WEB_URL}/?c=${encodeURIComponent(code)}` : null;
 }
+
+/** The public address of the web game (null: unknown), where links sent by email lead. */
+export function webAddress(): string | null {
+  return WEB_URL ?? null;
+}

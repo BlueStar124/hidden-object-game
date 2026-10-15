@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
-import { FRIEND_AREA, type FriendChallengeObject } from '../../core/challenge';
+import { FRIEND_AREA, FRIEND_SIZES, friendSizeOf, type FriendChallengeObject, type FriendSize } from '../../core/challenge';
 import type { SpriteType } from '../../core/model';
 import { progress } from '../../core/progress';
 import { allPages, placeOf } from '../../content';
@@ -9,7 +9,7 @@ import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { Check, Moon, Plus, Share2, Trash } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
 import { SpriteIcon } from '../../ui/SpriteIcon';
-import { colors, fonts } from '../../ui/theme';
+import { accentControl, colors, fonts } from '../../ui/theme';
 import { BookThumb } from '../BookThumb';
 import { newRequestId, publishFriendChallenge } from '../../platform/friendChallenges';
 import { friendChallengeMessage } from '../share/messages';
@@ -28,6 +28,15 @@ interface ChallengeCreateProps {
 
 const SPRITES = Object.keys(BESTIARY) as Exclude<SpriteType, 'seal'>[];
 const PAPER = { x: 0.05, y: 0.218, w: 0.9, h: 0.564 };
+const SIZES: { value: FriendSize; label: string }[] = [
+  { value: 'small', label: 'Nhỏ' },
+  { value: 'medium', label: 'Vừa' },
+  { value: 'large', label: 'Lớn' },
+  { value: 'huge', label: 'Rất lớn' },
+];
+const DEFAULT_CLUE = 'Có một người bạn nhỏ đang trốn trong tranh.';
+// A medium object's marker on the preview (px)
+const MARKER = 30;
 // How near an object's marker a press picks it up (px on screen)
 const MARKER_GRAB = 22;
 const CAMOUFLAGE = [
@@ -47,8 +56,9 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
   const [title, setTitle] = useState('Thử thách của mình');
   const [spriteType, setSpriteType] = useState<Exclude<SpriteType, 'seal'>>('cat');
   const [name, setName] = useState(BESTIARY.cat.name);
-  const [clue, setClue] = useState('Có một người bạn nhỏ đang trốn trong tranh.');
+  const [clue, setClue] = useState(DEFAULT_CLUE);
   const [camo, setCamo] = useState<FriendChallengeObject['camo']>('ink');
+  const [size, setSize] = useState<FriendSize>('medium');
   const [objects, setObjects] = useState<FriendChallengeObject[]>([]);
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -83,6 +93,12 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
     setPublished(null);
   };
 
+  const updateSize = (value: FriendSize) => {
+    setSize(value);
+    if (selectedObjectId) setObjects((current) => current.map((object) => (object.id === selectedObjectId ? { ...object, ...FRIEND_SIZES[value] } : object)));
+    setPublished(null);
+  };
+
   const updateCamo = (value: NonNullable<FriendChallengeObject['camo']>) => {
     setCamo(value);
     if (selectedObjectId) setObjects((current) => current.map((object) => object.id === selectedObjectId ? { ...object, camo: value } : object));
@@ -103,8 +119,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
       clue: clue.trim(),
       x: 0.5,
       y: 0.5,
-      radius: 0.03,
-      scale: 0.9,
+      ...FRIEND_SIZES[size],
       camo,
     };
     if (!next.name || !next.clue) {
@@ -116,6 +131,16 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
     setError('Chạm hoặc kéo trên tranh để chọn chỗ giấu vật.');
     setPublished(null);
   };
+
+  // Done with the object being edited: the fields are free again, so choosing another sprite starts a
+  // new object instead of changing the one just hidden
+  const finishObject = () => {
+    setSelectedObjectId(null);
+    setName(BESTIARY[spriteType].name);
+    setClue(DEFAULT_CLUE);
+    setError('Đã giấu xong. Chọn vật khác rồi bấm "Thêm vật" để giấu tiếp.');
+  };
+  const editing = objects.find((object) => object.id === selectedObjectId);
 
   /* ---- Placing objects: tap or drag on the painting ---- */
 
@@ -144,6 +169,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
     setName(object.name);
     setClue(object.clue);
     setCamo(object.camo ?? 'ink');
+    setSize(friendSizeOf(object));
   };
   const grabAt = (event: GestureResponderEvent) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -265,7 +291,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
           <Text style={styles.label}>TÊN THỬ THÁCH</Text>
           <TextInput value={title} onChangeText={(value) => { setTitle(value); setPublished(null); }} maxLength={80} placeholder="Tên thử thách" style={styles.input} accessibilityLabel="Tên thử thách" />
 
-          <Text style={styles.label}>CHỌN VẬT ĐỂ GIẤU</Text>
+          <Text style={styles.label} numberOfLines={1}>{editing ? `ĐANG SỬA: ${editing.name.toUpperCase()}` : 'CHỌN VẬT ĐỂ GIẤU'}</Text>
           <ScrollStrip label="Danh sách vật" contentContainerStyle={styles.sprites}>
             {SPRITES.map((type) => (
                 <Pressable key={type} onPress={() => updateSprite(type)} accessibilityRole="button" accessibilityLabel={BESTIARY[type].name} accessibilityState={{ selected: spriteType === type }} style={[styles.spriteChoice, spriteType === type && styles.selectedSprite]}>
@@ -276,13 +302,26 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
           <View style={styles.fields}>
             <TextInput value={name} onChangeText={updateName} maxLength={80} placeholder="Tên vật" style={[styles.input, styles.flex]} accessibilityLabel="Tên vật cần tìm" />
             <TextInput value={clue} onChangeText={updateClue} maxLength={160} placeholder="Gợi ý cho người chơi" style={[styles.input, styles.flex]} accessibilityLabel="Gợi ý tìm vật" />
-            <SecondaryButton label="Thêm vật" icon={<Plus size={16} color={colors.earth} />} onPress={addObject} disabled={objects.length >= 20} style={styles.addButton} />
+            {editing ? (
+              <SecondaryButton label="Xong" accessibilityLabel={`Xong vật ${editing.name}, để thêm vật khác`} icon={<Check size={16} color={colors.earth} />} onPress={finishObject} style={[styles.addButton, accentControl]} />
+            ) : (
+              <SecondaryButton label="Thêm vật" icon={<Plus size={16} color={colors.earth} />} onPress={addObject} disabled={objects.length >= 20} style={styles.addButton} />
+            )}
           </View>
           <View style={styles.camoRow}>
             <Text style={styles.fieldLabel}>Cách giấu:</Text>
             {CAMOUFLAGE.map((item) => (
               <Pressable key={item.value} onPress={() => updateCamo(item.value)} accessibilityRole="radio" accessibilityState={{ checked: camo === item.value }} style={[styles.camo, camo === item.value && styles.selectedCamo]}>
                 <Text style={[styles.camoText, camo === item.value && styles.selectedCamoText]}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </View>
+
+          <View style={styles.camoRow}>
+            <Text style={styles.fieldLabel}>Cỡ vật:</Text>
+            {SIZES.map((item) => (
+              <Pressable key={item.value} onPress={() => updateSize(item.value)} accessibilityRole="radio" accessibilityLabel={`Cỡ ${item.label}`} accessibilityState={{ checked: size === item.value }} style={[styles.camo, size === item.value && styles.selectedCamo]}>
+                <Text style={[styles.camoText, size === item.value && styles.selectedCamoText]}>{item.label}</Text>
               </Pressable>
             ))}
           </View>
@@ -308,15 +347,21 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
               onResponderTerminate={() => { dragging.current = null; }}
             >
               <BookThumb scene={selectedPage} width={previewWidth} />
-              {objects.map((object) => (
+              {objects.map((object) => {
+                // The marker grows with the object's size (FRIEND_SIZES), so sizes compare on the painting
+                const grow = (object.scale ?? FRIEND_SIZES.medium.scale) / FRIEND_SIZES.medium.scale;
+                const d = Math.round(MARKER * grow);
+                return (
                 <View key={object.id} pointerEvents="none" style={[
                   styles.marker,
                   { left: `${((object.x - PAPER.x) / PAPER.w) * 100}%`, top: `${((object.y - PAPER.y) / PAPER.h) * 100}%` },
+                  { width: d, height: d, marginLeft: -d / 2, marginTop: -d / 2, borderRadius: d / 2 },
                   selectedObjectId === object.id && styles.activeMarker,
                 ]}>
-                  <SpriteIcon type={object.spriteType} size={24} />
+                  <SpriteIcon type={object.spriteType} size={Math.round(d * 0.8)} />
                 </View>
-              ))}
+                );
+              })}
             </View>
           )}
 

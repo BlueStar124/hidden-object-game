@@ -3,6 +3,7 @@ import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollVie
 import { LinearGradient } from 'expo-linear-gradient';
 import { cleanDisplayName, NAME_MAX, NAME_MIN } from '../../core/profile';
 import { signInWithGoogle } from '../../platform/googleSignIn';
+import { webAddress } from '../../platform/launchLink';
 import { BookOpen, Lock, Mail, UserRound } from '../../ui/icons';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { colors, fonts, shadow } from '../../ui/theme';
@@ -49,7 +50,13 @@ const AuthScreen: React.FC<{
     setMessage('');
     try {
       const result = createAccount
-        ? await supabase.auth.signUp({ email: email.trim(), password, options: { data: { display_name: displayName } } })
+        ? await supabase.auth.signUp({
+            email: email.trim(),
+            password,
+            // The confirmation link leads to the web game (not the project's default Site URL); it must be
+            // listed in Supabase's Redirect URLs
+            options: { data: { display_name: displayName }, emailRedirectTo: webAddress() ?? undefined },
+          })
         : await supabase.auth.signInWithPassword({ email: email.trim(), password });
 
       if (result.error) {

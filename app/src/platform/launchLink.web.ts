@@ -30,3 +30,12 @@ export function challengeLink(code: string): string | null {
     return null;
   }
 }
+
+/** The public address of the web game, where links sent by email lead (this page's, if unset). */
+export function webAddress(): string | null {
+  try {
+    return WEB_URL ?? window.location.origin;
+  } catch {
+    return null;
+  }
+}
