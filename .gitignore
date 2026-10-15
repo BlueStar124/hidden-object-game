@@ -26,3 +26,6 @@ scratch
 *.njsproj
 *.sln
 *.sw?
+
+# Raw source paintings (hundreds of MB): kept outside git
+/archive/
