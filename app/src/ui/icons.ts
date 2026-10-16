@@ -19,6 +19,7 @@ export { default as CircleQuestionMark } from 'lucide-react-native/icons/circle-
 export { default as Compass } from 'lucide-react-native/icons/compass';
 export { default as Download } from 'lucide-react-native/icons/download';
 export { default as Eye } from 'lucide-react-native/icons/eye';
+export { default as EyeOff } from 'lucide-react-native/icons/eye-off';
 export { default as Feather } from 'lucide-react-native/icons/feather';
 export { default as Flame } from 'lucide-react-native/icons/flame';
 export { default as Flashlight } from 'lucide-react-native/icons/flashlight';

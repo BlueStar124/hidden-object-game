@@ -8,6 +8,7 @@ import { BookOpen, Lock, Mail, UserRound } from '../../ui/icons';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { colors, fonts, shadow } from '../../ui/theme';
 import { supabase } from '../../platform/supabase';
+import { RevealButton } from '../../ui/RevealButton';
 
 /** Offers account access or lets the player continue directly to the game as a guest. */
 const AuthScreen: React.FC<{
@@ -21,6 +22,7 @@ const AuthScreen: React.FC<{
   const [forgot, setForgot] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -180,10 +182,11 @@ const AuthScreen: React.FC<{
                   placeholder="Mật khẩu"
                   placeholderTextColor={colors.inkFaint}
                   returnKeyType="go"
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   style={styles.input}
                   value={password}
                 />
+                <RevealButton shown={showPassword} onToggle={() => setShowPassword((v) => !v)} />
               </View>
             )}
             {!!message && <Text accessibilityLiveRegion="polite" style={styles.message}>{message}</Text>}

@@ -47,13 +47,9 @@ const ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 const SEED_CHARS = SEED_BITS / 5;
 const MAX_TIME = 99_999; // seconds
 
-/** Both creating and accepting a challenge require a prior visit to that exact day/night page. */
-export function canChallengePage(pageId: string, playedPages: readonly string[]): boolean {
-  return playedPages.includes(pageId);
-}
-
 /** Why a challenge cannot be played now (null: it can). */
-export type ChallengeRefusal = 'missing' | 'unplayed' | 'turning' | 'newer';
+// (Any page of the books can be challenged, played before or not)
+export type ChallengeRefusal = 'missing' | 'turning' | 'newer';
 
 /* ---- A friend's hunt (stored by the backend: platform/friendChallenges) ---- */
 

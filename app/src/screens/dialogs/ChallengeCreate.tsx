@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
 import { FRIEND_AREA, FRIEND_SIZES, friendSizeOf, type FriendChallengeObject, type FriendSize } from '../../core/challenge';
 import type { SpriteType } from '../../core/model';
-import { progress } from '../../core/progress';
 import { allPages, placeOf } from '../../content';
 import { BESTIARY } from '../../content/bestiary';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
@@ -23,7 +22,6 @@ interface ChallengeCreateProps {
   onClose: () => void;
   onSignIn: () => void;
   signedIn: boolean;
-  playedPageIds?: readonly string[];
 }
 
 const SPRITES = Object.keys(BESTIARY) as Exclude<SpriteType, 'seal'>[];
@@ -45,12 +43,9 @@ const CAMOUFLAGE = [
   { value: 'invisible', label: 'Mực tàng hình' },
 ] as const;
 
-/** Lets a player place any bundled sprite on a page they have played, then publish the layout. */
-export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClose, onSignIn, signedIn, playedPageIds }) => {
-  const pages = useMemo(() => {
-    const played = playedPageIds ?? progress.playedPages();
-    return allPages().filter((page) => played.includes(page.id));
-  }, [playedPageIds]);
+/** Lets a player place any bundled sprite on any page of the books, then publish the layout. */
+export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClose, onSignIn, signedIn }) => {
+  const pages = useMemo(() => allPages(), []);
   const [selectedPageId, setSelectedPageId] = useState(pages[0]?.id);
   const selectedPage = pages.find((page) => page.id === selectedPageId);
   const [title, setTitle] = useState('Thử thách của mình');
@@ -225,7 +220,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
       const code = await publishFriendChallenge(request.current.id, selectedPage.id, title.trim(), objects);
       setPublished({ code, text: friendChallengeMessage(code, selectedPage.title, objects.length, playerName) });
     } catch {
-      setError('Chưa thể xuất bản. Hãy đăng nhập, chơi trang này trên tài khoản của bạn rồi thử lại.');
+      setError('Chưa thể xuất bản. Hãy kiểm tra kết nối rồi thử lại (mỗi ngày tạo được tối đa 5 thử thách).');
     } finally {
       setBusy(false);
     }
@@ -267,7 +262,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
       )}
     >
       {pages.length === 0 ? (
-        <Text style={styles.empty}>Hãy chơi một trang trong cuốn sổ trước khi tạo thử thách.</Text>
+        <Text style={styles.empty}>Chưa có trang nào để giấu vật.</Text>
       ) : (
         <>
           <Text style={styles.label}>TRANG ĐỂ GIẤU VẬT</Text>

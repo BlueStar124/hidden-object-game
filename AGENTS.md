@@ -51,9 +51,8 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
 5. **Không làm hỏng bản lưu của người chơi.** Khóa `detective_sketchbook_progress_v1`, **id trang** và **id vật** đã phát
    hành là vĩnh viễn (tiến độ lưu theo chúng). Đổi định dạng lưu = tăng `SCHEMA_VERSION`, chuyển đổi trong
    `readProgress`, kèm test trong `progress.test.ts`.
-   Thử thách chỉ dành cho trang **đã chơi trong sổ** ở cả người tạo và người nhận (`playedPages`, ngày/đêm riêng);
-   dùng `canChallengePage`, chặn ở `useNavigation.openChallenge` cả khi nhập mã lẫn mở link (trả về lý do từ chối,
-   `ChallengeRefusal`). Dữ liệu thử thách bạn bè tải từ server phải qua `readFriendChallenge` (core). Đổi tài khoản
+   Thử thách mở cho **mọi trang**, ai cũng tạo và chơi được (không cần từng chơi trang đó); `useNavigation.openChallenge`
+   chỉ từ chối khi trang không có trong bản game, đang lật trang hoặc nội dung mới hơn (`ChallengeRefusal`). Dữ liệu thử thách bạn bè tải từ server phải qua `readFriendChallenge` (core). Đổi tài khoản
    không được gộp tiến độ của tài khoản trước (`accountPrefs.saveOwner`, `progress.replace`).
 6. **Đường vẽ là worklet.** Mọi hàm gọi từ `board/render/`, `board/anim.ts`, `core/motion.ts` phải có `'worklet'` ở
    dòng đầu và không chạm tới React state. Paint, shader, path được tạo **một lần** trên JS thread (`scene/paints.ts`,

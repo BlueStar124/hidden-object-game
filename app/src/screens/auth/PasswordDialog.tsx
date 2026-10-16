@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextInput } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { DialogHeader } from '../../ui/DialogHeader';
 import { Check, Lock } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
+import { RevealButton } from '../../ui/RevealButton';
 import { colors, fonts } from '../../ui/theme';
 
 /** Shortest password the account server takes (Supabase's default). */
@@ -19,6 +20,7 @@ export const PasswordDialog: React.FC<{
 }> = ({ onSave, onClose }) => {
   const [password, setPassword] = useState('');
   const [again, setAgain] = useState('');
+  const [shown, setShown] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const tooShort = password.length > 0 && password.length < PASSWORD_MIN;
@@ -55,35 +57,40 @@ export const PasswordDialog: React.FC<{
       }
     >
       <Text style={styles.help}>Đặt mật khẩu mới cho tài khoản của bạn.</Text>
-      <TextInput
-        value={password}
-        onChangeText={(value) => {
-          setPassword(value);
-          setError(null);
-        }}
-        placeholder={`Mật khẩu mới (ít nhất ${PASSWORD_MIN} ký tự)`}
-        placeholderTextColor={colors.inkFaint}
-        secureTextEntry
-        autoComplete="new-password"
-        autoFocus
-        style={styles.input}
-        accessibilityLabel="Mật khẩu mới"
-      />
-      <TextInput
-        value={again}
-        onChangeText={(value) => {
-          setAgain(value);
-          setError(null);
-        }}
-        onSubmitEditing={() => void save()}
-        placeholder="Nhập lại mật khẩu mới"
-        placeholderTextColor={colors.inkFaint}
-        secureTextEntry
-        autoComplete="new-password"
-        returnKeyType="done"
-        style={styles.input}
-        accessibilityLabel="Nhập lại mật khẩu mới"
-      />
+      <View style={styles.field}>
+        <TextInput
+          value={password}
+          onChangeText={(value) => {
+            setPassword(value);
+            setError(null);
+          }}
+          placeholder={`Mật khẩu mới (ít nhất ${PASSWORD_MIN} ký tự)`}
+          placeholderTextColor={colors.inkFaint}
+          secureTextEntry={!shown}
+          autoComplete="new-password"
+          autoFocus
+          style={styles.input}
+          accessibilityLabel="Mật khẩu mới"
+        />
+        <RevealButton shown={shown} onToggle={() => setShown((v) => !v)} />
+      </View>
+      <View style={styles.field}>
+        <TextInput
+          value={again}
+          onChangeText={(value) => {
+            setAgain(value);
+            setError(null);
+          }}
+          onSubmitEditing={() => void save()}
+          placeholder="Nhập lại mật khẩu mới"
+          placeholderTextColor={colors.inkFaint}
+          secureTextEntry={!shown}
+          autoComplete="new-password"
+          returnKeyType="done"
+          style={styles.input}
+          accessibilityLabel="Nhập lại mật khẩu mới"
+        />
+      </View>
       <Text style={[styles.hint, (tooShort || mismatch || !!error) && styles.hintBad]}>
         {error ?? (tooShort ? `Mật khẩu cần ít nhất ${PASSWORD_MIN} ký tự.` : mismatch ? 'Hai mật khẩu chưa giống nhau.' : ' ')}
       </Text>
@@ -109,16 +116,19 @@ export const AuthNotice: React.FC<{ title: string; text: string; onClose: () => 
 const styles = StyleSheet.create({
   content: { paddingHorizontal: 22, paddingBottom: 6, gap: 8 },
   help: { color: colors.inkSoft, fontFamily: fonts.body, fontSize: 13, lineHeight: 19 },
-  input: {
+  // The input and its eye in one bordered field
+  field: {
+    flexDirection: 'row',
+    alignItems: 'center',
     minHeight: 46,
-    paddingHorizontal: 13,
+    paddingLeft: 13,
+    paddingRight: 6,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.hairline,
     backgroundColor: '#fff',
-    color: colors.ink,
-    fontSize: 15,
   },
+  input: { flex: 1, minHeight: 44, color: colors.ink, fontSize: 15 },
   hint: { color: colors.inkFaint, fontSize: 12 },
   hintBad: { color: colors.crimson },
 });

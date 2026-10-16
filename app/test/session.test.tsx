@@ -165,25 +165,17 @@ describe('Ways of playing a page', () => {
     expect(refused).toBe('missing');
   });
 
-  test('an unplayed challenge is refused without changing the page, even when its day has been played', () => {
+  test('a challenge opens on a page never played, night pages included', () => {
     act(() => { renderer = create(<NavigationProbe />); });
-    const original = navigation.page;
-    let refused: string | null = null;
+    let refused: string | null = 'missing';
     const ref = pagesOf(FIRST_COUNTRY).find((p) => p.night)!;
-    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: false, seed: 42 }); });
-    expect(refused).toBe('unplayed');
-    expect(navigation.page).toBe(original);
-    expect(navigation.mode.kind).toBe('book');
-    mockPlayed.add(ref.day.id);
-    act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: true, seed: 42 }); });
-    expect(refused).toBe('unplayed');
-    mockPlayed.add(ref.night!.id);
     act(() => { refused = navigation.openChallenge({ country: 'SG', page: ref.number, night: true, seed: 42 }); });
     expect(refused).toBeNull();
+    expect(navigation.mode.kind).toBe('challenge');
     expect(navigation.page.id).toBe(ref.night!.id);
   });
 
-  test("a friend's hunt opens on a played page with only its objects; newer content or an unplayed page is refused", () => {
+  test("a friend's hunt opens on any page with only its objects; newer content is refused", () => {
     act(() => { renderer = create(<NavigationProbe />); });
     const target = pagesOf(FIRST_COUNTRY)[1].day;
     const hunt = {
@@ -197,9 +189,6 @@ describe('Ways of playing a page', () => {
       createdAt: '2026-10-14T00:00:00Z',
     };
     let refused: string | null = null;
-    act(() => { refused = navigation.openFriendChallenge(hunt); });
-    expect(refused).toBe('unplayed');
-    mockPlayed.add(target.id);
     act(() => { refused = navigation.openFriendChallenge({ ...hunt, contentVersion: FRIEND_CONTENT_VERSION + 1 }); });
     expect(refused).toBe('newer');
     act(() => { refused = navigation.openFriendChallenge(hunt); });

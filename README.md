@@ -170,10 +170,9 @@ giữa các hoa đăng…). Tổng cộng 112 loại; mỗi loại xuất hiện
 - **Sinh vật giật mình:** bị bắt, mèo nhảy lên, cua bò ngang, cá quẫy đuôi, chim vỗ cánh bay lên rồi đậu lại.
 - **Sao lưu tiến độ:** nút 💾 ở trang chủ lưu tiến độ ra một tệp; khôi phục (từ tệp hoặc dán nội dung) sẽ gộp với tiến
   độ đang có, không mất gì. Bản web xin trình duyệt giữ dữ liệu lâu dài.
-- **Thử thách bạn bè:** trang chủ → Thử thách → Tạo thử thách cho chọn màn đã chơi, tạo mã và gửi cho bạn bè,
-  hoặc chơi trước để lập kỷ lục. Sau khi thắng, mã như `SG3-7K2P-142` kèm thời gian của bạn. Cả người tạo và người
-  nhận đều phải từng vào chơi đúng màn đó trong sổ (ngày/đêm tính riêng, không bắt buộc thắng); nhập mã hoặc mở link
-  `…/?c=SG3-7K2P-142` đều kiểm tra điều kiện này. Lịch sử được giữ trong bản lưu và sao lưu.
+- **Thử thách bạn bè:** trang chủ → Thử thách → Tạo thử thách cho chọn bất kỳ màn nào, giấu vật (chọn cỡ, cách giấu),
+  tạo mã và gửi cho bạn bè; hoặc chơi trước để lập kỷ lục. Sau khi thắng, mã như `SG3-7K2P-142` kèm thời gian của bạn.
+  Người nhận nhập mã hoặc mở link `…/?c=SG3-7K2P-142` là chơi được ngay, không cần từng chơi màn đó.
 
 ### Trường mới trong file màn chơi
 
