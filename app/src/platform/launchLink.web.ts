@@ -39,3 +39,24 @@ export function webAddress(): string | null {
     return null;
   }
 }
+
+/**
+ * A link from an account email, as the email templates make it (supabase/templates):
+ * `…/?token_hash=…&type=email` confirms a sign-up, `type=recovery` resets a password. Verified by the
+ * game itself (AuthGate), so it works in any browser — not only the one the request was made in.
+ * Removed from the address, so a reload does not use it again.
+ */
+export function takeAuthLink(): { tokenHash: string; type: 'email' | 'recovery' } | null {
+  try {
+    const url = new URL(window.location.href);
+    const tokenHash = url.searchParams.get('token_hash');
+    const type = url.searchParams.get('type');
+    if (!tokenHash || (type !== 'email' && type !== 'recovery')) return null;
+    url.searchParams.delete('token_hash');
+    url.searchParams.delete('type');
+    window.history.replaceState(null, '', url.toString());
+    return { tokenHash, type };
+  } catch {
+    return null;
+  }
+}

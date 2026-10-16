@@ -8,7 +8,6 @@ import {
   type FriendChallenge,
 } from '../core/challenge';
 import type { Page } from '../core/model';
-import { pageOfChallenge, placeOf } from '../content';
 import type { Navigation } from '../game/useNavigation';
 import { getFriendChallenge } from '../platform/friendChallenges';
 import { takeLaunchCode } from '../platform/launchLink';
@@ -20,28 +19,17 @@ export interface ChallengeDraft {
   error: string | null;
 }
 
-/** What the player reads when a hunt cannot be played (`title`: its page). */
-function refusalText(refusal: ChallengeRefusal, title: string | undefined): string {
+/** What the player reads when a hunt cannot be played. */
+function refusalText(refusal: ChallengeRefusal): string {
   switch (refusal) {
     case 'missing':
       return 'Mã này dành cho một trang chưa có trong phiên bản game của bạn.';
     case 'newer':
       return 'Thử thách này dùng nội dung mới hơn bản game của bạn. Hãy cập nhật game rồi thử lại.';
-    case 'unplayed':
-      return `Bạn chưa chơi trang “${title ?? ''}”. Hãy chơi trang này trong Mục Lục trước.`;
     case 'turning':
       return 'Đang lật trang. Hãy thử lại khi trang đã mở.';
   }
 }
-
-const titleOfChallenge = (c: Challenge) => {
-  const at = pageOfChallenge(c);
-  return at ? (at.night ? at.ref.night : at.ref.day)?.title : undefined;
-};
-const titleOfPage = (pageId: string) => {
-  const at = placeOf(pageId);
-  return at ? (at.night ? at.ref.night : at.ref.day)?.title : undefined;
-};
 
 /**
  * Challenges from the home screen and from links: opening a code or a friend's hunt (the rules —
@@ -71,7 +59,7 @@ export function useChallenges(options: {
   const play = useCallback(
     (challenge: Challenge) => {
       const refused = openChallenge(challenge);
-      if (refused) return refusalText(refused, titleOfChallenge(challenge));
+      if (refused) return refusalText(refused);
       onOpened();
       return null;
     },
@@ -81,7 +69,7 @@ export function useChallenges(options: {
   const playFriend = useCallback(
     (challenge: FriendChallenge) => {
       const refused = openFriendChallenge(challenge);
-      if (refused) return refusalText(refused, titleOfPage(challenge.pageId));
+      if (refused) return refusalText(refused);
       onOpened();
       return null;
     },
@@ -105,7 +93,7 @@ export function useChallenges(options: {
       if (!signedIn) return failed('Đăng nhập để nhận thử thách từ bạn bè.');
       getFriendChallenge(friendCode)
         .then((challenge) => failed(playFriend(challenge)))
-        .catch(() => failed('Không thể nhận mã này. Hãy kiểm tra mã, đăng nhập và chơi trang gốc trước.'));
+        .catch(() => failed('Không thể nhận mã này. Hãy kiểm tra mã và kết nối mạng.'));
       return;
     }
     const challenge = parseChallenge(code);

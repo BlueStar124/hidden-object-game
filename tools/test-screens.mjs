@@ -59,14 +59,14 @@ const DIALOGS = [
   'cover',
   'challenge',
   'challenge-create',
-  'challenge-empty',
   'challenge-locked',
   'daily-done',
   'backup',
   'finale',
   'name',
+  'password',
 ];
-const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create', 'challenge-empty']);
+const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create']);
 
 // A dialog may shrink to fit, down to this: below it, its smallest text gets hard to read
 const MIN_SCALE = 0.75;

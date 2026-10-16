@@ -18,6 +18,7 @@ import { StoryPrologue } from '../../src/screens/dialogs/StoryPrologue';
 import { TimeUpScreen } from '../../src/screens/dialogs/TimeUpScreen';
 import { VictoryScreen } from '../../src/screens/dialogs/VictoryScreen';
 import { NameDialog } from '../../src/screens/auth/NameDialog';
+import { PasswordDialog } from '../../src/screens/auth/PasswordDialog';
 import { GameScreen } from '../../src/screens/GameScreen';
 import { victoryPostcard } from '../../src/screens/share/messages';
 import { drawPostcard } from '../../src/screens/share/postcard';
@@ -95,10 +96,10 @@ export const SCREENS: Record<string, () => ReactElement> = {
   passport: () => <Passport today="2026-10-12" canPlayToday onPlayDaily={nothing} onClose={nothing} />,
   cover: () => <MyCover onClose={nothing} />,
   challenge: () => <ChallengeEntry initialMode="receive" onPlay={() => null} onClose={nothing} />,
-  'challenge-create': () => <ChallengeEntry playedPageIds={allPages().map((p) => p.id)} onPlay={() => null} onClose={nothing} />,
-  'challenge-empty': () => <ChallengeEntry playedPageIds={[]} onPlay={() => null} onClose={nothing} />,
-  'challenge-locked': () => <ChallengeEntry initialMode="receive" initialText="SG2N-7K2P-12345" initialError="Bạn chưa chơi trang “Vườn Siêu Cây Lên Đèn”. Hãy chơi trang này trong Mục Lục trước." onPlay={() => null} onClose={nothing} />,
+  'challenge-create': () => <ChallengeEntry onPlay={() => null} onClose={nothing} />,
+  'challenge-locked': () => <ChallengeEntry initialMode="receive" initialText="SG2N-7K2P-12345" initialError="Mã này dành cho một trang chưa có trong phiên bản game của bạn." onPlay={() => null} onClose={nothing} />,
   backup: () => <Backup onRestored={nothing} onClose={nothing} />,
+  password: () => <PasswordDialog onSave={async () => null} onClose={nothing} />,
   name: () => <NameDialog initial="Thám tử Lan" required={false} onSave={async () => null} onClose={nothing} />,
   'daily-done': () => (
     <DailyDone

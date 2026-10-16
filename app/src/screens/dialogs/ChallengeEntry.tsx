@@ -21,11 +21,10 @@ interface ChallengeEntryProps {
   initialText?: string;
   initialError?: string | null;
   /** Gallery fixtures; in the game, visits are read from progress. */
-  playedPageIds?: readonly string[];
 }
 
 /** A friend's challenge code, typed or pasted (a whole message works too). */
-export const ChallengeEntry: React.FC<ChallengeEntryProps> = ({ onPlay, onPlayFriend = () => 'Chưa thể mở thử thách này.', onClose, onSignIn = () => {}, signedIn = true, initialMode = 'create', initialText = '', initialError = null, playedPageIds }) => {
+export const ChallengeEntry: React.FC<ChallengeEntryProps> = ({ onPlay, onPlayFriend = () => 'Chưa thể mở thử thách này.', onClose, onSignIn = () => {}, signedIn = true, initialMode = 'create', initialText = '', initialError = null }) => {
   const [mode, setMode] = useState(initialMode);
   const [text, setText] = useState(initialText);
   const [error, setError] = useState<string | null>(initialError);
@@ -43,7 +42,7 @@ export const ChallengeEntry: React.FC<ChallengeEntryProps> = ({ onPlay, onPlayFr
       try {
         setError(onPlayFriend(await getFriendChallenge(friendCode)));
       } catch {
-        setError('Không thể nhận mã này. Hãy kiểm tra mã, đăng nhập và chơi trang gốc trước.');
+        setError('Không thể nhận mã này. Hãy kiểm tra mã và kết nối mạng.');
       } finally {
         setBusy(false);
       }
@@ -70,7 +69,7 @@ export const ChallengeEntry: React.FC<ChallengeEntryProps> = ({ onPlay, onPlayFr
     </View>
   );
 
-  if (mode === 'create') return <ChallengeCreate header={header} onClose={onClose} onSignIn={onSignIn} signedIn={signedIn} playedPageIds={playedPageIds} />;
+  if (mode === 'create') return <ChallengeCreate header={header} onClose={onClose} onSignIn={onSignIn} signedIn={signedIn} />;
 
   return (
     <ModalShell

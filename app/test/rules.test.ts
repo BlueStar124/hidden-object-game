@@ -1,7 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { clockTick, COMBO_WINDOW, leftovers, openCase, recordExploreFind, recordFind, recordHint, recordMiss } from '../src/core/caseFile';
 import {
-  canChallengePage,
   challengeSeed,
   encodeChallenge,
   FRIEND_CONTENT_VERSION,
@@ -52,14 +51,6 @@ function atPhase(period: number, phase: number): number {
 }
 
 describe('challenge eligibility', () => {
-  test('requires prior play of the exact page, with day and night kept separate', () => {
-    expect(canChallengePage('gardens-by-the-bay', [])).toBe(false);
-    expect(canChallengePage('gardens-by-the-bay', ['gardens-by-the-bay'])).toBe(true);
-    expect(canChallengePage('gardens-by-the-bay-night', ['gardens-by-the-bay'])).toBe(false);
-    expect(canChallengePage('gardens-by-the-bay', ['gardens-by-the-bay-night'])).toBe(false);
-    expect(canChallengePage('merlion-park', ['gardens-by-the-bay'])).toBe(false);
-  });
-
   test('new challenges always use a reproducible nonzero seed within the code range', () => {
     for (const roll of [0, 0.25, 0.5, 0.999999, 1]) {
       const seed = challengeSeed(roll);

@@ -19,3 +19,8 @@ export function challengeLink(code: string): string | null {
 export function webAddress(): string | null {
   return WEB_URL ?? null;
 }
+
+/** A link from an account email (confirm sign-up, reset password): those open in the web game, never here. */
+export function takeAuthLink(): { tokenHash: string; type: 'email' | 'recovery' } | null {
+  return null;
+}

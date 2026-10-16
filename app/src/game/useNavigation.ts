@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  canChallengePage,
   friendChallengeRefusal,
   friendPage,
   isFriendChallenge,
@@ -307,8 +306,6 @@ export function useNavigation(): Navigation {
     (challenge: Challenge): ChallengeRefusal | null => {
       const at = pageOfChallenge(challenge);
       if (!at) return 'missing';
-      const page = at.night ? at.ref.night! : at.ref.day;
-      if (!canChallengePage(page.id, progress.playedPages())) return 'unplayed';
       if (isTurning) return 'turning';
       openSpecial({ countryId: at.ref.country.id, index: at.ref.index, night: at.night }, challenge.seed, { kind: 'challenge', challenge });
       return null;
@@ -322,7 +319,6 @@ export function useNavigation(): Navigation {
       if (refused) return refused;
       const at = placeOf(challenge.pageId);
       if (!at) return 'missing';
-      if (!canChallengePage(challenge.pageId, progress.playedPages())) return 'unplayed';
       if (isTurning) return 'turning';
       openSpecial({ countryId: at.ref.country.id, index: at.ref.index, night: at.night }, 0, { kind: 'challenge', challenge });
       return null;

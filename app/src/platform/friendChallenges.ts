@@ -41,7 +41,7 @@ export async function getFriendChallenge(code: string): Promise<FriendChallenge>
   if (!supabase) throw new Error('Chưa kết nối máy chủ thử thách.');
   const { data, error } = await supabase.rpc('get_friend_challenge', { p_code: code });
   if (error) throw error;
-  if (!data) throw new Error('Không tìm thấy thử thách hoặc bạn chưa chơi trang này.');
+  if (!data) throw new Error('Không tìm thấy thử thách này. Hãy kiểm tra lại mã.');
   // Checked object by object (core/challenge): a hunt this app cannot draw is refused, not played
   const challenge = readFriendChallenge(data, knownSprite);
   if (!challenge) throw new Error('Thử thách này dùng nội dung mà bản game của bạn chưa có. Hãy cập nhật game rồi thử lại.');

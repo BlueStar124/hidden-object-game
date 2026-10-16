@@ -8,6 +8,7 @@ import { BookOpen, Lock, Mail, UserRound } from '../../ui/icons';
 import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
 import { colors, fonts, shadow } from '../../ui/theme';
 import { supabase } from '../../platform/supabase';
+import { RevealButton } from '../../ui/RevealButton';
 
 /** Offers account access or lets the player continue directly to the game as a guest. */
 const AuthScreen: React.FC<{
@@ -17,12 +18,31 @@ const AuthScreen: React.FC<{
   guestLabel?: string;
 }> = ({ configured, onPlayAsGuest, guestLabel = 'Chơi không cần đăng nhập' }) => {
   const [createAccount, setCreateAccount] = useState(false);
+  // "Quên mật khẩu?": only the email, to send a reset link to
+  const [forgot, setForgot] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
-  const title = configured ? (createAccount ? 'Mở hồ sơ mới' : 'Đăng nhập') : 'Chưa kết nối';
+  const title = configured ? (forgot ? 'Quên mật khẩu' : createAccount ? 'Mở hồ sơ mới' : 'Đăng nhập') : 'Chưa kết nối';
+
+  const sendReset = async () => {
+    if (!supabase || busy || !email.trim()) return;
+    setBusy(true);
+    setMessage('');
+    try {
+      // The email's link opens the web game, which asks for a new password (AuthGate, PasswordDialog)
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: webAddress() ?? undefined });
+      // (The same answer whether the address has an account or not: it is not told to strangers)
+      setMessage(error ? 'Chưa gửi được email. Hãy thử lại sau ít phút.' : 'Nếu email này có tài khoản, link đặt lại mật khẩu đã được gửi. Hãy mở email và bấm link.');
+    } catch {
+      setMessage('Kết nối đang gặp sự cố. Hãy thử lại sau.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const google = async () => {
     if (busy) return;
@@ -88,7 +108,9 @@ const AuthScreen: React.FC<{
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>
           {configured
-            ? createAccount
+            ? forgot
+              ? 'Nhập email đã đăng ký, mình sẽ gửi link để đặt mật khẩu mới.'
+              : createAccount
               ? 'Tạo tài khoản để lưu hồ sơ của bạn trên thiết bị này.'
               : 'Đăng nhập để mở cuốn sổ ký họa của bạn.'
             : 'Ứng dụng chưa được kết nối với Supabase.'}
@@ -96,23 +118,27 @@ const AuthScreen: React.FC<{
 
         {configured ? (
           <>
-            <Pressable
-              onPress={() => void google()}
-              disabled={busy}
-              accessibilityRole="button"
-              accessibilityLabel="Tiếp tục với Google"
-              style={({ pressed }) => [styles.google, pressed && styles.googlePressed, busy && styles.dim]}
-            >
-              <View style={styles.googleMark}>
-                <Text style={styles.googleLetter}>G</Text>
-              </View>
-              <Text style={styles.googleText}>Tiếp tục với Google</Text>
-            </Pressable>
-            <View style={styles.divider}>
-              <View style={styles.rule} />
-              <Text style={styles.dividerText}>hoặc dùng email</Text>
-              <View style={styles.rule} />
-            </View>
+            {!forgot && (
+              <>
+                <Pressable
+                  onPress={() => void google()}
+                  disabled={busy}
+                  accessibilityRole="button"
+                  accessibilityLabel="Tiếp tục với Google"
+                  style={({ pressed }) => [styles.google, pressed && styles.googlePressed, busy && styles.dim]}
+                >
+                  <View style={styles.googleMark}>
+                    <Text style={styles.googleLetter}>G</Text>
+                  </View>
+                  <Text style={styles.googleText}>Tiếp tục với Google</Text>
+                </Pressable>
+                <View style={styles.divider}>
+                  <View style={styles.rule} />
+                  <Text style={styles.dividerText}>hoặc dùng email</Text>
+                  <View style={styles.rule} />
+                </View>
+              </>
+            )}
             {createAccount && (
               <View style={styles.field}>
                 <UserRound size={17} color={colors.earth} />
@@ -144,33 +170,58 @@ const AuthScreen: React.FC<{
                 value={email}
               />
             </View>
-            <View style={styles.field}>
-              <Lock size={17} color={colors.earth} />
-              <TextInput
-                accessibilityLabel="Mật khẩu"
-                autoCapitalize="none"
-                autoComplete={createAccount ? 'new-password' : 'password'}
-                onChangeText={setPassword}
-                onSubmitEditing={() => void submit()}
-                placeholder="Mật khẩu"
-                placeholderTextColor={colors.inkFaint}
-                returnKeyType="go"
-                secureTextEntry
-                style={styles.input}
-                value={password}
-              />
-            </View>
+            {!forgot && (
+              <View style={styles.field}>
+                <Lock size={17} color={colors.earth} />
+                <TextInput
+                  accessibilityLabel="Mật khẩu"
+                  autoCapitalize="none"
+                  autoComplete={createAccount ? 'new-password' : 'password'}
+                  onChangeText={setPassword}
+                  onSubmitEditing={() => void submit()}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor={colors.inkFaint}
+                  returnKeyType="go"
+                  secureTextEntry={!showPassword}
+                  style={styles.input}
+                  value={password}
+                />
+                <RevealButton shown={showPassword} onToggle={() => setShowPassword((v) => !v)} />
+              </View>
+            )}
             {!!message && <Text accessibilityLiveRegion="polite" style={styles.message}>{message}</Text>}
-            <PrimaryButton
-              label={createAccount ? 'Tạo Tài Khoản' : 'Vào Sổ Ký Họa'}
-              icon={busy ? <ActivityIndicator color="#fff" size="small" /> : <BookOpen size={18} color="#fff" />}
-              onPress={() => void submit()}
-              disabled={busy || !email.trim() || !password || (createAccount && !name.trim())}
-              style={styles.full}
-            />
-            <Pressable onPress={() => { setCreateAccount((value) => !value); setMessage(''); }} accessibilityRole="button">
+            {forgot ? (
+              <PrimaryButton
+                label="Gửi link đặt lại"
+                icon={busy ? <ActivityIndicator color="#fff" size="small" /> : <Mail size={18} color="#fff" />}
+                onPress={() => void sendReset()}
+                disabled={busy || !email.trim()}
+                style={styles.full}
+              />
+            ) : (
+              <PrimaryButton
+                label={createAccount ? 'Tạo Tài Khoản' : 'Vào Sổ Ký Họa'}
+                icon={busy ? <ActivityIndicator color="#fff" size="small" /> : <BookOpen size={18} color="#fff" />}
+                onPress={() => void submit()}
+                disabled={busy || !email.trim() || !password || (createAccount && !name.trim())}
+                style={styles.full}
+              />
+            )}
+            {!forgot && !createAccount && (
+              <Pressable onPress={() => { setForgot(true); setMessage(''); }} accessibilityRole="button">
+                <Text style={styles.forgot}>Quên mật khẩu?</Text>
+              </Pressable>
+            )}
+            <Pressable
+              onPress={() => {
+                if (forgot) setForgot(false);
+                else setCreateAccount((value) => !value);
+                setMessage('');
+              }}
+              accessibilityRole="button"
+            >
               <Text style={styles.toggle}>
-                {createAccount ? 'Đã có tài khoản? Đăng nhập' : 'Chưa có tài khoản? Tạo tài khoản'}
+                {forgot ? 'Quay lại đăng nhập' : createAccount ? 'Đã có tài khoản? Đăng nhập' : 'Chưa có tài khoản? Tạo tài khoản'}
               </Text>
             </Pressable>
           </>
@@ -246,5 +297,6 @@ const styles = StyleSheet.create({
   divider: { alignSelf: 'stretch', flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 12 },
   rule: { flex: 1, height: 1, backgroundColor: colors.hairline },
   dividerText: { color: colors.inkFaint, fontSize: 11 },
+  forgot: { marginTop: 12, color: colors.inkSoft, fontSize: 12, textDecorationLine: 'underline' },
   toggle: { marginTop: 15, color: colors.earth, fontSize: 13, fontWeight: '700' },
 });
