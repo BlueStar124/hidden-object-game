@@ -197,6 +197,10 @@ Câu hỏi của bí ẩn chương nằm trong `countries/<nước>/mysteries.ts
 Game chơi trọn vẹn không cần tài khoản. Có tài khoản thì tiến độ đồng bộ giữa các máy và tạo được thử thách bạn bè.
 
 - Đăng nhập bằng **Google** hoặc **email** (đăng ký email có thêm **tên trong game**; tài khoản Google lấy sẵn tên Google, đổi được ở trang chủ; link xác nhận email dẫn về `EXPO_PUBLIC_WEB_URL`). Tài khoản chưa có tên được hỏi một lần, bấm "Để sau" vẫn chơi tiếp.
+- Quên mật khẩu: màn đăng nhập → "Quên mật khẩu?" → mail có link mở game và hỏi mật khẩu mới.
+- Mail tài khoản (cần SMTP riêng trên Supabase → Authentication → Emails → SMTP Settings, ví dụ Gmail + mật khẩu ứng dụng):
+  dán `supabase/templates/confirmation.html` vào mẫu *Confirm sign up* và `reset-password.html` vào *Reset password*
+  (tiêu đề ghi ở đầu mỗi file). Link trong mẫu dẫn về Site URL, nên Site URL phải là địa chỉ bản web.
 - Bật đăng nhập Google (một lần, trên dashboard):
   1. Google Cloud Console → APIs & Services → Credentials → **Create OAuth client ID** (Web application). Authorized redirect URI: `https://<mã-dự-án>.supabase.co/auth/v1/callback`.
   2. Supabase → Authentication → Sign In / Providers → **Google**: bật, dán Client ID và Client Secret.

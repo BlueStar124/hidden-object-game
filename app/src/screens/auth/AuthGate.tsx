@@ -4,11 +4,13 @@ import type { Session } from '@supabase/supabase-js';
 import { displayNameOf } from '../../core/profile';
 import { hasEntered, rememberEntered } from '../../platform/accountPrefs';
 import { connectCloudProgress, type CloudSync } from '../../platform/cloudProgress';
+import { takeAuthLink } from '../../platform/launchLink';
 import { supabase } from '../../platform/supabase';
 import { colors, fonts } from '../../ui/theme';
 import { AuthContextProvider } from './AuthContext';
 import AuthScreen from './AuthScreen';
 import { NameDialog } from './NameDialog';
+import { AuthNotice, PasswordDialog } from './PasswordDialog';
 
 // A sign-in waits this long for the account's progress, then the game opens anyway (sync goes on)
 const SYNC_WAIT_MS = 4000;
@@ -28,6 +30,9 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [editingName, setEditingName] = useState(false);
   // "Để sau" on the first ask: not asked again until the app opens next time
   const [nameLater, setNameLater] = useState(false);
+  // Opened from a reset-password email: a new password is asked for
+  const [resetting, setResetting] = useState(false);
+  const [notice, setNotice] = useState<{ title: string; text: string } | null>(null);
   // Bumped once a sign-in has brought the account's progress: the game opens again with it
   const [generation, setGeneration] = useState(0);
   const sync = useRef<CloudSync | null>(null);
@@ -41,6 +46,27 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
     const { data } = supabase.auth.onAuthStateChange((_event, next) => {
       if (active) setSession(next);
     });
+    // Opened from an account email (web): the link is verified here, so it works in any browser
+    const link = takeAuthLink();
+    if (link) {
+      supabase.auth
+        .verifyOtp({ token_hash: link.tokenHash, type: link.type })
+        .then(({ error }) => {
+          if (!active) return;
+          if (error) {
+            setNotice({
+              title: 'Link đã hết hạn',
+              text:
+                link.type === 'recovery'
+                  ? 'Link đặt lại mật khẩu đã được dùng hoặc đã hết hạn. Hãy bấm "Quên mật khẩu?" để nhận link mới.'
+                  : 'Link xác nhận đã được dùng hoặc đã hết hạn. Nếu email đã được xác nhận, bạn cứ đăng nhập bằng email và mật khẩu.',
+            });
+          } else if (link.type === 'recovery') setResetting(true);
+        })
+        .catch(() => {
+          if (active) setNotice({ title: 'Chưa kết nối được', text: 'Hãy kiểm tra mạng rồi mở lại link trong email.' });
+        });
+    }
     supabase.auth
       .getSession()
       .then(({ data: result }) => {
@@ -107,6 +133,18 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
     [session, name]
   );
 
+  const savePassword = async (password: string): Promise<string | null> => {
+    if (!supabase) return 'Chưa kết nối máy chủ.';
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) return 'Chưa đổi được mật khẩu. Hãy thử mật khẩu khác, hoặc kiểm tra kết nối.';
+      setNotice({ title: 'Đã đổi mật khẩu', text: 'Lần sau bạn đăng nhập bằng mật khẩu mới này.' });
+      return null;
+    } catch {
+      return 'Chưa đổi được mật khẩu. Hãy kiểm tra kết nối rồi thử lại.';
+    }
+  };
+
   const playAsGuest = () => {
     rememberEntered();
     setEntered(true);
@@ -132,7 +170,7 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
           )}
         </View>
       )}
-      {!asking && session && (editingName || (!name && !nameLater)) && (
+      {!asking && !resetting && session && (editingName || (!name && !nameLater)) && (
         <NameDialog
           initial={name ?? ''}
           required={!name}
@@ -143,6 +181,8 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
           }}
         />
       )}
+      {resetting && session && <PasswordDialog onSave={savePassword} onClose={() => setResetting(false)} />}
+      {notice && !resetting && <AuthNotice title={notice.title} text={notice.text} onClose={() => setNotice(null)} />}
     </View>
   );
 };

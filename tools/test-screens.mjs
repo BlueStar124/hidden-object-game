@@ -65,6 +65,7 @@ const DIALOGS = [
   'backup',
   'finale',
   'name',
+  'password',
 ];
 const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create', 'challenge-empty']);
 
