@@ -36,7 +36,8 @@ thì tin code, rồi sửa file này.
 | Sinh vật nhút nhát | bắt được khi pha nằm trong 0.035–0.455 của chu kỳ | `core/motion.ts` |
 
 **Luật điểm** (`core/scoring.ts`): tìm thấy = `score × combo + (combo − 1) × 50`; combo bắt đầu ×1, tăng sau mỗi lần
-tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 (bước 1: đọc thẻ) / −100 (bước 2: chỉ chỗ). Điểm không xuống dưới 0.
+tìm thấy, về ×1 khi soi sai hoặc để quá 6 s. Soi sai −20. Gợi ý −50 (bước 1: đọc thẻ) / −100 (bước 2: chỉ chỗ), **chỉ cho khi điểm đủ trả** (`canAffordHint`; thiếu thì
+báo cần bao nhiêu điểm, không gợi ý). Điểm không xuống dưới 0.
 Phá án: thưởng `floor(giây còn lại × 4)`. **3 sao** khi sai ≤ 2, gợi ý ≤ 1 và còn > 60 s; **2 sao** khi sai ≤ 5 và gợi
 ý ≤ 2; còn lại 1 sao.
 
@@ -61,7 +62,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 | `model.ts` | `SpriteType`, `CamoStyle`, `ShyBehavior`, `RoamBehavior`, `ObjectSpot`, `HiddenObject`, `isMainObject`, `isOptionalObject`, `SPRITE_BASE_WIDTH`, `NightLight`, `Page`, `SpreadRect`, `PageSlot`, `Chapter`, `Mystery`, `MysteryOption`, `Country`, `PageRef`, `PAGE_TURN_MS`, `PageTurn`, `ActiveHint`, `CaseState`, `PageResult`, `GameProgress`, `GameSettings`, `DailyStamp`, `CoverSticker` | **Từ điển của cả game.** Thêm kiểu mới ở đây. |
 | `caseFile.ts` | `COMBO_WINDOW`, `openCase`, `clockTick`, `recordFind` → `FindResult {changes, earned, combo, solved}`, `recordExploreFind`, `recordMiss`, `recordHint`, `leftovers` | Hàm thuần `CaseState → CaseState`. `recordFind` trả về `changes` để **merge** (đồng hồ vẫn chạy song song). |
 | `detection.ts` | `detectObject(nx, ny, objects, foundIds, now?)` → `{hit, object, distance, position, hidingObject, outOfTurn}`, `nextInSequence`, `waitsInSequence` | Vùng chạm chồng nhau thì vật gần nhất thắng; vật nhút nhát đang trốn trả về `hidingObject`, vật chưa tới lượt trong trang theo dấu trả về `outOfTurn` (cả hai không tính là sai). |
-| `scoring.ts` | `foundScore`, `mistakePenalty`, `hintPenalty`, `completionBonus` | Số liệu ở mục 1. |
+| `scoring.ts` | `foundScore`, `mistakePenalty`, `hintCost`, `canAffordHint`, `hintPenalty`, `completionBonus` | Số liệu ở mục 1. |
 | `hints.ts` | `nextHint(activeHint, revealedIds, objects, foundIds, loupePos, targetId?)` → `HintResult` | `targetId`: thẻ được chạm. |
 | `motion.ts` | `motionNow`, `shyPhase`, `isShyVisible`, `roamState`, `objectPosition` | **Worklet**, chạy cả JS thread (bắt vật) lẫn UI thread (vẽ) trên cùng một đồng hồ, nên vật chỉ bắt được đúng nơi, đúng lúc nó được vẽ. |
 | `random.ts` | `SEED_BITS` (20), `SEED_COUNT`, `hashString` (FNV-1a), `rng(seed)` (mulberry32), `draw`, `shuffled`, `localDay(date)` | Ngẫu nhiên tái lập được: cùng seed ra cùng kết quả trên mọi máy. `localDay` theo giờ máy, không theo UTC. |
@@ -90,7 +91,7 @@ lần đầu thì mở khóa trang đêm của nó (`PageIndex`: nút đêm bị
 ### game/ — một lượt chơi (hooks)
 | File | Vai trò |
 |---|---|
-| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm + bật/tắt nước rửa (`washEnabled`, lưu trong `settings.wash`) + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Trang thực sự mở để chơi trong sổ (không còn trang chủ, intro, lật trang hay hộp thoại) thì ghi trang đang ở và lịch sử đã chơi (`progress.recordVisit`). Kiểu trả về: `Game`. |
+| `useGame.ts` | `useGame({browsing})` = `nav` + `case` + `notices` + bật/tắt âm (nước rửa màu luôn bật; `settings.wash` trong bản lưu cũ không còn được đọc) + `home`/`setHome` (trang chủ đang mở; mở sẵn khi vào game). Đồng hồ dừng khi chờ/lật trang hoặc có trang chủ, prologue, intro đêm, Mục Lục hay Sổ Tay. Trang thực sự mở để chơi trong sổ (không còn trang chủ, intro, lật trang hay hộp thoại) thì ghi trang đang ở và lịch sử đã chơi (`progress.recordVisit`). Kiểu trả về: `Game`. |
 | `useNavigation.ts` | `mode: PlayMode` (`book` · `daily` · `challenge`) và `seed`: trang được dựng qua `layOutPage` / `dailyPage` một lần mỗi lượt. Lần đầu chơi một trang là seed 0; trang đã giải (và có `spots`) thì mỗi lần chơi lại một seed mới. Trang lân cận được chuẩn bị trước khi lật để đích khớp `layoutKey`. `openDaily`, `openChallenge`, `openFriendChallenge` (trả về `ChallengeRefusal` hoặc null khi mở được), `leaveSpecial` (về chỗ đang ở trong sổ). Thử thách bạn bè dựng bằng `friendPage` (core). Ngoài sổ thì `nextPage` là null. Trang đang dở được mở sẵn từ tiến độ local. |
 | `useCase.ts` | Vụ án của trang: `inspect`, `requestHint`, `togglePause`, `explore`, `isFogged`, `screenShake`, `unlockedNight`. Chạm ngoài góc của trang của ngày bị bỏ qua; vật chưa tới lượt chỉ báo nhắc; mảnh manh mối cuối của chương báo mở Bảng Suy Luận. Phá trang của ngày thì `recordStamp` thay cho `recordVictory`. Khi `visit` đổi thì reset vụ án **ngay trong lần render đó** (không lộ trạng thái cũ). Đây là nơi gọi `sound`, `notify`, `progress`. |
 | `useNotices.ts` | `notify(text, at, 'score' \| 'info')`. |

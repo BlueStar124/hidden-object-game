@@ -56,7 +56,7 @@ export const GameScreen: React.FC = () => {
   const [deduction, setDeduction] = useState<{ chapter: Chapter; number: number } | null>(null);
   const [finale, setFinale] = useState(false);
   const browsing = showIndex || showAlbum || sheet !== null || deduction !== null || finale;
-  const { nav, case: kase, notices, soundEnabled, toggleSound, washEnabled, toggleWash, home, setHome } = useGame({ browsing });
+  const { nav, case: kase, notices, soundEnabled, toggleSound, home, setHome } = useGame({ browsing });
   const onSignOut = useCallback(() => {
     void signOut().catch(() => {});
   }, [signOut]);
@@ -160,7 +160,8 @@ export const GameScreen: React.FC = () => {
   // Stable handlers: the HUD and the board skip the re-render of every clock tick
   const openIndex = useCallback(() => setShowIndex(true), []);
   const openAlbum = useCallback(() => setShowAlbum(true), []);
-  const requestHint = useStableCallback(kase.requestHint);
+  // A hint the score cannot pay for is refused with a notice in the middle of the screen
+  const requestHint = useStableCallback((id?: string) => kase.requestHint(id, { x: width / 2, y: height / 2 }));
   // The hint button takes the next step; a card asks for itself (a press event is no card id)
   const hintButton = useCallback(() => requestHint(), [requestHint]);
   const inspect = useStableCallback(kase.inspect);
@@ -282,7 +283,6 @@ export const GameScreen: React.FC = () => {
           onInspect={inspect}
           preload={preload}
           active={boardActive}
-          wash={washEnabled}
         />
       </View>
 
@@ -394,11 +394,9 @@ export const GameScreen: React.FC = () => {
         <PauseMenu
           page={page}
           soundEnabled={soundEnabled}
-          washEnabled={washEnabled}
           onResume={togglePause}
           onRestart={nav.replay}
           onToggleSound={toggleSound}
-          onToggleWash={toggleWash}
           onExit={() => {
             // Back to the home screen; the clock stays stopped while it is open, and "Chơi tiếp"
             // carries on with this case where it was

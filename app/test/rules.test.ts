@@ -29,7 +29,7 @@ import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
 import { chapterGiving, toolsOwned, withTools } from '../src/core/tools';
 import { migrantObjectId, migrantProgress, migrantSpot, withVisitors } from '../src/core/migrants';
 import type { Migrant } from '../src/core/model';
-import { completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
+import { canAffordHint, completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
   id,
@@ -74,6 +74,14 @@ describe('scoring', () => {
     expect(mistakePenalty(10)).toBe(0);
     expect([1, 2].map((level) => hintPenalty(200, level))).toEqual([150, 100]);
     expect(hintPenalty(30, 2)).toBe(0);
+  });
+
+  test('a hint is only given while the score can pay for it', () => {
+    expect(canAffordHint(0, 1)).toBe(false);
+    expect(canAffordHint(49, 1)).toBe(false);
+    expect(canAffordHint(50, 1)).toBe(true);
+    expect(canAffordHint(99, 2)).toBe(false);
+    expect(canAffordHint(100, 2)).toBe(true);
   });
 
   test('closing a case: 4 points per second left, stars for a clean investigation', () => {
