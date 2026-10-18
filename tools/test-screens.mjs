@@ -75,7 +75,7 @@ const MIN_SCALE = 0.75;
 
 if (!process.argv.includes('--no-build')) {
   console.log('Building the web app with the dialog gallery…');
-  const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', 'dist-screens'], {
+  const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--clear', '--output-dir', 'dist-screens'], {
     cwd: appRoot,
     env: { ...process.env, SKETCHBOOK_SCREEN_TESTS: '1' },
     stdio: ['ignore', 'ignore', 'inherit'],
@@ -179,7 +179,7 @@ async function check(page, viewport, name, options) {
 /* ------------------------------------- Run -------------------------------------- */
 
 fs.rmSync(shotsDir, { recursive: true, force: true });
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PLAYWRIGHT_CHROME_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHROME_CHANNEL } : fs.existsSync('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe') ? { channel: 'chrome' } : {});
 const results = [];
 try {
   for (const viewport of VIEWPORTS) {
@@ -189,13 +189,18 @@ try {
       hasTouch: !!viewport.mobile,
     });
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {}
+    });
     const errors = [];
     page.on('pageerror', (e) => errors.push(String(e)));
 
     // The game itself: rotate prompt (upright phones), home screen (a new player: "Bắt Đầu Điều
     // Tra"), case file, then the sketchbook
     await page.goto(origin, { waitUntil: 'load' });
-    await page.getByText(/^Bắt Đầu Điều Tra$|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
+    await page.getByText(/^(Bắt Đầu Điều Tra|Chơi Tiếp)$|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
     await settle(page);
     const keepPortrait = page.getByText('Vẫn chơi màn hình dọc');
     if (await keepPortrait.count()) {
@@ -204,7 +209,7 @@ try {
       await settle(page);
     }
     results.push(await check(page, viewport, 'game-home'));
-    await page.getByText('Bắt Đầu Điều Tra', { exact: true }).click();
+    await page.getByText(/^(Bắt Đầu Điều Tra|Chơi Tiếp)$/).first().click();
     await page.getByText('Mở Cuốn Sổ').first().waitFor({ timeout: 10000 });
     await settle(page);
     results.push(await check(page, viewport, 'game-prologue'));

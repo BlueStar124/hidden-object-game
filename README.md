@@ -229,17 +229,17 @@ hidden-object-game/
 ├── app/                        ← game (Expo: iOS · Android · web) — mọi thứ được phát hành
 │   ├── assets/art/             ← tranh: <nước>/ (các trang sổ), desk/ (mặt bàn)
 │   └── src/
-│       ├── core/               luật chơi, thuần TypeScript: mô hình dữ liệu, phát hiện, điểm,
-│       │                       gợi ý, hồ sơ vụ án, chuyển động sinh vật, lưu tiến độ
+│       ├── core/               luật chơi, thuần TypeScript: mô hình dữ liệu (tách spriteTypes, storyModel, progressModel),
+│       │                       BXH (leaderboard), phát hiện, điểm, gợi ý, vụ án, chuyển động, tiến độ (progressSchema, progressMerge)
 │       ├── content/            nội dung: countries/<nước>/ (chương, trang JSON, tranh), Sổ Tay
-│       ├── game/               một lượt chơi (React hooks): điều hướng trang, vụ án, thông báo
+│       ├── game/               một lượt chơi (React hooks): điều hướng trang (navigationLayout), vụ án (useCaseEffects), thông báo
 │       ├── board/              cuốn sổ vẽ bằng Skia: camera, lật trang, cử chỉ;
-│       │                       scene/ dựng trang (JS thread), render/ vẽ từng khung (UI thread)
-│       ├── screens/            màn hình chơi, HUD, bảng manh mối, các hộp thoại
-│       ├── platform/           theo thiết bị: âm thanh (native/web), rung, tải tranh
+│       │                       scene/ dựng trang (JS thread, tách sceneSprites, sceneEnvironment, paintFilters), render/ vẽ từng khung (UI thread, bookEffects)
+│       ├── screens/            màn hình chơi (GamePlayArea, GameDialogOverlays), Trang chủ & BXH (home/), HUD (hud/), các hộp thoại (dialogs/)
+│       ├── platform/           theo thiết bị: âm thanh (native/web, synth/ tách voiceMap, synthSounds), rung, tải tranh, BXH cloud (leaderboard.ts)
 │       ├── ui/                 giao diện dùng chung: màu, chữ, nút, hộp thoại, icon
 │       └── generated/          hình vẽ & âm thanh sinh tự động (không sửa tay)
-├── tools/                      công cụ: sprites/ (bản vẽ gốc của 112 hình), generate-assets, generate-icons,
+├── tools/                      công cụ: sprites/ (bản vẽ gốc của 112 hình), generate-assets (kèm helper sprites & sound), generate-icons,
 │                               check-architecture (kiểm tra các tầng của app/src)
 ├── archive/web-vite.zip        bản web Vite cũ (không dùng)
 └── vercel.json                 deploy bản web
@@ -261,7 +261,7 @@ Mỗi nước là một cuốn sổ riêng trong `app/src/content/countries/<nư
 2. **Màn chơi** — mỗi trang một file JSON `app/src/content/countries/<nước>/chapter-N/<id-trang>.json` (định dạng ở mục 0.2 và 0.3 phía trên; `"art"` là tên bức tranh, không kèm `.png`). Id trang **không được trùng** với nước khác: tiến độ lưu theo id.
 3. **Định nghĩa nước** — `app/src/content/countries/<nước>/index.ts`: tên nước, các chương (tiêu đề, phụ đề, các đoạn mở đầu), trang của mỗi chương (`{ day }` hoặc `{ day, night }`) và bảng `art` (tên tranh → `require('….webp')`). Lấy `countries/singapore/index.ts` làm mẫu.
 4. **Đăng ký** — thêm nước vào `COUNTRIES` trong `app/src/content/index.ts`. Mục Lục tự hiện tab chọn nước, số trang tính riêng từng nước ("Trang 3 / 9"), Sổ Tay ghi tên nước cạnh số trang.
-5. **Đồ vật / sinh vật mới** (nón lá, đèn lồng, xích lô…) — vẽ thêm trong `tools/sprites/ObjectSprite.tsx`, thêm tên vào `SpriteType` (`app/src/core/model.ts`) và một mục Sổ Tay (`app/src/content/bestiary.ts`), rồi chạy `npm run generate` ở thư mục gốc.
+5. **Đồ vật / sinh vật mới** (nón lá, đèn lồng, xích lô…) — vẽ thêm trong `tools/sprites/ObjectSprite.tsx`, thêm tên vào `SpriteType` (`app/src/core/spriteTypes.ts`, re-export tại `app/src/core/model.ts`) và một mục Sổ Tay (`app/src/content/bestiary.ts`), rồi chạy `npm run generate` ở thư mục gốc.
 6. **Kiểm tra** — `cd app && npm run check && npm run web`. `npm test` soát từng trang của mọi nước (tọa độ trong khung 0–1, id không trùng, hình vẽ và mục Sổ Tay có đủ, trang đêm dùng chung tranh với trang ngày); khi khởi động, danh mục cũng tự báo lỗi nếu id trang bị trùng hoặc trang dùng tên tranh không có trong bảng `art`.
 
 ---

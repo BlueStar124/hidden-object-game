@@ -1,6 +1,5 @@
 import type { SpriteType } from '../../core/model';
 import { VOICE_OF } from './voiceMap';
-export { VOICE_OF };
 
 /**
  * Tiny Web Audio "voices": every creature and object answers with its own synthesized sound
