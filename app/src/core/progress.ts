@@ -405,17 +405,6 @@ export const progress = {
     save({ ...current, settings: { ...current.settings, soundEnabled: enabled } });
   },
 
-  /** Whether pages are washed over until their case is closed (on until the player turns it off). */
-  washEnabled(): boolean {
-    return load().settings?.wash !== false;
-  },
-
-  setWashEnabled(enabled: boolean): void {
-    const current = load();
-    if ((current.settings?.wash !== false) === enabled) return;
-    save({ ...current, settings: { soundEnabled: current.settings?.soundEnabled !== false, ...current.settings, wash: enabled } });
-  },
-
   /** Sum of every page's best score. */
   totalScore(): number {
     return load().totalScore;

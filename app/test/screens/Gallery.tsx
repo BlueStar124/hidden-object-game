@@ -78,11 +78,9 @@ export const SCREENS: Record<string, () => ReactElement> = {
     <PauseMenu
       page={pages[1].day}
       soundEnabled
-      washEnabled
       onResume={nothing}
       onRestart={nothing}
       onToggleSound={nothing}
-      onToggleWash={nothing}
       onExit={nothing}
     />
   ),

@@ -15,6 +15,7 @@ import { isOptionalObject, type CaseState, type HiddenObject, type Page } from '
 import { migrantProgress, migrantObjectId } from '../core/migrants';
 import { canDeduce } from '../core/mystery';
 import { progress } from '../core/progress';
+import { canAffordHint, hintCost } from '../core/scoring';
 import { placeOf } from '../content';
 import { MIGRANTS } from '../content/migrants';
 import { sound } from '../platform/sound';
@@ -35,7 +36,8 @@ export interface Case {
   unlockedNight: string | null;
   screenShake: boolean;
   inspect: (nx: number, ny: number, at: { x: number; y: number }) => void;
-  requestHint: (targetObjectId?: string) => void;
+  /** `at`: where to say so (screen point) when the score cannot pay for the hint */
+  requestHint: (targetObjectId: string | undefined, at: { x: number; y: number }) => void;
   togglePause: () => void;
   /** After the case is closed: keep hunting the critters & secret left (no clock, no score) */
   explore: (exploring: boolean) => void;
@@ -257,7 +259,7 @@ export function useCase(
   );
 
   const requestHint = useCallback(
-    (targetObjectId?: string) => {
+    (targetObjectId: string | undefined, at: { x: number; y: number }) => {
       if (c.isCompleted || c.isPaused || c.isGameOver) return;
       const hint = nextHint(
         c.activeHint,
@@ -268,10 +270,15 @@ export function useCase(
         targetObjectId
       );
       if (!hint) return;
+      if (!canAffordHint(c.score, hint.level)) {
+        sound.playWrong();
+        notify(`Cần ${hintCost(hint.level)} điểm để dùng gợi ý này — tìm thêm vật nhé!`, at, 'info');
+        return;
+      }
       sound.playHint();
       update((s) => recordHint(s, hint));
     },
-    [c, page, update]
+    [c, page, update, notify]
   );
 
   const togglePause = useCallback(() => update((s) => ({ ...s, isPaused: !s.isPaused })), [update]);

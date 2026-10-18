@@ -25,9 +25,17 @@ export function mistakePenalty(currentScore: number): number {
 }
 
 /** A hint's first step (the card's name and clue) costs 50 points, its second (where it is) 100. */
+export function hintCost(hintLevel: number): number {
+  return hintLevel === 1 ? 50 : 100;
+}
+
+/** A hint is only given while the score can pay for it: no points, no help. */
+export function canAffordHint(currentScore: number, hintLevel: number): boolean {
+  return currentScore >= hintCost(hintLevel);
+}
+
 export function hintPenalty(currentScore: number, hintLevel: number): number {
-  const penalty = hintLevel === 1 ? 50 : 100;
-  return Math.max(0, currentScore - penalty);
+  return Math.max(0, currentScore - hintCost(hintLevel));
 }
 
 /** Closing the case: 4 points per second left, and up to three stars. */
