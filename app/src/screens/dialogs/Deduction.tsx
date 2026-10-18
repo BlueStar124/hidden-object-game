@@ -3,13 +3,13 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Chapter } from '../../core/model';
 import { cluesOf, isRightAnswer } from '../../core/mystery';
 import { progress } from '../../core/progress';
-import { TOOLS } from '../../content/tools';
 import { PrimaryButton } from '../../ui/Buttons';
 import { DialogHeader } from '../../ui/DialogHeader';
-import { CircleCheckBig, Lightbulb, Lock, ScanEye, Sparkles } from '../../ui/icons';
+import { CircleCheckBig, Lightbulb, Lock, Sparkles } from '../../ui/icons';
 import { ModalShell } from '../../ui/ModalShell';
-import { SpriteIcon } from '../../ui/SpriteIcon';
 import { colors, fonts } from '../../ui/theme';
+import { DeductionNotes } from './deduction/DeductionNotes';
+import { DeductionEpilogue } from './deduction/DeductionEpilogue';
 
 interface DeductionProps {
   chapter: Chapter;
@@ -23,7 +23,12 @@ interface DeductionProps {
  * The deduction board of a chapter: its clue fragments pinned up, the question, the answers. A wrong
  * answer only shows a nudge back at the clues; the right one reveals the chapter's epilogue.
  */
-export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, onFinale, onClose }) => {
+export const Deduction: React.FC<DeductionProps> = ({
+  chapter,
+  chapterNumber,
+  onFinale,
+  onClose,
+}) => {
   const mystery = chapter.mystery!;
   const clues = useMemo(() => cluesOf(chapter), [chapter]);
   const [solved, setSolved] = useState(() => progress.isMysterySolved(chapter.id));
@@ -37,7 +42,9 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
       return;
     }
     setPicked((p) => (p.includes(option) ? p : [...p, option]));
-    setNudge(mystery.options[option].nudge ?? 'Chưa đúng. Hãy đọc lại các mảnh manh mối trên bảng.');
+    setNudge(
+      mystery.options[option].nudge ?? 'Chưa đúng. Hãy đọc lại các mảnh manh mối trên bảng.'
+    );
   };
 
   return (
@@ -58,47 +65,26 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
       footer={
         solved ? (
           mystery.finale ? (
-            <PrimaryButton label="Nhận Chứng Nhận Người Giữ Sổ" icon={<Sparkles size={18} color="#fff" />} onPress={onFinale} />
+            <PrimaryButton
+              label="Nhận Chứng Nhận Người Giữ Sổ"
+              icon={<Sparkles size={18} color="#fff" />}
+              onPress={onFinale}
+            />
           ) : (
-            <PrimaryButton label="Gấp Hồ Sơ Lại" icon={<CircleCheckBig size={18} color="#fff" />} onPress={onClose} />
+            <PrimaryButton
+              label="Gấp Hồ Sơ Lại"
+              icon={<CircleCheckBig size={18} color="#fff" />}
+              onPress={onClose}
+            />
           )
         ) : undefined
       }
     >
       {/* The fragments, pinned to the board */}
-      <View style={styles.board}>
-        {clues.map(({ object, page }) => (
-          <View key={`${page.id}/${object.id}`} style={styles.note}>
-            <View style={styles.pin} />
-            <SpriteIcon type={object.spriteType} size={34} revealed />
-            <Text style={styles.noteName} numberOfLines={2}>
-              {object.name}
-            </Text>
-            {object.foundText && <Text style={styles.noteText}>{object.foundText}</Text>}
-          </View>
-        ))}
-      </View>
+      <DeductionNotes clues={clues} />
 
       {solved ? (
-        <View style={styles.epilogue}>
-          <Text style={styles.solvedTag}>BÍ ẨN ĐÃ ĐƯỢC GIẢI</Text>
-          <Text style={styles.question}>{mystery.question}</Text>
-          <Text style={styles.right}>{mystery.options.find((o) => o.correct)?.text}</Text>
-          {mystery.epilogue.map((p, i) => (
-            <Text key={i} style={styles.paragraph}>
-              {p}
-            </Text>
-          ))}
-          {mystery.reward && (
-            <View style={styles.reward}>
-              <ScanEye size={22} color="#0284c7" />
-              <View style={styles.rewardText}>
-                <Text style={styles.rewardTitle}>Bạn nhận được: {TOOLS[mystery.reward].name}</Text>
-                <Text style={styles.rewardBody}>{TOOLS[mystery.reward].description}</Text>
-              </View>
-            </View>
-          )}
-        </View>
+        <DeductionEpilogue chapter={chapter} />
       ) : (
         <View style={styles.quiz}>
           <Text style={styles.question}>{mystery.question}</Text>
@@ -110,10 +96,16 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
                 onPress={() => answer(i)}
                 disabled={wrong}
                 accessibilityRole="button"
-                style={({ pressed }) => [styles.option, wrong && styles.optionWrong, pressed && styles.optionPressed]}
+                style={({ pressed }) => [
+                  styles.option,
+                  wrong && styles.optionWrong,
+                  pressed && styles.optionPressed,
+                ]}
               >
                 {wrong && <Lock size={13} color={colors.inkFaint} />}
-                <Text style={[styles.optionText, wrong && styles.optionTextWrong]}>{o.text}</Text>
+                <Text style={[styles.optionText, wrong && styles.optionTextWrong]}>
+                  {o.text}
+                </Text>
               </Pressable>
             );
           })}
@@ -130,54 +122,6 @@ export const Deduction: React.FC<DeductionProps> = ({ chapter, chapterNumber, on
 };
 
 const styles = StyleSheet.create({
-  board: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 10,
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: '#c9a477',
-    borderWidth: 3,
-    borderColor: '#8c6226',
-  },
-  note: {
-    width: 150,
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingTop: 14,
-    paddingBottom: 10,
-    backgroundColor: '#fffaf0',
-    borderRadius: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  pin: {
-    position: 'absolute',
-    top: 4,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: colors.crimson,
-  },
-  noteName: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 13,
-    color: colors.ink,
-    textAlign: 'center',
-  },
-  noteText: {
-    fontFamily: fonts.bodyItalic,
-    fontSize: 11.5,
-    lineHeight: 16,
-    color: colors.inkSoft,
-    textAlign: 'center',
-  },
   quiz: {
     alignSelf: 'stretch',
     gap: 8,
@@ -229,55 +173,6 @@ const styles = StyleSheet.create({
   nudgeText: {
     flexShrink: 1,
     fontFamily: fonts.bodyItalic,
-    fontSize: 13,
-    lineHeight: 19,
-    color: colors.ink,
-  },
-  epilogue: {
-    alignSelf: 'stretch',
-    gap: 8,
-    marginTop: 16,
-    marginBottom: 10,
-  },
-  solvedTag: {
-    fontSize: 10.5,
-    fontWeight: '700',
-    letterSpacing: 2,
-    color: colors.emerald,
-    textAlign: 'center',
-  },
-  right: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 14,
-    color: colors.emerald,
-    textAlign: 'center',
-  },
-  paragraph: {
-    fontFamily: fonts.body,
-    fontSize: 14,
-    lineHeight: 22,
-    color: colors.ink,
-  },
-  reward: {
-    flexDirection: 'row',
-    gap: 10,
-    padding: 12,
-    marginTop: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(2, 132, 199, 0.35)',
-    backgroundColor: 'rgba(2, 132, 199, 0.07)',
-  },
-  rewardText: {
-    flexShrink: 1,
-    gap: 3,
-  },
-  rewardTitle: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 14,
-    color: '#0369a1',
-  },
-  rewardBody: {
     fontSize: 13,
     lineHeight: 19,
     color: colors.ink,

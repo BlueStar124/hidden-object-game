@@ -1,36 +1,20 @@
-import React, { useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-  cancelAnimation,
-} from 'react-native-reanimated';
-import {
-  BookHeart,
-  BookOpen,
-  ChevronLeft,
-  ChevronRight,
-  CircleQuestionMark,
-  Flame,
-  House,
-  Moon,
-  Pause,
-  Volume2,
-  VolumeX,
-} from '../../ui/icons';
 import type { Page } from '../../core/model';
-import { formatClock, formatNumber } from '../../ui/format';
-import { accentControl, colors, controlIcon, fonts, gradients } from '../../ui/theme';
+import { colors, fonts } from '../../ui/theme';
 import { ExploreStatus } from './ExploreStatus';
+import { BrandLogo } from './BrandLogo';
+import { HudTimer } from './HudTimer';
+import { ComboBadge } from './ComboBadge';
+import { PageSwitcher } from './PageSwitcher';
+import { ScoreBox } from './ScoreBox';
+import { HudActions } from './HudActions';
+import { NightBadge } from './NightBadge';
 
 export type HudLayout = 'phone' | 'phoneLandscape' | 'wide';
 
-interface HUDProps {
+export interface HUDProps {
   layout: HudLayout;
   page: Page;
   chapterNumber: number;
@@ -44,6 +28,8 @@ interface HUDProps {
   comboTimer: number;
   soundEnabled: boolean;
   isNight: boolean;
+  freeHintAvailable?: boolean;
+  hasNextUnlocked?: boolean;
   topInset: number;
   insetLeft: number;
   insetRight: number;
@@ -59,210 +45,77 @@ interface HUDProps {
   onHome: () => void;
 }
 
-const IconButton: React.FC<{
-  onPress: () => void;
-  label: string;
-  showLabel?: boolean;
-  /** 'accent': the one button that asks for attention (the hint) */
-  tone?: 'default' | 'accent';
-  children: React.ReactNode;
-}> = ({ onPress, label, showLabel, tone = 'default', children }) => (
-  <Pressable
-    onPress={onPress}
-    accessibilityRole="button"
-    accessibilityLabel={label}
-    hitSlop={4}
-    style={({ pressed }) => [
-      styles.btn,
-      !showLabel && styles.btnIcon,
-      tone === 'accent' && accentControl,
-      pressed && styles.btnPressed,
-    ]}
-  >
-    {children}
-    {showLabel && (
-      <Text style={[styles.btnText, tone === 'accent' && styles.btnTextAccent]}>
-        {label}
-      </Text>
-    )}
-  </Pressable>
-);
-
-const PageSwitcher = React.memo<Pick<HUDProps, 'pageIndex' | 'pageCount' | 'huntLabel' | 'onPrevPage' | 'onNextPage' | 'onOpenIndex'>>(({
-  pageIndex,
-  pageCount,
-  huntLabel,
-  onPrevPage,
-  onNextPage,
-  onOpenIndex,
-}) =>
-  huntLabel ? (
-    // Outside the book there is no page before or after: the index still leads back to it
-    <Pressable onPress={onOpenIndex} hitSlop={6} accessibilityLabel={`${huntLabel}. Mở mục lục để về cuốn sổ`} style={styles.picker}>
-      <BookOpen size={13} color={controlIcon.color} />
-      <Text style={styles.pickerText}>{huntLabel}</Text>
-      <Text style={styles.caret}>▾</Text>
-    </Pressable>
-  ) : (
-  <View style={styles.switcher}>
-    <Pressable
-      onPress={onPrevPage}
-      disabled={pageIndex <= 0}
-      hitSlop={8}
-      accessibilityLabel="Lật về trang trước"
-      style={[styles.arrow, pageIndex <= 0 && styles.disabled]}
-    >
-      <ChevronLeft size={16} color={controlIcon.color} />
-    </Pressable>
-    <Pressable onPress={onOpenIndex} hitSlop={6} accessibilityLabel="Mục lục các trang ký họa" style={styles.picker}>
-      <BookOpen size={13} color={controlIcon.color} />
-      <Text style={styles.pickerText}>
-        Trang {pageIndex + 1} / {pageCount}
-      </Text>
-      <Text style={styles.caret}>▾</Text>
-    </Pressable>
-    <Pressable
-      onPress={onNextPage}
-      disabled={pageIndex >= pageCount - 1}
-      hitSlop={8}
-      accessibilityLabel="Lật sang trang sau"
-      style={[styles.arrow, pageIndex >= pageCount - 1 && styles.disabled]}
-    >
-      <ChevronRight size={16} color={controlIcon.color} />
-    </Pressable>
-  </View>
-  )
-);
-
-const NightBadge = () => (
-  <View style={styles.nightBadge}>
-    <Moon size={11} color={colors.moonGold} />
-    <Text style={styles.nightText}>ĐÊM</Text>
-  </View>
-);
-
-/** Countdown with its bar; turns red and pulses in the last 30 seconds. */
-const Timer: React.FC<{ remaining: number; limit: number; compact: boolean }> = ({ remaining, limit, compact }) => {
-  const low = remaining <= 30;
-  const pulse = useSharedValue(1);
-  const fill = useSharedValue(Math.min(1, remaining / Math.max(1, limit)));
-
-  useEffect(() => {
-    fill.value = withTiming(Math.min(1, remaining / Math.max(1, limit)), { duration: 300, easing: Easing.linear });
-  }, [remaining, limit, fill]);
-
-  useEffect(() => {
-    if (low) {
-      pulse.value = withRepeat(withSequence(withTiming(1.03, { duration: 500 }), withTiming(0.97, { duration: 500 })), -1, true);
-    } else {
-      cancelAnimation(pulse);
-      pulse.value = 1;
-    }
-  }, [low, pulse]);
-
-  const pulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-    opacity: low ? 0.7 + (pulse.value - 0.97) * 5 : 1,
-  }));
-  const barStyle = useAnimatedStyle(() => ({ width: `${fill.value * 100}%` }));
-
-  if (compact) {
-    return (
-      <View style={styles.timerPill}>
-        <Animated.Text style={[styles.timerSmall, low && styles.timerLow, pulseStyle]}>{formatClock(remaining)}</Animated.Text>
-        <View style={[styles.barTrack, { width: 40, marginTop: 0 }]}>
-          <Animated.View style={[styles.barFill, low && { backgroundColor: colors.danger }, barStyle]} />
-        </View>
-      </View>
-    );
-  }
-  return (
-    <View style={styles.timer}>
-      <Text style={styles.metaLabel}>THỜI GIAN CÒN LẠI</Text>
-      <Animated.Text style={[styles.timerBig, low && styles.timerLow, pulseStyle]}>{formatClock(remaining)}</Animated.Text>
-      <View style={styles.barTrack}>
-        <Animated.View style={[styles.barFill, low && { backgroundColor: colors.danger }, barStyle]} />
-      </View>
-    </View>
-  );
-};
-
-const ComboBadge: React.FC<{ combo: number; comboTimer: number; compact: boolean }> = ({ combo, comboTimer, compact }) => {
-  const wiggle = useSharedValue(-8);
-  useEffect(() => {
-    wiggle.value = withRepeat(withTiming(8, { duration: 600 }), -1, true);
-    return () => cancelAnimation(wiggle);
-  }, [wiggle]);
-  const flame = useAnimatedStyle(() => ({ transform: [{ rotate: `${wiggle.value}deg` }] }));
-  return (
-    <LinearGradient
-      colors={gradients.combo}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={[styles.combo, compact && styles.comboCompact]}
-    >
-      <Animated.View style={flame}>
-        <Flame size={compact ? 13 : 17} color="#fff" />
-      </Animated.View>
-      <Text style={[styles.comboText, compact && { fontSize: 10 }]}>COMBO ×{combo}</Text>
-      <View style={[styles.comboBar, { width: `${(comboTimer / 6) * 100}%` }]} />
-    </LinearGradient>
-  );
-};
-
-/** Home, album, sound, hint, pause. */
-const Actions = React.memo<
-  Pick<HUDProps, 'soundEnabled' | 'onOpenAlbum' | 'onToggleSound' | 'onUseHint' | 'onPause' | 'onHome'> & { wide: boolean }
->(({ wide, soundEnabled, onOpenAlbum, onToggleSound, onUseHint, onPause, onHome }) => {
-  // One size and one colour for every icon of the bar (ui/theme controlIcon)
-  const icon = { size: controlIcon.size, color: controlIcon.color };
-  const SoundIcon = soundEnabled ? Volume2 : VolumeX;
-  return (
-    <View style={[styles.actions, !wide && styles.actionsNarrow]}>
-      <IconButton onPress={onHome} label="Về trang chủ" showLabel={wide}>
-        <House {...icon} />
-      </IconButton>
-      <IconButton onPress={onOpenAlbum} label="Sổ Tay" showLabel={wide}>
-        <BookHeart {...icon} />
-      </IconButton>
-      <IconButton onPress={onToggleSound} label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}>
-        <SoundIcon {...icon} />
-      </IconButton>
-      <IconButton onPress={onUseHint} label="Gợi Ý" showLabel={wide} tone="accent">
-        <CircleQuestionMark {...icon} />
-      </IconButton>
-      <IconButton onPress={onPause} label="Tạm dừng">
-        <Pause {...icon} />
-      </IconButton>
-    </View>
-  );
-});
-
 /** The bar over the sketchbook. From second to second only the clock (score, combo) changes. */
 export const HUD: React.FC<HUDProps> = (props) => {
-  const { layout, page, chapterNumber, score, remainingTime, combo, comboTimer, soundEnabled, isNight, topInset, insetLeft, insetRight } =
-    props;
+  const {
+    layout,
+    page,
+    chapterNumber,
+    score,
+    remainingTime,
+    combo,
+    comboTimer,
+    soundEnabled,
+    isNight,
+    topInset,
+    insetLeft,
+    insetRight,
+    freeHintAvailable,
+  } = props;
+  const { width } = useWindowDimensions();
   const wide = layout === 'wide';
   const exploring = props.exploreRemaining !== null;
-  const exploration = props.exploreRemaining !== null
-    ? <ExploreStatus remaining={props.exploreRemaining} onFinish={props.onFinishExplore} /> : null;
+  const exploration =
+    props.exploreRemaining !== null ? (
+      <ExploreStatus remaining={props.exploreRemaining} onFinish={props.onFinishExplore} />
+    ) : null;
+
+  // Responsive breakpoints when layout is 'wide' (desktop, laptop, tablet, resized web window)
+  const isCompactDesktop = wide && width < 1200;
+  const isMediumDesktop = wide && width < 1060;
+  const isNarrowDesktop = wide && width < 940;
+  const isVeryNarrow = wide && width < 820;
+
+  const brandMode: 'full' | 'titleOnly' | 'compact' =
+    !wide || isNarrowDesktop ? 'compact' : isCompactDesktop ? 'titleOnly' : 'full';
+
+  const showAlbumLabel = wide && !isMediumDesktop;
+  const showHintLabel = wide && !isNarrowDesktop;
+  const hintLabel = showHintLabel
+    ? width >= 1220 && freeHintAvailable
+      ? 'Gợi Ý (Free)'
+      : 'Gợi Ý'
+    : undefined;
+  const compactBtn = !wide || isNarrowDesktop;
+
+  const timerCompact = !wide || isNarrowDesktop;
+  const timerMedium = wide && isMediumDesktop && !timerCompact;
+
+  const scoreLabelText = wide && !isMediumDesktop ? 'ĐIỂM ĐIỀU TRA' : 'ĐIỂM';
+  const isNarrowScore = !wide || isNarrowDesktop;
 
   const actions = (
-    <Actions
+    <HudActions
       wide={wide}
+      freeHintAvailable={freeHintAvailable}
       soundEnabled={soundEnabled}
+      compactBtn={compactBtn}
+      showAlbumLabel={showAlbumLabel}
+      hintLabel={hintLabel}
+      showHintLabel={showHintLabel}
       onOpenAlbum={props.onOpenAlbum}
       onToggleSound={props.onToggleSound}
       onUseHint={props.onUseHint}
       onPause={props.onPause}
-      onHome={props.onHome}
     />
   );
+
   const switcher = (
     <PageSwitcher
       pageIndex={props.pageIndex}
       pageCount={props.pageCount}
       huntLabel={props.huntLabel}
+      hasNextUnlocked={props.hasNextUnlocked}
       onPrevPage={props.onPrevPage}
       onNextPage={props.onNextPage}
       onOpenIndex={props.onOpenIndex}
@@ -270,20 +123,29 @@ export const HUD: React.FC<HUDProps> = (props) => {
   );
 
   const scoreBox = (
-    <View style={styles.score}>
-      {wide && <Text style={styles.metaLabel}>ĐIỂM ĐIỀU TRA</Text>}
-      <Text style={[styles.scoreValue, !wide && { fontSize: 17 }]}>{formatNumber(score)}</Text>
-    </View>
+    <ScoreBox
+      score={score}
+      wide={wide}
+      isNarrowScore={isNarrowScore}
+      isNight={isNight}
+      scoreLabelText={scoreLabelText}
+    />
   );
 
   const container = [
     styles.container,
-    { paddingTop: topInset + (wide ? 10 : 6), paddingLeft: insetLeft + 10, paddingRight: insetRight + 10 },
+    {
+      paddingTop: topInset + (wide ? 10 : 6),
+      paddingLeft: insetLeft + 10,
+      paddingRight: insetRight + 10,
+    },
   ];
   const background = (
     <LinearGradient
       colors={
-        isNight ? ['rgba(27, 36, 64, 0.97)', 'rgba(27, 36, 64, 0.9)'] : ['rgba(240, 236, 226, 0.97)', 'rgba(240, 236, 226, 0.9)']
+        isNight
+          ? ['rgba(27, 36, 64, 0.97)', 'rgba(27, 36, 64, 0.9)']
+          : ['rgba(240, 236, 226, 0.97)', 'rgba(240, 236, 226, 0.9)']
       }
       style={StyleSheet.absoluteFill}
     />
@@ -293,16 +155,34 @@ export const HUD: React.FC<HUDProps> = (props) => {
     return (
       <View style={[container, styles.row, { paddingBottom: 5 }]}>
         {background}
+        <BrandLogo onPress={props.onHome} mode="compact" isNight={isNight} />
         {switcher}
         {isNight && <NightBadge />}
-        {exploring ? exploration : <>
-          <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
-            {page.title}
-          </Text>
-          <Timer remaining={remainingTime} limit={page.timeLimit} compact />
-          {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
-          {scoreBox}
-        </>}
+        {exploring ? (
+          exploration
+        ) : (
+          <>
+            <Text
+              style={[
+                styles.title,
+                styles.titleCompact,
+                { flex: 1 },
+                isNight && styles.titleNight,
+              ]}
+              numberOfLines={1}
+            >
+              {page.title}
+            </Text>
+            <HudTimer
+              remaining={remainingTime}
+              limit={page.timeLimit}
+              compact
+              isNight={isNight}
+            />
+            {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
+            {scoreBox}
+          </>
+        )}
         {actions}
       </View>
     );
@@ -313,44 +193,104 @@ export const HUD: React.FC<HUDProps> = (props) => {
       <View style={[container, { paddingBottom: 6, gap: 6 }]}>
         {background}
         <View style={styles.row}>
+          <BrandLogo onPress={props.onHome} mode="compact" isNight={isNight} />
           {switcher}
-          <Text style={[styles.title, styles.titleCompact, { flex: 1 }, isNight && styles.titleNight]} numberOfLines={1}>
+          <Text
+            style={[
+              styles.title,
+              styles.titleCompact,
+              { flex: 1 },
+              isNight && styles.titleNight,
+            ]}
+            numberOfLines={1}
+          >
             {page.title}
           </Text>
           {isNight && <NightBadge />}
         </View>
         <View style={styles.row}>
-          {exploring ? exploration : <>
-            <Timer remaining={remainingTime} limit={page.timeLimit} compact />
-            <View style={{ flex: 1 }} />
-            {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
-            {scoreBox}
-          </>}
+          {exploring ? (
+            exploration
+          ) : (
+            <>
+              <HudTimer
+                remaining={remainingTime}
+                limit={page.timeLimit}
+                compact
+                isNight={isNight}
+              />
+              <View style={{ flex: 1 }} />
+              {combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact />}
+              {scoreBox}
+            </>
+          )}
           {actions}
         </View>
       </View>
     );
   }
 
+  const gapSize = isVeryNarrow ? 5 : isNarrowDesktop ? 6 : isCompactDesktop ? 8 : 12;
+  const titleSize = isVeryNarrow ? 14.5 : isNarrowDesktop ? 15.5 : isCompactDesktop ? 17 : 19.5;
+  const hideSubtitle = isNarrowDesktop;
+
   return (
-    <View style={[container, styles.row, { paddingBottom: 10, justifyContent: 'space-between' }]}>
+    <View
+      style={[
+        container,
+        styles.row,
+        { paddingBottom: 10, justifyContent: 'space-between', gap: gapSize },
+      ]}
+    >
       {background}
-      <View style={{ flexShrink: 1 }}>
-        <View style={[styles.row, { marginBottom: 4 }]}>
-          <Text style={styles.caseTag}>HỒ SƠ ĐIỀU TRA #CHƯƠNG {chapterNumber}</Text>
-          {switcher}
-          {isNight && <NightBadge />}
+      <View style={[styles.row, { flexShrink: 1, minWidth: 0, gap: gapSize }]}>
+        <BrandLogo onPress={props.onHome} mode={brandMode} isNight={isNight} />
+        {!isVeryNarrow && (
+          <View style={[styles.headerDivider, isNight && styles.headerDividerNight]} />
+        )}
+        <View style={{ flexShrink: 1, minWidth: 0 }}>
+          <View style={[styles.row, { marginBottom: 3, gap: 6 }]}>
+            {!isVeryNarrow && (
+              <View style={[styles.chapterPill, isNight && styles.chapterPillNight]}>
+                <Text style={[styles.chapterText, isNight && styles.chapterTextNight]}>
+                  CHƯƠNG {chapterNumber}
+                </Text>
+              </View>
+            )}
+            {switcher}
+            {isNight && <NightBadge />}
+          </View>
+          <Text
+            style={[styles.title, { fontSize: titleSize }, isNight && styles.titleNight]}
+            numberOfLines={1}
+          >
+            {page.title}
+          </Text>
+          {!hideSubtitle && (
+            <Text
+              style={[styles.subtitle, isNight && styles.subtitleNight]}
+              numberOfLines={1}
+            >
+              {page.subtitle}
+            </Text>
+          )}
         </View>
-        <Text style={[styles.title, isNight && styles.titleNight]} numberOfLines={1}>
-          {page.title}
-        </Text>
-        <Text style={[styles.subtitle, isNight && { color: 'rgba(244, 236, 208, 0.6)' }]} numberOfLines={1}>
-          {page.subtitle}
-        </Text>
       </View>
-      {exploring ? exploration : <Timer remaining={remainingTime} limit={page.timeLimit} compact={false} />}
-      <View style={[styles.row, { gap: 14 }]}>
-        {!exploring && combo > 1 && <ComboBadge combo={combo} comboTimer={comboTimer} compact={false} />}
+      {exploring ? (
+        exploration
+      ) : (
+        <HudTimer
+          remaining={remainingTime}
+          limit={page.timeLimit}
+          compact={timerCompact}
+          medium={timerMedium}
+          isNight={isNight}
+        />
+      )}
+      <View style={[styles.row, { flexShrink: 0, gap: gapSize }]}>
+        {!exploring && combo > 1 && (
+          <ComboBadge combo={combo} comboTimer={comboTimer} compact={isCompactDesktop} />
+        )}
         {!exploring && scoreBox}
         {actions}
       </View>
@@ -369,198 +309,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  caseTag: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1.5,
-    color: colors.earth,
+  headerDivider: {
+    width: 1,
+    height: 34,
+    backgroundColor: colors.hairline,
   },
-  switcher: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.paper,
+  headerDividerNight: {
+    backgroundColor: 'rgba(244, 236, 208, 0.2)',
+  },
+  chapterPill: {
+    paddingHorizontal: 7,
+    paddingVertical: 2.5,
+    borderRadius: 6,
+    backgroundColor: 'rgba(154, 106, 62, 0.12)',
     borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: 10,
-    paddingHorizontal: 3,
-    paddingVertical: 2,
+    borderColor: 'rgba(154, 106, 62, 0.25)',
   },
-  arrow: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
+  chapterPillNight: {
+    backgroundColor: 'rgba(244, 213, 141, 0.12)',
+    borderColor: 'rgba(244, 213, 141, 0.25)',
   },
-  picker: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-  },
-  pickerText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.ink,
-  },
-  caret: {
-    fontSize: 10,
-    color: colors.earth,
-  },
-  disabled: {
-    opacity: 0.3,
-  },
-  nightBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 999,
-    backgroundColor: colors.night,
-  },
-  nightText: {
-    color: colors.moonGold,
+  chapterText: {
     fontSize: 10,
     fontWeight: '800',
-    letterSpacing: 1,
+    letterSpacing: 1.2,
+    color: colors.earth,
+  },
+  chapterTextNight: {
+    color: colors.moonGold,
   },
   title: {
     fontFamily: fonts.displayMedium,
-    fontSize: 20,
+    fontSize: 19.5,
     color: colors.ink,
   },
   titleCompact: {
-    fontSize: 15,
+    fontSize: 15.5,
   },
   titleNight: {
     color: colors.moonlight,
   },
   subtitle: {
-    fontSize: 11,
-    color: colors.inkFaint,
+    fontSize: 12,
+    color: '#6D6255',
     letterSpacing: 0.2,
   },
-  timer: {
-    alignItems: 'center',
-    minWidth: 140,
-  },
-  metaLabel: {
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1.4,
-    color: colors.inkFaint,
-    marginBottom: 2,
-  },
-  timerBig: {
-    fontFamily: fonts.displaySemiBold,
-    fontSize: 26,
-    letterSpacing: 1,
-    color: colors.ink,
-  },
-  timerSmall: {
-    fontFamily: fonts.displaySemiBold,
-    fontSize: 16,
-    letterSpacing: 0.6,
-    color: colors.ink,
-  },
-  timerLow: {
-    color: colors.danger,
-  },
-  timerPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    backgroundColor: 'rgba(220, 214, 200, 0.6)',
-    borderRadius: 8,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-  },
-  barTrack: {
-    width: '100%',
-    height: 3,
-    borderRadius: 2,
-    marginTop: 6,
-    backgroundColor: 'rgba(44, 40, 36, 0.12)',
-    overflow: 'hidden',
-  },
-  barFill: {
-    height: '100%',
-    backgroundColor: colors.earth,
-  },
-  combo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  comboCompact: {
-    gap: 3,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  comboText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  comboBar: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    height: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-  },
-  score: {
-    alignItems: 'flex-end',
-  },
-  scoreValue: {
-    fontFamily: fonts.displaySemiBold,
-    fontSize: 24,
-    color: colors.ink,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    minWidth: 36,
-    height: 36,
-    justifyContent: 'center',
-    paddingHorizontal: 8,
-    // The home screen's buttons (ui/Buttons' secondary), at the bar's height
-    borderRadius: 10,
-    backgroundColor: colors.paper,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-  },
-  // Icons only (a narrow bar): five buttons must fit a phone held upright
-  btnIcon: {
-    minWidth: 34,
-    paddingHorizontal: 6,
-  },
-  actionsNarrow: {
-    gap: 4,
-  },
-  btnPressed: {
-    backgroundColor: '#fff',
-  },
-  btnText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.ink,
-  },
-  btnTextAccent: {
-    color: colors.earth,
-    fontWeight: '700',
+  subtitleNight: {
+    color: 'rgba(244, 236, 208, 0.65)',
   },
 });

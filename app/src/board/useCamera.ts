@@ -148,24 +148,27 @@ export function useCamera(
     dims.value = { w: size.w, h: size.h, fit, r: d / 2, d, bx, by, bw, bh };
     const prev = placed.current;
     placed.current = size;
-    const resized = !prev || prev.w !== size.w || prev.h !== size.h;
     // First layout, or the phone turned: start fitted at 1.0×.
     const turned = !prev || prev.w > prev.h !== size.w > size.h;
     if (turned) userZoomed.current = false;
     const level = userZoomed.current ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom)) : 1;
     const scale = fit * level;
     s.value = scale;
-    if (resized || !turning.current) {
+    if (!prev || turned) {
       const c = centre(scale);
       tx.value = c.tx;
       ty.value = c.ty;
+      placeLoupe(size.w * 0.6, size.h * 0.58);
+    } else {
+      // Board resized (e.g. sidebar collapsed or expanded):
+      // Keep pan position clamped to the new bounds, and keep the loupe where it was
+      const b = bounds(scale);
+      tx.value = Math.min(b.maxX, Math.max(b.minX, tx.value));
+      ty.value = Math.min(b.maxY, Math.max(b.minY, ty.value));
+      placeLoupe(lx.value, ly.value);
     }
-    // The loupe starts a little right of and below the middle of what is on screen; a new page
-    // (whose paper sits a pixel or two elsewhere) leaves it where the player put it
-    if (resized) placeLoupe(size.w * 0.6, size.h * 0.58);
-    else placeLoupe(lx.value, ly.value);
     setZoom(level);
-  }, [size, bx, by, bw, bh, centre, placeLoupe, dims, lx, ly, s, tx, ty, turning]);
+  }, [size, bx, by, bw, bh, centre, bounds, placeLoupe, dims, lx, ly, s, tx, ty, turning]);
 
   // A new page opens on the middle of the spread (a page turn glides there itself)
   useEffect(() => {

@@ -1,5 +1,12 @@
 import type { Challenge } from '../core/challenge';
-import type { Chapter, Country, Page, PageRef } from '../core/model';
+import type { Chapter, Country, GameProgress, Page, PageRef } from '../core/model';
+import { progress } from '../core/progress';
+import {
+  evaluateStoryProgress,
+  getCountryLockReason,
+  getPageLockReason,
+  type StoryProgressState,
+} from '../core/story';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
 import { vietnam } from './countries/vietnam';
@@ -121,3 +128,76 @@ export function allPages(): Page[] {
   }
   return [...days, ...nights];
 }
+
+/** All day page slots in linear reading order across all countries. */
+export function allStoryRefs(): PageRef[] {
+  return COUNTRIES.flatMap((c) => pagesOf(c));
+}
+
+/**
+ * Story progression queries pre-bound to the catalogue of sketchbooks.
+ */
+export const story = {
+  /** Full evaluation of the linear story journey. */
+  state(p?: GameProgress): StoryProgressState {
+    const current =
+      p ??
+      (typeof progress?.get === 'function'
+        ? progress.get()
+        : {
+            schemaVersion: 3,
+            unlockedScenes: [],
+            sceneResults: {},
+            totalScore: 0,
+            discovered: {},
+          });
+    return evaluateStoryProgress(allStoryRefs(), current);
+  },
+
+  /** Whether a page (day or night) is currently unlocked in story mode. */
+  isUnlocked(pageId: string, p?: GameProgress): boolean {
+    const s = this.state(p);
+    return s.unlockedPageIds.has(pageId) || s.unlockedNightIds.has(pageId);
+  },
+
+  /** Whether a country's sketchbook is currently unlocked. */
+  isCountryUnlocked(countryId: string, p?: GameProgress): boolean {
+    return this.state(p).unlockedCountryIds.has(countryId);
+  },
+
+  /** Human-friendly lock reason if locked, or empty string if unlocked. */
+  lockReason(pageId: string, p?: GameProgress): string {
+    const s = this.state(p);
+    if (s.unlockedPageIds.has(pageId) || s.unlockedNightIds.has(pageId)) return '';
+    return getPageLockReason(pageId, allStoryRefs(), s);
+  },
+
+  /** Human-friendly country lock reason if locked, or empty string if unlocked. */
+  countryLockReason(countryId: string, p?: GameProgress): string {
+    const s = this.state(p);
+    if (s.unlockedCountryIds.has(countryId)) return '';
+    return getCountryLockReason(countryId, COUNTRIES, allStoryRefs(), s);
+  },
+
+  /** Next day page to play in the story, or null if entire journey completed. */
+  nextTarget(p?: GameProgress): Page | null {
+    return this.state(p).nextDayPage;
+  },
+
+  /** Whether the full story journey across all countries is complete. */
+  isJourneyCompleted(p?: GameProgress): boolean {
+    return this.state(p).journeyCompleted;
+  },
+
+  /** The next page in the story sequence after `pageId` (day or night), or null if end of journey. */
+  nextPageAfter(pageId: string): { ref: PageRef; night: boolean } | null {
+    const refs = allStoryRefs();
+    const idx = refs.findIndex((r) => r.day.id === pageId || r.night?.id === pageId);
+    if (idx === -1) return null;
+    if (idx + 1 < refs.length) {
+      return { ref: refs[idx + 1], night: false };
+    }
+    return null;
+  },
+};
+

@@ -1,36 +1,16 @@
-import { BlendMode, Skia, TileMode, type SkImage, type SkRect } from '@shopify/react-native-skia';
-import { SPRITE_BASE_WIDTH, type HiddenObject, type Page, type SpriteType } from '../../core/model';
-import { hashString, rng } from '../../core/random';
-import { isCreature, STARTLE } from '../../content/bestiary';
-import { STARTLE_FLUTTER, STARTLE_HOP, STARTLE_NONE, STARTLE_SCURRY, STARTLE_SPLASH } from '../anim';
-import { PAGE_H, PAGE_W, PX, spriteSize } from '../constants';
+import { Skia, type SkImage } from '@shopify/react-native-skia';
+import type { Page } from '../../core/model';
+import { PAGE_H, PAGE_W, PX } from '../constants';
 import {
-  CAMO_CHAMELEON,
-  CAMO_INK,
   CAMO_INVISIBLE,
-  LENS_PLAIN,
   LENS_PRISM,
-  LENS_TINY,
-  type NightScene,
-  type RevealBlob,
   type SceneData,
   type SceneMark,
-  type SceneSprite,
 } from '../render/types';
 import type { BookRect, CamoTint } from './analyze';
-import { createBoardPaints, lampShader, moonPath, type LoupePaints } from './paints';
-import { buildSheet, type AtlasEntry, type SpriteAtlas } from './spriteAtlas';
-import {
-  ANIM_BLINK,
-  ANIM_GLOW_SPOT,
-  ANIM_TAIL,
-  ANIM_WAVE,
-  ANIM_WING,
-  partsAnimate,
-  spriteBounds,
-  spriteParts,
-  type Part,
-} from './spriteParts';
+import type { LoupePaints } from './paints';
+import { boardPaints, buildSprite, isPainted, layOutAtlas } from './sceneSprites';
+import { buildNight, revealBlobs, veilAround } from './sceneEnvironment';
 
 /**
  * Lays a page out for the renderer, once, on the JS thread: every sprite with its drawing in each
@@ -38,212 +18,8 @@ import {
  * and the sheet of its sprites drawn at rest (scene/spriteAtlas).
  */
 
-const boardPaints = createBoardPaints();
-
 // Radius of the sketchbook's rounded corners in the artwork (page units)
 const PAPER_CORNER = 48;
-
-// Fixed star field in the upper part of the spread (normalized x, y, size)
-const STARS: [number, number, number][] = [
-  [0.06, 0.08, 1.2],
-  [0.13, 0.16, 0.8],
-  [0.21, 0.06, 1],
-  [0.29, 0.13, 0.7],
-  [0.36, 0.05, 1.3],
-  [0.44, 0.11, 0.8],
-  [0.57, 0.07, 1.1],
-  [0.63, 0.15, 0.7],
-  [0.71, 0.05, 0.9],
-  [0.78, 0.12, 1.2],
-  [0.86, 0.07, 0.8],
-  [0.93, 0.14, 1],
-  [0.1, 0.25, 0.7],
-  [0.52, 0.2, 0.9],
-  [0.9, 0.24, 0.7],
-];
-
-const SHY_OFFSET: Record<string, [number, number]> = {
-  below: [0, 0.55],
-  above: [0, -0.55],
-  left: [-0.55, 0],
-  right: [0.55, 0],
-};
-
-/** Stable per-object blink offset so hidden creatures never blink in unison. */
-function blinkDelay(id: string): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) | 0;
-  return Math.abs(hash) % 4600;
-}
-
-const isPainted = (o: HiddenObject) => !!o.spriteType && o.spriteType !== 'seal';
-
-function waterPaint(w: number, waterline: number) {
-  const p = Skia.Paint();
-  p.setBlendMode(BlendMode.DstIn);
-  p.setShader(
-    Skia.Shader.MakeLinearGradient(
-      { x: 0, y: -w / 2 },
-      { x: 0, y: w / 2 },
-      [Skia.Color('#000'), Skia.Color('#000'), Skia.Color('rgba(0, 0, 0, 0)')],
-      [0, Math.min(1, waterline), Math.min(1, waterline + 0.14)],
-      TileMode.Clamp
-    )
-  );
-  return p;
-}
-
-function buildSprite(obj: HiddenObject, tint: CamoTint | undefined, night: boolean): SceneSprite {
-  const type = obj.spriteType!;
-  const w = spriteSize(obj.scale);
-  const camo = obj.camo === 'chameleon' ? CAMO_CHAMELEON : obj.camo === 'invisible' ? CAMO_INVISIBLE : CAMO_INK;
-  const lens = obj.requires === 'prism' ? LENS_PRISM : obj.requires === 'twin-lens' ? LENS_TINY : LENS_PLAIN;
-  const hiddenVariant = camo === CAMO_CHAMELEON ? 'chameleon' : 'base';
-  const shyFrom = obj.shy?.from ?? 'below';
-  const roam = obj.roam && obj.roam.path.length >= 2 ? obj.roam : null;
-  const glows = night && isCreature(type) && obj.glow !== false && camo !== CAMO_INVISIBLE;
-
-  let occluder = null;
-  if (obj.occluder && obj.occluder.length >= 3) {
-    const shape = Skia.PathBuilder.Make();
-    obj.occluder.forEach(([x, y], i) => (i ? shape.lineTo(x * PAGE_W, y * PAGE_H) : shape.moveTo(x * PAGE_W, y * PAGE_H)));
-    occluder = shape.close().build();
-  }
-
-  const page = camo === CAMO_INVISIBLE ? null : spriteParts(type, hiddenVariant, tint);
-  const found = spriteParts(type, 'base');
-  return {
-    id: obj.id,
-    x: obj.x * PAGE_W,
-    y: obj.y * PAGE_H,
-    w,
-    rot: obj.rotation ?? 0,
-    flip: obj.flip ? -1 : 1,
-    camo,
-    lens,
-    shy: obj.shy ?? null,
-    shyDx: SHY_OFFSET[shyFrom]?.[0] ?? 0,
-    shyDy: SHY_OFFSET[shyFrom]?.[1] ?? 0,
-    jump: shyFrom === 'jump',
-    roam,
-    bob: !!roam?.bob,
-    blinkDelay: blinkDelay(obj.id),
-    page,
-    // Invisible ink looks like ink through the loupe; what the prism or the twin lens shows keeps its colours
-    loupe: spriteParts(type, camo === CAMO_INVISIBLE ? (lens === LENS_PLAIN ? 'invisible' : 'base') : hiddenVariant, tint),
-    found,
-    glow: glows ? spriteParts(type, camo === CAMO_CHAMELEON ? 'glowChameleon' : 'glow', tint) : null,
-    bounds: Skia.XYWHRect(-1.4 * w, -1.4 * w, 2.8 * w, 2.8 * w),
-    box: Skia.XYWHRect(-w / 2, -w / 2, w, w),
-    water: obj.waterline !== undefined ? waterPaint(w, obj.waterline) : null,
-    occluder,
-    occluderBounds: occluder ? occluder.computeTightBounds() : null,
-    pageCell: null,
-    foundCell: null,
-    blinks: partsAnimate(found, [ANIM_BLINK]),
-    gold: !!obj.rare,
-    dayTrail: obj.dayAt ? dayTrail(obj.dayAt, obj) : null,
-    dayX: (obj.dayAt?.x ?? 0) * PAGE_W,
-    dayY: (obj.dayAt?.y ?? 0) * PAGE_H,
-    startle: STARTLE_KIND[STARTLE[type] ?? 'none'],
-  };
-}
-
-/** The way a thing went between the day and the night: a gentle arc from where it was to where it is. */
-function dayTrail(from: { x: number; y: number }, to: { x: number; y: number }) {
-  const ax = from.x * PAGE_W;
-  const ay = from.y * PAGE_H;
-  const bx = to.x * PAGE_W;
-  const by = to.y * PAGE_H;
-  // Bowed sideways by a fifth of its length, as if it took the long way round
-  const bow = 0.2;
-  const cx = (ax + bx) / 2 - (by - ay) * bow;
-  const cy = (ay + by) / 2 + (bx - ax) * bow;
-  return Skia.PathBuilder.Make().moveTo(ax, ay).quadTo(cx, cy, bx, by).build();
-}
-
-// The startles of the bestiary, as the renderer's numbers
-const STARTLE_KIND = { none: STARTLE_NONE, hop: STARTLE_HOP, scurry: STARTLE_SCURRY, splash: STARTLE_SPLASH, flutter: STARTLE_FLUTTER };
-
-// What keeps moving in a found sprite
-const FOUND_MOTION = [ANIM_WING, ANIM_TAIL, ANIM_WAVE, ANIM_GLOW_SPOT];
-
-/**
- * Draws the page's sprites at rest into one sheet and hands each sprite its cells: hidden on the
- * page, and found if nothing in it moves once found (wings, tails, paws, glow spots do).
- */
-function layOutAtlas(sprites: SceneSprite[], objects: HiddenObject[], density: number): SpriteAtlas | null {
-  const entries: AtlasEntry[] = [];
-  const index = new Map<Part[], Map<number, number>>(); // same drawing at the same size: one cell
-  const entryOf = (parts: Part[], type: SpriteType, w: number) => {
-    let bySize = index.get(parts);
-    if (!bySize) index.set(parts, (bySize = new Map()));
-    let i = bySize.get(w);
-    if (i === undefined) {
-      i = entries.push({ parts, bounds: spriteBounds(type), w }) - 1;
-      bySize.set(w, i);
-    }
-    return i;
-  };
-  const types = new Map(objects.map((o) => [o.id, o.spriteType!]));
-  const wanted = sprites.map((sp) => {
-    const type = types.get(sp.id)!;
-    return {
-      page: sp.page && sp.page.length ? entryOf(sp.page, type, sp.w) : -1,
-      // A golden critter, found, is filtered as a whole: drawn from its shapes, not the sheet
-      found: sp.gold || partsAnimate(sp.found, FOUND_MOTION) ? -1 : entryOf(sp.found, type, sp.w),
-    };
-  });
-  // Both kinds share one texture, but only hidden cells are backed with white.
-  // Bake the ink filter before drawing over white, never over the backing itself.
-  const hiddenEntries: AtlasEntry[] = [];
-  const hiddenWanted = sprites.map((sp, i) => {
-    if (wanted[i].page < 0 || sp.water) return -1;
-    return hiddenEntries.push({
-      ...entries[wanted[i].page],
-      filter: sp.camo === CAMO_INK ? boardPaints.inkFilter : null,
-      background: 'white',
-    }) - 1;
-  });
-  const foundEntries: AtlasEntry[] = [];
-  const foundWanted = sprites.map((sp, i) => wanted[i].found < 0
-    ? -1 : foundEntries.push(entries[wanted[i].found]) - 1);
-  const { sheet, cells } = buildSheet([...hiddenEntries, ...foundEntries], density, 'transparent');
-  if (!sheet) return null;
-  sprites.forEach((sp, i) => {
-    sp.pageCell = hiddenWanted[i] >= 0 ? cells[hiddenWanted[i]] : null;
-    sp.foundCell = foundWanted[i] >= 0 ? cells[hiddenEntries.length + foundWanted[i]] : null;
-  });
-  return sheet;
-}
-
-function buildNight(page: Page): NightScene {
-  const r = 0.016 * PAGE_W;
-  return {
-    lamps: (page.nightLights ?? []).map((l, i) => ({
-      x: l.x * PAGE_W,
-      y: l.y * PAGE_H,
-      hole: l.r * PAGE_W * 1.15,
-      glow: l.r * PAGE_W,
-      shader: lampShader(l.color),
-      delay: ((i * 0.53) % 4) * 1000,
-    })),
-    stars: STARS.map(([x, y, s], i) => ({ x: x * PAGE_W, y: y * PAGE_H, r: 1.5 * s * PX, delay: ((i * 0.37) % 3) * 1000 })),
-    moon: moonPath(0.07 * PAGE_W + r, 0.07 * PAGE_H + r, r),
-  };
-}
-
-/** The four rectangles of the spread around a focus (page units), laid out once. */
-function veilAround(f: SkRect): SkRect[] {
-  const right = f.x + f.width;
-  const bottom = f.y + f.height;
-  return [
-    Skia.XYWHRect(0, 0, PAGE_W, f.y),
-    Skia.XYWHRect(0, bottom, PAGE_W, PAGE_H - bottom),
-    Skia.XYWHRect(0, f.y, f.x, f.height),
-    Skia.XYWHRect(right, f.y, PAGE_W - right, f.height),
-  ];
-}
 
 export interface SceneOptions {
   page: Page;
@@ -255,24 +31,6 @@ export interface SceneOptions {
   /** Device pixels per page unit to draw the sprite sheet at (scene/spriteAtlas) */
   density: number;
   pixelRatio: number;
-}
-
-// The patch a find washes clear: this many times the sprite's width, within these bounds (page units)
-const REVEAL_SPAN = 3.2;
-const REVEAL_MIN = 110;
-const REVEAL_MAX = 230;
-
-/** An irregular patch, the same every time for an object: one round and two smaller ones beside it. */
-function revealBlobs(obj: HiddenObject): RevealBlob[] {
-  const radius = Math.min(REVEAL_MAX, Math.max(REVEAL_MIN, REVEAL_SPAN * SPRITE_BASE_WIDTH * (obj.scale ?? 1) * PAGE_W));
-  const random = rng(hashString(obj.id));
-  const blobs: RevealBlob[] = [{ dx: 0, dy: 0, r: radius }];
-  for (let i = 0; i < 2; i++) {
-    const angle = random() * Math.PI * 2;
-    const reach = radius * (0.45 + 0.2 * random());
-    blobs.push({ dx: Math.cos(angle) * reach, dy: Math.sin(angle) * reach, r: radius * (0.5 + 0.2 * random()) });
-  }
-  return blobs;
 }
 
 export function buildScene({ page, image, tints, book, loupe, compact, density, pixelRatio }: SceneOptions): SceneData {
