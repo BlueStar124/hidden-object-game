@@ -1,6 +1,6 @@
 import type { Country, Page, SpriteType } from '../../core/model';
 import { progress } from '../../core/progress';
-import { allPages, pagesOf } from '../../content';
+import { allPages, pagesOf, story } from '../../content';
 
 /** How far the player is in one country's sketchbook. */
 export interface BookSummary {
@@ -13,6 +13,8 @@ export interface BookSummary {
   /** The page to go on with: the first one not cleared yet (the first page once all are) */
   next: { index: number; number: number; title: string };
   started: boolean;
+  unlocked: boolean;
+  lockReason?: string;
 }
 
 const starsOf = (page: Page | undefined) => (page ? (progress.pageResult(page.id)?.stars ?? 0) : 0);
@@ -21,6 +23,8 @@ export function bookSummary(country: Country): BookSummary {
   const refs = pagesOf(country);
   const cleared = refs.filter((ref) => starsOf(ref.day) > 0).length;
   const nextRef = refs.find((ref) => starsOf(ref.day) === 0) ?? refs[0];
+  const unlocked = story.isCountryUnlocked(country.id);
+  const lockReason = unlocked ? undefined : story.countryLockReason(country.id);
   let stars = 0;
   let pageCount = 0;
   for (const ref of refs) {
@@ -39,6 +43,8 @@ export function bookSummary(country: Country): BookSummary {
     maxStars: pageCount * 3,
     next: { index: nextRef.index, number: nextRef.number, title: nextRef.day.title },
     started: refs.some((ref) => [ref.day, ref.night].some((p) => p && progress.discovered(p.id).length > 0)),
+    unlocked,
+    lockReason,
   };
 }
 

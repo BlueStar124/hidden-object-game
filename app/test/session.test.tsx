@@ -13,12 +13,25 @@ jest.mock('../src/platform/sound', () => ({ sound: { playPageTurn: jest.fn() } }
 // Pages the player has solved (a replay of one may lay it out anew)
 const mockSolved = new Set<string>();
 const mockPlayed = new Set<string>();
+const mockUnlocked = new Set<string>();
 jest.mock('../src/core/progress', () => ({
   progress: {
     lastPage: () => undefined,
     pageResult: (id: string) => (mockSolved.has(id) ? { stars: 3 } : undefined),
     isMysterySolved: () => false,
     playedPages: () => [...new Set([...mockPlayed, ...mockSolved])],
+    get: () => ({
+      schemaVersion: 3,
+      unlockedScenes: [...mockUnlocked],
+      storyCleared: [...mockSolved],
+      playedPages: [...new Set([...mockPlayed, ...mockSolved])],
+      sceneResults: Object.fromEntries([...mockSolved].map((id) => [id, { sceneId: id, stars: 3, highScore: 1000, bestTime: 30, completedAt: '' }])),
+      totalScore: 0,
+      discovered: {},
+    }),
+    storyCleared: () => [...mockSolved],
+    isStoryCleared: (id: string) => mockSolved.has(id),
+    unlockedScenes: () => [...mockUnlocked],
   },
 }));
 jest.mock('../src/board/useSceneLibrary', () => ({ useKeepArt: jest.fn() }));
@@ -31,6 +44,7 @@ function NavigationProbe() {
 }
 
 beforeEach(() => {
+  pagesOf(FIRST_COUNTRY).forEach((p) => mockUnlocked.add(p.day.id));
   jest.useFakeTimers();
   // React's test renderer is already provided by jest-expo; opt into its act environment.
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -43,6 +57,7 @@ beforeEach(() => {
 afterEach(() => {
   mockSolved.clear();
   mockPlayed.clear();
+  mockUnlocked.clear();
   if (renderer) act(() => renderer.unmount());
   jest.useRealTimers();
   jest.restoreAllMocks();

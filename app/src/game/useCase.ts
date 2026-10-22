@@ -12,20 +12,22 @@ import { inFocus } from '../core/daily';
 import { detectObject } from '../core/detection';
 import { nextHint } from '../core/hints';
 import { isOptionalObject, type CaseState, type HiddenObject, type Page } from '../core/model';
-import { migrantProgress, migrantObjectId } from '../core/migrants';
-import { canDeduce } from '../core/mystery';
-import { progress } from '../core/progress';
 import { canAffordHint, hintCost } from '../core/scoring';
-import { placeOf } from '../content';
-import { MIGRANTS } from '../content/migrants';
 import { sound } from '../platform/sound';
 import type { PlayMode } from './useNavigation';
 import type { Notify } from './useNotices';
+import { handleDiscovery, handleVictoryRecord } from './useCaseEffects';
 
 // Anti-spam: this many wrong taps within the window mists up the loupe for a moment
 const FOG_MISSES = 4;
 const FOG_WINDOW_MS = 3000;
 const FOG_DURATION_MS = 3000;
+
+export interface HintRefusal {
+  needed: number;
+  current: number;
+  timestamp: number;
+}
 
 /** The case of the page being played, and what the player can do in it. */
 export interface Case {
@@ -35,9 +37,10 @@ export interface Case {
   /** Set when this victory opened the page's night variant for the first time (its title) */
   unlockedNight: string | null;
   screenShake: boolean;
+  hintRefusal: HintRefusal | null;
   inspect: (nx: number, ny: number, at: { x: number; y: number }) => void;
-  /** `at`: where to say so (screen point) when the score cannot pay for the hint */
-  requestHint: (targetObjectId: string | undefined, at: { x: number; y: number }) => void;
+  /** `at`: where to say so (screen point) when the score cannot pay for the hint. Returns true if granted. */
+  requestHint: (targetObjectId: string | undefined, at: { x: number; y: number }) => boolean;
   togglePause: () => void;
   /** After the case is closed: keep hunting the critters & secret left (no clock, no score) */
   explore: (exploring: boolean) => void;
@@ -65,10 +68,11 @@ export function useCase(
     night: Page | undefined;
     /** A daily page earns a passport stamp rather than counting as playing the page */
     mode: PlayMode;
+    isNight?: boolean;
   },
   notify: Notify
 ): Case {
-  const { clockRuns, isTurning, nextPage, night, mode } = context;
+  const { clockRuns, isTurning, nextPage, night, mode, isNight = false } = context;
   const friendHunt = mode.kind === 'challenge' && isFriendChallenge(mode.challenge);
 
   // A page opened (or opened again) starts a new case — in the same render, so nothing of the
@@ -92,6 +96,10 @@ export function useCase(
       shakeTimer.current = null;
     };
   }, [visit]);
+  const [hintRefusal, setHintRefusal] = useState<HintRefusal | null>(null);
+  useEffect(() => {
+    setHintRefusal(null);
+  }, [visit]);
   const lastLoupePos = useRef({ nx: 0.5, ny: 0.5 });
   const recentMisses = useRef({ visit, at: [] as number[] });
   const lastFogNotice = useRef(0);
@@ -111,31 +119,9 @@ export function useCase(
     return () => clearInterval(timer);
   }, [c.isPaused, c.isCompleted, c.isGameOver, clockRuns, update]);
 
-  // A find is remembered at once; a golden critter goes into the album's gold collection; the last
-  // clue fragment of a chapter opens its deduction board
   const discover = useCallback(
     (found: HiddenObject, at: { x: number; y: number }) => {
-      if (!friendHunt) progress.recordDiscovery(page.id, found.id);
-      if (found.rare && found.spriteType) {
-        const first = progress.recordRareFind(found.spriteType);
-        sound.playCreature();
-        notify(first ? '✨ Sinh vật ánh vàng! Đã ghi vào Sổ Tay' : '✨ Lại một sinh vật ánh vàng!', { x: at.x, y: at.y - 44 }, 'info');
-      }
-      const migrant = MIGRANTS.find((m) => migrantObjectId(m) === found.id);
-      if (migrant) {
-        const { met, total } = migrantProgress(migrant, progress.discovered);
-        notify(
-          met === total ? `${migrant.name}: đã gặp ở mọi nơi! Đọc câu chuyện trong Hộ Chiếu` : `${migrant.name}: đã gặp ${met}/${total} nơi`,
-          { x: at.x, y: at.y - 44 },
-          'info'
-        );
-      }
-      if (!found.isClue) return;
-      const chapter = placeOf(page.id)?.ref.chapter;
-      if (chapter && canDeduce(chapter, progress.discovered) && !progress.isMysterySolved(chapter.id)) {
-        // Above the find's own notice, so both can be read
-        notify('Đủ manh mối của chương! Mở Mục Lục để suy luận', { x: at.x, y: at.y - 44 }, 'info');
-      }
+      handleDiscovery(found, at, page.id, friendHunt, notify);
     },
     [page.id, friendHunt, notify]
   );
@@ -183,6 +169,7 @@ export function useCase(
       const result = detectObject(nx, ny, page.objects, c.foundItems);
 
       if (result.hit && result.object) {
+        setHintRefusal(null);
         const found = result.object;
         recentMisses.current.at = [];
         sound.playFound(c.combo);
@@ -194,31 +181,19 @@ export function useCase(
         notify(`+${find.earned}${find.combo > 1 ? ` (×${find.combo})` : ''}${tag}`, at);
 
         let unlockedNight: string | null | undefined;
-        if (find.solved && mode.kind === 'daily') {
-          // The daily hunt is a stamp in the passport, not a game of the page itself
-          sound.playVictory();
-          const countryId = placeOf(page.id)?.ref.country.id ?? '';
-          progress.recordStamp(mode.puzzle.day, { pageId: page.id, countryId, time: page.timeLimit - c.remainingTime });
-          unlockedNight = null;
-        } else if (find.solved) {
-          sound.playVictory();
-          if (friendHunt) {
-            unlockedNight = null;
-          } else {
-            const wasPassed = (progress.pageResult(page.id)?.stars ?? 0) > 0;
-            const foundItems = find.changes.foundItems ?? c.foundItems;
-            const critters = page.objects.filter((o) => o.isBonus && foundItems.includes(o.id)).map((o) => o.id);
-            progress.recordVictory(
-              page.id,
-              nextPage?.id ?? null,
-              find.solved.score,
-              find.solved.stars,
-              page.timeLimit - c.remainingTime,
-              critters
-            );
-            // First clear of a day page opens its night variant
-            unlockedNight = !wasPassed && night ? night.title : null;
-          }
+        if (find.solved) {
+          const foundItems = find.changes.foundItems ?? c.foundItems;
+          unlockedNight = handleVictoryRecord(
+            find.solved,
+            page,
+            c,
+            mode,
+            friendHunt,
+            nextPage,
+            night,
+            isNight,
+            foundItems
+          );
         }
         setStore((s) => ({
           ...s,
@@ -255,12 +230,12 @@ export function useCase(
         setStore((s) => ({ ...s, state: recordMiss(s.state), fogUntil: fogged ? now + FOG_DURATION_MS : s.fogUntil }));
       }
     },
-    [c, page, isTurning, fogUntil, nextPage, night, mode, friendHunt, notify, inspectWhileExploring, discover]
+    [c, page, isTurning, fogUntil, nextPage, night, mode, isNight, friendHunt, notify, inspectWhileExploring, discover]
   );
 
   const requestHint = useCallback(
-    (targetObjectId: string | undefined, at: { x: number; y: number }) => {
-      if (c.isCompleted || c.isPaused || c.isGameOver) return;
+    (targetObjectId: string | undefined, at: { x: number; y: number }): boolean => {
+      if (c.isCompleted || c.isPaused || c.isGameOver) return false;
       const hint = nextHint(
         c.activeHint,
         c.revealedTextIds ?? [],
@@ -269,14 +244,19 @@ export function useCase(
         lastLoupePos.current,
         targetObjectId
       );
-      if (!hint) return;
-      if (!canAffordHint(c.score, hint.level)) {
+      if (!hint) return false;
+      const isFree = hint.level === 1 && !c.freeHintUsed;
+      if (!canAffordHint(c.score, hint.level, isFree)) {
         sound.playWrong();
-        notify(`Cần ${hintCost(hint.level)} điểm để dùng gợi ý này — tìm thêm vật nhé!`, at, 'info');
-        return;
+        const needed = hintCost(hint.level, isFree);
+        notify(`Cần ${needed} điểm để dùng gợi ý này (bạn có ${c.score} điểm) — tìm thêm vật nhé!`, at, 'info');
+        setHintRefusal({ needed, current: c.score, timestamp: Date.now() });
+        return false;
       }
       sound.playHint();
+      setHintRefusal(null);
       update((s) => recordHint(s, hint));
+      return true;
     },
     [c, page, update, notify]
   );
@@ -293,6 +273,7 @@ export function useCase(
     isFogged: fogUntil > 0,
     unlockedNight: store.unlockedNight,
     screenShake,
+    hintRefusal,
     inspect,
     requestHint,
     togglePause,

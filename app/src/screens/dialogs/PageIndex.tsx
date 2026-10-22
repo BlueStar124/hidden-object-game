@@ -1,19 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { BookOpen, CircleCheckBig, Lightbulb, Lock, Moon, PawPrint, ScrollText, Star, X } from '../../ui/icons';
-import { isCritter, type Chapter, type Country, type Page, type PageRef } from '../../core/model';
-import { withTools } from '../../core/tools';
+import { Lock } from '../../ui/icons';
+import type { Chapter, Country, PageRef } from '../../core/model';
 import { ownedTools } from '../../game/ownedTools';
-import { canDeduce, hasMystery, mysteryProgress } from '../../core/mystery';
-import { progress } from '../../core/progress';
-import { COUNTRIES, pagesOf } from '../../content';
-import { TOOLS } from '../../content/tools';
-import { byTool, TOOL_MARKS } from '../../ui/toolMarks';
-import { BookThumb } from '../BookThumb';
+import { hasMystery } from '../../core/mystery';
+import { pagesOf, story } from '../../content';
 import { colors, fonts } from '../../ui/theme';
-import { formatNumber } from '../../ui/format';
 import { ModalShell } from '../../ui/ModalShell';
-import { RoundIconButton } from '../../ui/Buttons';
+import { PageIndexHeader } from './pageIndex/PageIndexHeader';
+import { PageIndexCard } from './pageIndex/PageIndexCard';
+import { MysteryBadge } from './pageIndex/MysteryBadge';
 
 interface PageIndexProps {
   /** The sketchbook being played (the index opens on it) */
@@ -27,58 +23,20 @@ interface PageIndexProps {
   onClose: () => void;
 }
 
-/** A chapter's mystery in its heading: fragments found, then the way to the deduction board. */
-const MysteryBadge: React.FC<{ chapter: Chapter; onOpen: () => void }> = ({ chapter, onOpen }) => {
-  const { found, total } = mysteryProgress(chapter, progress.discovered);
-  if (!canDeduce(chapter, progress.discovered)) {
-    return (
-      <View style={styles.clues} accessibilityLabel={`Đã tìm ${found} trên ${total} mảnh manh mối của chương`}>
-        <ScrollText size={12} color={colors.earth} />
-        <Text style={styles.cluesText}>
-          {found}/{total} mảnh manh mối
-        </Text>
-      </View>
-    );
-  }
-  const solved = progress.isMysterySolved(chapter.id);
-  return (
-    <Pressable onPress={onOpen} accessibilityRole="button" style={({ pressed }) => [styles.deduce, solved && styles.deduceSolved, pressed && { opacity: 0.8 }]}>
-      {solved ? <CircleCheckBig size={13} color={colors.emerald} /> : <Lightbulb size={13} color="#fff" />}
-      <Text style={[styles.deduceText, solved && { color: colors.emerald }]}>{solved ? 'Bí ẩn đã giải' : 'Suy luận ngay!'}</Text>
-    </Pressable>
-  );
-};
-
-const Stars: React.FC<{ count: number; size?: number }> = ({ count, size = 12 }) => (
-  <View style={{ flexDirection: 'row', gap: 2 }}>
-    {[0, 1, 2].map((i) => (
-      <Star key={i} size={size} color={i < count ? '#f59e0b' : '#9ca3af'} fill={i < count ? '#f59e0b' : 'transparent'} />
-    ))}
-  </View>
-);
-
-function critterProgress(page: Page) {
-  const seen = new Set(progress.discovered(page.id));
-  const ids = page.objects.filter(isCritter).map((o) => o.id);
-  return { total: ids.length, spotted: ids.filter((id) => seen.has(id)).length };
-}
-
-/** What the player's tools reveal on a page (invisible ink, the prism's drawings…): found and how many. */
-function toolProgress(page: Page, tools: ReturnType<typeof ownedTools>) {
-  const seen = new Set(progress.discovered(page.id));
-  return byTool(withTools(page, tools).objects).map(([tool, finds]) => ({
-    tool,
-    total: finds.length,
-    spotted: finds.filter((o) => seen.has(o.id)).length,
-  }));
-}
-
 /**
  * "Mục Lục" — every page of a country's sketchbook, with progress and the night variants. With
  * several sketchbooks, a row of tabs switches between the countries.
  */
-export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current, isNight, onSelect, onOpenDeduction, onClose }) => {
+export const PageIndex: React.FC<PageIndexProps> = ({
+  country: playing,
+  current,
+  isNight,
+  onSelect,
+  onOpenDeduction,
+  onClose,
+}) => {
   const [country, setCountry] = useState(playing);
+  const [notice, setNotice] = useState<string | null>(null);
   const tools = useMemo(() => ownedTools(), []);
   const pages = pagesOf(country);
   const here = country.id === playing.id; // the book being played is the one shown
@@ -87,6 +45,15 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
   const [gridWidth, setGridWidth] = useState(Math.min(920, width - 24) - 32);
   const columns = gridWidth >= 700 ? 3 : gridWidth >= 460 ? 2 : 1;
   const cardWidth = Math.floor((gridWidth - (columns - 1) * 14) / columns);
+
+  const isCurrentCountryUnlocked = story.isCountryUnlocked(country.id);
+
+  const handleSelectCountry = (c: Country) => {
+    setCountry(c);
+    if (!story.isCountryUnlocked(c.id)) {
+      setNotice(story.countryLockReason(c.id) ?? 'Quốc gia này chưa mở');
+    }
+  };
 
   return (
     <ModalShell
@@ -97,35 +64,36 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
       onBackdropPress={onClose}
       contentStyle={styles.body}
       header={
-        <View style={styles.header}>
-          <View style={styles.titleGroup}>
-            <BookOpen size={24} color={colors.earth} />
-            <View style={{ flexShrink: 1 }}>
-              <Text style={styles.title}>Mục Lục {pages.length} Trang Ký Họa</Text>
-              <Text style={styles.desc}>Chọn trang để điều tra · hoàn thành trang ngày để mở khóa 🌙 trang đêm</Text>
-              {COUNTRIES.length > 1 && (
-                <View style={styles.tabs}>
-                  {COUNTRIES.map((c) => (
-                    <Pressable
-                      key={c.id}
-                      onPress={() => setCountry(c)}
-                      accessibilityRole="tab"
-                      accessibilityState={{ selected: c.id === country.id }}
-                      style={[styles.tab, c.id === country.id && styles.tabActive]}
-                    >
-                      <Text style={[styles.tabText, c.id === country.id && styles.tabTextActive]}>{c.name}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-              )}
-            </View>
-          </View>
-          <RoundIconButton onPress={onClose} accessibilityLabel="Đóng">
-            <X size={20} color={colors.ink} />
-          </RoundIconButton>
-        </View>
+        <PageIndexHeader
+          pageCount={pages.length}
+          activeCountry={country}
+          onSelectCountry={handleSelectCountry}
+          onClose={onClose}
+        />
       }
     >
+      {notice && (
+        <Pressable
+          onPress={() => setNotice(null)}
+          style={styles.noticeBanner}
+          accessibilityRole="alert"
+        >
+          <Lock size={14} color="#b45309" />
+          <Text style={styles.noticeText}>{notice}</Text>
+          <Text style={styles.noticeClose}>✕</Text>
+        </Pressable>
+      )}
+
+      {!isCurrentCountryUnlocked && (
+        <View style={styles.countryLockedBox}>
+          <Lock size={16} color="#b45309" />
+          <Text style={styles.countryLockedText}>
+            {story.countryLockReason(country.id) ??
+              'Hãy hoàn thành cuốn sổ trước để mở khóa ký họa này.'}
+          </Text>
+        </View>
+      )}
+
       {country.chapters.map((chapter, c) => {
         const refs = pages.filter((ref) => ref.chapter === chapter);
         return (
@@ -134,106 +102,38 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
               <Text style={styles.chapterBadge}>CHƯƠNG {c + 1}</Text>
               <Text style={styles.chapterName}>{chapter.title}</Text>
               {columns > 1 && <Text style={styles.chapterSub}> — {chapter.subtitle}</Text>}
-              {hasMystery(chapter) && <MysteryBadge chapter={chapter} onOpen={() => onOpenDeduction(chapter, c + 1)} />}
+              {hasMystery(chapter) && (
+                <MysteryBadge
+                  chapter={chapter}
+                  onOpen={() => onOpenDeduction(chapter, c + 1)}
+                />
+              )}
             </View>
-            <View style={styles.grid} onLayout={(e) => setGridWidth(e.nativeEvent.layout.width)}>
+            <View
+              style={styles.grid}
+              onLayout={(e) => setGridWidth(e.nativeEvent.layout.width)}
+            >
               {refs.map((ref) => {
                 const scene = ref.day;
                 const idx = ref.index;
                 const isCurrent = here && idx === current.index && !isNight;
-                const result = progress.pageResult(scene.id);
-                const passed = !!result && result.stars > 0;
-                const critters = critterProgress(scene);
-                const toolFinds = toolProgress(scene, tools);
-                const night = ref.night;
-                const nightResult = night ? progress.pageResult(night.id) : undefined;
-                const nightCritters = night ? critterProgress(night) : null;
                 const isCurrentNight = here && idx === current.index && isNight;
 
                 return (
-                  <Pressable
+                  <PageIndexCard
                     key={scene.id}
-                    onPress={() => {
-                      onSelect(idx, false, country.id);
-                      onClose();
-                    }}
-                    style={({ pressed }) => [
-                      styles.card,
-                      { width: cardWidth },
-                      isCurrent && styles.cardActive,
-                      pressed && styles.cardPressed,
-                    ]}
-                  >
-                    <View>
-                      <BookThumb scene={scene} width={cardWidth - 3} />
-                      <Text style={styles.numTag}>Trang {idx + 1}</Text>
-                      {isCurrent && <Text style={styles.currentBadge}>Đang mở</Text>}
-                      {passed && (
-                        <View style={styles.passedBadge}>
-                          <CircleCheckBig size={13} color="#fff" />
-                          <Text style={styles.passedText}>Hoàn tất</Text>
-                        </View>
-                      )}
-                    </View>
-                    <View style={styles.info}>
-                      <Text style={styles.cardTitle}>{scene.title}</Text>
-                      <Text style={styles.cardSub}>{scene.subtitle}</Text>
-                      <View style={styles.meta}>
-                        {result ? (
-                          <View style={styles.row}>
-                            <Stars count={result.stars} />
-                            <Text style={styles.score}>{formatNumber(result.highScore)} đ</Text>
-                          </View>
-                        ) : (
-                          <Text style={styles.unplayed}>Chưa giải mã</Text>
-                        )}
-                        {critters.total > 0 && (
-                          <View style={styles.row}>
-                            <PawPrint size={11} color={critters.spotted === critters.total ? colors.emerald : colors.inkFaint} />
-                            <Text style={[styles.critters, critters.spotted === critters.total && { color: colors.emerald }]}>
-                              {critters.spotted}/{critters.total}
-                            </Text>
-                          </View>
-                        )}
-                        {toolFinds.map(({ tool, spotted, total }) => {
-                          const { icon: Icon, color } = TOOL_MARKS[tool];
-                          const done = spotted === total;
-                          return (
-                            <View key={tool} style={styles.row} accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${total}`}>
-                              <Icon size={11} color={done ? colors.emerald : color} />
-                              <Text style={[styles.critters, { color: done ? colors.emerald : color }]}>
-                                {spotted}/{total}
-                              </Text>
-                            </View>
-                          );
-                        })}
-                      </View>
-                      {night && (
-                        <Pressable
-                          disabled={!passed}
-                          onPress={() => {
-                            onSelect(idx, true, country.id);
-                            onClose();
-                          }}
-                          style={[styles.nightBtn, !passed && styles.nightLocked, isCurrentNight && styles.nightActive]}
-                        >
-                          {passed ? <Moon size={13} color={colors.moonlight} /> : <Lock size={12} color={colors.inkFaint} />}
-                          <Text style={[styles.nightName, !passed && { color: colors.inkFaint }]} numberOfLines={1}>
-                            {passed ? night.title : 'Trang Đêm · khóa'}
-                          </Text>
-                          {passed && nightResult && <Stars count={nightResult.stars} size={11} />}
-                          {passed && nightCritters && nightCritters.total > 0 && (
-                            <View style={styles.row}>
-                              <PawPrint size={10} color={colors.moonlight} />
-                              <Text style={styles.nightCritters}>
-                                {nightCritters.spotted}/{nightCritters.total}
-                              </Text>
-                            </View>
-                          )}
-                        </Pressable>
-                      )}
-                    </View>
-                  </Pressable>
+                    scene={scene}
+                    night={ref.night}
+                    idx={idx}
+                    cardWidth={cardWidth}
+                    isCurrent={isCurrent}
+                    isCurrentNight={isCurrentNight}
+                    countryId={country.id}
+                    tools={tools}
+                    onSelect={onSelect}
+                    onNotice={setNotice}
+                    onClose={onClose}
+                  />
                 );
               })}
             </View>
@@ -245,58 +145,48 @@ export const PageIndex: React.FC<PageIndexProps> = ({ country: playing, current,
 };
 
 const styles = StyleSheet.create({
-  header: {
+  noticeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    backgroundColor: 'rgba(240, 236, 226, 0.95)',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-  },
-  titleGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flexShrink: 1,
-  },
-  title: {
-    fontFamily: fonts.displayMedium,
-    fontSize: 22,
-    color: colors.ink,
-  },
-  desc: {
-    fontSize: 11.5,
-    color: colors.inkSoft,
-    marginTop: 2,
-  },
-  tabs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 8,
-  },
-  tab: {
+    gap: 8,
     paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 999,
+    paddingVertical: 9,
+    borderRadius: 8,
+    backgroundColor: 'rgba(254, 243, 199, 0.96)',
     borderWidth: 1,
-    borderColor: colors.hairline,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: 'rgba(217, 119, 6, 0.35)',
+    marginBottom: 4,
   },
-  tabActive: {
-    backgroundColor: colors.earth,
-    borderColor: colors.earth,
+  noticeText: {
+    flex: 1,
+    fontSize: 12.5,
+    fontWeight: '600',
+    color: '#92400e',
   },
-  tabText: {
-    fontSize: 12,
+  noticeClose: {
+    fontSize: 13,
     fontWeight: '700',
-    color: colors.inkSoft,
+    color: '#92400e',
+    paddingHorizontal: 6,
   },
-  tabTextActive: {
-    color: '#fff',
+  countryLockedBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: 'rgba(245, 238, 225, 0.95)',
+    borderWidth: 1,
+    borderColor: 'rgba(217, 119, 6, 0.3)',
+    borderStyle: 'dashed',
+    marginBottom: 8,
+  },
+  countryLockedText: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#92400e',
   },
   body: {
     alignItems: 'stretch',
@@ -337,174 +227,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.inkFaint,
   },
-  clues: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 999,
-    backgroundColor: 'rgba(154, 106, 62, 0.1)',
-  },
-  cluesText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.earth,
-  },
-  deduce: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-    backgroundColor: colors.gold,
-  },
-  deduceSolved: {
-    backgroundColor: 'rgba(45, 122, 79, 0.12)',
-  },
-  deduceText: {
-    fontSize: 11.5,
-    fontWeight: '800',
-    color: '#fff',
-  },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 14,
-  },
-  card: {
-    borderWidth: 1.5,
-    borderColor: colors.hairline,
-    borderRadius: 14,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-  },
-  cardActive: {
-    borderColor: colors.gold,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-  },
-  cardPressed: {
-    backgroundColor: '#fff',
-    borderColor: colors.earth,
-  },
-  numTag: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: 'rgba(30, 26, 21, 0.82)',
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  currentBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: colors.gold,
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  passedBadge: {
-    position: 'absolute',
-    right: 8,
-    bottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    backgroundColor: 'rgba(45, 122, 79, 0.92)',
-  },
-  passedText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
-  },
-  info: {
-    padding: 12,
-    gap: 3,
-  },
-  cardTitle: {
-    fontFamily: fonts.displaySemiBold,
-    fontSize: 15.5,
-    color: colors.ink,
-  },
-  cardSub: {
-    fontSize: 11,
-    color: colors.inkFaint,
-    marginBottom: 6,
-  },
-  meta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 6,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(43, 39, 33, 0.08)',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  score: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.earth,
-    marginLeft: 4,
-  },
-  unplayed: {
-    fontFamily: fonts.bodyItalic,
-    fontSize: 11,
-    color: colors.inkFaint,
-  },
-  critters: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.inkFaint,
-  },
-  nightBtn: {
-    marginTop: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 9,
-    backgroundColor: colors.night,
-    borderWidth: 1,
-    borderColor: 'rgba(27, 36, 64, 0.35)',
-  },
-  nightLocked: {
-    backgroundColor: 'rgba(43, 39, 33, 0.06)',
-    borderStyle: 'dashed',
-    borderColor: colors.hairline,
-  },
-  nightActive: {
-    borderColor: colors.gold,
-    borderWidth: 2,
-  },
-  nightName: {
-    flex: 1,
-    color: colors.moonlight,
-    fontSize: 11.5,
-    fontWeight: '700',
-  },
-  nightCritters: {
-    color: colors.moonlight,
-    fontSize: 11,
-    fontWeight: '700',
-    opacity: 0.85,
   },
 });

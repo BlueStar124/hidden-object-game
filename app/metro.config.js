@@ -11,7 +11,7 @@ if (process.env.SKETCHBOOK_SCREEN_TESTS === '1') {
   const gallery = path.join(__dirname, 'test/screens/Gallery.tsx');
   const resolveRequest = config.resolver.resolveRequest;
   config.resolver.resolveRequest = (context, moduleName, platform) => {
-    if (moduleName === './App' && /index\.web\.ts$/.test(context.originModulePath)) {
+    if (moduleName === './App' && /[/\\]index\.web\.ts$/.test(context.originModulePath)) {
       return { type: 'sourceFile', filePath: gallery };
     }
     return (resolveRequest ?? context.resolveRequest)(context, moduleName, platform);

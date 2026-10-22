@@ -24,18 +24,19 @@ export function mistakePenalty(currentScore: number): number {
   return Math.max(0, currentScore - 20);
 }
 
-/** A hint's first step (the card's name and clue) costs 50 points, its second (where it is) 100. */
-export function hintCost(hintLevel: number): number {
+/** A hint's first step costs 50 points (or 0 if free), its second (where it is) 100. */
+export function hintCost(hintLevel: number, isFree: boolean = false): number {
+  if (hintLevel === 1 && isFree) return 0;
   return hintLevel === 1 ? 50 : 100;
 }
 
-/** A hint is only given while the score can pay for it: no points, no help. */
-export function canAffordHint(currentScore: number, hintLevel: number): boolean {
-  return currentScore >= hintCost(hintLevel);
+/** A hint is only given while the score can pay for it: no points, no help (unless free). */
+export function canAffordHint(currentScore: number, hintLevel: number, isFree: boolean = false): boolean {
+  return currentScore >= hintCost(hintLevel, isFree);
 }
 
-export function hintPenalty(currentScore: number, hintLevel: number): number {
-  return Math.max(0, currentScore - hintCost(hintLevel));
+export function hintPenalty(currentScore: number, hintLevel: number, isFree: boolean = false): number {
+  return Math.max(0, currentScore - hintCost(hintLevel, isFree));
 }
 
 /** Closing the case: 4 points per second left, and up to three stars. */

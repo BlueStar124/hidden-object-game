@@ -1,41 +1,30 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   friendChallengeRefusal,
-  friendPage,
-  isFriendChallenge,
   type Challenge,
   type ChallengeRefusal,
   type FriendChallenge,
 } from '../core/challenge';
-import { dailyPage, type DailyPuzzle } from '../core/daily';
-import { withDayTwins } from '../core/dayNight';
-import { hasSpots, layOutPage } from '../core/layout';
-import { withVisitors } from '../core/migrants';
+import type { DailyPuzzle } from '../core/daily';
 import type { Country, Page, PageRef, PageTurn, ToolId } from '../core/model';
-import { progress } from '../core/progress';
-import { localDay, SEED_COUNT } from '../core/random';
-import { withRareCritter } from '../core/rare';
-import { withTools } from '../core/tools';
-import { countryById, FIRST_COUNTRY, pageOfChallenge, pagesOf, placeOf } from '../content';
-import { MIGRANTS } from '../content/migrants';
+import { localDay } from '../core/random';
+import { COUNTRIES, countryById, FIRST_COUNTRY, pageOfChallenge, pagesOf, placeOf, story } from '../content';
 import { sound } from '../platform/sound';
 import { ownedTools } from './ownedTools';
+import {
+  BOOK,
+  type Fate,
+  pageAt,
+  pageFor,
+  type Place,
+  type PlayMode,
+  savedPlace,
+  seedFor,
+  type Spot,
+  visitOf,
+} from './navigationLayout';
 
-/**
- * Where the player is in the books: which country, which page, day or night — and turning pages.
- * Page numbers are per country: "Trang 3 / 9" is the third page of that country's sketchbook.
- *
- * A page is played in one of three ways (`mode`): in the book; as the daily page, a corner of it with
- * a few objects (core/daily); or as a friend's challenge, laid out as in their code (core/challenge).
- */
-
-/** How the page on screen is being played. */
-export type PlayMode =
-  | { kind: 'book' }
-  | { kind: 'daily'; puzzle: DailyPuzzle }
-  | { kind: 'challenge'; challenge: Challenge | FriendChallenge };
-
-const BOOK: PlayMode = { kind: 'book' };
+export type { PlayMode };
 
 export interface Navigation {
   country: Country;
@@ -79,82 +68,9 @@ export interface Navigation {
   preparedPage: (page: Page) => Page;
 }
 
-interface Spot {
-  countryId: string;
-  index: number;
-  night: boolean;
-}
-
-interface Place extends Spot {
-  visit: number;
-  seed: number;
-  mode: PlayMode;
-  roll: number; // this visit's chance of a golden critter (core/rare), rolled when it opens
-  tools: ToolId[]; // the tools the player had when it opened (core/tools)
-  day: string; // the day it opened: which travelling creatures visit (core/migrants)
-}
-
-function pageAt(country: Country, index: number, night: boolean): Page {
-  const ref = pagesOf(country)[index];
-  return (night && ref.night) || ref.day;
-}
-
-/** The day page of a page (itself for a day page). */
-const dayOf = (page: Page) => placeOf(page.id)?.ref.day ?? page;
-
-/**
- * A page as it opens on a day, before this visit's layout and chance: where its moved things were by
- * day (night pages), tools, travelling visitors.
- */
-const openingPage = (page: Page, tools: readonly ToolId[], day: string) =>
-  withVisitors(withTools(withDayTwins(page, dayOf(page)), tools), day, MIGRANTS);
-
-/** A page of the book as a visit plays it: laid out for its seed, maybe with a golden critter. */
-const visitOf = (page: Page, tools: readonly ToolId[], day: string, fate: Fate) =>
-  withRareCritter(layOutPage(openingPage(page, tools, day), fate.seed), fate.roll);
-
-/** The page as a visit plays it (a daily corner has only main objects: no visitor, no golden critter). */
-function pageFor(country: Country, index: number, night: boolean, seed: number, mode: PlayMode, roll: number, tools: ToolId[], day: string): Page {
-  const page = pageAt(country, index, night);
-  if (mode.kind === 'daily') return dailyPage(withTools(page, tools), mode.puzzle);
-  const visit = visitOf(page, tools, day, { seed, roll });
-  return mode.kind === 'challenge' && isFriendChallenge(mode.challenge) ? friendPage(visit, mode.challenge) : visit;
-}
-
-/** A first visit plays the page as written; once solved, its objects may hide elsewhere. */
-function seedFor(page: Page): number {
-  const solved = (progress.pageResult(page.id)?.stars ?? 0) > 0;
-  return solved && hasSpots(page) ? 1 + Math.floor(Math.random() * (SEED_COUNT - 1)) : 0;
-}
-
-/** What a visit to a page will be, decided before it opens: its layout and its chance. */
-interface Fate {
-  seed: number;
-  roll: number;
-}
-
 interface PendingTurn extends Spot, Fate {
   request: PageTurn;
   then?: () => void;
-}
-
-/** The page the player was last in, if it is still in the books. */
-function savedPlace(): Place | null {
-  const id = progress.lastPage();
-  const saved = id ? placeOf(id) : null;
-  return saved
-    ? {
-        countryId: saved.ref.country.id,
-        index: saved.ref.index,
-        night: saved.night,
-        visit: 0,
-        seed: 0,
-        mode: BOOK,
-        roll: Math.random(),
-        tools: ownedTools(),
-        day: localDay(new Date()),
-      }
-    : null;
 }
 
 export function useNavigation(): Navigation {
@@ -199,7 +115,12 @@ export function useNavigation(): Navigation {
     const target = countryById(countryId);
     const book = pagesOf(target);
     const valid = Math.max(0, Math.min(index, book.length - 1));
-    const nightOn = night && !!book[valid].night;
+    const targetRef = book[valid];
+    if (mode.kind === 'book' && targetRef) {
+      const targetPageId = night && targetRef.night ? targetRef.night.id : targetRef.day.id;
+      if (!story.isUnlocked(targetPageId)) return;
+    }
+    const nightOn = night && !!book[valid]?.night;
     fates.current.delete(pageAt(target, valid, nightOn).id); // this visit is decided: the next one is new
     if (mode.kind === 'book') bookSpot.current = { countryId: target.id, index: valid, night: nightOn };
     setPlace((prev) => ({
@@ -223,10 +144,14 @@ export function useNavigation(): Navigation {
       if (pending.current) return;
       const target = countryById(countryId);
       const valid = Math.max(0, Math.min(index, pagesOf(target).length - 1));
-      const page = pageAt(target, valid, night);
+      const targetRef = pagesOf(target)[valid];
+      if (!targetRef) return;
+      const targetPageId = night && targetRef.night ? targetRef.night.id : targetRef.day.id;
+      if (!story.isUnlocked(targetPageId)) return;
+      const p = pageAt(target, valid, night);
       // The leaf turns onto the page as it will be played, laid out already
-      const fate = fateOf(page);
-      const request = { to: visitOf(page, ownedTools(), localDay(new Date()), fate), direction };
+      const fate = fateOf(p);
+      const request = { to: visitOf(p, ownedTools(), localDay(new Date()), fate), direction };
       pending.current = { request, countryId: target.id, index: valid, night, ...fate, then };
       setTurn(request);
       sound.playPageTurn();
@@ -245,15 +170,25 @@ export function useNavigation(): Navigation {
   const next = useCallback(() => {
     if (isTurning) return;
     if (place.index >= pages.length - 1) {
-      // The end of the book
-      open(country.id, 0, false, seedFor(pages[0].day));
+      // The end of this country's book: advance to next country if unlocked
+      const cIdx = COUNTRIES.findIndex((c) => c.id === country.id);
+      if (cIdx >= 0 && cIdx < COUNTRIES.length - 1) {
+        const nextCountry = COUNTRIES[cIdx + 1];
+        const nextPages = pagesOf(nextCountry);
+        if (nextPages.length > 0 && story.isUnlocked(nextPages[0].day.id)) {
+          turnTo(nextCountry.id, 0, false, 1, () => {
+            setShowPrologue(true);
+          });
+        }
+      }
       return;
     }
     const nextRef = pages[place.index + 1];
+    if (!nextRef || !story.isUnlocked(nextRef.day.id)) return;
     turnTo(country.id, place.index + 1, false, 1, () => {
       if (nextRef.chapter !== ref.chapter) setShowPrologue(true);
     });
-  }, [isTurning, place.index, pages, country.id, ref.chapter, open, turnTo]);
+  }, [isTurning, place.index, pages, country.id, ref.chapter, turnTo]);
 
   // Back from a night page is its own day page
   const prev = useCallback(() => {
@@ -266,6 +201,12 @@ export function useNavigation(): Navigation {
   const goTo = useCallback(
     (index: number, night: boolean = false, countryId: string = country.id) => {
       if (isTurning) return;
+      const targetCountry = countryById(countryId);
+      const targetPages = pagesOf(targetCountry);
+      const targetRef = targetPages[index];
+      if (!targetRef) return;
+      const targetPageId = night && targetRef.night ? targetRef.night.id : targetRef.day.id;
+      if (!story.isUnlocked(targetPageId)) return;
       if (inBook && countryId === country.id && index === place.index && night === place.night) return;
       const forwards =
         countryId !== country.id || index > place.index || (index === place.index && night);
@@ -352,7 +293,7 @@ export function useNavigation(): Navigation {
     visit: place.visit,
     turn,
     completeTurn,
-    nextPage: inBook ? (pages[place.index + 1]?.day ?? null) : null,
+    nextPage: inBook ? (story.nextPageAfter(page.id)?.ref.day ?? null) : null,
     showPrologue,
     setShowPrologue,
     showNightIntro,

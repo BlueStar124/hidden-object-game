@@ -29,7 +29,7 @@ import { RARE_CHANCE, withRareCritter } from '../src/core/rare';
 import { chapterGiving, toolsOwned, withTools } from '../src/core/tools';
 import { migrantObjectId, migrantProgress, migrantSpot, withVisitors } from '../src/core/migrants';
 import type { Migrant } from '../src/core/model';
-import { canAffordHint, completionBonus, foundScore, hintPenalty, mistakePenalty } from '../src/core/scoring';
+import { canAffordHint, completionBonus, foundScore, hintCost, hintPenalty, mistakePenalty } from '../src/core/scoring';
 
 const object = (id: string, extra: Partial<HiddenObject> = {}): HiddenObject => ({
   id,
@@ -76,12 +76,25 @@ describe('scoring', () => {
     expect(hintPenalty(30, 2)).toBe(0);
   });
 
-  test('a hint is only given while the score can pay for it', () => {
-    expect(canAffordHint(0, 1)).toBe(false);
-    expect(canAffordHint(49, 1)).toBe(false);
-    expect(canAffordHint(50, 1)).toBe(true);
-    expect(canAffordHint(99, 2)).toBe(false);
-    expect(canAffordHint(100, 2)).toBe(true);
+  test('a hint is only given while the score can pay for it, unless free', () => {
+    // First tier 1 hint is free
+    expect(hintCost(1, true)).toBe(0);
+    expect(canAffordHint(0, 1, true)).toBe(true);
+    expect(hintPenalty(0, 1, true)).toBe(0);
+
+    // Subsequent tier 1 hint costs 50
+    expect(hintCost(1, false)).toBe(50);
+    expect(canAffordHint(0, 1, false)).toBe(false);
+    expect(canAffordHint(49, 1, false)).toBe(false);
+    expect(canAffordHint(50, 1, false)).toBe(true);
+    expect(hintPenalty(50, 1, false)).toBe(0);
+
+    // Tier 2 hint always costs 100
+    expect(hintCost(2, false)).toBe(100);
+    expect(hintCost(2, true)).toBe(100);
+    expect(canAffordHint(99, 2, false)).toBe(false);
+    expect(canAffordHint(100, 2, false)).toBe(true);
+    expect(hintPenalty(150, 2, false)).toBe(50);
   });
 
   test('closing a case: 4 points per second left, stars for a clean investigation', () => {
@@ -290,10 +303,44 @@ describe('case file', () => {
   test('hint reveals text id and records it into revealedTextIds', () => {
     const opened = openCase(page);
     expect(opened.revealedTextIds).toEqual([]);
+    expect(opened.freeHintUsed).toBe(false);
+    expect(opened.score).toBe(0);
+
+    // First tier 1 hint is free, even at 0 points
     const step1 = nextHint(null, opened.revealedTextIds, page.objects, [], { nx: 0, ny: 0 });
     const afterHint = recordHint(opened, step1!);
     expect(afterHint.revealedTextIds).toContain('first');
     expect(afterHint.activeHint?.level).toBe(1);
+    expect(afterHint.freeHintUsed).toBe(true);
+    expect(afterHint.hintsUsed).toBe(1);
+    expect(afterHint.score).toBe(0); // free: no points deducted
+
+    // Second tier 1 hint for another card is NOT free: costs 50
+    const step1Second = nextHint(afterHint.activeHint, afterHint.revealedTextIds, page.objects, [], { nx: 0, ny: 0 }, 'second');
+    expect(step1Second?.targetObject.id).toBe('second');
+    expect(step1Second?.level).toBe(1);
+    expect(canAffordHint(afterHint.score, step1Second!.level, !afterHint.freeHintUsed)).toBe(false);
+
+    // With 100 points, second tier 1 hint deducts 50
+    const withScore = { ...afterHint, score: 100 };
+    const afterSecondHint = recordHint(withScore, step1Second!);
+    expect(afterSecondHint.revealedTextIds).toContain('second');
+    expect(afterSecondHint.hintsUsed).toBe(2);
+    expect(afterSecondHint.score).toBe(50);
+  });
+
+  test('tapping a specific unread card uses the free hint on that exact card', () => {
+    const opened = openCase(page);
+    // Explicitly target 'second' instead of first
+    const hintForSecond = nextHint(null, opened.revealedTextIds, page.objects, [], { nx: 0, ny: 0 }, 'second');
+    expect(hintForSecond?.targetObject.id).toBe('second');
+    expect(hintForSecond?.level).toBe(1);
+
+    const afterSecond = recordHint(opened, hintForSecond!);
+    expect(afterSecond.revealedTextIds).toEqual(['second']);
+    expect(afterSecond.activeHint?.objectId).toBe('second');
+    expect(afterSecond.freeHintUsed).toBe(true);
+    expect(afterSecond.score).toBe(0);
   });
 
   test('after the case is closed, leftovers can still be found for the album', () => {

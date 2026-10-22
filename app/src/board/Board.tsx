@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { PixelRatio, Pressable, StyleSheet, Text, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
+import { PixelRatio, StyleSheet, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
 import { Canvas, Skia, useCanvasRef, type ISkiaViewApi, type SkPicture } from '@shopify/react-native-skia';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useAnimatedReaction, useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
@@ -7,9 +7,6 @@ import { scheduleOnUI } from 'react-native-worklets';
 import { layoutKey } from '../core/layout';
 import type { HiddenObject, Page, PageTurn } from '../core/model';
 import { motionNow } from '../core/motion';
-import { ZoomIn, ZoomOut } from '../ui/icons';
-import { colors } from '../ui/theme';
-import { MAX_ZOOM, MIN_ZOOM } from './constants';
 import { renderFrame } from './render';
 import { createLoupePaints } from './scene/paints';
 import { atlasDensity } from './scene/spriteAtlas';
@@ -55,6 +52,10 @@ export interface BoardProps {
   /** The watercolour wash over a page until its case is closed (render/types WASH_ALPHA) */
   wash?: boolean;
   children?: React.ReactNode; // overlays (explore banner…)
+  /** Current zoom level reported to parent */
+  onZoomChange?: (zoom: number) => void;
+  /** Ref to receive the stepZoom function */
+  stepZoomRef?: React.MutableRefObject<((dir: 1 | -1) => void) | null>;
 }
 
 const emptyPicture = (() => {
@@ -81,6 +82,8 @@ export const Board = React.memo<BoardProps>(function Board({
   active = true,
   wash = true,
   children,
+  onZoomChange,
+  stepZoomRef,
 }) {
   const win = useWindowDimensions();
   const compact = win.width < 640;
@@ -201,14 +204,28 @@ export const Board = React.memo<BoardProps>(function Board({
     }, 0);
   }, [frameBuffer]);
 
-  const { gesture, zoomRect, bannerRect } = useBoardGestures(camera, active && !turn && !flip, onInspect, windowOffset, viewRef, turning);
+  const { gesture, bannerRect } = useBoardGestures(camera, active && !turn && !flip, onInspect, windowOffset, viewRef, turning);
 
-  /* ------------------------------ Zoom buttons ------------------------------ */
+  /* ------------------------------ Zoom controls ------------------------------ */
 
   const { zoom, zoomTo } = camera;
-  // The buttons move in tenths of what the label shows (1.0×, 1.1×, 1.2×…), also after a pinch
-  const stepZoom = (dir: 1 | -1) => zoomTo((Math.round(zoom * 10) + dir) / 10);
-  const zoomIdle = turn !== null || flip !== null; // includes a destination still loading
+  const stepZoom = useCallback(
+    (dir: 1 | -1) => {
+      zoomTo((Math.round(zoom * 10) + dir) / 10);
+    },
+    [zoom, zoomTo]
+  );
+
+  useEffect(() => {
+    if (stepZoomRef) stepZoomRef.current = stepZoom;
+    return () => {
+      if (stepZoomRef) stepZoomRef.current = null;
+    };
+  }, [stepZoomRef, stepZoom]);
+
+  useEffect(() => {
+    onZoomChange?.(zoom);
+  }, [zoom, onZoomChange]);
 
   return (
     <View ref={viewRef} style={styles.root} onLayout={onLayout}>
@@ -230,35 +247,6 @@ export const Board = React.memo<BoardProps>(function Board({
           {children}
         </View>
       )}
-
-      <View
-        style={styles.zoom}
-        pointerEvents="box-none"
-        onLayout={(e) => {
-          const { x, y, width, height } = e.nativeEvent.layout;
-          zoomRect.value = { x, y, w: width, h: height };
-        }}
-      >
-        <Pressable
-          style={({ pressed }) => [styles.zoomBtn, pressed && styles.pressed, zoom <= MIN_ZOOM + 0.01 && styles.disabled]}
-          onPress={() => stepZoom(-1)}
-          disabled={zoomIdle || zoom <= MIN_ZOOM + 0.01}
-          accessibilityLabel="Thu nhỏ trang sách"
-          hitSlop={6}
-        >
-          <ZoomOut size={18} color={colors.ink} />
-        </Pressable>
-        <Text style={styles.zoomLevel}>{zoom.toFixed(1)}×</Text>
-        <Pressable
-          style={({ pressed }) => [styles.zoomBtn, pressed && styles.pressed, zoom >= MAX_ZOOM - 0.01 && styles.disabled]}
-          onPress={() => stepZoom(1)}
-          disabled={zoomIdle || zoom >= MAX_ZOOM - 0.01}
-          accessibilityLabel="Phóng to trang sách"
-          hitSlop={6}
-        >
-          <ZoomIn size={18} color={colors.ink} />
-        </Pressable>
-      </View>
     </View>
   );
 });
@@ -274,42 +262,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     maxWidth: '94%',
   },
-  zoom: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    padding: 3,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255, 252, 245, 0.92)',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.hairline,
-    shadowColor: '#000',
-    shadowOpacity: 0.14,
-    shadowRadius: 7,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  zoomBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pressed: {
-    backgroundColor: 'rgba(43, 39, 33, 0.08)',
-  },
-  disabled: {
-    opacity: 0.3,
-  },
-  zoomLevel: {
-    minWidth: 34,
-    textAlign: 'center',
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.earth,
-  },
 });
+
