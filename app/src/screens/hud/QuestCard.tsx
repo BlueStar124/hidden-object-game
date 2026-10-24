@@ -84,13 +84,13 @@ export const QuestCard = React.memo<QuestCardProps>(function QuestCard({
           hinted && styles.cardHint,
         ]}
       >
-        <View style={styles.thumb}>
+        <View style={[styles.thumb, compact && styles.thumbCompact]}>
           {obj.riddle && !found && !read ? (
-            <CircleQuestionMark size={24} color={colors.earth} />
+            <CircleQuestionMark size={compact ? 18 : 24} color={colors.earth} />
           ) : obj.spriteType && obj.spriteType !== 'seal' ? (
-            <SpriteIcon type={obj.spriteType} size={compact ? 24 : 30} revealed={found} />
+            <SpriteIcon type={obj.spriteType} size={compact ? 20 : 30} revealed={found} />
           ) : (
-            <Stamp size={22} color={colors.crimson} opacity={0.75} />
+            <Stamp size={compact ? 17 : 22} color={colors.crimson} opacity={0.75} />
           )}
           {obj.order !== undefined && (
             <View style={styles.order}>
@@ -174,9 +174,9 @@ export const cardStyles = StyleSheet.create({
     elevation: 2,
   },
   cardCompact: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    gap: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    gap: 7,
   },
   cardExpanded: {
     borderColor: colors.earth,
@@ -205,7 +205,7 @@ export const cardStyles = StyleSheet.create({
     color: '#2B2721',
   },
   nameCompact: {
-    fontSize: 16,
+    fontSize: 13.5,
   },
   clue: {
     fontFamily: fonts.body,
@@ -214,8 +214,8 @@ export const cardStyles = StyleSheet.create({
     color: '#4B463F',
   },
   clueCompact: {
-    fontSize: 14.5,
-    lineHeight: 21,
+    fontSize: 12.5,
+    lineHeight: 17,
   },
 });
 
@@ -236,6 +236,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
+  },
+  thumbCompact: {
+    width: 24,
+    height: 24,
+    marginTop: 0,
   },
   check: {
     position: 'absolute',

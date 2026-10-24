@@ -56,7 +56,7 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
   } = props;
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, compact && styles.headerCompact]}>
       <View style={styles.headerTitleRow}>
         <View style={styles.titleGroup}>
           <Search size={15} color={colors.ink} />
@@ -88,13 +88,15 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
       <View style={styles.chipsRow}>
         {critters.length > 0 && (
           <View
-            style={[styles.chip, crittersFound === critters.length && styles.chipDone]}
+            style={[styles.chip, compact && styles.chipCompact, crittersFound === critters.length && styles.chipDone]}
             accessibilityLabel={`Sinh vật ẩn nấp: ${crittersFound} trên ${critters.length}`}
           >
             <PawPrint size={13} color={colors.emerald} />
-            <Text style={styles.chipText}>
+            <Text style={[styles.chipText, compact && styles.chipTextCompact]}>
               {crittersFound}/{critters.length}
             </Text>
+            {/* Phones: the counts alone, so every chip fits on one line */}
+            {!compact && (
             <View style={styles.miniIcons}>
               {critters.map((o) => (
                 <SpriteIcon
@@ -106,16 +108,17 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
                 />
               ))}
             </View>
+            )}
           </View>
         )}
 
         {clues.length > 0 && (
           <View
-            style={[styles.chip, cluesFound === clues.length && styles.chipDone]}
+            style={[styles.chip, compact && styles.chipCompact, cluesFound === clues.length && styles.chipDone]}
             accessibilityLabel={`Mảnh manh mối: ${cluesFound} trên ${clues.length}`}
           >
             <ScrollText size={13} color="#854d0e" />
-            <Text style={styles.chipText}>
+            <Text style={[styles.chipText, compact && styles.chipTextCompact]}>
               {cluesFound}/{clues.length}
             </Text>
           </View>
@@ -127,11 +130,11 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
           return (
             <View
               key={tool}
-              style={[styles.chip, spotted === finds.length && styles.chipDone]}
+              style={[styles.chip, compact && styles.chipCompact, spotted === finds.length && styles.chipDone]}
               accessibilityLabel={`${TOOLS[tool].finds}: ${spotted} trên ${finds.length}`}
             >
               <Icon size={13} color={color} />
-              <Text style={[styles.chipText, { color }]}>
+              <Text style={[styles.chipText, compact && styles.chipTextCompact, { color }]}>
                 {spotted}/{finds.length}
               </Text>
             </View>
@@ -140,7 +143,7 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
 
         {secret && (
           <View
-            style={[styles.chip, secretFound && styles.chipDone]}
+            style={[styles.chip, compact && styles.chipCompact, secretFound && styles.chipDone]}
             accessibilityLabel={secretFound ? 'Bí mật đã mở' : 'Vật thể bí mật đang ẩn'}
           >
             {secretFound ? (
@@ -148,25 +151,27 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
             ) : (
               <Lock size={13} color="#6D6255" />
             )}
-            <Text style={[styles.chipText, secretFound && { color: '#ca8a04' }]}>
-              {secretFound ? 'Bí mật' : '1 Bí mật'}
-            </Text>
+            {!compact && (
+              <Text style={[styles.chipText, secretFound && { color: '#ca8a04' }]}>
+                {secretFound ? 'Bí mật' : '1 Bí mật'}
+              </Text>
+            )}
           </View>
         )}
       </View>
 
       {/* Hint status indicator */}
       {!freeHintUsed ? (
-        <View style={styles.hintStatusBar}>
+        <View style={[styles.hintStatusBar, compact && styles.hintStatusBarCompact]}>
           <Sparkles size={13} color="#b45309" />
-          <Text style={styles.hintStatusTextFree} numberOfLines={1}>
+          <Text style={[styles.hintStatusTextFree, compact && styles.hintTextCompact]} numberOfLines={1}>
             {compact ? 'Gợi ý đầu miễn phí' : '1 lượt gợi ý đầu: Miễn phí (0đ)'}
           </Text>
         </View>
       ) : hintRefusal || score < hintCost(1) ? (
-        <View style={[styles.hintStatusBar, styles.hintStatusBarAlert]}>
+        <View style={[styles.hintStatusBar, compact && styles.hintStatusBarCompact, styles.hintStatusBarAlert]}>
           <CircleQuestionMark size={13} color="#b91c1c" />
-          <Text style={styles.hintStatusTextAlert} numberOfLines={compact ? 1 : undefined}>
+          <Text style={[styles.hintStatusTextAlert, compact && styles.hintTextCompact]} numberOfLines={compact ? 1 : undefined}>
             {compact
               ? `Gợi ý cần ${hintRefusal?.needed ?? hintCost(1)}đ · có ${score}đ`
               : hintRefusal
@@ -175,9 +180,9 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
           </Text>
         </View>
       ) : (
-        <View style={styles.hintStatusBar}>
+        <View style={[styles.hintStatusBar, compact && styles.hintStatusBarCompact]}>
           <CircleQuestionMark size={13} color="#6F4D2C" />
-          <Text style={styles.hintStatusText} numberOfLines={compact ? 1 : undefined}>
+          <Text style={[styles.hintStatusText, compact && styles.hintTextCompact]} numberOfLines={compact ? 1 : undefined}>
             {compact ? `Gợi ý: ${hintCost(1)}đ · có ${score}đ` : `Gợi ý tiếp: ${hintCost(1)}đ · Bạn có ${score}đ`}
           </Text>
         </View>
@@ -192,6 +197,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(43, 39, 33, 0.1)',
     gap: 6,
+  },
+  headerCompact: {
+    paddingBottom: 5,
+    gap: 4,
   },
   headerTitleRow: {
     flexDirection: 'row',
@@ -211,7 +220,7 @@ const styles = StyleSheet.create({
     color: '#2B2721',
   },
   titleTextCompact: {
-    fontSize: 15,
+    fontSize: 14,
   },
   badge: {
     fontSize: 12.5,
@@ -250,6 +259,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(43, 39, 33, 0.12)',
   },
+  chipCompact: {
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    gap: 3,
+  },
   chipDone: {
     backgroundColor: '#f3f9f4',
     borderColor: '#86efac',
@@ -258,6 +272,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: '#6F4D2C',
+  },
+  chipTextCompact: {
+    fontSize: 11,
   },
   miniIcons: {
     flexDirection: 'row',
@@ -277,6 +294,10 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     marginHorizontal: 2,
   },
+  hintStatusBarCompact: {
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+  },
   hintStatusBarAlert: {
     backgroundColor: 'rgba(254, 226, 226, 0.85)',
     borderColor: 'rgba(239, 68, 68, 0.35)',
@@ -295,6 +316,9 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     fontWeight: '700',
     color: '#b91c1c',
+  },
+  hintTextCompact: {
+    fontSize: 10.5,
   },
   pressed: {
     opacity: 0.7,
