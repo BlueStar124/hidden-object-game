@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type ViewStyle, type ScrollViewInstance } from 'react-native';
 import { ChevronLeft, ChevronRight } from './icons';
 import { colors } from './theme';
 
@@ -16,7 +16,7 @@ export const ScrollStrip: React.FC<{
   /** Spoken names of the arrows */
   label: string;
 }> = ({ children, contentContainerStyle, label }) => {
-  const ref = useRef<ScrollView>(null);
+  const ref = useRef<ScrollViewInstance>(null);
   const [view, setView] = useState({ x: 0, width: 0, content: 0 });
   const canBack = view.x > 1;
   const canOn = view.x + view.width < view.content - 1;

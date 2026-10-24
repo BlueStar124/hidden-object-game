@@ -6,8 +6,8 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 ## 1. Tổng quan
 
-- Game tìm vật ẩn: một cuốn sổ ký họa màu nước, soi bằng kính lúp. **Một codebase Expo** (SDK 57, React Native 0.86,
-  React 19, Skia 2.6, Reanimated 4 + worklets) trong `app/` chạy iOS, Android và web. Khóa màn hình ngang, chỉ có một
+- Game tìm vật ẩn: một cuốn sổ ký họa màu nước, soi bằng kính lúp. **Một codebase Expo** (SDK 58, React Native 0.88,
+  React 19.3, Skia 2.14, Reanimated 4 + worklets, Gesture Handler 3) trong `app/` chạy iOS, Android và web. Khóa màn hình ngang, chỉ có một
   màn hình chơi, **không dùng thư viện navigation**: trang chủ (`screens/home/`) và hộp thoại đều là lớp phủ.
 - Dữ liệu: `Country → Chapter → PageSlot { day, night? } → Page → HiddenObject[]`. Mỗi trang là một file JSON cùng một
   bức tranh 1760 × 1240.
@@ -62,7 +62,7 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
    bằng timer độc lập. Tài nguyên bị loại khỏi cache chỉ giải phóng sau khi mapper bỏ tham chiếu (kể cả nguồn/đích
    đang lật và ảnh warm). Picture đầu ra đưa thẳng vào Canvas, không ghi thêm lớp picture bao ngoài.
 8. **Thư viện:** chỉ dùng `npx expo install <pkg>`, chỉ module có sẵn trong Expo Go, ưu tiên module của Expo. Expo hay
-   đổi API: đọc docs đúng phiên bản `https://docs.expo.dev/versions/v57.0.0/`, đừng đoán theo trí nhớ.
+   đổi API: đọc docs đúng phiên bản `https://docs.expo.dev/versions/v58.0.0/`, đừng đoán theo trí nhớ.
 9. **Dung lượng:** tranh dùng WebP, sprite là vector sinh tự động, âm thanh tổng hợp bằng synth. Icon và font import
    từng file một. Không đưa ảnh PNG lớn, file âm thanh thu sẵn hay thư viện nặng vào app (xem
    `docs/ai/performance-and-size.md`).

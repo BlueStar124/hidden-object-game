@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, useWindowDimensions, type ViewInstance } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -107,7 +107,7 @@ export const GameScreen: React.FC = () => {
     stepZoomRef.current?.(dir);
   }, []);
 
-  const rootRef = useRef<View>(null);
+  const rootRef = useRef<ViewInstance>(null);
   const [rootOffset, setRootOffset] = useState({ x: 0, y: 0 });
 
   /* ------------------------------- Derived state ------------------------------- */

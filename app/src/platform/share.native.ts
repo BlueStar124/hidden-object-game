@@ -19,7 +19,7 @@ export async function shareImage(jpegBase64: string, fileName: string, text: str
     if (!(await Sharing.isAvailableAsync())) return shareText(text);
     const file = new File(Paths.cache, fileName);
     file.create({ overwrite: true });
-    file.write(jpegBase64, { encoding: 'base64' });
+    await file.write(jpegBase64, { encoding: 'base64' }); // async since SDK 58
     await Sharing.shareAsync(file.uri, { mimeType: 'image/jpeg', UTI: 'public.jpeg', dialogTitle: text });
     return 'shared';
   } catch {

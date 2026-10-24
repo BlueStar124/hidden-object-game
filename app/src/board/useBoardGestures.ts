@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, type MutableRefObject, type RefObject } from 'react';
-import { Platform, type View } from 'react-native';
+import { Platform, type ViewInstance } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import { cancelAnimation, useFrameCallback, useSharedValue, withDecay, type SharedValue } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -40,7 +40,7 @@ export function useBoardGestures(
   onInspect: (nx: number, ny: number, screenPos: { x: number; y: number }) => void,
   /** The board's position in the window (inspection points are reported in window coordinates) */
   windowOffset: MutableRefObject<{ x: number; y: number }>,
-  viewRef: RefObject<View | null>,
+  viewRef: RefObject<ViewInstance | null>,
   turning: MutableRefObject<boolean>
 ): BoardGestures {
   const { s, tx, ty, lx, ly, dims, bounds, clampScale, placeLoupe, zoomTo, markZoomed } = camera;

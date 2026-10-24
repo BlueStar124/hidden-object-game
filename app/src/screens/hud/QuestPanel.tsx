@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 import type { HiddenObject } from '../../core/model';
 import { isCritter, isMainObject } from '../../core/model';
 import { colors } from '../../ui/theme';
@@ -61,7 +61,7 @@ export const QuestPanel = React.memo<QuestPanelProps>(function QuestPanel({
     [onToggleCollapse]
   );
   const [expanded, setExpanded] = useState<string | null>(null);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const cardLayouts = useRef<Record<string, number>>({});
 
   const compact = layout === 'phoneLandscape';

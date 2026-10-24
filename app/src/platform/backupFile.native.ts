@@ -9,7 +9,7 @@ export async function saveBackupFile(text: string, fileName: string): Promise<Sh
     if (!(await Sharing.isAvailableAsync())) return 'failed';
     const file = new File(Paths.cache, fileName);
     file.create({ overwrite: true });
-    file.write(text);
+    await file.write(text); // async since SDK 58: the share sheet must get the whole file
     await Sharing.shareAsync(file.uri, { mimeType: 'application/json', UTI: 'public.json', dialogTitle: 'Lưu bản sao lưu' });
     return 'shared';
   } catch {

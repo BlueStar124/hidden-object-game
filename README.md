@@ -282,4 +282,4 @@ WebAssembly của CanvasKit), chặn nhúng vào iframe của trang khác, `nosn
 Bản app (iOS/Android) gửi link thử thách khi biết địa chỉ bản web: đặt biến môi trường `EXPO_PUBLIC_WEB_URL` (ví dụ
 `https://ten-du-an.vercel.app`) lúc build. Bản web tự dùng địa chỉ của chính nó.
 
-`package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 57 cần Node ≥ 22.13 (hoặc 24.3).
+`package.json` gốc ghi `"engines": { "node": "24.x" }`: Vercel tắt Node.js 20 từ 01/10/2026, và Expo SDK 58 cần Node ≥ 22.13 (hoặc 24.3).

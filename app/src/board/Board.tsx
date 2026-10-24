@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { PixelRatio, StyleSheet, View, useWindowDimensions, type LayoutChangeEvent } from 'react-native';
+import { PixelRatio, StyleSheet, View, useWindowDimensions, type LayoutChangeEvent, type ViewInstance } from 'react-native';
 import { Canvas, Skia, useCanvasRef, type ISkiaViewApi, type SkPicture } from '@shopify/react-native-skia';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { useAnimatedReaction, useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
@@ -88,7 +88,7 @@ export const Board = React.memo<BoardProps>(function Board({
   const win = useWindowDimensions();
   const compact = win.width < 640;
 
-  const viewRef = useRef<View>(null);
+  const viewRef = useRef<ViewInstance>(null);
   const windowOffset = useRef({ x: 0, y: 0 });
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const onLayout = useCallback((e: LayoutChangeEvent) => {
