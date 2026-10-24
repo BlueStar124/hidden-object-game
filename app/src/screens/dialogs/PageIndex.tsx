@@ -51,7 +51,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({
   const handleSelectCountry = (c: Country) => {
     setCountry(c);
     if (!story.isCountryUnlocked(c.id)) {
-      setNotice(story.countryLockReason(c.id) ?? 'Quốc gia này chưa mở');
+      setNotice(story.countryLockReason(c.id) || 'Quốc gia này chưa mở');
     }
   };
 
@@ -88,7 +88,7 @@ export const PageIndex: React.FC<PageIndexProps> = ({
         <View style={styles.countryLockedBox}>
           <Lock size={16} color="#b45309" />
           <Text style={styles.countryLockedText}>
-            {story.countryLockReason(country.id) ??
+            {story.countryLockReason(country.id) ||
               'Hãy hoàn thành cuốn sổ trước để mở khóa ký họa này.'}
           </Text>
         </View>

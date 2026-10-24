@@ -131,8 +131,20 @@ export function allPages(): Page[] {
 
 /** All day page slots in linear reading order across all countries. */
 export function allStoryRefs(): PageRef[] {
-  return COUNTRIES.flatMap((c) => pagesOf(c));
+  return STORY_REFS;
 }
+
+// The catalogue never changes at run time, so the reading order is built once
+const STORY_REFS: PageRef[] = COUNTRIES.flatMap((c) => pagesOf(c));
+// Page id (day or night) → its slot in STORY_REFS
+const STORY_INDEX = new Map<string, number>();
+STORY_REFS.forEach((r, i) => {
+  STORY_INDEX.set(r.day.id, i);
+  if (r.night) STORY_INDEX.set(r.night.id, i);
+});
+// Progress snapshots are immutable (every save replaces the object), so one evaluation per
+// snapshot serves the clock tick and every index card instead of re-walking the journey each call
+const STORY_STATES = new WeakMap<GameProgress, StoryProgressState>();
 
 /**
  * Story progression queries pre-bound to the catalogue of sketchbooks.
@@ -151,7 +163,12 @@ export const story = {
             totalScore: 0,
             discovered: {},
           });
-    return evaluateStoryProgress(allStoryRefs(), current);
+    let state = STORY_STATES.get(current);
+    if (!state) {
+      state = evaluateStoryProgress(STORY_REFS, current);
+      STORY_STATES.set(current, state);
+    }
+    return state;
   },
 
   /** Whether a page (day or night) is currently unlocked in story mode. */
@@ -169,14 +186,14 @@ export const story = {
   lockReason(pageId: string, p?: GameProgress): string {
     const s = this.state(p);
     if (s.unlockedPageIds.has(pageId) || s.unlockedNightIds.has(pageId)) return '';
-    return getPageLockReason(pageId, allStoryRefs(), s);
+    return getPageLockReason(pageId, STORY_REFS, s);
   },
 
   /** Human-friendly country lock reason if locked, or empty string if unlocked. */
   countryLockReason(countryId: string, p?: GameProgress): string {
     const s = this.state(p);
     if (s.unlockedCountryIds.has(countryId)) return '';
-    return getCountryLockReason(countryId, COUNTRIES, allStoryRefs(), s);
+    return getCountryLockReason(countryId, COUNTRIES, STORY_REFS, s);
   },
 
   /** Next day page to play in the story, or null if entire journey completed. */
@@ -191,13 +208,9 @@ export const story = {
 
   /** The next page in the story sequence after `pageId` (day or night), or null if end of journey. */
   nextPageAfter(pageId: string): { ref: PageRef; night: boolean } | null {
-    const refs = allStoryRefs();
-    const idx = refs.findIndex((r) => r.day.id === pageId || r.night?.id === pageId);
-    if (idx === -1) return null;
-    if (idx + 1 < refs.length) {
-      return { ref: refs[idx + 1], night: false };
-    }
-    return null;
+    const idx = STORY_INDEX.get(pageId);
+    if (idx === undefined || idx + 1 >= STORY_REFS.length) return null;
+    return { ref: STORY_REFS[idx + 1], night: false };
   },
 };
 

@@ -87,16 +87,20 @@ export const QuestPanel = React.memo<QuestPanelProps>(function QuestPanel({
     toggle(id);
   });
 
+  // Read through a ref: collapsing must not re-run the hint effect, which would expand it again
+  const collapsedRef = useRef(isCollapsed);
+  collapsedRef.current = isCollapsed;
+
   // When a hint is triggered: expand sidebar, highlight card, and scroll to it
   useEffect(() => {
     if (!activeHintId) return;
-    if (isCollapsed) toggleCollapse();
+    if (collapsedRef.current) toggleCollapse();
     setExpanded(activeHintId);
     const y = cardLayouts.current[activeHintId];
     if (y !== undefined) {
       scrollRef.current?.scrollTo({ y: Math.max(0, y - 20), animated: true });
     }
-  }, [activeHintId, activeHintLevel, isCollapsed, toggleCollapse]);
+  }, [activeHintId, activeHintLevel, toggleCollapse]);
 
   const recordCardLayout = (id: string, y: number) => {
     cardLayouts.current[id] = y;

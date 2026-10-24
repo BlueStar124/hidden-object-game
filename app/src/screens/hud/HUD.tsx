@@ -83,7 +83,7 @@ export const HUD: React.FC<HUDProps> = (props) => {
   const showHintLabel = wide && !isNarrowDesktop;
   const hintLabel = showHintLabel
     ? width >= 1220 && freeHintAvailable
-      ? 'Gợi Ý (Free)'
+      ? 'Gợi Ý (Miễn phí)'
       : 'Gợi Ý'
     : undefined;
   const compactBtn = !wide || isNarrowDesktop;

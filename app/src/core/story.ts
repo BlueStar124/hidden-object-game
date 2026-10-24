@@ -53,8 +53,9 @@ export function evaluateStoryProgress(
     const ref = allRefs[i];
     const dayId = ref.day.id;
     const nightId = ref.night?.id;
-    const hasStars = (p.sceneResults[dayId]?.stars ?? 0) > 0;
-    const isCleared = legacyStoryCleared.has(dayId) || hasStars;
+    // Only a story-mode win counts: stars are also written by challenge wins, which are open on
+    // every page and must not unlock the journey (older saves were moved into storyCleared by readProgress)
+    const isCleared = legacyStoryCleared.has(dayId);
 
     if (isCleared) {
       clearedDayIds.add(dayId);
@@ -64,7 +65,6 @@ export function evaluateStoryProgress(
       explicitUnlocked.has(dayId) ||
       playedPages.has(dayId) ||
       lastPageId === dayId ||
-      hasStars ||
       (nightId && (explicitUnlocked.has(nightId) || playedPages.has(nightId) || lastPageId === nightId))
     ) {
       highestLegacyIndex = Math.max(highestLegacyIndex, i);

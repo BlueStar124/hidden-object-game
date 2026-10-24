@@ -288,76 +288,74 @@ export const GameScreen: React.FC = () => {
       <StatusBar hidden style={isNight ? 'light' : 'dark'} />
       <Desk night={isNight} foliage={width > 800} stickers={coverStickers} />
 
-      {!home && (
-        <>
-          <HUD
-            layout={layout}
-            page={page}
-            chapterNumber={ref.chapterNumber}
-            pageIndex={ref.index}
-            pageCount={pages.length}
-            huntLabel={
-              mode.kind === 'daily'
-                ? 'Trang của ngày'
-                : mode.kind === 'challenge'
-                ? 'Thử thách'
-                : undefined
-            }
-            score={c.score}
-            remainingTime={c.remainingTime}
-            combo={c.combo}
-            comboTimer={c.comboTimer}
-            soundEnabled={soundEnabled}
-            isNight={isNight}
-            freeHintAvailable={!c.freeHintUsed}
-            topInset={insets.top}
-            insetLeft={insets.left}
-            insetRight={insets.right}
-            exploreRemaining={c.isCompleted && c.isExploring ? left : null}
-            onFinishExplore={finishExplore}
-            onOpenIndex={openIndex}
-            onOpenAlbum={openAlbum}
-            onPrevPage={nav.prev}
-            onNextPage={nav.next}
-            hasNextUnlocked={
-              mode.kind === 'book'
-                ? Boolean(nav.nextPage && story.isUnlocked(nav.nextPage.id))
-                : ref.index < pages.length - 1
-            }
-            onToggleSound={toggleSound}
-            onUseHint={hintButton}
-            onPause={togglePause}
-            onHome={leaveToHome}
-          />
+      {/* Always mounted, even under the home screen: the book keeps its scenes and warmed pages,
+          so "Chơi tiếp" starts at once and a turn begun from home completes (boardActive is off) */}
+      <HUD
+        layout={layout}
+        page={page}
+        chapterNumber={ref.chapterNumber}
+        pageIndex={ref.index}
+        pageCount={pages.length}
+        huntLabel={
+          mode.kind === 'daily'
+            ? 'Trang của ngày'
+            : mode.kind === 'challenge'
+            ? 'Thử thách'
+            : undefined
+        }
+        score={c.score}
+        remainingTime={c.remainingTime}
+        combo={c.combo}
+        comboTimer={c.comboTimer}
+        soundEnabled={soundEnabled}
+        isNight={isNight}
+        freeHintAvailable={!c.freeHintUsed}
+        topInset={insets.top}
+        insetLeft={insets.left}
+        insetRight={insets.right}
+        exploreRemaining={c.isCompleted && c.isExploring ? left : null}
+        onFinishExplore={finishExplore}
+        onOpenIndex={openIndex}
+        onOpenAlbum={openAlbum}
+        onPrevPage={nav.prev}
+        onNextPage={nav.next}
+        hasNextUnlocked={
+          mode.kind === 'book'
+            ? Boolean(nav.nextPage && story.isUnlocked(nav.nextPage.id))
+            : ref.index < pages.length - 1
+        }
+        onToggleSound={toggleSound}
+        onUseHint={hintButton}
+        onPause={togglePause}
+        onHome={leaveToHome}
+      />
 
-          <GamePlayArea
-            isPortrait={isPortrait}
-            layout={layout}
-            page={page}
-            caseState={c}
-            radarTargetId={radarTargetId}
-            nudgeTarget={nudgeTarget}
-            turn={turn}
-            onTurnComplete={nav.completeTurn}
-            isFogged={kase.isFogged}
-            onInspect={inspect}
-            preload={preload}
-            boardActive={boardActive}
-            zoom={zoom}
-            setZoom={setZoom}
-            stepZoomRef={stepZoomRef}
-            onStepZoom={onStepZoom}
-            hint={hint}
-            hintRefusal={kase.hintRefusal}
-            requestHint={requestHint}
-            insets={insets}
-            isTurning={isTurning}
-            sidebarCollapsed={sidebarCollapsed}
-            effectiveSidebarWidth={effectiveSidebarWidth}
-            onToggleSidebar={onToggleSidebar}
-          />
-        </>
-      )}
+      <GamePlayArea
+        isPortrait={isPortrait}
+        layout={layout}
+        page={page}
+        caseState={c}
+        radarTargetId={radarTargetId}
+        nudgeTarget={nudgeTarget}
+        turn={turn}
+        onTurnComplete={nav.completeTurn}
+        isFogged={kase.isFogged}
+        onInspect={inspect}
+        preload={preload}
+        boardActive={boardActive}
+        zoom={zoom}
+        setZoom={setZoom}
+        stepZoomRef={stepZoomRef}
+        onStepZoom={onStepZoom}
+        hint={hint}
+        hintRefusal={kase.hintRefusal}
+        requestHint={requestHint}
+        insets={insets}
+        isTurning={isTurning}
+        sidebarCollapsed={sidebarCollapsed}
+        effectiveSidebarWidth={effectiveSidebarWidth}
+        onToggleSidebar={onToggleSidebar}
+      />
 
       <FloatingScores items={notices} origin={rootOffset} />
 

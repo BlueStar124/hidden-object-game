@@ -211,9 +211,11 @@ export const Board = React.memo<BoardProps>(function Board({
   const { zoom, zoomTo } = camera;
   const stepZoom = useCallback(
     (dir: 1 | -1) => {
+      // A landing turn sets the camera from the scale it started at
+      if (turn || flip) return;
       zoomTo((Math.round(zoom * 10) + dir) / 10);
     },
-    [zoom, zoomTo]
+    [zoom, zoomTo, turn, flip]
   );
 
   useEffect(() => {

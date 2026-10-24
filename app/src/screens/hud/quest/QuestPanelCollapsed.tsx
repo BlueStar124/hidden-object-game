@@ -6,6 +6,7 @@ import {
   Search,
   Sparkles,
 } from '../../../ui/icons';
+import { hintCost } from '../../../core/scoring';
 import { colors } from '../../../ui/theme';
 import { ZoomControl } from '../ZoomControl';
 
@@ -61,12 +62,12 @@ export const QuestPanelCollapsed: React.FC<QuestPanelCollapsedProps> = React.mem
         {!freeHintUsed ? (
           <View style={styles.collapsedHintBadge} accessibilityLabel="Gợi ý đầu miễn phí">
             <Sparkles size={13} color="#ca8a04" />
-            <Text style={styles.collapsedHintText}>Free</Text>
+            <Text style={styles.collapsedHintText}>0đ</Text>
           </View>
-        ) : score < 50 ? (
+        ) : score < hintCost(1) ? (
           <View
             style={[styles.collapsedHintBadge, styles.collapsedHintBadgeAlert]}
-            accessibilityLabel={`Cần 50 điểm để gợi ý, hiện có ${score} điểm`}
+            accessibilityLabel={`Cần ${hintCost(1)} điểm để gợi ý, hiện có ${score} điểm`}
           >
             <CircleQuestionMark size={13} color="#b91c1c" />
             <Text style={[styles.collapsedHintText, { color: '#b91c1c' }]}>{score}đ</Text>

@@ -27,7 +27,8 @@ import {
   type Part,
 } from './spriteParts';
 
-export const isPainted = (o: HiddenObject) => !o.spriteType || o.spriteType !== 'seal';
+/** Drawn by the game: an object with no sprite type (or the seal) is part of the artist's painting. */
+export const isPainted = (o: HiddenObject) => !!o.spriteType && o.spriteType !== 'seal';
 
 export const boardPaints = createBoardPaints();
 

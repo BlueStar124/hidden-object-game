@@ -145,6 +145,9 @@ export function useCamera(
     const fit = fittedScale(size.w, size.h, bw, bh);
     const d = loupeDiameter(size.w, size.h);
     const prevZoom = s.value / dims.value.fit;
+    const prevScale = s.value;
+    const prevW = dims.value.w;
+    const prevH = dims.value.h;
     dims.value = { w: size.w, h: size.h, fit, r: d / 2, d, bx, by, bw, bh };
     const prev = placed.current;
     placed.current = size;
@@ -154,19 +157,31 @@ export function useCamera(
     const level = userZoomed.current ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom)) : 1;
     const scale = fit * level;
     s.value = scale;
-    if (!prev || turned) {
+    if (turned) {
       const c = centre(scale);
       tx.value = c.tx;
       ty.value = c.ty;
       placeLoupe(size.w * 0.6, size.h * 0.58);
-    } else {
-      // Board resized (e.g. sidebar collapsed or expanded):
-      // Keep pan position clamped to the new bounds, and keep the loupe where it was
-      const b = bounds(scale);
-      tx.value = Math.min(b.maxX, Math.max(b.minX, tx.value));
-      ty.value = Math.min(b.maxY, Math.max(b.minY, ty.value));
-      placeLoupe(lx.value, ly.value);
+      setZoom(level);
+      return;
     }
+    if (prev.w === size.w && prev.h === size.h) {
+      // Same board, new book rect (another page): it opens centred, unless a turn glides there itself
+      if (!turning.current) {
+        const c = centre(scale);
+        tx.value = c.tx;
+        ty.value = c.ty;
+      }
+    } else {
+      // Board resized (e.g. sidebar collapsed or expanded): the page point under the middle stays there
+      const px = (prevW / 2 - tx.value) / prevScale;
+      const py = (prevH / 2 - ty.value) / prevScale;
+      const b = bounds(scale);
+      tx.value = Math.min(b.maxX, Math.max(b.minX, size.w / 2 - px * scale));
+      ty.value = Math.min(b.maxY, Math.max(b.minY, size.h / 2 - py * scale));
+    }
+    // The loupe stays where the player put it
+    placeLoupe(lx.value, ly.value);
     setZoom(level);
   }, [size, bx, by, bw, bh, centre, bounds, placeLoupe, dims, lx, ly, s, tx, ty, turning]);
 

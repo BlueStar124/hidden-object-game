@@ -112,13 +112,22 @@ export function useNavigation(): Navigation {
   // Opens a page (night: the page's night variant, if it has one)
   const open = useCallback((countryId: string, index: number, night: boolean = false, seed: number = 0, mode: PlayMode = BOOK, roll: number = Math.random()) => {
     pending.current = null;
-    const target = countryById(countryId);
-    const book = pagesOf(target);
-    const valid = Math.max(0, Math.min(index, book.length - 1));
+    let target = countryById(countryId);
+    let book = pagesOf(target);
+    let valid = Math.max(0, Math.min(index, book.length - 1));
     const targetRef = book[valid];
     if (mode.kind === 'book' && targetRef) {
       const targetPageId = night && targetRef.night ? targetRef.night.id : targetRef.day.id;
-      if (!story.isUnlocked(targetPageId)) return;
+      // Locked meanwhile (a cloud sync or an account switch during a turn or a challenge): open the
+      // story's current page instead of bailing out, which would leave `turn` set and the book stuck
+      const goal = story.isUnlocked(targetPageId) ? null : story.nextTarget();
+      const fallback = goal ? placeOf(goal.id) : null;
+      if (fallback) {
+        target = fallback.ref.country;
+        book = pagesOf(target);
+        valid = fallback.ref.index;
+        night = false;
+      }
     }
     const nightOn = night && !!book[valid]?.night;
     fates.current.delete(pageAt(target, valid, nightOn).id); // this visit is decided: the next one is new

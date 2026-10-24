@@ -12,6 +12,19 @@ const fs = require('node:fs');
       deviceScaleFactor: +(process.env.DPR || 1) });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
+    // Straight into the game: the sign-in screen only shows on a first launch (platform/accountPrefs)
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem('detective_sketchbook_entered', '1');
+        // The story opens one page at a time: a save with Singapore cleared, standing on its first page
+        const cleared = ['marina-bay-sands', 'gardens-by-the-bay', 'merlion-park', 'buddha-tooth-temple',
+          'joo-chiat-shophouses', 'lau-pa-sat-market', 'botanic-gardens-heritage', 'marina-bay-skyline', 'singapore-river-quay'];
+        if (!localStorage.getItem('detective_sketchbook_progress_v1')) {
+          localStorage.setItem('detective_sketchbook_progress_v1', JSON.stringify({ schemaVersion: 3, unlockedScenes: cleared,
+            storyCleared: cleared, sceneResults: {}, totalScore: 0, discovered: {}, lastPageId: 'marina-bay-sands' }));
+        }
+      } catch {}
+    });
     await page.addInitScript(() => {
       window.__turnBench = { frames: [], long: [], calls: {}, recordings: 0 };
       const tick = t => { window.__turnBench.frames.push(t); requestAnimationFrame(tick); };
@@ -32,13 +45,14 @@ const fs = require('node:fs');
     });
     await page.goto(process.argv[2] || 'http://127.0.0.1:8093', { waitUntil: 'load', timeout: 120000 });
     const start = page.getByLabel('Mở Cuốn Sổ & Bắt Đầu Điều Tra');
-    const homeStart = page.getByLabel('Bắt Đầu Điều Tra', { exact: true });
+    const homeStart = page.getByLabel(/^(Bắt Đầu Điều Tra|Chơi Tiếp)$/);
     await homeStart.waitFor({ timeout: 120000 });
     const portrait = page.getByLabel('Vẫn chơi màn hình dọc');
     if (await portrait.count()) await portrait.click();
     await page.waitForTimeout(3000);
     await homeStart.click();
-    await start.click();
+    // The case file only opens on a chapter's first visit
+    await start.click({ timeout: 5000 }).catch(() => {});
     await page.locator('canvas').first().waitFor();
     await page.waitForTimeout(2000);
     await page.evaluate(() => {

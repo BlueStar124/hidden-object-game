@@ -86,7 +86,7 @@ export const HudActions = React.memo<HudActionsProps>(({
   const SoundIcon = soundEnabled ? Volume2 : VolumeX;
   const computedHintLabel =
     hintLabel ??
-    (showHintLabel ? (freeHintAvailable ? 'Gợi Ý (Free)' : 'Gợi Ý') : 'Gợi Ý');
+    (showHintLabel ? (freeHintAvailable ? 'Gợi Ý (Miễn phí)' : 'Gợi Ý') : 'Gợi Ý');
 
   return (
     <View

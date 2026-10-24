@@ -34,6 +34,25 @@ describe('story progression rules', () => {
     }
   });
 
+  test('a challenge win (stars without a story clear) does not unlock the journey', () => {
+    const late = vnPages[vnPages.length - 1].day.id;
+    const challengeWin: GameProgress = {
+      schemaVersion: SCHEMA_VERSION,
+      unlockedScenes: [],
+      sceneResults: {
+        [late]: { sceneId: late, stars: 3, highScore: 2000, bestTime: 50, completedAt: new Date().toISOString() },
+      },
+      totalScore: 2000,
+      discovered: {},
+    };
+    const state = evaluateStoryProgress(allRefs, challengeWin);
+    expect(state.unlockedPageIds.has(sgPages[1].day.id)).toBe(false);
+    expect(state.unlockedPageIds.has(late)).toBe(false);
+    expect(state.unlockedCountryIds.has('thailand')).toBe(false);
+    expect(state.unlockedCountryIds.has('vietnam')).toBe(false);
+    expect(state.nextDayPage?.id).toBe(sgPages[0].day.id);
+  });
+
   test('winning a day page unlocks next day page and its night variant', () => {
     const p1Id = sgPages[0].day.id;
     const progressWithP1: GameProgress = {
