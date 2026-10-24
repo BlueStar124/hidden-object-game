@@ -47,18 +47,16 @@ export const TimeUpScreen: React.FC<TimeUpScreenProps> = ({ page, foundIds, onRe
       footer={
         <View style={styles.actions}>
           <SecondaryButton label="Mục Lục" icon={<BookOpen size={16} color={colors.ink} />} onPress={onOpenIndex} />
-          <PrimaryButton label="Thử Lại Trang Này" icon={<RotateCcw size={17} color="#fff" />} onPress={onReplay} />
+          <PrimaryButton label="Chơi Lại" icon={<RotateCcw size={17} color="#fff" />} onPress={onReplay} />
         </View>
       }
     >
       <Animated.View style={[styles.icon, glass]}>
         <Hourglass size={40} color={colors.crimson} />
       </Animated.View>
-      <Text style={styles.tag}>HỒ SƠ CÒN DANG DỞ</Text>
-      <Text style={styles.title}>Hết Giờ Điều Tra!</Text>
+      <Text style={styles.title}>Hết Giờ!</Text>
       <Text style={styles.text}>
-        Bạn đã tìm được <Text style={styles.bold}>{found}</Text> / {main.length} manh mối ở{' '}
-        <Text style={styles.bold}>{page.title}</Text>. Những sinh vật ngụy trang vẫn đang chờ bạn quay lại soi kỹ hơn.
+        Tìm được <Text style={styles.bold}>{found}</Text> / {main.length} manh mối
       </Text>
       <View style={styles.track}>
         <View style={[styles.fill, { width: `${(found / Math.max(1, main.length)) * 100}%` }]} />
@@ -70,12 +68,6 @@ export const TimeUpScreen: React.FC<TimeUpScreenProps> = ({ page, foundIds, onRe
 const styles = StyleSheet.create({
   icon: {
     marginBottom: 6,
-  },
-  tag: {
-    fontSize: 10.5,
-    fontWeight: '700',
-    letterSpacing: 2,
-    color: colors.crimson,
   },
   title: {
     fontFamily: fonts.display,

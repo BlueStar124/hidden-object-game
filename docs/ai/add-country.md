@@ -28,7 +28,10 @@ Ví dụ thêm Việt Nam, id nước `vietnam`:
 - [ ] Sprite mới, nếu có (§5) → `npm run generate` ở gốc repo
 - [ ] Một migration mới trong `supabase/migrations/` thêm id các trang mới vào `challenge_pages` (và sprite mới vào
       `challenge_sprites`, kèm tăng `FRIEND_CONTENT_VERSION` trong `core/challenge.ts`): thiếu là
-      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè
+      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè.
+      Cùng migration đó thêm các **trang ngày** vào `storyline_pages` (`id, country_id, chapter_number, page_number,
+      max_score`) cho Bảng Xếp Hạng; `max_score` = `maxPageScore` (core/leaderboard) trên vật của trang cộng mọi
+      sinh vật lữ hành có thể ghé. Sai hay thiếu là `test/leaderboard.test.ts` fail và in ra giá trị đúng
 - [ ] `cd app && npm run check && npm run test:screens`, rồi chơi thử `npm run web` (§8)
 - [ ] Cập nhật `README.md` (danh sách nước/trang) nếu cần
 
@@ -166,7 +169,7 @@ Mẫu một vật có đủ trường:
 > Sinh vật mới cần thêm vào `STARTLE` trong `content/bestiary.ts` (cách nó giật mình khi bị bắt: `hop`, `scurry`,
 > `splash`, `flutter`); test `content.test.ts` sẽ báo nếu thiếu.
 
-Chỉ làm khi trong 112 loại có sẵn (`SpriteType` trong `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
+Chỉ làm khi trong 112 loại có sẵn (`SpriteType` trong `core/spriteTypes.ts`, re-export tại `core/model.ts`) không có loại phù hợp. Ví dụ cho Việt Nam: nón lá,
 đèn lồng, xích lô. Mỗi nước nên có bộ hình riêng (Thái Lan có 50 loại không dùng chung với Singapore) để người chơi không
 gặp lại cùng một con vật, cùng một đồ vật ở mọi cuốn sổ.
 
@@ -178,12 +181,12 @@ gặp lại cùng một con vật, cùng một đồ vật ở mọi cuốn sổ
    - `.wing` / `.tail` (`tail-cat`) / `.wave`: vỗ cánh, vẫy đuôi, vẫy tay khi đã tìm thấy;
    - phần tử có class hoạt ảnh **không được có `transform` riêng** (generator sẽ cảnh báo);
    - các biến thể ngụy trang không được đổi độ dày nét (generator sẽ throw).
-2. **Khai báo** tên trong union `SpriteType` (`app/src/core/model.ts`), đặt đúng nhóm có comment.
+2. **Khai báo** tên trong union `SpriteType` (`app/src/core/spriteTypes.ts`, được re-export tại `app/src/core/model.ts`), đặt đúng nhóm có comment.
 3. **Mục Sổ Tay** trong `app/src/content/bestiary.ts`: `{ name, kind: 'creature' | 'object', fact }`, viết bằng tiếng Việt.
    Nếu thiếu, TypeScript sẽ báo lỗi. `kind: 'creature'` thì mắt phát sáng ở trang đêm.
-4. **Tiếng kêu** (không bắt buộc): thêm `<type>: '<giọng>'` vào `VOICE_OF` (`app/src/platform/synth/voices.ts`). **Ưu
+4. **Tiếng kêu** (không bắt buộc): thêm `<type>: '<giọng>'` vào `VOICE_OF` (`app/src/platform/synth/voiceMap.ts`, được re-export tại `voices.ts`). **Ưu
    tiên dùng lại giọng có sẵn**: mỗi giọng mới thêm một file WAV (~30–100 KB) cho bản app.
-5. **Sinh lại**: `npm install` ở gốc repo (một lần) → `npm run generate` (gốc hoặc `app/`). Lệnh này ghi
+5. **Sinh lại**: `npm install` ở gốc repo (một lần) → `npm run generate` (gốc hoặc `app/`). Lệnh này chạy qua `tools/generate-assets.mjs` (kèm `generate-sprites-helper.mjs`, `generate-sound-helper.mjs`) ghi
    `app/src/generated/spriteArt.ts`, `app/src/generated/sounds.ts`, `app/assets/sounds/`. **Commit cả các file sinh ra.**
 6. Xem lại icon của vật trên thẻ manh mối và trong Sổ Tay (`npm run web`).
 

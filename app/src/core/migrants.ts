@@ -7,6 +7,9 @@ import { draw, hashString, rng } from './random';
  * a page is an optional critter whose id (`migrant-<id>`) stays the same, so finds are saved per page.
  */
 
+/** Points for finding a migrant (an optional critter), on any page. */
+export const MIGRANT_SCORE = 100;
+
 /** The id of a migrant's object, on any page it visits. */
 export const migrantObjectId = (m: Migrant) => `migrant-${m.id}`;
 
@@ -26,7 +29,7 @@ export function withVisitors(page: Page, day: string, migrants: readonly Migrant
       x: spot.x,
       y: spot.y,
       radius: spot.radius ?? 0.03,
-      score: 100,
+      score: MIGRANT_SCORE,
       isBonus: true,
       spriteType: m.spriteType,
       scale: spot.scale ?? 0.5,

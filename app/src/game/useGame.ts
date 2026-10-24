@@ -24,6 +24,7 @@ export function useGame({ browsing }: { browsing: boolean }) {
       nextPage: nav.nextPage,
       night: nav.isNight ? undefined : nav.ref.night,
       mode: nav.mode,
+      isNight: nav.isNight,
     },
     notify
   );

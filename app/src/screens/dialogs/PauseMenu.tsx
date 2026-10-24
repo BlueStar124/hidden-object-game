@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BookOpen, House, Play, RotateCcw, Volume2, VolumeX } from '../../ui/icons';
 import type { Page } from '../../core/model';
 import { colors, fonts } from '../../ui/theme';
@@ -37,7 +37,9 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
               <BookOpen size={14} color={colors.earth} />
               <Text style={styles.recapLabel}>NHẮC LẠI MANH MỐI:</Text>
             </View>
-            <Text style={styles.recapText}>{page.storyClue}</Text>
+            <ScrollView style={styles.recapScroll} showsVerticalScrollIndicator={false}>
+              <Text style={styles.recapText}>{page.storyClue}</Text>
+            </ScrollView>
           </View>
         </View>
 
@@ -108,25 +110,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.hairline,
     borderRadius: 10,
-    padding: 12,
+    padding: 14,
     marginBottom: 16,
   },
   recapHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   recapLabel: {
     fontSize: 11,
     fontWeight: '700',
     color: colors.earth,
   },
+  recapScroll: {
+    maxHeight: 150,
+  },
   recapText: {
-    fontFamily: fonts.bodyItalic,
-    fontSize: 12.5,
-    lineHeight: 18,
-    color: colors.inkSoft,
+    fontFamily: fonts.body,
+    fontSize: 14.5,
+    lineHeight: 22,
+    color: colors.ink,
+    textAlign: 'justify',
   },
   actions: {
     alignSelf: 'stretch',

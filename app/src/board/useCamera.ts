@@ -145,27 +145,45 @@ export function useCamera(
     const fit = fittedScale(size.w, size.h, bw, bh);
     const d = loupeDiameter(size.w, size.h);
     const prevZoom = s.value / dims.value.fit;
+    const prevScale = s.value;
+    const prevW = dims.value.w;
+    const prevH = dims.value.h;
     dims.value = { w: size.w, h: size.h, fit, r: d / 2, d, bx, by, bw, bh };
     const prev = placed.current;
     placed.current = size;
-    const resized = !prev || prev.w !== size.w || prev.h !== size.h;
     // First layout, or the phone turned: start fitted at 1.0×.
     const turned = !prev || prev.w > prev.h !== size.w > size.h;
     if (turned) userZoomed.current = false;
     const level = userZoomed.current ? Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom)) : 1;
     const scale = fit * level;
     s.value = scale;
-    if (resized || !turning.current) {
+    if (turned) {
       const c = centre(scale);
       tx.value = c.tx;
       ty.value = c.ty;
+      placeLoupe(size.w * 0.6, size.h * 0.58);
+      setZoom(level);
+      return;
     }
-    // The loupe starts a little right of and below the middle of what is on screen; a new page
-    // (whose paper sits a pixel or two elsewhere) leaves it where the player put it
-    if (resized) placeLoupe(size.w * 0.6, size.h * 0.58);
-    else placeLoupe(lx.value, ly.value);
+    if (prev.w === size.w && prev.h === size.h) {
+      // Same board, new book rect (another page): it opens centred, unless a turn glides there itself
+      if (!turning.current) {
+        const c = centre(scale);
+        tx.value = c.tx;
+        ty.value = c.ty;
+      }
+    } else {
+      // Board resized (e.g. sidebar collapsed or expanded): the page point under the middle stays there
+      const px = (prevW / 2 - tx.value) / prevScale;
+      const py = (prevH / 2 - ty.value) / prevScale;
+      const b = bounds(scale);
+      tx.value = Math.min(b.maxX, Math.max(b.minX, size.w / 2 - px * scale));
+      ty.value = Math.min(b.maxY, Math.max(b.minY, size.h / 2 - py * scale));
+    }
+    // The loupe stays where the player put it
+    placeLoupe(lx.value, ly.value);
     setZoom(level);
-  }, [size, bx, by, bw, bh, centre, placeLoupe, dims, lx, ly, s, tx, ty, turning]);
+  }, [size, bx, by, bw, bh, centre, bounds, placeLoupe, dims, lx, ly, s, tx, ty, turning]);
 
   // A new page opens on the middle of the spread (a page turn glides there itself)
   useEffect(() => {

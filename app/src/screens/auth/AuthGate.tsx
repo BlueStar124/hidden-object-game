@@ -118,6 +118,7 @@ export const AuthGate: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const value = useMemo(
     () => ({
+      userId: session?.user.id ?? null,
       email: session?.user.email ?? '',
       name,
       openAccount: () => setAccountOpen(true),

@@ -116,6 +116,17 @@ describe('reading a save', () => {
   });
 });
 
+describe('schema 3: the story journey', () => {
+  test('a save from before schema 3 counts every page won with stars as cleared in the story', () => {
+    expect(readProgress(firstVersionSave).storyCleared?.sort()).toEqual(['marina-bay-sands', 'merlion-park']);
+  });
+
+  test('an up-to-date save keeps only what it lists: stars alone (a challenge win) are not a story clear', () => {
+    const read = readProgress({ ...firstVersionSave, schemaVersion: SCHEMA_VERSION, storyCleared: ['marina-bay-sands'] });
+    expect(read.storyCleared).toEqual(['marina-bay-sands']);
+  });
+});
+
 describe('winning a page', () => {
   test('keeps the best stars, score and time, and unlocks the next page once', () => {
     progress.recordVictory('marina-bay-sands', 'gardens-by-the-bay', 500, 2, 60, ['gecko']);
@@ -141,6 +152,14 @@ describe('winning a page', () => {
     storage.setItem(KEY, JSON.stringify(firstVersionSave));
     progress.recordVictory('marina-bay-sands', null, 1300, 3, 40);
     expect(saved()).toMatchObject({ schemaVersion: SCHEMA_VERSION, totalScore: 1300 + 800, currentChapter: 2, settings: { soundEnabled: false } });
+  });
+
+  test('a story win marks the page cleared; a challenge win records the result but not the journey', () => {
+    progress.recordVictory('marina-bay-sands', 'gardens-by-the-bay', 500, 2, 60);
+    progress.recordVictory('merlion-park', null, 300, 1, 100, [], false);
+    expect(saved().storyCleared).toEqual(['marina-bay-sands']);
+    expect(saved().unlockedScenes).toEqual(['gardens-by-the-bay']);
+    expect(progress.pageResult('merlion-park')).toMatchObject({ stars: 1, highScore: 300 });
   });
 });
 
