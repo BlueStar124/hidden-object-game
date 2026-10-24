@@ -81,7 +81,8 @@ export const HomeScreen = React.memo<HomeScreenProps>(
 
     // Side by side unless the screen is narrow (a phone held upright); little height: tighter
     const columns = width >= 600;
-    const tight = height < 420;
+    // (the room left once the notch and home bar are taken out: a large iPhone app is 430 tall, ~409 usable)
+    const tight = height - insets.top - insets.bottom < 440;
     const pad = tight ? 10 : 18;
     const available = height - insets.top - insets.bottom - 2 * pad;
 

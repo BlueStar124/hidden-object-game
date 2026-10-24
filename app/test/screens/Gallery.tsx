@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaInsetsContext, type EdgeInsets } from 'react-native-safe-area-context';
 import { AppShell } from '../../App';
 import { allPages, FIRST_COUNTRY, pagesOf } from '../../src/content';
 import { isMainObject, type Page } from '../../src/core/model';
@@ -138,19 +139,26 @@ function useHash() {
   return hash;
 }
 
+// `?insets=top,right,bottom,left`: the notch and home bar of a phone, as the app (not a browser) has them
+const INSETS: EdgeInsets | null = (() => {
+  const [top, right, bottom, left] = (new URLSearchParams(location.search).get('insets') ?? '').split(',').map(Number);
+  return [top, right, bottom, left].every(Number.isFinite) ? { top, right, bottom, left } : null;
+})();
+
 export default function Gallery() {
   const hash = useHash();
   const screen = hash === 'postcard' ? () => <PostcardPreview /> : SCREENS[hash];
+  const content = screen ? (
+    // key: a fresh dialog for each hash, entering animation included
+    <View key={hash} style={styles.desk}>
+      {screen()}
+    </View>
+  ) : (
+    <GameScreen />
+  );
   return (
     <AppShell>
-      {screen ? (
-        // key: a fresh dialog for each hash, entering animation included
-        <View key={hash} style={styles.desk}>
-          {screen()}
-        </View>
-      ) : (
-        <GameScreen />
-      )}
+      {INSETS ? <SafeAreaInsetsContext.Provider value={INSETS}>{content}</SafeAreaInsetsContext.Provider> : content}
     </AppShell>
   );
 }
