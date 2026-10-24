@@ -10,7 +10,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const migrationPath = path.join(root, 'supabase', 'migrations', '20261018230000_story_leaderboard.sql');
+const migrations = path.join(root, 'supabase', 'migrations');
+const migrationPath = path.join(migrations, '20261018230000_story_leaderboard.sql');
+const fixesPath = path.join(migrations, '20261024000000_story_leaderboard_fixes.sql');
 const clientLeaderboardPath = path.join(root, 'app', 'src', 'platform', 'leaderboard.ts');
 
 console.log('--- Verifying Supabase Backend Contracts ---\n');
@@ -31,7 +33,12 @@ function assert(condition, message) {
 // 1. Migration File Presence
 assert(fs.existsSync(migrationPath), 'Migration 20261018230000_story_leaderboard.sql exists');
 
-const sql = fs.readFileSync(migrationPath, 'utf8');
+assert(fs.existsSync(fixesPath), 'Migration 20261024000000_story_leaderboard_fixes.sql exists');
+
+// Every migration in order: a later one may replace a function or drop a policy
+const sql = fs.readdirSync(migrations).filter((n) => n.endsWith('.sql')).sort()
+  .map((n) => fs.readFileSync(path.join(migrations, n), 'utf8')).join('\n');
+const fixes = fs.readFileSync(fixesPath, 'utf8');
 
 // 2. Table Definitions
 assert(/create table public\.storyline_pages/i.test(sql), 'Table storyline_pages is defined');
@@ -42,11 +49,14 @@ assert(/primary key \(user_id, page_id\)/i.test(sql), 'story_page_records has co
 
 // 3. RLS Security Policies
 assert(/alter table public\.story_page_records enable row level security/i.test(sql), 'story_page_records enables Row Level Security (RLS)');
-assert(/user_id\s*=\s*\(select auth\.uid\(\)\)/i.test(sql), 'RLS policy enforces user_id = auth.uid() for modifications');
+assert(/drop policy if exists "Users can insert their own scores"/i.test(fixes) && /drop policy if exists "Users can update their own scores"/i.test(fixes),
+  'Players cannot write score rows directly (own-row write policies dropped)');
+assert(/revoke all on public\.story_page_records from anon, authenticated/i.test(fixes),
+  'story_page_records: only select is granted; writes go through record_story_score');
 
 // 4. RPC Functions & Validation Limits
 assert(/create or replace function public\.record_story_score/i.test(sql), 'RPC record_story_score is defined (NOT record_story_victory)');
-assert(/p_score\s*>\s*7000/i.test(sql), 'RPC validates score cap <= 7000');
+assert(/p_score\s*>\s*v_max/i.test(fixes) && /max_score/i.test(fixes), 'RPC validates the score against the page cap (storyline_pages.max_score)');
 assert(/p_time\s*<\s*0/i.test(sql), 'RPC validates time is non-negative');
 assert(/create or replace function public\.get_leaderboard/i.test(sql), 'RPC get_leaderboard is defined');
 assert(/limit greatest\(1,\s*least\(coalesce\(p_limit,\s*100\),\s*100\)\)/i.test(sql), 'RPC get_leaderboard enforces Top 100 limit');

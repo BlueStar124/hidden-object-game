@@ -3,6 +3,8 @@
  * Only daytime storyline pages count toward ranking.
  */
 
+import { completionBonus, foundScore } from './scoring';
+
 export type LeaderboardScope = 'journey' | 'country' | 'chapter';
 
 export interface LeaderboardFilter {
@@ -47,11 +49,22 @@ export const DEFAULT_LEADERBOARD_FILTER: LeaderboardFilter = {
 };
 
 /**
- * Validates a storyline score submission payload before sending to server.
- * Upper bound score 7000 accommodates high combo and time bonus.
+ * The most a page can score: every object found in one unbroken combo, smallest first (the k-th
+ * find scores ×k plus 50 per step, scoring/foundScore), then the whole clock as time bonus (4 points
+ * a second, scoring/completionBonus). The server keeps the same bound per page (storyline_pages.max_score).
  */
-export function isPlausibleStoryScore(score: number, stars: number, timeTaken: number): boolean {
-  if (typeof score !== 'number' || !Number.isFinite(score) || score <= 0 || score > 7000) {
+export function maxPageScore(objectScores: readonly number[], timeLimit: number): number {
+  const sorted = [...objectScores].sort((a, b) => a - b);
+  const finds = sorted.reduce((sum, s, i) => sum + foundScore(s, i + 1, 0).earnedScore, 0);
+  return finds + completionBonus(timeLimit, 0, 0).timeBonus;
+}
+
+/**
+ * Validates a storyline score submission payload before sending to server.
+ * `maxScore` is the page's bound (maxPageScore); a score past it cannot come from play.
+ */
+export function isPlausibleStoryScore(score: number, stars: number, timeTaken: number, maxScore: number): boolean {
+  if (typeof score !== 'number' || !Number.isFinite(score) || score <= 0 || score > maxScore) {
     return false;
   }
   if (typeof stars !== 'number' || !Number.isFinite(stars) || stars < 1 || stars > 3) {

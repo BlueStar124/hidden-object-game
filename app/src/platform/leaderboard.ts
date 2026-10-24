@@ -4,7 +4,7 @@ import {
   type LeaderboardEntry,
   type LeaderboardFilter,
 } from '../core/leaderboard';
-import { cleanDisplayName } from '../core/profile';
+import { cleanDisplayName, displayNameOf } from '../core/profile';
 import { supabase } from './supabase';
 
 const TIMEOUT_MS = 8000;
@@ -89,13 +89,11 @@ export async function fetchLeaderboard(
 
     if (boardRes.error) {
       console.warn('Leaderboard fetch error:', boardRes.error);
-      const isMissingRpc = (boardRes.error as { code?: string })?.code === 'PGRST202';
+      // PGRST202 (the RPC is missing: migration not applied) is for developers, logged above
       return {
         entries: [],
         userRank: null,
-        error: isMissingRpc
-          ? 'Máy chủ Supabase chưa áp dụng migration (20261018230000_story_leaderboard.sql). Hãy chạy file này trong Supabase SQL Editor.'
-          : 'Không thể kết nối máy chủ xếp hạng · Bạn vẫn có thể chơi ngoại tuyến',
+        error: 'Không thể kết nối máy chủ xếp hạng · Bạn vẫn có thể chơi ngoại tuyến',
       };
     }
 
@@ -131,9 +129,10 @@ export async function submitStoryScore(
   score: number,
   stars: number,
   timeTaken: number,
+  maxScore: number,
   displayName?: string | null
 ): Promise<boolean> {
-  if (!isPlausibleStoryScore(score, stars, timeTaken)) {
+  if (!isPlausibleStoryScore(score, stars, timeTaken, maxScore)) {
     return false;
   }
 
@@ -148,7 +147,8 @@ export async function submitStoryScore(
       return false;
     }
 
-    const cleanedName = displayName ? cleanDisplayName(displayName) : null;
+    // The name the player chose in the game (core/profile), not the raw provider name the server falls back to
+    const cleanedName = (displayName ? cleanDisplayName(displayName) : null) ?? displayNameOf(session.user.user_metadata);
     const { error } = await timed(
       client.rpc('record_story_score', {
         p_page_id: pageId,

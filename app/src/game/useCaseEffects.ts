@@ -3,6 +3,7 @@ import { migrantProgress, migrantObjectId } from '../core/migrants';
 import { canDeduce } from '../core/mystery';
 import { progress } from '../core/progress';
 import type { FindResult } from '../core/caseFile';
+import { maxPageScore } from '../core/leaderboard';
 import { placeOf } from '../content';
 import { MIGRANTS } from '../content/migrants';
 import { submitStoryScore } from '../platform/leaderboard';
@@ -76,7 +77,9 @@ export function handleVictoryRecord(
       page.id,
       solved.score,
       solved.stars,
-      page.timeLimit - c.remainingTime
+      page.timeLimit - c.remainingTime,
+      // The page as played: its objects and the migrants visiting it today
+      maxPageScore(page.objects.map((o) => o.score), page.timeLimit)
     ).catch(() => {});
   }
   return isStoryBook && !wasPassed && night ? night.title : null;

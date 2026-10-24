@@ -28,7 +28,10 @@ Ví dụ thêm Việt Nam, id nước `vietnam`:
 - [ ] Sprite mới, nếu có (§5) → `npm run generate` ở gốc repo
 - [ ] Một migration mới trong `supabase/migrations/` thêm id các trang mới vào `challenge_pages` (và sprite mới vào
       `challenge_sprites`, kèm tăng `FRIEND_CONTENT_VERSION` trong `core/challenge.ts`): thiếu là
-      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè
+      `check-supabase-catalog` (trong `npm run check`) fail và trang không dùng được cho thử thách bạn bè.
+      Cùng migration đó thêm các **trang ngày** vào `storyline_pages` (`id, country_id, chapter_number, page_number,
+      max_score`) cho Bảng Xếp Hạng; `max_score` = `maxPageScore` (core/leaderboard) trên vật của trang cộng mọi
+      sinh vật lữ hành có thể ghé. Sai hay thiếu là `test/leaderboard.test.ts` fail và in ra giá trị đúng
 - [ ] `cd app && npm run check && npm run test:screens`, rồi chơi thử `npm run web` (§8)
 - [ ] Cập nhật `README.md` (danh sách nước/trang) nếu cần
 

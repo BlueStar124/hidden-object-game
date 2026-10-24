@@ -4,8 +4,20 @@ import {
   describeFilter,
   formatRank,
   isPlausibleStoryScore,
+  maxPageScore,
   medalForRank,
 } from '../src/core/leaderboard';
+import fs from 'node:fs';
+import path from 'node:path';
+import { COUNTRIES, pagesOf } from '../src/content';
+import { MIGRANTS } from '../src/content/migrants';
+import { MIGRANT_SCORE } from '../src/core/migrants';
+import { foundScore } from '../src/core/scoring';
+// Imported at the top (jest.mock below is hoisted above these): loading the screen and every page's
+// JSON inside the test body ran past the 5 s timeout when the whole suite shares the CPU
+import React from 'react';
+import { act, create } from 'react-test-renderer';
+import { LeaderboardView } from '../src/screens/home/LeaderboardView';
 
 describe('leaderboard core rules', () => {
   test('default filter starts at journey scope', () => {
@@ -29,13 +41,25 @@ describe('leaderboard core rules', () => {
   });
 
   test('isPlausibleStoryScore rejects out-of-range scores and times', () => {
-    expect(isPlausibleStoryScore(1500, 3, 45)).toBe(true);
-    expect(isPlausibleStoryScore(0, 1, 10)).toBe(false);
-    expect(isPlausibleStoryScore(-100, 1, 10)).toBe(false);
-    expect(isPlausibleStoryScore(10000, 3, 10)).toBe(false);
-    expect(isPlausibleStoryScore(2000, 0, 10)).toBe(false);
-    expect(isPlausibleStoryScore(2000, 4, 10)).toBe(false);
-    expect(isPlausibleStoryScore(2000, 2, -5)).toBe(false);
+    expect(isPlausibleStoryScore(1500, 3, 45, 9000)).toBe(true);
+    expect(isPlausibleStoryScore(9000, 3, 45, 9000)).toBe(true);
+    expect(isPlausibleStoryScore(9001, 3, 45, 9000)).toBe(false);
+    expect(isPlausibleStoryScore(0, 1, 10, 9000)).toBe(false);
+    expect(isPlausibleStoryScore(-100, 1, 10, 9000)).toBe(false);
+    expect(isPlausibleStoryScore(2000, 0, 10, 9000)).toBe(false);
+    expect(isPlausibleStoryScore(2000, 4, 10, 9000)).toBe(false);
+    expect(isPlausibleStoryScore(2000, 2, -5, 9000)).toBe(false);
+  });
+
+  test('maxPageScore is one unbroken combo, smallest find first, plus the whole clock', () => {
+    // ×1: 100; ×2: 2·150 + 50; ×3: 3·200 + 100; then 60 s × 4
+    expect(maxPageScore([200, 100, 150], 60)).toBe(100 + 350 + 700 + 240);
+    // No other order scores more
+    const orders = [[100, 150, 200], [200, 150, 100], [150, 100, 200]];
+    for (const o of orders) {
+      const total = o.reduce((sum, s, i) => sum + foundScore(s, i + 1, 0).earnedScore, 0) + 240;
+      expect(total).toBeLessThanOrEqual(maxPageScore(o, 60));
+    }
   });
 
   test('describeFilter formats labels accurately', () => {
@@ -74,13 +98,36 @@ jest.mock('../src/platform/leaderboard', () => ({
   }),
 }));
 
+describe('the storyline catalog on the server (supabase/migrations)', () => {
+  // Latest values per page across the migrations, in order: (id, country, chapter, page[, max_score])
+  const catalog = new Map<string, { country: string; chapter: number; page: number; max?: number }>();
+  const dir = path.join(__dirname, '..', '..', 'supabase', 'migrations');
+  for (const name of fs.readdirSync(dir).filter((n) => n.endsWith('.sql')).sort()) {
+    const sql = fs.readFileSync(path.join(dir, name), 'utf8');
+    for (const m of sql.matchAll(/\('([a-z0-9-]+)', '([a-z]+)', (\d+), (\d+)(?:, (\d+))?\)/g)) {
+      catalog.set(m[1], { country: m[2], chapter: +m[3], page: +m[4], max: m[5] ? +m[5] : catalog.get(m[1])?.max });
+    }
+  }
+
+  test('lists every day page with its country, chapter and number in book order', () => {
+    const books = COUNTRIES.flatMap((c) => pagesOf(c).map((r) => [r.day.id, { country: c.id, chapter: r.chapterNumber, page: r.number }] as const));
+    expect([...catalog.keys()].sort()).toEqual(books.map(([id]) => id).sort());
+    for (const [id, place] of books) expect({ id, ...catalog.get(id), max: undefined }).toEqual({ id, ...place, max: undefined });
+  });
+
+  test('the max_score of each page covers a perfect run with every migrant that can visit it', () => {
+    for (const c of COUNTRIES) {
+      for (const r of pagesOf(c)) {
+        const visitors = MIGRANTS.filter((m) => m.spots.some((s) => s.pageId === r.day.id)).map(() => MIGRANT_SCORE);
+        const best = maxPageScore([...r.day.objects.map((o) => o.score), ...visitors], r.day.timeLimit);
+        expect({ id: r.day.id, max: catalog.get(r.day.id)?.max }).toEqual({ id: r.day.id, max: best });
+      }
+    }
+  });
+});
+
 describe('LeaderboardView out-of-order race condition protection', () => {
   test('when filter A -> B is requested, but B resolves before A, display remains B', async () => {
-    const React = require('react');
-    const { act, create } = require('react-test-renderer');
-    const { LeaderboardView } = require('../src/screens/home/LeaderboardView');
-    const { FilterPickerModal } = require('../src/screens/home/leaderboard/FilterPickerModal');
-    const { LeaderboardItemRow } = require('../src/screens/home/leaderboard/LeaderboardItemRow');
 
     let renderer: any;
     act(() => {
@@ -133,6 +180,7 @@ describe('LeaderboardView out-of-order race condition protection', () => {
     await act(async () => {
       renderer.unmount();
     });
-  });
+    // The first render of a whole screen can pass 5 s when the full suite shares the CPU
+  }, 20000);
 });
 
