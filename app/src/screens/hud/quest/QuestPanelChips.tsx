@@ -64,7 +64,7 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
             style={[styles.titleText, compact && styles.titleTextCompact]}
             numberOfLines={1}
           >
-            Manh mối cần tìm
+            {compact ? 'Manh mối' : 'Manh mối cần tìm'}
           </Text>
           <Text style={[styles.badge, compact && styles.badgeCompact]}>
             {normalFound}/{normalTotal}
@@ -159,15 +159,17 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
       {!freeHintUsed ? (
         <View style={styles.hintStatusBar}>
           <Sparkles size={13} color="#b45309" />
-          <Text style={styles.hintStatusTextFree}>
-            1 lượt gợi ý đầu: Miễn phí (0đ)
+          <Text style={styles.hintStatusTextFree} numberOfLines={1}>
+            {compact ? 'Gợi ý đầu miễn phí' : '1 lượt gợi ý đầu: Miễn phí (0đ)'}
           </Text>
         </View>
       ) : hintRefusal || score < hintCost(1) ? (
         <View style={[styles.hintStatusBar, styles.hintStatusBarAlert]}>
           <CircleQuestionMark size={13} color="#b91c1c" />
-          <Text style={styles.hintStatusTextAlert}>
-            {hintRefusal
+          <Text style={styles.hintStatusTextAlert} numberOfLines={compact ? 1 : undefined}>
+            {compact
+              ? `Gợi ý cần ${hintRefusal?.needed ?? hintCost(1)}đ · có ${score}đ`
+              : hintRefusal
               ? `Cần ${hintRefusal.needed}đ để gợi ý · Bạn có ${score}đ`
               : `Gợi ý tiếp: Cần ${hintCost(1)}đ · Bạn có ${score}đ`}
           </Text>
@@ -175,8 +177,8 @@ export const QuestPanelChips: React.FC<QuestPanelChipsProps> = React.memo((props
       ) : (
         <View style={styles.hintStatusBar}>
           <CircleQuestionMark size={13} color="#6F4D2C" />
-          <Text style={styles.hintStatusText}>
-            Gợi ý tiếp: {hintCost(1)}đ · Bạn có {score}đ
+          <Text style={styles.hintStatusText} numberOfLines={compact ? 1 : undefined}>
+            {compact ? `Gợi ý: ${hintCost(1)}đ · có ${score}đ` : `Gợi ý tiếp: ${hintCost(1)}đ · Bạn có ${score}đ`}
           </Text>
         </View>
       )}

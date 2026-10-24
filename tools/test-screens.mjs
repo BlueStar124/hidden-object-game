@@ -65,6 +65,8 @@ const DIALOGS = [
   'finale',
   'name',
   'password',
+  'auth', // the sign-in screen: never scrolled, even on the smallest phone held sideways
+  'auth-create',
 ];
 const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create']);
 

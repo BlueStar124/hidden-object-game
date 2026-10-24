@@ -20,6 +20,7 @@ import {
   camoTrait,
   cardName,
   cardText,
+  HOW_TO_READ,
   TRAIT_COLOR,
 } from './quest/questTraits';
 
@@ -62,6 +63,7 @@ export const QuestCard = React.memo<QuestCardProps>(function QuestCard({
   }, [hinted, bounce]);
 
   const style = useAnimatedStyle(() => ({ transform: [{ translateY: bounce.value }] }));
+  const clue = cardText(obj, found, read);
 
   return (
     <Animated.View style={[style, { width: width as any }]}>
@@ -71,7 +73,7 @@ export const QuestCard = React.memo<QuestCardProps>(function QuestCard({
         accessibilityLabel={
           sealed
             ? 'Thẻ chưa đọc. Chạm để đọc tên và manh mối (tốn một lượt gợi ý).'
-            : `${cardName(obj, found, read)}. ${cardText(obj, found, read)}`
+            : `${cardName(obj, found, read)}. ${clue}`
         }
         style={[
           styles.card,
@@ -134,6 +136,7 @@ export const QuestCard = React.memo<QuestCardProps>(function QuestCard({
             {cardName(obj, found, read)}
           </Text>
 
+          {!(compact && clue === HOW_TO_READ) && (
           <Text
             style={[
               styles.clue,
@@ -143,8 +146,9 @@ export const QuestCard = React.memo<QuestCardProps>(function QuestCard({
             ]}
             numberOfLines={expanded ? undefined : 2}
           >
-            {cardText(obj, found, read)}
+            {clue}
           </Text>
+          )}
         </View>
       </Pressable>
     </Animated.View>

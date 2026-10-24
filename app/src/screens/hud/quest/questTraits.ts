@@ -53,6 +53,9 @@ export function cardName(obj: HiddenObject, found: boolean, read: boolean): stri
   return obj.dayAt ? 'Đổi chỗ lúc đêm' : '???';
 }
 
+/** A card not read yet says how to read it (phones leave it out: the "???" says enough). */
+export const HOW_TO_READ = 'Chạm thẻ hoặc bấm Gợi Ý để đọc tên và manh mối';
+
 /** What a card says: the found text, the clue once read, else the riddle, where it was by day, or how to read it. */
 export function cardText(obj: HiddenObject, found: boolean, read: boolean): string {
   if (found) return obj.foundText || 'Đã tìm thấy!';
@@ -61,6 +64,6 @@ export function cardText(obj: HiddenObject, found: boolean, read: boolean): stri
   if (obj.riddle) return obj.riddle;
   return obj.dayAt
     ? `Ban ngày: ${obj.dayAt.clue}`
-    : 'Chạm thẻ hoặc bấm Gợi Ý để đọc tên và manh mối';
+    : HOW_TO_READ;
 }
 
