@@ -9,7 +9,9 @@ const fs = require('node:fs');
     ? ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] : [] });
   try {
     const page = await browser.newPage({ viewport: { width: +(process.env.WIDTH || 1280), height: +(process.env.HEIGHT || 720) },
-      deviceScaleFactor: +(process.env.DPR || 1) });
+      deviceScaleFactor: +(process.env.DPR || 1),
+      // MOBILE=1: a phone browser (touch, coarse pointer: platform/displayDensity caps the canvas density)
+      isMobile: process.env.MOBILE === '1', hasTouch: process.env.MOBILE === '1' });
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     // Straight into the game: the sign-in screen only shows on a first launch (platform/accountPrefs)
