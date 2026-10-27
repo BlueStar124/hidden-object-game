@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaInsetsContext, type EdgeInsets } from 'react-native-safe-area-context';
 import { AppShell } from '../../App';
 import { allPages, FIRST_COUNTRY, pagesOf } from '../../src/content';
 import { isMainObject, type Page } from '../../src/core/model';
@@ -17,6 +18,7 @@ import { RotatePrompt } from '../../src/screens/dialogs/RotatePrompt';
 import { StoryPrologue } from '../../src/screens/dialogs/StoryPrologue';
 import { TimeUpScreen } from '../../src/screens/dialogs/TimeUpScreen';
 import { VictoryScreen } from '../../src/screens/dialogs/VictoryScreen';
+import AuthScreen from '../../src/screens/auth/AuthScreen';
 import { NameDialog } from '../../src/screens/auth/NameDialog';
 import { PasswordDialog } from '../../src/screens/auth/PasswordDialog';
 import { GameScreen } from '../../src/screens/GameScreen';
@@ -97,6 +99,8 @@ export const SCREENS: Record<string, () => ReactElement> = {
   'challenge-create': () => <ChallengeEntry onPlay={() => null} onClose={nothing} />,
   'challenge-locked': () => <ChallengeEntry initialMode="receive" initialText="SG2N-7K2P-12345" initialError="Mã này dành cho một trang chưa có trong phiên bản game của bạn." onPlay={() => null} onClose={nothing} />,
   backup: () => <Backup onRestored={nothing} onClose={nothing} />,
+  auth: () => <AuthScreen configured onPlayAsGuest={nothing} />,
+  'auth-create': () => <AuthScreen configured initialCreate onPlayAsGuest={nothing} />,
   password: () => <PasswordDialog onSave={async () => null} onClose={nothing} />,
   name: () => <NameDialog initial="Thám tử Lan" required={false} onSave={async () => null} onClose={nothing} />,
   'daily-done': () => (
@@ -135,19 +139,26 @@ function useHash() {
   return hash;
 }
 
+// `?insets=top,right,bottom,left`: the notch and home bar of a phone, as the app (not a browser) has them
+const INSETS: EdgeInsets | null = (() => {
+  const [top, right, bottom, left] = (new URLSearchParams(location.search).get('insets') ?? '').split(',').map(Number);
+  return [top, right, bottom, left].every(Number.isFinite) ? { top, right, bottom, left } : null;
+})();
+
 export default function Gallery() {
   const hash = useHash();
   const screen = hash === 'postcard' ? () => <PostcardPreview /> : SCREENS[hash];
+  const content = screen ? (
+    // key: a fresh dialog for each hash, entering animation included
+    <View key={hash} style={styles.desk}>
+      {screen()}
+    </View>
+  ) : (
+    <GameScreen />
+  );
   return (
     <AppShell>
-      {screen ? (
-        // key: a fresh dialog for each hash, entering animation included
-        <View key={hash} style={styles.desk}>
-          {screen()}
-        </View>
-      ) : (
-        <GameScreen />
-      )}
+      {INSETS ? <SafeAreaInsetsContext.Provider value={INSETS}>{content}</SafeAreaInsetsContext.Provider> : content}
     </AppShell>
   );
 }

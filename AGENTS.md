@@ -6,8 +6,8 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 ## 1. Tổng quan
 
-- Game tìm vật ẩn: một cuốn sổ ký họa màu nước, soi bằng kính lúp. **Một codebase Expo** (SDK 57, React Native 0.86,
-  React 19, Skia 2.6, Reanimated 4 + worklets) trong `app/` chạy iOS, Android và web. Khóa màn hình ngang, chỉ có một
+- Game tìm vật ẩn: một cuốn sổ ký họa màu nước, soi bằng kính lúp. **Một codebase Expo** (SDK 58, React Native 0.88,
+  React 19.3, Skia 2.14, Reanimated 4 + worklets, Gesture Handler 3) trong `app/` chạy iOS, Android và web. Khóa màn hình ngang, chỉ có một
   màn hình chơi, **không dùng thư viện navigation**: trang chủ (`screens/home/`) và hộp thoại đều là lớp phủ.
 - Dữ liệu: `Country → Chapter → PageSlot { day, night? } → Page → HiddenObject[]`. Mỗi trang là một file JSON cùng một
   bức tranh 1760 × 1240.
@@ -24,14 +24,14 @@ Chi tiết nằm trong `docs/ai/`, đọc theo bảng ở mục 4. Các lệnh v
 
 | Tầng | Vai trò | Được import |
 |---|---|---|
-| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách), `profile.ts` (tên trong game), `rare.ts` (sinh vật ánh vàng), `tools.ts` (đồ nghề), `migrants.ts` (sinh vật lữ hành), `dayNight.ts` (ngày và đêm) | chỉ `core` — **không package nào** |
+| `core/` | Luật chơi thuần TS: `model.ts` (mọi kiểu dữ liệu, re-export từ `storyModel.ts`, `spriteTypes.ts`, `progressModel.ts`), `story.ts`, `leaderboard.ts` (tính điểm và bộ lọc BXH), `caseFile.ts` (chuyển trạng thái vụ án), `detection.ts`, `scoring.ts`, `hints.ts`, `motion.ts` (worklet), `progress.ts` (lưu tiến độ, tách `progressSchema.ts`, `progressMerge.ts`), `random.ts` (ngẫu nhiên có seed), `layout.ts` (vị trí thay thế), `daily.ts` (trang của ngày), `mystery.ts` (bí ẩn chương), `challenge.ts` (mã thử thách), `profile.ts` (tên trong game), `rare.ts` (sinh vật ánh vàng), `tools.ts` (đồ nghề), `migrants.ts` (sinh vật lữ hành), `dayNight.ts` (ngày và đêm) | chỉ `core` — **không package nào** |
 | `content/` | Chỉ dữ liệu: `index.ts` (`COUNTRIES` + các view suy ra), `countries/<nước>/`, `bestiary.ts`, `migrants.ts`, `tools.ts` | `core`, `content` — **không package nào** |
-| `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` + `useCase` + `useNotices`; `ownedTools` | `core`, `content`, `platform`, `game` |
-| `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread), `render/` (vẽ từng khung, UI thread) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
-| `screens/` | `GameScreen`, `useChallenges` (mã, thử thách bạn bè, link), `ErrorBoundary`, `Desk`, `auth/` (cổng tài khoản), `hud/` (`QuestPanel` + `QuestCard`), `dialogs/`, `share/` (bưu thiếp, lời nhắn) | mọi thứ |
-| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)`, `backupFile.native/.web`, `keepStorage(.web)`, `supabase` + `supabaseStorage` (client), `cloudProgress` (đồng bộ), `friendChallenges`, `accountPrefs`, `googleSignIn(.web)`, `displayDensity(.web)` (độ phân giải canvas trên web) | `core`, `platform`, `generated` |
+| `game/` | Một lượt chơi bằng hooks: `useGame` = `useNavigation` (tách `navigationLayout.ts`) + `useCase` (tách `useCaseEffects.ts`) + `useNotices`; `ownedTools` | `core`, `content`, `platform`, `game` |
+| `board/` | Cuốn sổ vẽ bằng Skia: hooks (camera, cử chỉ, lật trang, cache), `scene/` (dựng trang, JS thread: `buildScene.ts` kèm `sceneSprites.ts`, `sceneEnvironment.ts`; `paints.ts` kèm `paintFilters.ts`, `loupePaints.ts`), `render/` (vẽ từng khung, UI thread: `book.ts` kèm `bookEffects.ts`) | `core`, `content`, `platform`, `ui`, `generated`, `board` |
+| `screens/` | `GameScreen` (tách `GameDialogOverlays`, `GamePlayArea`), `home/` (`HomeScreen`, `LeaderboardView`, `HomeTabs`, `BookCard`, `HomeStats`, `HomeActions`, `leaderboard/`), `useChallenges` (mã, thử thách bạn bè, link), `ErrorBoundary`, `Desk`, `auth/` (cổng tài khoản), `hud/` (`HUD`, `QuestPanel`, `QuestCard`, `quest/`), `dialogs/`, `share/` (bưu thiếp, lời nhắn) | mọi thứ |
+| `platform/` | Theo thiết bị: `sound.native/.web` (+ `synth/` tách `synthSounds.ts`, `voiceMap.ts`), `haptics`, `sceneImage(.web)`, `crashLog`, `share.native/.web`, `launchLink(.web)`, `backupFile.native/.web`, `keepStorage(.web)`, `supabase` + `supabaseStorage` (client), `cloudProgress` (đồng bộ), `leaderboard.ts` (RPC BXH), `friendChallenges`, `accountPrefs`, `googleSignIn(.web)`, `displayDensity(.web)` (độ phân giải canvas trên web) | `core`, `platform`, `generated` |
 | `ui/` | Dùng chung: `theme`, `ModalShell`, `DialogHeader`, `Buttons`, `SpriteIcon`, `icons`, `layout`, `format`, `useStableCallback` | `core`, `ui`, `generated` |
-| `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động, **không sửa tay** | `core`, `board`, `generated` |
+| `generated/` | `spriteArt.ts`, `sounds.ts` — sinh tự động bởi `tools/generate-assets.mjs` (kèm `generate-sprites-helper.mjs`, `generate-sound-helper.mjs`), **không sửa tay** | `core`, `board`, `generated` |
 
 `npm run check:architecture` (`tools/check-architecture.mjs`) bắt lỗi khi import sai chiều. Thêm thư mục cấp một mới
 trong `src/` sẽ làm check này fail: phải khai báo vào `ALLOWED` trong tool **và** cập nhật bảng này.
@@ -62,7 +62,7 @@ Chi tiết từng file, luồng dữ liệu, hằng số: [docs/ai/architecture.
    bằng timer độc lập. Tài nguyên bị loại khỏi cache chỉ giải phóng sau khi mapper bỏ tham chiếu (kể cả nguồn/đích
    đang lật và ảnh warm). Picture đầu ra đưa thẳng vào Canvas, không ghi thêm lớp picture bao ngoài.
 8. **Thư viện:** chỉ dùng `npx expo install <pkg>`, chỉ module có sẵn trong Expo Go, ưu tiên module của Expo. Expo hay
-   đổi API: đọc docs đúng phiên bản `https://docs.expo.dev/versions/v57.0.0/`, đừng đoán theo trí nhớ.
+   đổi API: đọc docs đúng phiên bản `https://docs.expo.dev/versions/v58.0.0/`, đừng đoán theo trí nhớ.
 9. **Dung lượng:** tranh dùng WebP, sprite là vector sinh tự động, âm thanh tổng hợp bằng synth. Icon và font import
    từng file một. Không đưa ảnh PNG lớn, file âm thanh thu sẵn hay thư viện nặng vào app (xem
    `docs/ai/performance-and-size.md`).

@@ -22,7 +22,8 @@ export interface LoadedScene {
  * in the middle of a page turn. They are decoded here, on the JS thread, as soon as they arrive.
  */
 export async function loadSceneImage(source: number): Promise<LoadedScene> {
-  const uri = Image.resolveAssetSource(source).uri;
+  const uri = Image.resolveAssetSource(source)?.uri;
+  if (!uri) throw new Error(`Unknown artwork asset ${source}`);
   const lazy = Skia.Image.MakeImageFromEncoded(await Skia.Data.fromURI(uri));
   if (!lazy) throw new Error(`Could not decode ${uri}`);
   let image = lazy;

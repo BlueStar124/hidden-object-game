@@ -1,5 +1,12 @@
 import type { Challenge } from '../core/challenge';
-import type { Chapter, Country, Page, PageRef } from '../core/model';
+import type { Chapter, Country, GameProgress, Page, PageRef } from '../core/model';
+import { progress } from '../core/progress';
+import {
+  evaluateStoryProgress,
+  getCountryLockReason,
+  getPageLockReason,
+  type StoryProgressState,
+} from '../core/story';
 import { singapore } from './countries/singapore';
 import { thailand } from './countries/thailand';
 import { vietnam } from './countries/vietnam';
@@ -121,3 +128,89 @@ export function allPages(): Page[] {
   }
   return [...days, ...nights];
 }
+
+/** All day page slots in linear reading order across all countries. */
+export function allStoryRefs(): PageRef[] {
+  return STORY_REFS;
+}
+
+// The catalogue never changes at run time, so the reading order is built once
+const STORY_REFS: PageRef[] = COUNTRIES.flatMap((c) => pagesOf(c));
+// Page id (day or night) → its slot in STORY_REFS
+const STORY_INDEX = new Map<string, number>();
+STORY_REFS.forEach((r, i) => {
+  STORY_INDEX.set(r.day.id, i);
+  if (r.night) STORY_INDEX.set(r.night.id, i);
+});
+// Progress snapshots are immutable (every save replaces the object), so one evaluation per
+// snapshot serves the clock tick and every index card instead of re-walking the journey each call
+const STORY_STATES = new WeakMap<GameProgress, StoryProgressState>();
+
+/**
+ * Story progression queries pre-bound to the catalogue of sketchbooks.
+ */
+export const story = {
+  /** Full evaluation of the linear story journey. */
+  state(p?: GameProgress): StoryProgressState {
+    const current =
+      p ??
+      (typeof progress?.get === 'function'
+        ? progress.get()
+        : {
+            schemaVersion: 3,
+            unlockedScenes: [],
+            sceneResults: {},
+            totalScore: 0,
+            discovered: {},
+          });
+    let state = STORY_STATES.get(current);
+    if (!state) {
+      state = evaluateStoryProgress(STORY_REFS, current);
+      STORY_STATES.set(current, state);
+    }
+    return state;
+  },
+
+  /** Whether a page (day or night) is currently unlocked in story mode. */
+  isUnlocked(pageId: string, p?: GameProgress): boolean {
+    const s = this.state(p);
+    return s.unlockedPageIds.has(pageId) || s.unlockedNightIds.has(pageId);
+  },
+
+  /** Whether a country's sketchbook is currently unlocked. */
+  isCountryUnlocked(countryId: string, p?: GameProgress): boolean {
+    return this.state(p).unlockedCountryIds.has(countryId);
+  },
+
+  /** Human-friendly lock reason if locked, or empty string if unlocked. */
+  lockReason(pageId: string, p?: GameProgress): string {
+    const s = this.state(p);
+    if (s.unlockedPageIds.has(pageId) || s.unlockedNightIds.has(pageId)) return '';
+    return getPageLockReason(pageId, STORY_REFS, s);
+  },
+
+  /** Human-friendly country lock reason if locked, or empty string if unlocked. */
+  countryLockReason(countryId: string, p?: GameProgress): string {
+    const s = this.state(p);
+    if (s.unlockedCountryIds.has(countryId)) return '';
+    return getCountryLockReason(countryId, COUNTRIES, STORY_REFS, s);
+  },
+
+  /** Next day page to play in the story, or null if entire journey completed. */
+  nextTarget(p?: GameProgress): Page | null {
+    return this.state(p).nextDayPage;
+  },
+
+  /** Whether the full story journey across all countries is complete. */
+  isJourneyCompleted(p?: GameProgress): boolean {
+    return this.state(p).journeyCompleted;
+  },
+
+  /** The next page in the story sequence after `pageId` (day or night), or null if end of journey. */
+  nextPageAfter(pageId: string): { ref: PageRef; night: boolean } | null {
+    const idx = STORY_INDEX.get(pageId);
+    if (idx === undefined || idx + 1 >= STORY_REFS.length) return null;
+    return { ref: STORY_REFS[idx + 1], night: false };
+  },
+};
+

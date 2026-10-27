@@ -47,7 +47,8 @@
       "expo-asset",
       "expo-sharing",
       "expo-secure-store",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-status-bar"
     ],
     "experiments": {
       "tsconfigPaths": false

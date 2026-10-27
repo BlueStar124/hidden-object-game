@@ -1,39 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { PageRef } from '../../core/model';
 import { progress } from '../../core/progress';
-import { COUNTRIES } from '../../content';
-import { PrimaryButton, SecondaryButton } from '../../ui/Buttons';
-import { formatNumber } from '../../ui/format';
-import {
-  BookHeart,
-  BookOpen,
-  CalendarDays,
-  Check,
-  ChevronRight,
-  CircleCheckBig,
-  Moon,
-  PawPrint,
-  Play,
-  Save,
-  Stamp,
-  Star,
-  Sticker,
-  Swords,
-  Trophy,
-  UserRound,
-  Volume2,
-  VolumeX,
-} from '../../ui/icons';
-import { SpriteIcon } from '../../ui/SpriteIcon';
-import { accentControl, colors, controlIcon, fonts, shadow } from '../../ui/theme';
-import { BookThumb } from '../BookThumb';
-import { albumProgress, bookSummary, type BookSummary } from './summary';
+import { COUNTRIES, story } from '../../content';
+import { Lock } from '../../ui/icons';
+import { colors, shadow } from '../../ui/theme';
+import { BookCard } from './BookCard';
+import { HomeActions } from './HomeActions';
+import { HomeIntro } from './HomeIntro';
+import { HomeTabs, type HomeShelfTab } from './HomeTabs';
+import { LeaderboardView } from './LeaderboardView';
+import { albumProgress, bookSummary } from './summary';
 
-interface HomeScreenProps {
+export interface HomeScreenProps {
   /** The page the book is open at: "Chơi tiếp" goes on there */
   current: PageRef;
   isNight: boolean;
@@ -53,6 +35,7 @@ interface HomeScreenProps {
   onOpenCover: () => void;
   onEnterChallenge: () => void;
   onOpenBackup: () => void;
+  userId?: string | null;
   accountEmail: string;
   /** The name in the game (core/profile), shown instead of the email once there is one */
   accountName: string | null;
@@ -83,6 +66,7 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     onOpenCover,
     onEnterChallenge,
     onOpenBackup,
+    userId,
     accountEmail,
     accountName,
     onEditName,
@@ -91,9 +75,14 @@ export const HomeScreen = React.memo<HomeScreenProps>(
   }) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
+    const [notice, setNotice] = useState<string | null>(null);
+    const [shelfTab, setShelfTab] = useState<HomeShelfTab>('books');
+    const journeyDone = useMemo(() => story.isJourneyCompleted(), []);
+
     // Side by side unless the screen is narrow (a phone held upright); little height: tighter
     const columns = width >= 600;
-    const tight = height < 420;
+    // (the room left once the notch and home bar are taken out: a large iPhone app is 430 tall, ~409 usable)
+    const tight = height - insets.top - insets.bottom < 440;
     const pad = tight ? 10 : 18;
     const available = height - insets.top - insets.bottom - 2 * pad;
 
@@ -104,107 +93,13 @@ export const HomeScreen = React.memo<HomeScreenProps>(
     const cleared = books.reduce((n, b) => n + b.cleared, 0);
     const pageCount = books.reduce((n, b) => n + b.pages, 0);
 
-    const intro = (
-      <View style={[styles.intro, !columns && styles.centred]}>
-        {!tight && <SpriteIcon type="magnifying-glass" size={50} />}
-        <Text style={styles.tag}>HỒ SƠ THÁM TỬ</Text>
-        <Text style={[styles.title, tight && styles.titleTight, !columns && styles.centredText]}>The Lost Sketchbook</Text>
-        <Text style={[styles.subtitle, !columns && styles.centredText]}>
-          Cuốn sổ ký họa thất lạc · soi kính lúp, tìm vật ẩn trong tranh
-        </Text>
-        <View style={[styles.divider, tight && styles.dividerTight]} />
-      </View>
-    );
-
-    const actions = (
-      <View style={styles.actions}>
-        <PrimaryButton
-          tall={!tight}
-          label={returning ? 'Chơi Tiếp' : 'Bắt Đầu Điều Tra'}
-          icon={returning ? <Play size={19} color="#fff" /> : <BookOpen size={19} color="#fff" />}
-          onPress={onPlay}
-          style={styles.full}
-        />
-        <View style={[styles.resume, !columns && styles.centredRow]}>
-          {isNight && <Moon size={12} color={colors.earth} />}
-          <Text style={styles.resumeText} numberOfLines={1}>
-            {current.country.name} · Trang {current.number}
-            {isNight ? ' · Đêm' : ''} — {isNight && current.night ? current.night.title : current.day.title}
-          </Text>
-        </View>
-        <View style={[styles.row, tight && styles.rowTight]}>
-          <SecondaryButton label="Mục Lục" icon={<BookOpen size={controlIcon.size} color={controlIcon.color} />} onPress={onOpenIndex} />
-          <SecondaryButton label="Sổ Tay" icon={<BookHeart size={controlIcon.size} color={controlIcon.color} />} onPress={onOpenAlbum} />
-          <Pressable
-            onPress={onOpenBackup}
-            accessibilityRole="button"
-            accessibilityLabel="Sao lưu tiến độ"
-            style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
-          >
-            <Save size={controlIcon.size} color={controlIcon.color} />
-          </Pressable>
-          <Pressable
-            onPress={onToggleSound}
-            accessibilityRole="button"
-            accessibilityLabel={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
-            style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}
-          >
-            {soundEnabled ? <Volume2 size={controlIcon.size} color={controlIcon.color} /> : <VolumeX size={controlIcon.size} color={controlIcon.color} />}
-          </Pressable>
-        </View>
-        {/* Little height: icons only, on one row */}
-        <View style={[styles.desk, tight && styles.rowTight, !columns && styles.centredRow]}>
-          {daily !== 'none' && (
-            <Chip
-              label={daily === 'done' ? 'Đã xong hôm nay' : 'Trang của ngày'}
-              icon={daily === 'done' ? <Check size={controlIcon.small} color={controlIcon.color} /> : <CalendarDays size={controlIcon.small} color={controlIcon.color} />}
-              onPress={daily === 'done' ? onOpenPassport : onOpenDaily}
-              highlight={daily === 'open'}
-              iconOnly={tight}
-            />
-          )}
-          <Chip label="Hộ chiếu" icon={<Stamp size={controlIcon.small} color={controlIcon.color} />} onPress={onOpenPassport} iconOnly={tight} />
-          <Chip label="Trang bìa" icon={<Sticker size={controlIcon.small} color={controlIcon.color} />} onPress={onOpenCover} iconOnly={tight} />
-          <Chip label="Thử thách" icon={<Swords size={controlIcon.small} color={controlIcon.color} />} onPress={onEnterChallenge} iconOnly={tight} />
-          {tight && (
-            <Chip
-              label={accountEmail ? `Đăng xuất (${accountName ?? accountEmail})` : 'Đăng nhập để đồng bộ tiến độ'}
-              icon={<UserRound size={controlIcon.small} color={controlIcon.color} />}
-              onPress={accountEmail ? onSignOut : onSignIn}
-              iconOnly
-            />
-          )}
-        </View>
-        <View style={[styles.stats, tight && styles.statsTight, !columns && styles.centredRow]}>
-          <Stat icon={<Trophy size={13} color={controlIcon.color} />} text={`${formatNumber(score)} điểm`} />
-          <Stat icon={<CircleCheckBig size={13} color={controlIcon.color} />} text={`${cleared}/${pageCount} trang`} />
-          <Stat icon={<PawPrint size={13} color={colors.earth} />} text={`${album.found}/${album.total} loài`} />
-        </View>
-        {/* Little height: the account is one more icon on the desk row */}
-        {!tight && (accountEmail ? (
-          <View style={[styles.account, !columns && styles.centredRow]}>
-            <UserRound size={13} color={controlIcon.color} />
-            <Text style={[styles.accountEmail, !!accountName && styles.accountName]} numberOfLines={1}>{accountName ?? accountEmail}</Text>
-            <Pressable onPress={onEditName} accessibilityRole="button" accessibilityLabel="Đổi tên trong game">
-              <Text style={styles.signOut}>Đổi tên</Text>
-            </Pressable>
-            <Pressable onPress={onSignOut} accessibilityRole="button" accessibilityLabel="Đăng xuất khỏi tài khoản">
-              <Text style={styles.signOut}>Đăng xuất</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <Pressable
-            onPress={onSignIn}
-            accessibilityRole="button"
-            accessibilityLabel="Đăng nhập để đồng bộ tiến độ và tạo thử thách"
-            style={({ pressed }) => [styles.account, !columns && styles.centredRow, pressed && { opacity: 0.6 }]}
-          >
-            <UserRound size={13} color={controlIcon.color} />
-            <Text style={styles.signIn}>Đăng nhập để đồng bộ tiến độ</Text>
-          </Pressable>
-        ))}
-      </View>
-    );
+    const noticePill = notice ? (
+      <Pressable onPress={() => setNotice(null)} style={styles.noticeBanner} accessibilityRole="alert">
+        <Lock size={14} color="#b45309" />
+        <Text style={styles.noticeText}>{notice}</Text>
+        <Text style={styles.noticeClose}>✕</Text>
+      </Pressable>
+    ) : null;
 
     const cards = books.map((book) => (
       <BookCard
@@ -213,18 +108,47 @@ export const HomeScreen = React.memo<HomeScreenProps>(
         here={book.country.id === current.country.id}
         thumbWidth={tight ? 100 : 128}
         onPress={onSelect}
+        onLockedPress={(reason) => setNotice(reason)}
       />
     ));
-    const shelfHeader = (
-      <View style={styles.shelfHeader}>
-        <BookOpen size={15} color={colors.earth} />
-        <Text style={styles.shelfTitle}>CÁC CUỐN SỔ KÝ HỌA</Text>
-      </View>
+
+    const intro = <HomeIntro columns={columns} tight={tight} />;
+
+    const actions = (
+      <HomeActions
+        current={current}
+        isNight={isNight}
+        returning={returning}
+        soundEnabled={soundEnabled}
+        journeyDone={journeyDone}
+        score={score}
+        cleared={cleared}
+        pageCount={pageCount}
+        album={album}
+        daily={daily}
+        accountEmail={accountEmail}
+        accountName={accountName}
+        columns={columns}
+        tight={tight}
+        onPlay={onPlay}
+        onOpenIndex={onOpenIndex}
+        onOpenAlbum={onOpenAlbum}
+        onOpenBackup={onOpenBackup}
+        onToggleSound={onToggleSound}
+        onOpenDaily={onOpenDaily}
+        onOpenPassport={onOpenPassport}
+        onOpenCover={onOpenCover}
+        onEnterChallenge={onEnterChallenge}
+        onEditName={onEditName}
+        onSignIn={onSignIn}
+        onSignOut={onSignOut}
+      />
     );
+
+    const shelfHeader = <HomeTabs activeTab={shelfTab} onSelectTab={setShelfTab} />;
 
     return (
       <Animated.View
-        // No exit animation: a fading overlay would swallow the touches meant for the book (see ModalShell)
         entering={FadeIn.duration(250)}
         style={[
           StyleSheet.absoluteFill,
@@ -237,15 +161,11 @@ export const HomeScreen = React.memo<HomeScreenProps>(
           },
         ]}
       >
-        {/* A paper wash: on a roomy screen the book shows faintly in the middle, the HUD and the clue
-            cards at the edges all but hidden. A small screen puts the title right over the HUD, and a
-            dark night page would turn the wash grey: both get a denser one */}
         <LinearGradient
-          colors={isNight || tight || !columns ? DENSE_WASH : LIGHT_WASH}
+          colors={isNight ? NIGHT_HOME_WASH : HOME_WASH}
           locations={WASH_STOPS}
           style={StyleSheet.absoluteFill}
         />
-        {/* Catch every touch: nothing reaches the sketchbook underneath */}
         <Pressable style={StyleSheet.absoluteFill} accessible={false} />
 
         {columns ? (
@@ -256,18 +176,38 @@ export const HomeScreen = React.memo<HomeScreenProps>(
             </View>
             <View style={[styles.shelf, styles.shelfSide, { maxHeight: available }]}>
               {shelfHeader}
-              <ScrollView style={styles.shelfScroll} contentContainerStyle={styles.shelfList} showsVerticalScrollIndicator={false}>
-                {cards}
-              </ScrollView>
+              {shelfTab === 'books' ? (
+                <ScrollView
+                  style={styles.shelfScroll}
+                  contentContainerStyle={styles.shelfList}
+                  showsVerticalScrollIndicator={false}
+                >
+                  {noticePill}
+                  {cards}
+                </ScrollView>
+              ) : (
+                <LeaderboardView currentUserId={userId} onSignIn={onSignIn} tight={tight} />
+              )}
             </View>
           </View>
         ) : (
-          <ScrollView style={styles.stackScroll} contentContainerStyle={styles.stack} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.stackScroll}
+            contentContainerStyle={styles.stack}
+            showsVerticalScrollIndicator={false}
+          >
             {intro}
             {actions}
             <View style={styles.shelf}>
               {shelfHeader}
-              <View style={styles.shelfList}>{cards}</View>
+              {shelfTab === 'books' ? (
+                <View style={styles.shelfList}>
+                  {noticePill}
+                  {cards}
+                </View>
+              ) : (
+                <LeaderboardView currentUserId={userId} onSignIn={onSignIn} tight={tight} />
+              )}
             </View>
           </ScrollView>
         )}
@@ -276,90 +216,14 @@ export const HomeScreen = React.memo<HomeScreenProps>(
   }
 );
 
-// colors.paper, more or less see-through
-const wash = (edge: number, middle: number) =>
-  [`rgba(236, 231, 220, ${edge})`, `rgba(236, 231, 220, ${middle})`, `rgba(236, 231, 220, ${middle})`, `rgba(236, 231, 220, ${edge})`] as const;
-const LIGHT_WASH = wash(0.97, 0.88);
-const DENSE_WASH = wash(1, 0.95);
+const HOME_WASH = ['#ECE7DC', '#F3EFE6', '#F3EFE6', '#ECE7DC'] as const;
+const NIGHT_HOME_WASH = ['#1a1d2e', '#161926', '#161926', '#1a1d2e'] as const;
 const WASH_STOPS = [0, 0.25, 0.75, 1] as const;
-
-/** A small button of the detective's desk (daily page, passport, cover, challenge). */
-const Chip: React.FC<{ label: string; icon: React.ReactNode; onPress: () => void; highlight?: boolean; iconOnly?: boolean }> = ({
-  label,
-  icon,
-  onPress,
-  highlight,
-  iconOnly,
-}) => (
-  <Pressable
-    onPress={onPress}
-    accessibilityRole="button"
-    accessibilityLabel={label}
-    style={({ pressed }) => [styles.chip, iconOnly && styles.chipIcon, highlight && styles.chipHighlight, pressed && styles.pressed]}
-  >
-    {icon}
-    {!iconOnly && (
-      <Text style={styles.chipText} numberOfLines={1}>
-        {label}
-      </Text>
-    )}
-  </Pressable>
-);
-
-const Stat: React.FC<{ icon: React.ReactNode; text: string }> = ({ icon, text }) => (
-  <View style={styles.stat}>
-    {icon}
-    <Text style={styles.statText}>{text}</Text>
-  </View>
-);
-
-/** One country's sketchbook: its cover, how far the player is, and the page it opens at. */
-const BookCard = React.memo<{
-  book: BookSummary;
-  here: boolean;
-  thumbWidth: number;
-  onPress: (index: number, night: boolean, countryId: string) => void;
-}>(({ book, here, thumbWidth, onPress }) => {
-  const done = book.cleared === book.pages;
-  return (
-    <Pressable
-      onPress={() => onPress(book.next.index, false, book.country.id)}
-      accessibilityRole="button"
-      accessibilityLabel={`Mở cuốn sổ ${book.country.name}`}
-      style={({ pressed }) => [styles.card, here && styles.cardHere, pressed && styles.pressed]}
-    >
-      <View style={styles.thumb}>
-        <BookThumb scene={book.cover} width={thumbWidth} />
-        {here && <Text style={styles.hereBadge}>Đang mở</Text>}
-      </View>
-      <View style={styles.cardInfo}>
-        <Text style={styles.cardTitle} numberOfLines={1}>
-          {book.country.name}
-        </Text>
-        <View style={styles.cardMeta}>
-          <Text style={styles.cardMetaText}>
-            {book.cleared}/{book.pages} trang
-          </Text>
-          <Star size={11} color="#f59e0b" fill="#f59e0b" />
-          <Text style={styles.cardMetaText}>
-            {book.stars}/{book.maxStars}
-          </Text>
-        </View>
-        <View style={styles.bar}>
-          <View style={[styles.barFill, { width: `${(book.cleared / Math.max(1, book.pages)) * 100}%` }]} />
-        </View>
-        <Text style={styles.cardNext} numberOfLines={1}>
-          {done ? 'Đã hoàn tất · chơi lại từ' : book.started ? 'Tiếp theo' : 'Bắt đầu'}: Trang {book.next.number} — {book.next.title}
-        </Text>
-      </View>
-      <ChevronRight size={18} color={colors.inkFaint} />
-    </Pressable>
-  );
-});
 
 const styles = StyleSheet.create({
   root: {
-    zIndex: 180, // over the HUD and the clue cards, under every dialog
+    backgroundColor: colors.paper,
+    zIndex: 180,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -386,183 +250,6 @@ const styles = StyleSheet.create({
     gap: 18,
     paddingVertical: 4,
   },
-  centred: {
-    alignItems: 'center',
-  },
-  centredText: {
-    textAlign: 'center',
-  },
-  centredRow: {
-    justifyContent: 'center',
-  },
-
-  /* Title */
-  intro: {
-    alignItems: 'flex-start',
-  },
-  tag: {
-    marginTop: 6,
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 2.5,
-    color: colors.earth,
-  },
-  title: {
-    fontFamily: fonts.displayBold,
-    fontSize: 34,
-    lineHeight: 42,
-    color: colors.ink,
-  },
-  titleTight: {
-    fontSize: 26,
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontFamily: fonts.bodyItalic,
-    fontSize: 13.5,
-    lineHeight: 19,
-    color: colors.inkSoft,
-  },
-  divider: {
-    width: 64,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: colors.goldLight,
-    marginVertical: 16,
-  },
-  dividerTight: {
-    marginVertical: 9,
-  },
-
-  /* Actions */
-  actions: {
-    alignSelf: 'stretch',
-  },
-  full: {
-    flex: 0,
-    alignSelf: 'stretch',
-  },
-  resume: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    marginTop: 7,
-  },
-  resumeText: {
-    flexShrink: 1,
-    fontSize: 12,
-    color: colors.inkSoft,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 14,
-  },
-  rowTight: {
-    marginTop: 9,
-  },
-  iconButton: {
-    width: 46,
-    minHeight: 46,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.paper,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: 10,
-  },
-  pressed: {
-    backgroundColor: '#fff',
-  },
-  desk: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 8,
-  },
-  // The same button as the row above (ui/Buttons' secondary), a little lower: the rows read as one set
-  chip: {
-    // Two per row: four of them make an even grid, never three and an orphan
-    flexGrow: 1,
-    flexBasis: '40%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    minHeight: 40,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.hairline,
-    backgroundColor: colors.paper,
-  },
-  // Little height: icons only, as low as the row allows
-  chipIcon: {
-    flexGrow: 0,
-    flexBasis: 'auto',
-    width: 42,
-    minHeight: 36,
-    paddingHorizontal: 0,
-  },
-  chipHighlight: accentControl,
-  chipText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.ink,
-  },
-  stats: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: 14,
-    rowGap: 4,
-    marginTop: 12,
-  },
-  statsTight: {
-    marginTop: 7,
-  },
-  // The account: one quiet line under the stats, in their size and colours
-  account: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 8,
-  },
-  accountName: {
-    color: colors.ink,
-    fontWeight: '700',
-  },
-  accountEmail: {
-    flexShrink: 1,
-    maxWidth: 220,
-    color: colors.inkSoft,
-    fontSize: 12,
-  },
-  signOut: {
-    color: colors.earth,
-    fontSize: 12,
-    fontWeight: '700',
-    paddingVertical: 4,
-    paddingHorizontal: 4,
-    textDecorationLine: 'underline',
-  },
-  signIn: {
-    color: colors.earth,
-    fontSize: 12,
-    fontWeight: '700',
-    textDecorationLine: 'underline',
-  },
-  stat: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  statText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.inkSoft,
-  },
-
-  /* Sketchbooks */
   shelf: {
     backgroundColor: colors.paperCard,
     borderRadius: 16,
@@ -574,22 +261,6 @@ const styles = StyleSheet.create({
   shelfSide: {
     flex: 1.15,
   },
-  shelfHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.hairline,
-    backgroundColor: 'rgba(240, 236, 226, 0.95)',
-  },
-  shelfTitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1.8,
-    color: colors.earth,
-  },
   shelfScroll: {
     flexGrow: 0,
     flexShrink: 1,
@@ -598,71 +269,27 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  card: {
+  noticeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    padding: 8,
-    paddingRight: 10,
-    borderRadius: 12,
+    gap: 8,
+    backgroundColor: '#fef3c7',
     borderWidth: 1,
-    borderColor: colors.hairline,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-  },
-  cardHere: {
-    borderColor: colors.goldLight,
-    backgroundColor: '#fff',
-  },
-  thumb: {
+    borderColor: '#f59e0b',
     borderRadius: 8,
-    overflow: 'hidden',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
-  hereBadge: {
-    position: 'absolute',
-    left: 5,
-    top: 5,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 999,
-    overflow: 'hidden',
-    backgroundColor: colors.earth,
-    color: '#fff',
-    fontSize: 9.5,
-    fontWeight: '700',
-  },
-  cardInfo: {
+  noticeText: {
     flex: 1,
-    gap: 4,
-  },
-  cardTitle: {
-    fontFamily: fonts.displayMedium,
-    fontSize: 18,
-    color: colors.ink,
-  },
-  cardMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  cardMetaText: {
-    fontSize: 11.5,
+    fontSize: 12,
+    color: '#92400e',
     fontWeight: '600',
-    color: colors.inkSoft,
-    marginRight: 4,
   },
-  bar: {
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: colors.paperDark,
-    overflow: 'hidden',
-  },
-  barFill: {
-    height: '100%',
-    borderRadius: 3,
-    backgroundColor: colors.emerald,
-  },
-  cardNext: {
-    fontSize: 11,
-    color: colors.inkFaint,
+  noticeClose: {
+    fontSize: 14,
+    color: '#92400e',
+    fontWeight: '700',
+    paddingLeft: 4,
   },
 });

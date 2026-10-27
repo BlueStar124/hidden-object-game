@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions, type GestureResponderEvent, type ViewInstance } from 'react-native';
 import { FRIEND_AREA, FRIEND_SIZES, friendSizeOf, type FriendChallengeObject, type FriendSize } from '../../core/challenge';
 import type { SpriteType } from '../../core/model';
 import { allPages, placeOf } from '../../content';
@@ -141,7 +141,7 @@ export const ChallengeCreate: React.FC<ChallengeCreateProps> = ({ header, onClos
 
   // Where the painting is in the window, as shown (the dialog may be scaled down): measured as a
   // drag starts, so pointer positions map onto the spread whatever the layout
-  const previewRef = useRef<View>(null);
+  const previewRef = useRef<ViewInstance>(null);
   const previewRect = useRef({ x: 0, y: 0, width: 1, height: 1 });
   const dragging = useRef<string | null>(null);
   const spreadAt = (pageX: number, pageY: number) => {

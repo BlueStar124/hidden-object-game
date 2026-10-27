@@ -20,6 +20,7 @@ export function openCase(page: Page): CaseState {
     isExploring: false,
     mistakes: 0,
     hintsUsed: 0,
+    freeHintUsed: false,
     remainingTime: page.timeLimit,
     isPaused: false,
     isCompleted: false,
@@ -99,12 +100,14 @@ export function recordMiss(c: CaseState): CaseState {
   return { ...c, mistakes: c.mistakes + 1, combo: 1, comboTimer: 0, score: mistakePenalty(c.score) };
 }
 
-/** A hint taken: it costs points, and the target's card shows its name and clue from now on. */
+/** A hint taken: it costs points (unless first tier-1 is free), and the target's card shows its name and clue from now on. */
 export function recordHint(c: CaseState, hint: HintResult): CaseState {
+  const isFree = hint.level === 1 && !c.freeHintUsed;
   return {
     ...c,
     hintsUsed: c.hintsUsed + 1,
-    score: hintPenalty(c.score, hint.level),
+    freeHintUsed: c.freeHintUsed || hint.level === 1,
+    score: hintPenalty(c.score, hint.level, isFree),
     revealedTextIds: withId(c.revealedTextIds, hint.targetObject.id),
     activeHint: {
       level: hint.level,

@@ -20,7 +20,9 @@ function pageIds(dir) {
 }
 
 function spriteIds() {
-  const file = path.join(root, 'app', 'src', 'core', 'model.ts');
+  const spriteFile = path.join(root, 'app', 'src', 'core', 'spriteTypes.ts');
+  const modelFile = path.join(root, 'app', 'src', 'core', 'model.ts');
+  const file = fs.existsSync(spriteFile) ? spriteFile : modelFile;
   const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
   const alias = source.statements.find((node) => ts.isTypeAliasDeclaration(node) && node.name.text === 'SpriteType');
   if (!alias || !ts.isUnionTypeNode(alias.type)) throw new Error('SpriteType must be a string union');

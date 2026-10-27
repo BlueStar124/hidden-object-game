@@ -40,6 +40,10 @@ const VIEWPORTS = [
   { name: 'ipad-landscape', width: 1024, height: 698, mobile: true },
   { name: 'laptop', width: 1280, height: 720 },
   { name: 'desktop', width: 1440, height: 900 },
+  // The installed app (Expo Go, a store build): the whole screen, minus the notch and home bar it reports
+  { name: 'iphone-14-app', width: 844, height: 390, mobile: true, insets: { top: 0, right: 47, bottom: 21, left: 47 } },
+  { name: 'iphone-15-pro-max-app', width: 932, height: 430, mobile: true, insets: { top: 0, right: 59, bottom: 21, left: 59 } },
+  { name: 'iphone-se-app', width: 667, height: 375, mobile: true, insets: { top: 0, right: 0, bottom: 0, left: 0 } },
 ];
 
 /** Gallery dialogs (app/test/screens/Gallery.tsx). Lists scroll; everything else must fit. */
@@ -65,6 +69,8 @@ const DIALOGS = [
   'finale',
   'name',
   'password',
+  'auth', // the sign-in screen: never scrolled, even on the smallest phone held sideways
+  'auth-create',
 ];
 const SCROLLING = new Set(['index', 'album', 'deduction', 'passport', 'backup', 'challenge-create']);
 
@@ -75,7 +81,7 @@ const MIN_SCALE = 0.75;
 
 if (!process.argv.includes('--no-build')) {
   console.log('Building the web app with the dialog gallery…');
-  const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', 'dist-screens'], {
+  const result = spawnSync('npx', ['expo', 'export', '--platform', 'web', '--clear', '--output-dir', 'dist-screens'], {
     cwd: appRoot,
     env: { ...process.env, SKETCHBOOK_SCREEN_TESTS: '1' },
     stdio: ['ignore', 'ignore', 'inherit'],
@@ -101,7 +107,7 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 /* ------------------------------------ Checks ------------------------------------ */
 
 /** What is wrong with the page and the dialog on it (runs in the browser). */
-function inspectPage({ scrolls, minScale }) {
+function inspectPage({ scrolls, minScale, insets }) {
   const problems = [];
   const W = innerWidth;
   const H = innerHeight;
@@ -163,13 +169,25 @@ function inspectPage({ scrolls, minScale }) {
       if (outside(target.getBoundingClientRect())) problems.push(`"${describe(target)}" is outside the window`);
     }
   }
+  // The installed app: nothing to tap under the notch or on the home bar
+  if (insets) {
+    const covered = (r) => r.left < insets.left - 0.5 || r.right > W - insets.right + 0.5 || r.bottom > H - insets.bottom + 0.5 || r.top < insets.top - 0.5;
+    const seen = new Set();
+    for (const el of document.querySelectorAll('[role="button"]')) {
+      const target = onScreen(el);
+      if (seen.has(target) || !visible(el)) continue;
+      seen.add(target);
+      const r = target.getBoundingClientRect();
+      if (!outside(r) && covered(r)) problems.push(`"${describe(target)}" is under the notch or home bar`);
+    }
+  }
   return { problems, scale };
 }
 
 const settle = (page, ms = 1100) => page.waitForTimeout(ms); // entering animations
 
 async function check(page, viewport, name, options) {
-  const { problems, scale } = await page.evaluate(inspectPage, { minScale: MIN_SCALE, scrolls: false, ...options });
+  const { problems, scale } = await page.evaluate(inspectPage, { minScale: MIN_SCALE, scrolls: false, insets: viewport.insets ?? null, ...options });
   const dir = path.join(shotsDir, viewport.name);
   fs.mkdirSync(dir, { recursive: true });
   await page.screenshot({ path: path.join(dir, `${name}.png`) });
@@ -179,7 +197,7 @@ async function check(page, viewport, name, options) {
 /* ------------------------------------- Run -------------------------------------- */
 
 fs.rmSync(shotsDir, { recursive: true, force: true });
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PLAYWRIGHT_CHROME_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHROME_CHANNEL } : fs.existsSync('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe') ? { channel: 'chrome' } : {});
 const results = [];
 try {
   for (const viewport of VIEWPORTS) {
@@ -189,13 +207,19 @@ try {
       hasTouch: !!viewport.mobile,
     });
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      try {
+        localStorage.clear();
+      } catch {}
+    });
     const errors = [];
     page.on('pageerror', (e) => errors.push(String(e)));
 
     // The game itself: rotate prompt (upright phones), home screen (a new player: "Bắt Đầu Điều
     // Tra"), case file, then the sketchbook
-    await page.goto(origin, { waitUntil: 'load' });
-    await page.getByText(/^Bắt Đầu Điều Tra$|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
+    const i = viewport.insets;
+    await page.goto(i ? `${origin}?insets=${i.top},${i.right},${i.bottom},${i.left}` : origin, { waitUntil: 'load' });
+    await page.getByText(/^(Bắt Đầu Điều Tra|Chơi Tiếp)$|Vẫn chơi màn hình dọc/).first().waitFor({ timeout: 60000 });
     await settle(page);
     const keepPortrait = page.getByText('Vẫn chơi màn hình dọc');
     if (await keepPortrait.count()) {
@@ -204,7 +228,7 @@ try {
       await settle(page);
     }
     results.push(await check(page, viewport, 'game-home'));
-    await page.getByText('Bắt Đầu Điều Tra', { exact: true }).click();
+    await page.getByText(/^(Bắt Đầu Điều Tra|Chơi Tiếp)$/).first().click();
     await page.getByText('Mở Cuốn Sổ').first().waitFor({ timeout: 10000 });
     await settle(page);
     results.push(await check(page, viewport, 'game-prologue'));
